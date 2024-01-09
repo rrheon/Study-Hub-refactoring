@@ -66,6 +66,7 @@
 		EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1B12B3D4FC20025C4F8 /* EditUserInfoManager.swift */; };
 		EE98B1B92B47E3930025C4F8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EE98B1B82B47E3930025C4F8 /* Kingfisher */; };
 		EE98B1BD2B4805A90025C4F8 /* DeleteIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */; };
+		EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */; };
 		EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */; };
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
@@ -153,6 +154,7 @@
 		EE98B1AF2B3C387A0025C4F8 /* FindPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
 		EE98B1B12B3D4FC20025C4F8 /* EditUserInfoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoManager.swift; sourceTree = "<group>"; };
 		EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteIDViewController.swift; sourceTree = "<group>"; };
+		EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoManager.swift; path = "../../../../../Documents/study-hub-iOS-yongheon/STUDYHUB2/MAIN/MyPage/UserInfoManager.swift"; sourceTree = "<group>"; };
 		EEB51E852B103C2300C23AB4 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPageViewController.swift; path = ../MyPageViewController.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 			children = (
 				EE07ADB82AEFE6730096890F /* PostedStudyViewController.swift */,
 				EE07ADC02AF0D5A40096890F /* SimilarPostCell.swift */,
+				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
 			);
 			path = PostedStudy;
 			sourceTree = "<group>";
@@ -696,6 +699,7 @@
 				EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
+				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,
 				EE271F262AD77CD100190E7A /* UIViewcontroller+.swift in Sources */,

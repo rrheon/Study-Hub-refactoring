@@ -37,7 +37,7 @@ final class PostedStudyViewController: NaviHelper {
       fineCountLabel.changeColor(label: fineCountLabel,
                                  wantToChange: fineCount,
                                  color: .changeInfo)
-
+      
       fineAmountLabel.text = "결석비 \(fineCount)원"
     }
   }
@@ -226,7 +226,7 @@ final class PostedStudyViewController: NaviHelper {
   }()
   
   private lazy var grayDividerLine2 = createGrayDividerLine(8.0)
-
+  
   // 작성자 정보
   private lazy var writerLabel = createLabel(title: "작성자",
                                              textColor: .black,
@@ -260,7 +260,7 @@ final class PostedStudyViewController: NaviHelper {
   private lazy var spaceView1 = UIView()
   
   private lazy var grayDividerLine3 = createGrayDividerLine(8.0)
-
+  
   // 댓글
   private lazy var commentLabel = createLabel(title: "댓글 0",
                                               textColor: .black,
@@ -270,7 +270,17 @@ final class PostedStudyViewController: NaviHelper {
   private lazy var commentLabelStackView = createStackView(axis: .vertical, spacing: 10)
   
   private lazy var grayDividerLine4 = createGrayDividerLine(1.0)
-
+  
+  private lazy var commentCollectionView: UICollectionView = {
+    let flowLayout = UICollectionViewFlowLayout()
+    flowLayout.scrollDirection = .vertical
+    flowLayout.minimumLineSpacing = 10
+    let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    view.backgroundColor = .white
+    
+    return view
+  }()
+  
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
   
   private lazy var commentButton: UIButton = {
@@ -278,21 +288,21 @@ final class PostedStudyViewController: NaviHelper {
     button.setTitle("등록", for: .normal)
     button.setTitleColor(UIColor.white, for: .normal)
     button.backgroundColor = .o30
-    button.layer.cornerRadius = 15
+    button.layer.cornerRadius = 10
     return button
   }()
   
   private lazy var commentStackView = createStackView(axis: .horizontal, spacing: 8)
   
   private lazy var grayDividerLine5 = createGrayDividerLine(8.0)
-
+  
   // 비슷한 게시글
   private lazy var similarPostLabel = createLabel(title: "이 글과 비슷한 스터디예요",
                                                   textColor: .black,
                                                   fontType: "Pretendard-SemiBold",
                                                   fontSize: 18)
-    
-  private lazy var collectionView: UICollectionView = {
+  
+  private lazy var SimilarCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .horizontal
     flowLayout.minimumLineSpacing = 50 // cell사이의 간격 설정
@@ -303,7 +313,7 @@ final class PostedStudyViewController: NaviHelper {
   }()
   
   private lazy var similarPostStackView = createStackView(axis: .vertical,
-                                                          spacing: 10)
+                                                          spacing: 20)
   
   // 회색 라인 생성
   private lazy var createGrayDividerLine: (CGFloat) -> UIView = { size in
@@ -313,6 +323,25 @@ final class PostedStudyViewController: NaviHelper {
     dividerLine.translatesAutoresizingMaskIntoConstraints = false
     return dividerLine
   }
+  
+  // 참여하기, 북마크버튼
+  private lazy var bookmarkButton: UIButton = {
+    let button = UIButton()
+    button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    return button
+  }()
+  
+  private lazy var participateButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("참여하기", for: .normal)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.backgroundColor = .o50
+    button.layer.cornerRadius = 10
+    return button
+  }()
+  
+  private lazy var bottomButtonStackView = createStackView(axis: .horizontal, spacing: 10)
+  
   
   // 전체 요소를 담는 스택
   private lazy var pageStackView = createStackView(axis: .vertical,
@@ -450,10 +479,19 @@ final class PostedStudyViewController: NaviHelper {
         
     // 유사 스터디 추천
     let spaceView11 = UIView()
-    let collectionView = [similarPostLabel,collectionView, spaceView11]
+    let collectionView = [similarPostLabel,SimilarCollectionView, spaceView11]
     for view in collectionView {
       similarPostStackView.addArrangedSubview(view)
     }
+    
+    // 북마크, 참여하기버튼
+    [
+      bookmarkButton,
+      participateButton
+    ].forEach {
+      bottomButtonStackView.addArrangedSubview($0)
+    }
+    
     
     // 전체 페이지
     [
@@ -467,7 +505,8 @@ final class PostedStudyViewController: NaviHelper {
       grayDividerLine4,
       commentStackView,
       grayDividerLine5,
-      similarPostStackView
+      similarPostStackView,
+      bottomButtonStackView
     ].forEach {
       pageStackView.addArrangedSubview($0)
     }
@@ -548,11 +587,21 @@ final class PostedStudyViewController: NaviHelper {
     
     // 비슷한 게시글
     similarPostStackView.backgroundColor = .white
-    similarPostStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 10)
+    similarPostStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 30, right: 10)
     similarPostStackView.isLayoutMarginsRelativeArrangement = true
     
-    collectionView.snp.makeConstraints { make in
+    SimilarCollectionView.snp.makeConstraints { make in
       make.height.equalTo(171)
+    }
+    
+    // 북마크 참여하기버튼
+    bottomButtonStackView.distribution = .fillProportionally
+    bottomButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    bottomButtonStackView.isLayoutMarginsRelativeArrangement = true
+    
+    participateButton.snp.makeConstraints {
+      $0.height.equalTo(55)
+      $0.width.equalTo(283)
     }
     
     // pageStackView의 설정
@@ -571,13 +620,21 @@ final class PostedStudyViewController: NaviHelper {
 
   // MARK: - collectionview 관련
   private func setupDelegate() {
-    collectionView.delegate = self
-    collectionView.dataSource = self
+    SimilarCollectionView.delegate = self
+    SimilarCollectionView.dataSource = self
+    SimilarCollectionView.tag = 1
+    
+    commentCollectionView.delegate = self
+    commentCollectionView.dataSource = self
+    commentCollectionView.tag = 2
   }
   
   private func registerCell() {
-    collectionView.register(SimilarPostCell.self,
+    SimilarCollectionView.register(SimilarPostCell.self,
                             forCellWithReuseIdentifier: SimilarPostCell.id)
+    
+    commentCollectionView.register(CommentCell.self,
+                                   forCellWithReuseIdentifier: CommentCell.id)
   }
   
   // MARK: - 데이터 받아오고 ui다시 그리는 함수
@@ -626,7 +683,7 @@ final class PostedStudyViewController: NaviHelper {
       }
     }
     
-    collectionView.reloadData()
+    SimilarCollectionView.reloadData()
   }
 }
 
@@ -635,20 +692,31 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return postedDate?.relatedPost.count ?? 0
+    if collectionView.tag == 1 {
+      return postedDate?.relatedPost.count ?? 0
+    } else {
+      return 3
+    }
+   
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimilarPostCell.id,
                                                   for: indexPath)
-    if let cell = cell as? SimilarPostCell {
-      if indexPath.item < postedDate?.relatedPost.count ?? 0 {
-        let data = postedDate?.relatedPost[indexPath.item]
-        cell.model = data
+    if collectionView.tag == 1 {
+      if let cell = cell as? SimilarPostCell {
+        if indexPath.item < postedDate?.relatedPost.count ?? 0 {
+          let data = postedDate?.relatedPost[indexPath.item]
+          cell.model = data
+        }
+      }
+    } else {
+      if let cell = cell as? CommentCell {
+        
       }
     }
-    
+        
     return cell
   }
 
