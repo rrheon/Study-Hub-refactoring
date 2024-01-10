@@ -14,6 +14,7 @@ final class MyPageViewController: NaviHelper {
       DispatchQueue.main.async {
         self.nickNameLabel.text = self.myPageUserData?.nickname
         self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
+        
         if let imageURL = URL(string: self.myPageUserData?.imageURL ?? "") {
           let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))
           

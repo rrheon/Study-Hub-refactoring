@@ -11,15 +11,25 @@ import SnapKit
 import Kingfisher
 import Moya
 
-final class PostedStudyViewController: NaviHelper {
+final class PostedStudyViewController: NaviHelper{
   let detailPostDataManager = PostDetailInfoManager.shared
   
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedDate: PostDetailData? {
     didSet {
+      self.getCommentList {
+        DispatchQueue.main.async {
+          self.redrawUI()
+          self.commentTableView.reloadData()
+        }
+      }
+    }
+  }
+  
+  var commentData: GetCommentList? {
+    didSet {
       DispatchQueue.main.async {
-        self.redrawUI()
-        self.getCommentList()
+        self.commentTableView.reloadData()
       }
     }
   }
@@ -263,7 +273,14 @@ final class PostedStudyViewController: NaviHelper {
   
   private lazy var grayDividerLine3 = createGrayDividerLine(8.0)
   
+
   // 댓글
+  private lazy var countComment: Int = 0 {
+    didSet {
+      commentLabel.text = "댓글 \(countComment)"
+    }
+  }
+  
   private lazy var commentLabel = createLabel(title: "댓글 0",
                                               textColor: .black,
                                               fontType: "Pretendard-SemiBold",
@@ -274,14 +291,12 @@ final class PostedStudyViewController: NaviHelper {
   
   private lazy var grayDividerLine4 = createGrayDividerLine(1.0)
   
-  private lazy var commentCollectionView: UICollectionView = {
-    let flowLayout = UICollectionViewFlowLayout()
-    flowLayout.scrollDirection = .vertical
-    flowLayout.minimumLineSpacing = 10
-    let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-    view.backgroundColor = .white
-    
-    return view
+  private lazy var commentTableView: UITableView = {
+    let tableView = UITableView()
+    tableView.register(CommentCell.self,
+                       forCellReuseIdentifier: CommentCell.cellId)
+    tableView.backgroundColor = .white
+    return tableView
   }()
   
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
@@ -367,7 +382,6 @@ final class PostedStudyViewController: NaviHelper {
     navigationItemSetting()
     setUpLayout()
     makeUI()
-    getCommentList()
   }
   
   // MARK: - setUpLayout
@@ -508,7 +522,7 @@ final class PostedStudyViewController: NaviHelper {
       totalWriterInfoStackView,
       grayDividerLine3,
       commentLabelStackView,
-      commentCollectionView,
+      commentTableView,
       grayDividerLine4,
       commentStackView,
       grayDividerLine5,
@@ -583,12 +597,17 @@ final class PostedStudyViewController: NaviHelper {
     commentLabelStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
     commentLabelStackView.isLayoutMarginsRelativeArrangement = true
     
-    commentCollectionView.snp.makeConstraints {
-//      $0.top.equalTo(commentLabelStackView.snp.bottom).offset(20)
-//      $0.leading.equalTo(commentLabelStackView.snp.leading)
-//      $0.trailing.equalToSuperview().offset(20)
-      $0.height.equalTo(500)
+    // 이거 숫자 동적으로 조절하게끔 수정해야함
+    let test = 86*3
+    commentTableView.snp.makeConstraints {
+      $0.height.equalTo(test)
     }
+//
+//    resultTableView.snp.makeConstraints { make in
+//      make.top.equalTo(describeLabel.snp.bottom).offset(-30)
+//      make.leading.trailing.equalTo(searchController)
+//      make.bottom.equalTo(view).offset(-10)
+//    }
     
     commentStackView.distribution = .fillProportionally
     commentStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
@@ -637,17 +656,13 @@ final class PostedStudyViewController: NaviHelper {
     SimilarCollectionView.dataSource = self
     SimilarCollectionView.tag = 1
     
-    commentCollectionView.delegate = self
-    commentCollectionView.dataSource = self
-    commentCollectionView.tag = 2
+    commentTableView.delegate = self
+    commentTableView.dataSource = self
   }
   
   private func registerCell() {
     SimilarCollectionView.register(SimilarPostCell.self,
                             forCellWithReuseIdentifier: SimilarPostCell.id)
-    
-    commentCollectionView.register(CommentCell.self,
-                                   forCellWithReuseIdentifier: CommentCell.id)
   }
   
   // MARK: - 데이터 받아오고 ui다시 그리는 함수
@@ -717,14 +732,14 @@ final class PostedStudyViewController: NaviHelper {
   }
   
   // MARK: - 댓글 리스트 가져오기
-  func getCommentList(){
-    print("함수")
+  func getCommentList(completion: @escaping () -> Void){
     guard let postId = postedDate?.postID else { return }
-    print("실행")
     detailPostDataManager.getCommentList(postId: postId,
                                          page: 0,
                                          size: 8) {
-      print("네트워킹")
+      self.commentData = self.detailPostDataManager.getCommentList()
+      self.countComment = self.commentData?.content.count ?? 0
+      completion()
     }
   }
 }
@@ -734,18 +749,12 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    if collectionView.tag == 1 {
       return postedDate?.relatedPost.count ?? 0
-    } else {
-      return 3
-    }
-    
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
-    if collectionView.tag == 1 {
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimilarPostCell.id,
                                                     for: indexPath)
       if let cell = cell as? SimilarPostCell {
@@ -755,18 +764,6 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
         }
       }
       return cell
-
-    } else {
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCell.id,
-                                                    for: indexPath)
-      if let cell = cell as? CommentCell {
-        if indexPath.item < postedDate?.relatedPost.count ?? 0 {
-          let data = postedDate?.relatedPost[indexPath.item]
-          cell.model = data
-        }
-      }
-      return cell
-    }
   }
 
 
@@ -788,11 +785,27 @@ extension PostedStudyViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    if collectionView.tag == 1 {
       return CGSize(width: 250, height: collectionView.frame.height)
-    } else {
-      return CGSize(width: 375, height: 86)
-    }
+  }
+}
+
+
+// MARK: - tableview
+extension PostedStudyViewController: UITableViewDelegate, UITableViewDataSource  {
+  func tableView(_ tableView: UITableView,
+                 numberOfRowsInSection section: Int) -> Int {
+    return commentData?.content.count ?? 0
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = commentTableView.dequeueReusableCell(withIdentifier: CommentCell.cellId,
+                                                    for: indexPath) as! CommentCell
     
+    cell.model = commentData?.content[indexPath.row]
+    return cell
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 86
   }
 }

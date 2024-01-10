@@ -9,52 +9,39 @@ import Foundation
 
 import Moya
 import UIKit
+
 // MARK: - GetCommentList
 struct GetCommentList: Codable {
-    let content: [Content1]
-    let empty, first, last: Bool
-    let number, numberOfElements: Int
-    let pageable: Pageable
-    let size: Int
-    let sort: Sort
-}
+  let content: [CommentConetent]
+  let empty, first, last: Bool
+  let number, numberOfElements: Int
+  let size: Int
+} 
 
 // MARK: - Content
-struct Content1: Codable {
-    let commentID: Int
-    let commentedUserData: CommentedUserData
-    let content, createdDate: String
-    let usersComment: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case commentID = "commentId"
-        case commentedUserData, content, createdDate, usersComment
-    }
+struct CommentConetent: Codable {
+  let commentID: Int
+  let commentedUserData: CommentedUserData
+  let content:String
+  let createdDate:  [Int]
+  let usersComment: Bool
+  
+  enum CodingKeys: String, CodingKey {
+    case commentID = "commentId"
+    case commentedUserData, content, createdDate, usersComment
+  }
 }
 
 // MARK: - CommentedUserData
 struct CommentedUserData: Codable {
-    let imageURL, major, nickname: String
-    let userID: Int
-
-    enum CodingKeys: String, CodingKey {
-        case imageURL = "imageUrl"
-        case major, nickname
-        case userID = "userId"
-    }
-}
-
-// MARK: - Pageable
-struct Pageable: Codable {
-    let offset, pageNumber, pageSize: Int
-    let paged: Bool
-    let sort: Sort
-    let unpaged: Bool
-}
-
-// MARK: - Sort
-struct Sort: Codable {
-    let empty, sorted, unsorted: Bool
+  let imageURL, major, nickname: String
+  let userID: Int
+  
+  enum CodingKeys: String, CodingKey {
+    case imageURL = "imageUrl"
+    case major, nickname
+    case userID = "userId"
+  }
 }
 
 enum networkingAPI {
@@ -77,7 +64,7 @@ extension networkingAPI: TargetType {
   var baseURL: URL {
     return URL(string: "https://study-hub.site:443/api")!
   }
-
+  
   var path: String {
     switch self {
     case .storeImage(_image: _):
@@ -128,7 +115,7 @@ extension networkingAPI: TargetType {
       
     case .deleteImage, .deleteID:
       return .delete
-
+      
     case .verifyPassword(_password: _),
         .verifyEmail(_code: _, _email: _),
         .checkEmailDuplication(_email: _),
@@ -146,7 +133,7 @@ extension networkingAPI: TargetType {
       let formData = MultipartFormBodyPart(provider: .data(imageData!), name: "image",
                                            fileName: "image.jpg", mimeType: "image/jpeg")
       return .uploadMultipartFormData([formData])
-
+      
       // 바디에 요청
     case .editUserNickName(let nickname):
       let params = EditNickName(nickname: nickname)
@@ -174,7 +161,7 @@ extension networkingAPI: TargetType {
     case.writeComment(let content, let postId):
       let params = WriteComment(content: content, postId: postId)
       return .requestJSONEncodable(params)
-    
+      
     case .getCommentList(_postId: _, let page, let size):
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
@@ -191,9 +178,9 @@ extension networkingAPI: TargetType {
     guard let acceessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {
     case  .checkEmailDuplication(_email: _),
-          .sendEmailCode(_email: _),
-          .searchSinglePost(_postId: _),
-          .getCommentList(_postId: _, _page: _, _size: _):
+        .sendEmailCode(_email: _),
+        .searchSinglePost(_postId: _),
+        .getCommentList(_postId: _, _page: _, _size: _):
       return ["Content-type": "application/json"]
       
       
@@ -208,8 +195,8 @@ extension networkingAPI: TargetType {
       return [ "Content-Type" : "multipart/form-data",
                "Authorization": "\(acceessToken)" ]
     case .deleteImage,
-         .deleteID ,
-         .verifyPassword(_):
+        .deleteID ,
+        .verifyPassword(_):
       return [ "Authorization": "\(acceessToken)"]
     default:
       return ["Content-type": "application/json",
@@ -229,29 +216,29 @@ final class Networking {
   
   // 네트워킹 요청을 생성하는 메서드
   func createRequest<T: Codable>(url: URL,
-                     method: String,
-                     tokenNeed: Bool,
-                     createPostData: T?) -> URLRequest {
+                                 method: String,
+                                 tokenNeed: Bool,
+                                 createPostData: T?) -> URLRequest {
     var request = URLRequest(url: url)
     request.httpMethod = method
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("application/json", forHTTPHeaderField: "Accept")
-   
-   if tokenNeed == true {
-     guard let token = tokenManager.loadAccessToken() else { return request}
-     request.setValue("\(token)", forHTTPHeaderField: "Authorization")
-     
-     if createPostData != nil {
-       guard let uploadData = try? JSONEncoder().encode(createPostData) else { return request }
-       request.httpBody = uploadData
-     }
-   }
+    
+    if tokenNeed == true {
+      guard let token = tokenManager.loadAccessToken() else { return request}
+      request.setValue("\(token)", forHTTPHeaderField: "Authorization")
+      
+      if createPostData != nil {
+        guard let uploadData = try? JSONEncoder().encode(createPostData) else { return request }
+        request.httpBody = uploadData
+      }
+    }
     
     return request
   }
   
   // API 응답을 디코딩하는 메서드
- func decodeResponse<T: Codable>(data: Data, completion: NetworkCompletion<T>) {
+  func decodeResponse<T: Codable>(data: Data, completion: NetworkCompletion<T>) {
     do {
       let decoder = JSONDecoder()
       let responseData = try decoder.decode(T.self, from: data)
@@ -265,11 +252,11 @@ final class Networking {
   // 네트워킹 요청하는 메서드
   func fetchData<T: Codable>(type: String,
                              apiVesrion: String,
-                               urlPath: String,
-                               queryItems: [URLQueryItem]?,
-                               tokenNeed: Bool,
-                               createPostData: T?,
-                               completion: @escaping NetworkCompletion<T>) {
+                             urlPath: String,
+                             queryItems: [URLQueryItem]?,
+                             tokenNeed: Bool,
+                             createPostData: T?,
+                             completion: @escaping NetworkCompletion<T>) {
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"
     urlComponents.host = "study-hub.site"

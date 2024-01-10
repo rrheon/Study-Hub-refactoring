@@ -3,11 +3,11 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-final class CommentCell: UICollectionViewCell {
+final class CommentCell: UITableViewCell {
   
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
-  
-  var model: RelatedPost? { didSet { bind() } }
+  static let cellId = "CellId"
+
+  var model: CommentConetent? { didSet { bind() } }
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -18,7 +18,7 @@ final class CommentCell: UICollectionViewCell {
   
   private lazy var nickNameLabel: UILabel = {
     let label = UILabel()
-    label.textColor = .lightGray
+    label.textColor = .bg90
     label.text = "비어있음"
     label.font = UIFont(name: "Pretendard", size: 12)
     return label
@@ -28,7 +28,7 @@ final class CommentCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "2023.9.8"
     label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.font = UIFont(name: "Pretendard", size: 10)
     return label
   }()
   
@@ -40,20 +40,17 @@ final class CommentCell: UICollectionViewCell {
     return label
   }()
   
-  
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
     
     addSubviews()
     configure()
   }
   
-  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    fatalError()
+    fatalError("init(coder:) has not been implemented")
   }
-  
   private func addSubviews() {
     [
       profileImageView,
@@ -90,7 +87,32 @@ final class CommentCell: UICollectionViewCell {
   
   private func bind() {
     print("동")
-    nickNameLabel.text = model?.userData.nickname
     
+    print(model?.commentedUserData.nickname)
+    nickNameLabel.text = model?.commentedUserData.nickname
+    commentLabel.text = model?.content
+    
+    guard let createeData = model?.createdDate else { return }
+    postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
+
+    
+    if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
+      
+      KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
+      
+      self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
+          DispatchQueue.main.async {
+            self.profileImageView.image = value.image
+            self.profileImageView.layer.cornerRadius = 12
+            self.profileImageView.clipsToBounds = true
+          }
+        case .failure(let error):
+          print("Image download failed: \(error)")
+        }
+      }
+    }
   }
 }
