@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Kingfisher
+import Moya
 
 final class PostedStudyViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
@@ -18,6 +19,7 @@ final class PostedStudyViewController: NaviHelper {
     didSet {
       DispatchQueue.main.async {
         self.redrawUI()
+        self.getCommentList()
       }
     }
   }
@@ -269,6 +271,7 @@ final class PostedStudyViewController: NaviHelper {
   
   private lazy var commentLabelStackView = createStackView(axis: .vertical, spacing: 10)
   
+  
   private lazy var grayDividerLine4 = createGrayDividerLine(1.0)
   
   private lazy var commentCollectionView: UICollectionView = {
@@ -289,6 +292,9 @@ final class PostedStudyViewController: NaviHelper {
     button.setTitleColor(UIColor.white, for: .normal)
     button.backgroundColor = .o30
     button.layer.cornerRadius = 10
+    button.addAction(UIAction { _ in
+      self.commentButtonTapped()
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -361,7 +367,7 @@ final class PostedStudyViewController: NaviHelper {
     navigationItemSetting()
     setUpLayout()
     makeUI()
-    
+    getCommentList()
   }
   
   // MARK: - setUpLayout
@@ -502,6 +508,7 @@ final class PostedStudyViewController: NaviHelper {
       totalWriterInfoStackView,
       grayDividerLine3,
       commentLabelStackView,
+      commentCollectionView,
       grayDividerLine4,
       commentStackView,
       grayDividerLine5,
@@ -510,7 +517,6 @@ final class PostedStudyViewController: NaviHelper {
     ].forEach {
       pageStackView.addArrangedSubview($0)
     }
-    
     
     scrollView.addSubview(pageStackView)
     
@@ -576,6 +582,13 @@ final class PostedStudyViewController: NaviHelper {
   
     commentLabelStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
     commentLabelStackView.isLayoutMarginsRelativeArrangement = true
+    
+    commentCollectionView.snp.makeConstraints {
+//      $0.top.equalTo(commentLabelStackView.snp.bottom).offset(20)
+//      $0.leading.equalTo(commentLabelStackView.snp.leading)
+//      $0.trailing.equalToSuperview().offset(20)
+      $0.height.equalTo(500)
+    }
     
     commentStackView.distribution = .fillProportionally
     commentStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
@@ -669,7 +682,8 @@ final class PostedStudyViewController: NaviHelper {
     if let imageURL = URL(string: postedDate?.postedUser.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
             
-      self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+      self.profileImageView.kf.setImage(with: imageURL,
+                                        options: [.processor(processor)]) { result in
         switch result {
         case .success(let value):
           DispatchQueue.main.async {
@@ -685,6 +699,34 @@ final class PostedStudyViewController: NaviHelper {
     
     SimilarCollectionView.reloadData()
   }
+  
+  // MARK: - 댓글 작성하기
+  func commentButtonTapped(){
+    let provider = MoyaProvider<networkingAPI>()
+    guard let postId = postedDate?.postID,
+          let content = commentTextField.text else { return }
+    provider.request(.writeComment(_content: content, _postId: postId)) {
+      switch $0 {
+      case .success(let response):
+        return print(response.response)
+      case .failure(let response):
+        return print(response)
+      }
+      
+    }
+  }
+  
+  // MARK: - 댓글 리스트 가져오기
+  func getCommentList(){
+    print("함수")
+    guard let postId = postedDate?.postID else { return }
+    print("실행")
+    detailPostDataManager.getCommentList(postId: postId,
+                                         page: 0,
+                                         size: 8) {
+      print("네트워킹")
+    }
+  }
 }
 
 // MARK: - collectionView
@@ -697,28 +739,36 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
     } else {
       return 3
     }
-   
+    
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimilarPostCell.id,
-                                                  for: indexPath)
+    
     if collectionView.tag == 1 {
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimilarPostCell.id,
+                                                    for: indexPath)
       if let cell = cell as? SimilarPostCell {
         if indexPath.item < postedDate?.relatedPost.count ?? 0 {
           let data = postedDate?.relatedPost[indexPath.item]
           cell.model = data
         }
       }
+      return cell
+
     } else {
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCell.id,
+                                                    for: indexPath)
       if let cell = cell as? CommentCell {
-        
+        if indexPath.item < postedDate?.relatedPost.count ?? 0 {
+          let data = postedDate?.relatedPost[indexPath.item]
+          cell.model = data
+        }
       }
+      return cell
     }
-        
-    return cell
   }
+
 
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
@@ -738,6 +788,11 @@ extension PostedStudyViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: 250, height: collectionView.frame.height)
+    if collectionView.tag == 1 {
+      return CGSize(width: 250, height: collectionView.frame.height)
+    } else {
+      return CGSize(width: 375, height: 86)
+    }
+    
   }
 }

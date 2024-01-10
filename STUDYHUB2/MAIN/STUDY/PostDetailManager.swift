@@ -137,7 +137,6 @@ final class PostDetailInfoManager {
     fetchPostDetailData(postID: postID) { result in
       switch result {
       case .success(let postDetailData):
-        print("Post Detail Data:", postDetailData)
         self.postDetailData = postDetailData
         completion()
       case .failure(let error):
@@ -153,7 +152,6 @@ final class PostDetailInfoManager {
       case .success(let response):
         do {
           let postDataContent = try JSONDecoder().decode(PostDetailData.self, from: response.data)
-          print(postDataContent)
           self.postDetailData = postDataContent
         } catch {
           print("Failed to decode JSON: \(error)")
@@ -166,6 +164,28 @@ final class PostDetailInfoManager {
       case .failure(let response):
         print(response)
         
+      }
+    }
+  }
+  
+  func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping () -> Void) {
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.getCommentList(_postId: postId,
+                                     _page: page,
+                                     _size: size)) {
+      switch $0 {
+      case .success(let response):
+        print(response.response)
+        do {
+          let postDataContent = try JSONDecoder().decode(GetCommentList.self, from: response.data)
+          print(postDataContent)
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+        
+        completion()
+      case .failure(let response):
+        print(response)
       }
     }
   }

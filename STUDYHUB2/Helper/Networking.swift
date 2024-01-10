@@ -9,6 +9,53 @@ import Foundation
 
 import Moya
 import UIKit
+// MARK: - GetCommentList
+struct GetCommentList: Codable {
+    let content: [Content1]
+    let empty, first, last: Bool
+    let number, numberOfElements: Int
+    let pageable: Pageable
+    let size: Int
+    let sort: Sort
+}
+
+// MARK: - Content
+struct Content1: Codable {
+    let commentID: Int
+    let commentedUserData: CommentedUserData
+    let content, createdDate: String
+    let usersComment: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case commentID = "commentId"
+        case commentedUserData, content, createdDate, usersComment
+    }
+}
+
+// MARK: - CommentedUserData
+struct CommentedUserData: Codable {
+    let imageURL, major, nickname: String
+    let userID: Int
+
+    enum CodingKeys: String, CodingKey {
+        case imageURL = "imageUrl"
+        case major, nickname
+        case userID = "userId"
+    }
+}
+
+// MARK: - Pageable
+struct Pageable: Codable {
+    let offset, pageNumber, pageSize: Int
+    let paged: Bool
+    let sort: Sort
+    let unpaged: Bool
+}
+
+// MARK: - Sort
+struct Sort: Codable {
+    let empty, sorted, unsorted: Bool
+}
 
 enum networkingAPI {
   case storeImage(_image: UIImage)
@@ -22,6 +69,8 @@ enum networkingAPI {
   case sendEmailCode(_email: String)
   case deleteID
   case searchSinglePost(_postId: Int)
+  case writeComment(_content: String, _postId: Int)
+  case getCommentList(_postId: Int, _page: Int, _size: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -57,12 +106,18 @@ extension networkingAPI: TargetType {
       
     case .searchSinglePost(let postId):
       return "/v1/study-posts/\(postId)"
+      
+    case .writeComment(_content: _ , _postId: _):
+      return "/v1/comments"
+    case .getCommentList(let postId, _page: _, _size: _):
+      return "/v1/comments/\(postId)"
     }
   }
   
   var method: Moya.Method {
     switch self {
-    case .searchSinglePost(_postId: _):
+    case .searchSinglePost(_postId: _),
+        .getCommentList(_postId: _, _page: _, _size: _):
       return .get
       
     case .storeImage(_image: _),
@@ -77,7 +132,8 @@ extension networkingAPI: TargetType {
     case .verifyPassword(_password: _),
         .verifyEmail(_code: _, _email: _),
         .checkEmailDuplication(_email: _),
-        .sendEmailCode(_email: _):
+        .sendEmailCode(_email: _),
+        .writeComment(_content: _, _postId: _):
       return .post
     }
   }
@@ -90,8 +146,7 @@ extension networkingAPI: TargetType {
       let formData = MultipartFormBodyPart(provider: .data(imageData!), name: "image",
                                            fileName: "image.jpg", mimeType: "image/jpeg")
       return .uploadMultipartFormData([formData])
-    case .deleteImage:
-      return .requestPlain
+
       // 바디에 요청
     case .editUserNickName(let nickname):
       let params = EditNickName(nickname: nickname)
@@ -116,11 +171,19 @@ extension networkingAPI: TargetType {
       let params = CheckEmailDuplication(email: email)
       return .requestJSONEncodable(params)
       
-    case .deleteID:
+    case.writeComment(let content, let postId):
+      let params = WriteComment(content: content, postId: postId)
+      return .requestJSONEncodable(params)
+    
+    case .getCommentList(_postId: _, let page, let size):
+      let params: [String : Any] = [ "page": page, "size": size]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
+    case .deleteID,
+        .searchSinglePost(_postId: _),
+        .deleteImage:
       return .requestPlain
       
-    case .searchSinglePost(_postId: _):
-      return .requestPlain
     }
   }
   
@@ -129,11 +192,17 @@ extension networkingAPI: TargetType {
     switch self {
     case  .checkEmailDuplication(_email: _),
           .sendEmailCode(_email: _),
-          .searchSinglePost(_postId: _):
+          .searchSinglePost(_postId: _),
+          .getCommentList(_postId: _, _page: _, _size: _):
       return ["Content-type": "application/json"]
+      
       
     case .verifyEmail(_code: _, _email: _):
       return ["Accept" : "application/json"]
+      
+    case .writeComment(_content: _, _postId: _):
+      return ["Content-type": "application/json",
+              "Authorization": "\(acceessToken)"]
       
     case .storeImage(_image: _):
       return [ "Content-Type" : "multipart/form-data",

@@ -36,7 +36,7 @@ final class CommentCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "댓글댓글"
     label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard", size: 20)
+    label.font = UIFont(name: "Pretendard", size: 14)
     return label
   }()
   
@@ -45,6 +45,8 @@ final class CommentCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
+    addSubviews()
+    configure()
   }
   
   @available(*, unavailable)
@@ -67,6 +69,7 @@ final class CommentCell: UICollectionViewCell {
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(10)
       $0.leading.equalToSuperview().offset(10)
+      $0.height.width.equalTo(28)
     }
     
     nickNameLabel.snp.makeConstraints {
@@ -80,13 +83,14 @@ final class CommentCell: UICollectionViewCell {
     }
     
     commentLabel.snp.makeConstraints {
-      $0.top.equalTo(postCommentDate.snp.bottom).offset(20)
+      $0.top.equalTo(postCommentDate.snp.bottom).offset(10)
       $0.leading.equalTo(postCommentDate.snp.leading)
     }
   }
   
   private func bind() {
-    
+    print("동")
+    nickNameLabel.text = model?.userData.nickname
     
   }
 }

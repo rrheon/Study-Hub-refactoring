@@ -55,6 +55,17 @@ struct UserData: Codable {
   }
 }
 
+// MARK: - 댓글작성
+struct WriteComment: Codable {
+  let content: String
+  let postId: Int
+}
+
+struct WriteList: Codable {
+  let postId: Int
+  let page: Int
+  let size: Int
+}
 
 //MARK: - Networking (서버와 통신하는) 클래스 모델
 final class PostDataManager {

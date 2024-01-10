@@ -19,7 +19,7 @@ final class HomeViewController: NaviHelper {
     return mainImageView
   }()
   
-  lazy var detailsButton: UIButton = {
+  private lazy var detailsButton: UIButton = {
     let detailsButton = UIButton(type: .system)
     detailsButton.setTitle("알아보기", for: .normal)
     detailsButton.setTitleColor(.white, for: .normal)
