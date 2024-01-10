@@ -1,421 +1,477 @@
-//
-//  MyinformViewController.swift
-//  STUDYHUB2
-//
-//  Created by HYERYEONG on 2023/11/07.
-//
-
 import UIKit
 
 import SnapKit
+import Moya
+import Kingfisher
 
-class MyInformViewController: UIViewController {
-  var major: String?
-  var nickname: String?
+final class MyInformViewController: NaviHelper {
+  var major: String? {
+    didSet {
+      print("변경된 학과\(major)")
+      userMajorLabel.text = major
+    }
+  }
+  var nickname: String? {
+    didSet {
+      userNickNamekLabel.text = nickname
+    }
+  }
   var email: String?
   var gender: String?
+  var profileImage: String? {
+    didSet {
+      if let imageURL = URL(string: profileImage ?? "") {
+        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))
+        self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)])
+        self.profileImageView.layer.cornerRadius = 20
+        self.profileImageView.clipsToBounds = true
+      }
+    }
+  }
   
+  let editUserInfo = EditUserInfoManager.shared
+  var previousVC: MyPageViewController?
   
-  
-  private let headerStackView: UIStackView = {
-    let headerStackView = UIStackView()
-    headerStackView.axis = .horizontal
-    headerStackView.alignment = .center
-    headerStackView.spacing = 8
-    return headerStackView
-  }()
-  
-  private lazy var backButton: UIButton = {
-    let backButton = UIButton(type: .system)
-    backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-    backButton.tintColor = .white
-    backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-    return backButton
-  }()
-  
-  private lazy var myinformLabel = createLabel(title: "내 정보",
-                                               textColor: .white,
-                                               fontSize: 18)
-  
-  private lazy var headerContentStackView = createStackView(axis: .vertical,
-                                                            spacing: 40)
-  
-  private lazy var profileImageStackView = createStackView(axis: .vertical,spacing: 5)
-  
-  
+  // 프로필 이미지
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 15
-    imageView.image = UIImage(named: "ProfileAvatar")
-    imageView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+    imageView.image = UIImage(named: "ProfileAvatar_change")
     
     return imageView
   }()
   
   //이미지 삭제, 변경
-  private lazy var ImageeditStackView = createStackView(axis: .horizontal,
-                                                        spacing: 5)
-  lazy var deleteButton: UIButton = {
-    let deleteButton = UIButton()
-    deleteButton.setTitle("삭제", for: .normal)
-    deleteButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-    deleteButton.setTitleColor(UIColor(hexCode: "#A1AAB0"), for: .normal)
-    deleteButton.translatesAutoresizingMaskIntoConstraints = false
-    //      deleteButton.addTarget(self, action: #selector(deleteButtonButtonTapped(_:)), for: .touchUpInside)
-    return deleteButton
+  private lazy var deleteButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("삭제", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard", size: 14)
+    button.setTitleColor(.bg70, for: .normal)
+    button.addAction(UIAction { _ in
+      self.deleteProfileButtonTapped()
+    } , for: .touchUpInside)
+    return button
   }()
   
-  lazy var editButton: UIButton = {
-    let editButton = UIButton()
-    editButton.setTitle("변경", for: .normal)
-    editButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-    editButton.setTitleColor(UIColor(hexCode: "#FF5530"), for: .normal)
-    editButton.translatesAutoresizingMaskIntoConstraints = false
-    //        editButton.addTarget(self, action: #selector(editButtonButtonTapped(_:)), for: .touchUpInside)
-    return editButton
+  private lazy var editButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("변경", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard", size: 14)
+    button.setTitleColor(.o50, for: .normal)
+    button.addAction(UIAction { _ in
+      self.editProfileButtonTapped()
+    }, for: .touchUpInside)
+    return button
   }()
   
   //닉네임
-  private lazy var nicknameStackView = createStackView(axis: .horizontal,
-                                                       spacing: 5)
-  
-  private lazy var nicknamekLabel = createLabel(title: "닉네임",
+  private lazy var nickNamekLabel = createLabel(title: "닉네임",
                                                 textColor: .black,
+                                                fontType: "Pretendard",
                                                 fontSize: 16)
   
+  private lazy var userNickNamekLabel = createLabel(title: nickname ?? "없음",
+                                                    textColor: .bg80,
+                                                    fontType: "Pretendard",
+                                                    fontSize: 16)
   
-  private lazy var usernicknamekLabel: UILabel = {
-    let label = UILabel()
-    
-    label.text = nickname
-    
-    label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-    label.textColor = UIColor(hexCode: "#68737D")
-    
-    return label
-  }()
-  
-  private lazy var nicknamechevronButton: UIButton = {
-    let nicknamechevronButton = UIButton(type: .system)
-    nicknamechevronButton.setImage(UIImage(systemName: "chevron.right"),
-                                   for: .normal)
-    nicknamechevronButton.tintColor = UIColor(hexCode: "#8F8F8F")
-    //        nicknamechevronButton.addTarget(self,
-    //                              action: #selector(nicknamechevronButtonTapped),
-    //                              for: .touchUpInside)
-    nicknamechevronButton.contentHorizontalAlignment = .trailing
-    
-    return nicknamechevronButton
+  private lazy var nickNameEditButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.tintColor = .bg60
+    button.addAction(UIAction { _ in
+      self.nickNameEditButtonTapped()
+    }, for: .touchUpInside)
+    return button
   }()
   
   //학과
-  private lazy var departmentStackView = createStackView(axis: .horizontal,
-                                                         spacing: 5)
+  private lazy var majorLabel = createLabel(title: "학과",
+                                            textColor: .black,
+                                            fontType: "Pretendard",
+                                            fontSize: 16)
   
-  private lazy var departmentLabel = createLabel(title: "학과",
-                                                 textColor: .black,
-                                                 fontSize: 16)
+  private lazy var userMajorLabel = createLabel(title: major ?? "없음",
+                                                textColor: .bg80,
+                                                fontType: "Pretendard",
+                                                fontSize: 16)
   
-  private lazy var userdepartmentLabel: UILabel = {
-    let label = UILabel()
-    
-    label.text = major
-    
-    label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-    label.textColor = UIColor(hexCode: "#68737D")
-    
-    return label
-  }()
-  
-  
-  private lazy var departmentchevronButton: UIButton = {
-    let departmentchevronButton = UIButton(type: .system)
-    departmentchevronButton.setImage(UIImage(systemName: "chevron.right"),
-                                     for: .normal)
-    departmentchevronButton.tintColor = UIColor(hexCode: "#8F8F8F")
-    departmentchevronButton.contentHorizontalAlignment = .trailing
-    
-    return departmentchevronButton
+  private lazy var editMajorButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.tintColor = .bg60
+    button.addAction(UIAction { _ in
+      self.majorEditButtonTapped()
+    }, for: .touchUpInside)
+    return button
   }()
   
   //비밀번호
-  private lazy var passwordStackView = createStackView(axis: .horizontal,
-                                                       spacing: 5)
-  
   private lazy var passwordLabel = createLabel(title: "비밀번호",
                                                textColor: .black,
+                                               fontType: "Pretendard",
                                                fontSize: 16)
   
   
-  private lazy var passwordchevronButton: UIButton = {
-    let passwordchevronButton = UIButton(type: .system)
-    passwordchevronButton.setImage(UIImage(systemName: "chevron.right"),
-                                   for: .normal)
-    passwordchevronButton.tintColor = UIColor(hexCode: "#8F8F8F")
-    passwordchevronButton.contentHorizontalAlignment = .trailing
-    
-    return passwordchevronButton
+  private lazy var editPassworButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.tintColor = .bg60
+    button.addAction(UIAction { _ in
+      self.passwordEditButtonTapped()
+    }, for: .touchUpInside)
+    return button
   }()
   
   //성별
-  private lazy var genderStackView = createStackView(axis: .horizontal,
-                                                     spacing: 5)
-  
   private lazy var genderLabel = createLabel(title: "성별",
                                              textColor: .black,
+                                             fontType: "Pretendard",
                                              fontSize: 16)
   
-  private lazy var usergenderLabel: UILabel = {
-    let label = UILabel()
-    
-    label.text = gender
-    
-    label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-    label.textColor = UIColor(hexCode: "#68737D")
-    
-    return label
-  }()
+  private lazy var userGenderLabel = createLabel(title: gender ?? "없음",
+                                                 textColor: .bg80,
+                                                 fontType: "Pretendard",
+                                                 fontSize: 16)
   
   //이메일
-  private lazy var emailStackView = createStackView(axis: .horizontal,
-                                                    spacing: 5)
-  
   private lazy var emailLabel = createLabel(title: "이메일",
                                             textColor: .black,
+                                            fontType: "Pretendard",
                                             fontSize: 16)
   
-  private lazy var useremailLabel: UILabel = {
-    let label = UILabel()
-    
-    label.text = email
-    
-    label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-    label.textColor = UIColor(hexCode: "#68737D")
-    
-    return label
-  }()
+  private lazy var userEmailLabel = createLabel(title: email ?? "없음",
+                                                textColor: .bg80,
+                                                fontType: "Pretendard",
+                                                fontSize: 16)
   
-  
-  private let DividerLine: UIView = {
+  private let dividerLine: UIView = {
     let DividerLine = UIView()
     DividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
     DividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
     return DividerLine
   }()
   
-  private lazy var normalButtonStackView = createStackView(axis: .vertical,
-                                                           spacing: 16)
+  
   private lazy var logoutButton = createMypageButton(title: "로그아웃")
   private lazy var quitButton = createMypageButton(title: "탈퇴하기")
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent {
+      previousVC?.changedUserNickname = nickname
+      previousVC?.changedUserMajor = major
+      previousVC?.fetchUserData()
+    }
+  }
   
-  let scrollView = UIScrollView()
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .black
+    view.backgroundColor = .white
+    
+    navigationItemSetting()
+    redesignNavigationBar()
     
     setUpLayout()
     makeUI()
+    
   }
   
   // MARK: - setUpLayout
   func setUpLayout(){
-    headerStackView.addArrangedSubview(backButton)
-    headerStackView.addArrangedSubview(myinformLabel)
-    
-    headerContentStackView.addArrangedSubview(profileImageStackView)
-    profileImageStackView.addArrangedSubview(profileImageView)
-    
-    headerContentStackView.addArrangedSubview(ImageeditStackView)
-    ImageeditStackView.addArrangedSubview(deleteButton)
-    ImageeditStackView.addArrangedSubview(editButton)
-    
-    headerContentStackView.addArrangedSubview(nicknameStackView)
-    nicknameStackView.addArrangedSubview(nicknamekLabel)
-    nicknameStackView.addArrangedSubview(usernicknamekLabel)
-    nicknameStackView.addArrangedSubview(nicknamechevronButton)
-    
-    headerContentStackView.addArrangedSubview(departmentStackView)
-    departmentStackView.addArrangedSubview(departmentLabel)
-    departmentStackView.addArrangedSubview(userdepartmentLabel)
-    departmentStackView.addArrangedSubview(departmentchevronButton)
-    
-    headerContentStackView.addArrangedSubview(passwordStackView)
-    passwordStackView.addArrangedSubview(passwordLabel)
-    passwordStackView.addArrangedSubview(passwordchevronButton)
-    
-    headerContentStackView.addArrangedSubview(genderStackView)
-    genderStackView.addArrangedSubview(genderLabel)
-    genderStackView.addArrangedSubview(usergenderLabel)
-    
-    headerContentStackView.addArrangedSubview(emailStackView)
-    emailStackView.addArrangedSubview(emailLabel)
-    emailStackView.addArrangedSubview(useremailLabel)
-    
-    headerContentStackView.addArrangedSubview(DividerLine)
-    
-    headerContentStackView.addArrangedSubview(normalButtonStackView)
-    normalButtonStackView.addArrangedSubview(logoutButton)
-    normalButtonStackView.addArrangedSubview(quitButton)
-    
-    
-    
-    
-    view.addSubview(headerStackView)
-    
-    
-    
-    // 키보드 내리기를 위한 탭 제스처 추가
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-    view.addGestureRecognizer(tapGesture)
-    
-    
-    // Create a scroll view to make the content scrollable
-    scrollView.translatesAutoresizingMaskIntoConstraints = false
-    scrollView.addSubview(headerContentStackView)
-    view.addSubview(scrollView)
-    
-    scrollView.backgroundColor = .white
-    
-    headerContentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+    [
+      profileImageView,
+      deleteButton,
+      editButton,
+      nickNamekLabel,
+      userNickNamekLabel,
+      nickNameEditButton,
+      majorLabel,
+      userMajorLabel,
+      editMajorButton,
+      passwordLabel,
+      editPassworButton,
+      genderLabel,
+      userGenderLabel,
+      emailLabel,
+      userEmailLabel,
+      dividerLine,
+      logoutButton,
+      quitButton
+    ].forEach {
+      view.addSubview($0)
+    }
   }
+  
   // MARK: - makeUI
   func makeUI(){
-    headerStackView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-      make.leading.equalTo(view.snp.leading).offset(-60)
-      make.trailing.equalTo(view.snp.trailing).offset(-16)
+    // 프로필
+    profileImageView.snp.makeConstraints {
+      $0.top.equalToSuperview().offset(30)
+      $0.width.height.equalTo(80)
+      $0.centerX.equalToSuperview()
     }
     
-    backButton.snp.makeConstraints { make in
-      make.leading.equalTo(headerStackView.snp.leading).offset(-50)
+    deleteButton.snp.makeConstraints {
+      $0.leading.equalTo(profileImageView.snp.leading)
+      $0.top.equalTo(profileImageView.snp.bottom).offset(10)
     }
     
-    myinformLabel.snp.makeConstraints { make in
-      make.centerX.equalTo(headerStackView.snp.centerX).offset(115)
+    editButton.snp.makeConstraints {
+      $0.trailing.equalTo(profileImageView.snp.trailing)
+      $0.top.equalTo(profileImageView.snp.bottom).offset(10)
     }
     
-    // Header content stack view constraints
-    headerContentStackView.snp.makeConstraints { make in
-      make.top.equalTo(scrollView.snp.top).offset(20)
-      make.leading.equalTo(scrollView.snp.leading)
-      make.trailing.equalTo(scrollView.snp.trailing)
-      make.bottom.equalTo(scrollView.snp.bottom)
-      make.width.equalTo(scrollView.snp.width)
+    // 닉네임
+    nickNamekLabel.snp.makeConstraints {
+      $0.leading.equalToSuperview().offset(20)
+      $0.top.equalTo(deleteButton.snp.bottom).offset(20)
     }
     
-    profileImageStackView.snp.makeConstraints { make in
-      make.leading.equalTo(headerContentStackView.snp.leading)
-      make.trailing.equalTo(headerContentStackView.snp.trailing)
+    nickNameEditButton.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(nickNamekLabel)
     }
     
-    profileImageView.snp.makeConstraints { make in
-      make.centerX.equalTo(headerContentStackView.snp.centerX)
-      make.width.equalTo(80)
-      make.height.equalTo(80)
-      make.trailing.equalTo(profileImageStackView.snp.trailing).offset(-50)
+    userNickNamekLabel.snp.makeConstraints {
+      $0.trailing.equalTo(nickNameEditButton.snp.leading).offset(-10)
+      $0.centerY.equalTo(nickNamekLabel)
     }
     
-    //      ImageeditStackView.snp.makeConstraints { make in
-    //          make.centerX.equalTo(headerContentStackView.snp.centerX)
-    //      }
-    
-    //이미지 수정 삭제
-    deleteButton.snp.makeConstraints { make in
-      make.leading.equalTo(ImageeditStackView.snp.leading).offset(150)
+    // 학과
+    majorLabel.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(nickNamekLabel.snp.bottom).offset(30)
     }
     
-    editButton.snp.makeConstraints { make in
-      make.leading.equalTo(deleteButton.snp.trailing).offset(-142)
+    editMajorButton.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(majorLabel)
     }
     
-    //닉네임
-    nicknamekLabel.snp.makeConstraints { make in
-      make.leading.equalTo(nicknameStackView.snp.leading).offset(20)
+    userMajorLabel.snp.makeConstraints {
+      $0.trailing.equalTo(editMajorButton.snp.leading).offset(-10)
+      $0.centerY.equalTo(majorLabel)
     }
     
-    usernicknamekLabel.snp.makeConstraints { make in
-      make.leading.equalTo(nicknamekLabel.snp.trailing).offset(-10)
+    // 비밀번호
+    passwordLabel.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(majorLabel.snp.bottom).offset(30)
     }
     
-    nicknamechevronButton.snp.makeConstraints { make in
-      make.trailing.equalTo(headerContentStackView.snp.trailing).offset(-20)
+    editPassworButton.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(passwordLabel)
     }
     
-    //학과
-    departmentLabel.snp.makeConstraints { make in
-      make.leading.equalTo(departmentStackView.snp.leading).offset(20)
+    // 성별
+    genderLabel.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(passwordLabel.snp.bottom).offset(30)
     }
     
-    userdepartmentLabel.snp.makeConstraints { make in
-      make.leading.equalTo(departmentLabel.snp.trailing).offset(-10)
+    userGenderLabel.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(genderLabel)
     }
     
-    departmentchevronButton.snp.makeConstraints { make in
-      make.trailing.equalTo(headerContentStackView.snp.trailing).offset(-20)
+    // 이메일
+    emailLabel.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(genderLabel.snp.bottom).offset(30)
     }
     
-    //비밀번호
-    passwordLabel.snp.makeConstraints { make in
-      make.leading.equalTo(passwordStackView.snp.leading).offset(20)
+    userEmailLabel.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(emailLabel)
     }
     
-    passwordchevronButton.snp.makeConstraints { make in
-      make.trailing.equalTo(headerContentStackView.snp.trailing).offset(-20)
+    // 구분선
+    dividerLine.snp.makeConstraints {
+      $0.top.equalTo(emailLabel.snp.bottom).offset(30)
+      $0.leading.trailing.equalToSuperview()
     }
     
-    //성별
-    genderLabel.snp.makeConstraints { make in
-      make.leading.equalTo(genderStackView.snp.leading).offset(20)
+    logoutButton.addAction(UIAction { _ in
+      self.logoutButtonTapped()
+    }, for: .touchUpInside)
+    
+    logoutButton.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(dividerLine.snp.bottom).offset(30)
     }
     
-    usergenderLabel.snp.makeConstraints { make in
-      make.leading.equalTo(genderLabel.snp.leading).offset(290)
-    }
-    
-    //이메일
-    emailLabel.snp.makeConstraints { make in
-      make.leading.equalTo(emailStackView.snp.leading).offset(20)
-    }
-    
-    useremailLabel.snp.makeConstraints { make in
-      make.leading.equalTo(emailLabel.snp.leading).offset(210)
-    }
-    
-    
-    normalButtonStackView.alignment = .leading
-    normalButtonStackView.snp.makeConstraints { make in
-      make.leading.equalTo(headerContentStackView.snp.leading)
-      make.bottom.equalTo(scrollView.snp.bottom).offset(-16)
-    }
-    
-    logoutButton.snp.makeConstraints { make in
-      make.leading.equalTo(normalButtonStackView.snp.leading).offset(20)
-    }
-    
-    
-    scrollView.snp.makeConstraints { make in
-      make.top.equalTo(headerStackView.snp.bottom).offset(16)
-      make.leading.equalTo(view)
-      make.trailing.equalTo(view)
-      make.bottom.equalTo(view)
+    quitButton.addAction(UIAction { _ in
+      self.quitButtonTapped()
+    }, for: .touchUpInside)
+    quitButton.snp.makeConstraints {
+      $0.leading.equalTo(nickNamekLabel)
+      $0.top.equalTo(logoutButton.snp.bottom).offset(30)
     }
   }
   
-  
-  
-  // 키보드 내리기 위한 탭 제스처 핸들러
-  @objc func handleTap() {
-    // 키보드를 내립니다.
-    view.endEditing(true)
+  // MARK: - 네비게이션바 재설정
+  func redesignNavigationBar(){
+    navigationItem.rightBarButtonItem = .none
+    navigationItem.title = "내 정보"
+    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
   }
   
-  
-  @objc func goBack() {
+  // MARK: - 프로필 사진 관련 함수
+  // 삭제
+  func deleteProfileButtonTapped(){
+    profileImageView.image = UIImage(named: "ProfileAvatar_change")
     
-    self.dismiss(animated: true, completion: nil)
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.deleteImage) {
+      switch $0 {
+      case.success(let response):
+        self.showToast(message: "사진이 삭제됐어요.", alertCheck: true)
+      case.failure(let response):
+        print(response.response)
+      }
+    }
   }
   
+  // 변경
+  func editProfileButtonTapped(){
+    let bottomSheetVC = BottomSheet(postID: 0,
+                                    firstButtonTitle: "사진 촬영하기" ,
+                                    secondButtonTitle: "앨범에서 선택하기")
+    bottomSheetVC.delegate = self
+    
+    if #available(iOS 15.0, *) {
+      if let sheet = bottomSheetVC.sheetPresentationController {
+        if #available(iOS 16.0, *) {
+          sheet.detents = [.custom(resolver: { context in
+            return 228.0
+          })]
+        } else {
+          // Fallback on earlier versions
+        }
+        sheet.largestUndimmedDetentIdentifier = nil
+        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        sheet.prefersEdgeAttachedInCompactHeight = true
+        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        sheet.preferredCornerRadius = 20
+      }
+    } else {
+      // Fallback on earlier versions
+    }
+    present(bottomSheetVC, animated: true, completion: nil)
+  }
+  
+  // 닉네임 변경
+  func nickNameEditButtonTapped(){
+    let editNickNameVC = EditnicknameViewController()
+    editNickNameVC.previousVC = self
+    editNickNameVC.changeNickname = nickname
+    editNickNameVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(editNickNameVC, animated: true)
+  }
+  
+  // 학과 변경
+  func majorEditButtonTapped(){
+    let editMajorVC = EditMajorViewController()
+    editMajorVC.previousVC = self
+    editMajorVC.beforeMajor = major
+    editMajorVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(editMajorVC, animated: true)
+  }
+  
+  // MARK: - 비밀번호 변경 버튼
+  func passwordEditButtonTapped(){
+    let editPasswordVC = EditPasswordViewController()
+    editPasswordVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(editPasswordVC, animated: true)
+  }
+  
+  // MARK: - 로그아웃 버튼
+  func logoutButtonTapped(){
+    let popupVC = PopupViewController(title: "로그아웃 하시겠어요?",
+                                      desc: "",
+                                      leftButtonTitle: "아니요",
+                                      rightButtonTilte: "네")
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.present(popupVC, animated: false)
+    
+    popupVC.popupView.rightButtonAction = { [weak self] in
+      if let navigationController = self?.navigationController {
+        navigationController.dismiss(animated: true)
+        navigationController.popToRootViewController(animated: false)
+       
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .overFullScreen
+        navigationController.present(loginVC, animated: true, completion: nil)
+      }
+    }
+    
+  }
+  
+  // MARK: - 탈퇴하기
+  func quitButtonTapped(){
+    let quitVC = DeleteIDViewContoller()
+    quitVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(quitVC, animated: true)
+  }
+}
+
+// MARK: - bottomSheet Delegate
+extension MyInformViewController: BottomSheetDelegate {
+  // 프로필 이미지 변경
+  func changeProfileImage(type: UIImagePickerController.SourceType){
+    self.dismiss(animated: true)
+    
+    let picker = UIImagePickerController()
+    picker.delegate = self
+    picker.sourceType = type
+    picker.allowsEditing = true
+    self.present(picker, animated: true)
+  }
+  
+  func firstButtonTapped(postID: Int?) {
+    changeProfileImage(type: .camera)
+  }
+  
+  // 앨범에서 선택하기
+  func secondButtonTapped(postID: Int?) {
+    changeProfileImage(type: .photoLibrary)
+  }
+}
+
+// 사진 선택
+extension MyInformViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+  func imagePickerController(_ picker: UIImagePickerController,
+                             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
+      DispatchQueue.main.async {
+        self.profileImageView.image = image
+        self.profileImageView.layer.cornerRadius = 20
+        self.profileImageView.clipsToBounds = true
+      }
+      
+      let provider = MoyaProvider<networkingAPI>()
+      provider.request(.storeImage(_image: image)) { result in
+        switch result {
+        case .success(let response):
+          
+          // Clear image cache
+          KingfisherManager.shared.cache.clearMemoryCache()
+          KingfisherManager.shared.cache.clearDiskCache {
+            
+          }
+          
+        case let .failure(error):
+          print(error.localizedDescription)
+        }
+      }
+      
+      self.dismiss(animated: true)
+    }
+  }
 }
