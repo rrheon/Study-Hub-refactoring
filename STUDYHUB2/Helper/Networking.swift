@@ -58,6 +58,7 @@ enum networkingAPI {
   case searchSinglePost(_postId: Int)
   case writeComment(_content: String, _postId: Int)
   case getCommentList(_postId: Int, _page: Int, _size: Int)
+  case deleteComment(_commentId: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -98,6 +99,8 @@ extension networkingAPI: TargetType {
       return "/v1/comments"
     case .getCommentList(let postId, _page: _, _size: _):
       return "/v1/comments/\(postId)"
+    case .deleteComment(let commentId):
+      return "/v1/comments/\(commentId)"
     }
   }
   
@@ -113,7 +116,9 @@ extension networkingAPI: TargetType {
         .editUserPassword(_checkPassword: _, _password: _):
       return .put
       
-    case .deleteImage, .deleteID:
+    case .deleteImage,
+         .deleteID,
+         .deleteComment(_commentId: _):
       return .delete
       
     case .verifyPassword(_password: _),
@@ -168,7 +173,8 @@ extension networkingAPI: TargetType {
       
     case .deleteID,
         .searchSinglePost(_postId: _),
-        .deleteImage:
+        .deleteImage,
+        .deleteComment(_commentId: _):
       return .requestPlain
       
     }
@@ -196,7 +202,8 @@ extension networkingAPI: TargetType {
                "Authorization": "\(acceessToken)" ]
     case .deleteImage,
         .deleteID ,
-        .verifyPassword(_):
+        .verifyPassword(_),
+        .deleteComment(_commentId: _):
       return [ "Authorization": "\(acceessToken)"]
     default:
       return ["Content-type": "application/json",

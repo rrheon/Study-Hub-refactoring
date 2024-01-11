@@ -3,11 +3,17 @@ import UIKit
 import SnapKit
 import Kingfisher
 
+protocol CommentCellDelegate: AnyObject {
+  func menuButtonTapped(in cell: CommentCell, commentId: Int)
+}
+
 final class CommentCell: UITableViewCell {
+  weak var delegate: CommentCellDelegate?
   
   static let cellId = "CellId"
-
+  
   var model: CommentConetent? { didSet { bind() } }
+  var commentId: Int?
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -30,6 +36,16 @@ final class CommentCell: UITableViewCell {
     label.textColor = .bg70
     label.font = UIFont(name: "Pretendard", size: 10)
     return label
+  }()
+  
+  private lazy var menuButton: UIButton = {
+    let button = UIButton()
+    button.setImage(UIImage(named: "MenuButton"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.menuButtonTapped()
+      print("hhhh")
+    }, for: .touchUpInside)
+    return button
   }()
   
   private lazy var commentLabel: UILabel = {
@@ -56,6 +72,7 @@ final class CommentCell: UITableViewCell {
       profileImageView,
       nickNameLabel,
       postCommentDate,
+      menuButton,
       commentLabel
     ].forEach {
       addSubview($0)
@@ -79,6 +96,13 @@ final class CommentCell: UITableViewCell {
       $0.leading.equalTo(nickNameLabel)
     }
     
+    menuButton.snp.makeConstraints {
+      $0.top.equalTo(nickNameLabel.snp.top)
+      $0.bottom.equalTo(postCommentDate.snp.bottom)
+      $0.centerY.equalTo(profileImageView)
+      $0.trailing.equalToSuperview().offset(-10)
+    }
+    
     commentLabel.snp.makeConstraints {
       $0.top.equalTo(postCommentDate.snp.bottom).offset(10)
       $0.leading.equalTo(postCommentDate.snp.leading)
@@ -86,9 +110,8 @@ final class CommentCell: UITableViewCell {
   }
   
   private func bind() {
-    print("동")
-    
-    print(model?.commentedUserData.nickname)
+    commentId = model?.commentID
+
     nickNameLabel.text = model?.commentedUserData.nickname
     commentLabel.text = model?.content
     
@@ -114,5 +137,9 @@ final class CommentCell: UITableViewCell {
         }
       }
     }
+  }
+  
+  func menuButtonTapped(){
+    self.delegate?.menuButtonTapped(in: self, commentId: commentId ?? 0)
   }
 }
