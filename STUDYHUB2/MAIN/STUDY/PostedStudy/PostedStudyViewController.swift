@@ -292,7 +292,6 @@ final class PostedStudyViewController: NaviHelper {
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
     button.tintColor = .black
     button.addAction(UIAction { _ in
-      print("hh")
       self.moveToCommentViewButtonTapped()
     }, for: .touchUpInside)
     return button
@@ -348,7 +347,7 @@ final class PostedStudyViewController: NaviHelper {
                                                   fontType: "Pretendard-SemiBold",
                                                   fontSize: 18)
   
-  private lazy var SimilarCollectionView: UICollectionView = {
+  private lazy var similarCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .horizontal
     flowLayout.minimumLineSpacing = 50 // cell사이의 간격 설정
@@ -530,7 +529,7 @@ final class PostedStudyViewController: NaviHelper {
         
     // 유사 스터디 추천
     let spaceView11 = UIView()
-    let collectionView = [similarPostLabel,SimilarCollectionView, spaceView11]
+    let collectionView = [similarPostLabel,similarCollectionView, spaceView11]
     for view in collectionView {
       similarPostStackView.addArrangedSubview(view)
     }
@@ -642,6 +641,8 @@ final class PostedStudyViewController: NaviHelper {
     commentStackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 20)
     commentStackView.isLayoutMarginsRelativeArrangement = true
     
+    commentButton.isEnabled = false
+    
     commentButtonStackView.distribution = .fillProportionally
     commentButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     commentButtonStackView.isLayoutMarginsRelativeArrangement = true
@@ -650,12 +651,16 @@ final class PostedStudyViewController: NaviHelper {
       $0.height.equalTo(42)
     }
     
+    commentTextField.addTarget(self,
+                               action: #selector(textFieldDidChange(_:)),
+                               for: .editingChanged)
+    
     // 비슷한 게시글
     similarPostStackView.backgroundColor = .white
     similarPostStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 30, right: 10)
     similarPostStackView.isLayoutMarginsRelativeArrangement = true
     
-    SimilarCollectionView.snp.makeConstraints { make in
+    similarCollectionView.snp.makeConstraints { make in
       make.height.equalTo(171)
     }
     
@@ -685,16 +690,16 @@ final class PostedStudyViewController: NaviHelper {
 
   // MARK: - collectionview 관련
   private func setupDelegate() {
-    SimilarCollectionView.delegate = self
-    SimilarCollectionView.dataSource = self
-    SimilarCollectionView.tag = 1
+    similarCollectionView.delegate = self
+    similarCollectionView.dataSource = self
+    similarCollectionView.tag = 1
     
     commentTableView.delegate = self
     commentTableView.dataSource = self
   }
   
   private func registerCell() {
-    SimilarCollectionView.register(SimilarPostCell.self,
+    similarCollectionView.register(SimilarPostCell.self,
                             forCellWithReuseIdentifier: SimilarPostCell.id)
   }
   
@@ -745,7 +750,7 @@ final class PostedStudyViewController: NaviHelper {
       }
     }
     
-    SimilarCollectionView.reloadData()
+    similarCollectionView.reloadData()
   }
   
   // MARK: - 댓글 작성하기
@@ -778,6 +783,7 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
+  // MARK: - 댓글페이지로 이도
   func moveToCommentViewButtonTapped(){
     let commentVC = CommentViewController()
     
@@ -850,5 +856,15 @@ extension PostedStudyViewController: UITableViewDelegate, UITableViewDataSource 
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 86
+  }
+}
+
+// MARK: - 댓글 입력 시 버튼 활성화
+extension PostedStudyViewController {
+  @objc func textFieldDidChange(_ textField: UITextField) {
+    if textField.text?.isEmpty != true && textField.text != "댓글을 입력해주세요" {
+      commentButton.backgroundColor = .o50
+      commentButton.isEnabled = true
+    }
   }
 }

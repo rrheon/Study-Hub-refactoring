@@ -48,8 +48,7 @@ final class SimilarPostCell: UICollectionViewCell {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 15
     imageView.image = UIImage(named: "ProfileAvatar_change")
-    imageView.contentMode = .left
-    imageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+    imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
     return imageView
   }()
   
@@ -138,11 +137,15 @@ final class SimilarPostCell: UICollectionViewCell {
   }
   
   private func bind() {
-    majorLabel.text = model?.major.convertMajor(model?.major ?? "공통",
-                                                isEnglish: false)
+    guard let major = model?.major.convertMajor(model?.major ?? "공통",
+                                                isEnglish: false) else { return }
+    
+    guard let writerMajor = model?.userData.major.convertMajor(model?.userData.major ?? "없음",
+                                                               isEnglish: false) else { return }
+    majorLabel.text = " \(major) "
     titleLabel.text = model?.title
     remainMemberNum = model?.remainingSeat ?? 0
-    writerMajorLabel.text = model?.major.convertMajor(model?.major ?? "없음", isEnglish: false)
+    writerMajorLabel.text = " \(writerMajor) "
     nickNameLabel.text = model?.userData.nickname
     postID = model?.postID
     

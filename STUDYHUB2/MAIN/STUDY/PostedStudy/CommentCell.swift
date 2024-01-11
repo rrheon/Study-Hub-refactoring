@@ -20,7 +20,7 @@ final class CommentCell: UITableViewCell {
     let label = UILabel()
     label.textColor = .bg90
     label.text = "비어있음"
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.font = UIFont(name: "Pretendard", size: 16)
     return label
   }()
   
@@ -75,7 +75,7 @@ final class CommentCell: UITableViewCell {
     }
     
     postCommentDate.snp.makeConstraints {
-      $0.top.equalTo(nickNameLabel.snp.bottom).offset(10)
+      $0.top.equalTo(nickNameLabel.snp.bottom)
       $0.leading.equalTo(nickNameLabel)
     }
     
