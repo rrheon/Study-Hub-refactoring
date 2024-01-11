@@ -11,7 +11,7 @@ import SnapKit
 import Kingfisher
 import Moya
 
-final class PostedStudyViewController: NaviHelper{
+final class PostedStudyViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
   
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
@@ -20,7 +20,8 @@ final class PostedStudyViewController: NaviHelper{
       self.getCommentList {
         DispatchQueue.main.async {
           self.redrawUI()
-          self.commentTableView.reloadData()
+          self.setUpLayout()
+          self.makeUI()
         }
       }
     }
@@ -286,7 +287,18 @@ final class PostedStudyViewController: NaviHelper{
                                               fontType: "Pretendard-SemiBold",
                                               fontSize: 16)
   
-  private lazy var commentLabelStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var moveToCommentViewButton: UIButton = {
+    let button = UIButton()
+    button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.tintColor = .black
+    button.addAction(UIAction { _ in
+      print("hh")
+      self.moveToCommentViewButtonTapped()
+    }, for: .touchUpInside)
+    return button
+  }()
+  
+  private lazy var commentLabelStackView = createStackView(axis: .horizontal, spacing: 10)
   
   
   private lazy var grayDividerLine4 = createGrayDividerLine(1.0)
@@ -296,8 +308,12 @@ final class PostedStudyViewController: NaviHelper{
     tableView.register(CommentCell.self,
                        forCellReuseIdentifier: CommentCell.cellId)
     tableView.backgroundColor = .white
+    tableView.separatorStyle = .none
     return tableView
   }()
+  
+  
+  private lazy var commentStackView = createStackView(axis: .vertical, spacing: 10)
   
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
   
@@ -308,12 +324,21 @@ final class PostedStudyViewController: NaviHelper{
     button.backgroundColor = .o30
     button.layer.cornerRadius = 10
     button.addAction(UIAction { _ in
-      self.commentButtonTapped()
+      self.commentButtonTapped {
+        self.getCommentList {
+          self.commentTableView.reloadData()
+          
+          let tableViewHeight = 86 * (self.commentData?.content.count ?? 0)
+          self.commentTableView.snp.updateConstraints {
+            $0.height.equalTo(tableViewHeight)
+          }
+        }
+      }
     }, for: .touchUpInside)
     return button
   }()
   
-  private lazy var commentStackView = createStackView(axis: .horizontal, spacing: 8)
+  private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
   
   private lazy var grayDividerLine5 = createGrayDividerLine(8.0)
   
@@ -380,8 +405,6 @@ final class PostedStudyViewController: NaviHelper{
     registerCell()
     
     navigationItemSetting()
-    setUpLayout()
-    makeUI()
   }
   
   // MARK: - setUpLayout
@@ -483,11 +506,19 @@ final class PostedStudyViewController: NaviHelper{
       writerInfoWithImageStackView.addArrangedSubview(view)
     }
     
-    commentLabelStackView.addArrangedSubview(commentLabel)
+    // 댓글 라벨
+    [
+      commentLabel,
+      moveToCommentViewButton
+    ].forEach {
+      commentLabelStackView.addArrangedSubview($0)
+    }
+    
+    commentStackView.addArrangedSubview(commentTableView)
     
     let commentInfo = [commentTextField, commentButton]
     for view in commentInfo {
-      commentStackView.addArrangedSubview(view)
+      commentButtonStackView.addArrangedSubview(view)
     }
     
     let spaceView8 = UIView()
@@ -522,9 +553,9 @@ final class PostedStudyViewController: NaviHelper{
       totalWriterInfoStackView,
       grayDividerLine3,
       commentLabelStackView,
-      commentTableView,
-      grayDividerLine4,
       commentStackView,
+      grayDividerLine4,
+      commentButtonStackView,
       grayDividerLine5,
       similarPostStackView,
       bottomButtonStackView
@@ -593,25 +624,27 @@ final class PostedStudyViewController: NaviHelper{
     spaceView1.snp.makeConstraints { make in
       make.width.equalTo(200)
     }
-  
+    
+    moveToCommentViewButton.snp.makeConstraints {
+      $0.height.width.equalTo(32)
+    }
+    
     commentLabelStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
     commentLabelStackView.isLayoutMarginsRelativeArrangement = true
     
-    // 이거 숫자 동적으로 조절하게끔 수정해야함
-    let test = 86*3
-    commentTableView.snp.makeConstraints {
-      $0.height.equalTo(test)
-    }
-//
-//    resultTableView.snp.makeConstraints { make in
-//      make.top.equalTo(describeLabel.snp.bottom).offset(-30)
-//      make.leading.trailing.equalTo(searchController)
-//      make.bottom.equalTo(view).offset(-10)
-//    }
+    // 양옆 여백 필요
+    let tableViewHeight = 86 * countComment
     
-    commentStackView.distribution = .fillProportionally
-    commentStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    commentTableView.snp.makeConstraints {
+      $0.height.equalTo(tableViewHeight)
+    }
+    
+    commentStackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 20)
     commentStackView.isLayoutMarginsRelativeArrangement = true
+    
+    commentButtonStackView.distribution = .fillProportionally
+    commentButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    commentButtonStackView.isLayoutMarginsRelativeArrangement = true
     
     commentTextField.snp.makeConstraints {
       $0.height.equalTo(42)
@@ -716,13 +749,14 @@ final class PostedStudyViewController: NaviHelper{
   }
   
   // MARK: - 댓글 작성하기
-  func commentButtonTapped(){
+  func commentButtonTapped(completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
     guard let postId = postedDate?.postID,
           let content = commentTextField.text else { return }
     provider.request(.writeComment(_content: content, _postId: postId)) {
       switch $0 {
       case .success(let response):
+        completion()
         return print(response.response)
       case .failure(let response):
         return print(response)
@@ -739,8 +773,17 @@ final class PostedStudyViewController: NaviHelper{
                                          size: 8) {
       self.commentData = self.detailPostDataManager.getCommentList()
       self.countComment = self.commentData?.content.count ?? 0
+      
       completion()
     }
+  }
+  
+  func moveToCommentViewButtonTapped(){
+    let commentVC = CommentViewController()
+    
+    guard let postId = postedDate?.postID else { return }
+    commentVC.postId = postId
+    navigationController?.pushViewController(commentVC, animated: true)
   }
 }
 
