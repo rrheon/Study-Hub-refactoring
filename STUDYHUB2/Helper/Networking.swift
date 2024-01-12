@@ -59,6 +59,7 @@ enum networkingAPI {
   case writeComment(_content: String, _postId: Int)
   case getCommentList(_postId: Int, _page: Int, _size: Int)
   case deleteComment(_commentId: Int)
+  case modifyComment(_commentId: Int, _content: String)
 }
 
 extension networkingAPI: TargetType {
@@ -101,6 +102,8 @@ extension networkingAPI: TargetType {
       return "/v1/comments/\(postId)"
     case .deleteComment(let commentId):
       return "/v1/comments/\(commentId)"
+    case .modifyComment(let commentId, let content):
+      return "/v1/comments"
     }
   }
   
@@ -113,7 +116,8 @@ extension networkingAPI: TargetType {
     case .storeImage(_image: _),
         .editUserNickName(_nickname: _),
         .editUserMaojr(_major: _),
-        .editUserPassword(_checkPassword: _, _password: _):
+        .editUserPassword(_checkPassword: _, _password: _),
+        .modifyComment(_commentId: _, _content: _):
       return .put
       
     case .deleteImage,
@@ -171,6 +175,10 @@ extension networkingAPI: TargetType {
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .modifyComment(let commentId, let content):
+      let parmas = ModifyComment(commentId: commentId, content: content)
+      return .requestJSONEncodable(parmas)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -193,7 +201,8 @@ extension networkingAPI: TargetType {
     case .verifyEmail(_code: _, _email: _):
       return ["Accept" : "application/json"]
       
-    case .writeComment(_content: _, _postId: _):
+    case .writeComment(_content: _, _postId: _),
+        .modifyComment(_commentId: _, _content: _):
       return ["Content-type": "application/json",
               "Authorization": "\(acceessToken)"]
       

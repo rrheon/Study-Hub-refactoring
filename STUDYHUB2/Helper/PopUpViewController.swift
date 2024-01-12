@@ -12,7 +12,8 @@ final class PopupViewController: UIViewController {
        leftButtonTitle: String = "취소",
        rightButtonTilte: String = "삭제",
        checkEndButton: Bool = false) {
-    self.popupView = PopupView(title: title, desc: desc,
+    self.popupView = PopupView(title: title,
+                               desc: desc,
                                leftButtonTitle: leftButtonTitle,
                                rightButtonTitle: rightButtonTilte,
                                checkEndButton: checkEndButton)

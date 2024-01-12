@@ -24,7 +24,9 @@ final class BottomSheet: UIViewController {
   
   let detailPostDataManager = PostDetailInfoManager.shared
   
-  init(postID: Int, firstButtonTitle: String = "삭제하기", secondButtonTitle: String = "수정하기") {
+  init(postID: Int,
+       firstButtonTitle: String = "삭제하기",
+       secondButtonTitle: String = "수정하기") {
     self.postID = postID
     self.firstButtonTitle = firstButtonTitle
     self.secondButtonTitle = secondButtonTitle
@@ -111,16 +113,10 @@ final class BottomSheet: UIViewController {
   }
   
   func firstButtonTapped(){
-    delegate?.firstButtonTapped(postID: postID)
-  }
-  
-  @objc func deleteButtonTapped(){
-    let popupVC = PopupViewController(title: "이 글을 삭제할까요?",
-                                      desc: "삭제한 글과 참여자는 다시 볼 수 없어요",
-                                      postID: postID,
-                                      bottomeSheet: self)
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+    dismiss(animated: true) {
+      self.delegate?.firstButtonTapped(postID: self.postID)
+    }
+
   }
   
   @objc func dissMissButtonTapped(){
@@ -128,6 +124,8 @@ final class BottomSheet: UIViewController {
   }
   
   func secondButtonTapped(){
-    delegate?.secondButtonTapped(postID: postID)
+    dismiss(animated: true) {
+      self.delegate?.secondButtonTapped(postID: self.postID)
+    }
   }
 }

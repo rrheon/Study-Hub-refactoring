@@ -14,7 +14,7 @@ import Moya
 final class PostedStudyViewController: NaviHelper {
   
   let detailPostDataManager = PostDetailInfoManager.shared
-  
+  var commentId: Int?
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedDate: PostDetailData? {
     didSet {
@@ -325,8 +325,15 @@ final class PostedStudyViewController: NaviHelper {
     button.backgroundColor = .o30
     button.layer.cornerRadius = 10
     button.addAction(UIAction { _ in
-      self.commentButtonTapped {
-        self.afterCommentButtonTapped()
+      
+      if self.commentId != nil {
+        self.modifyComment {
+          self.afterCommentButtonTapped()
+        }
+      } else {
+        self.commentButtonTapped {
+          self.afterCommentButtonTapped()
+        }
       }
     }, for: .touchUpInside)
     return button
@@ -764,13 +771,37 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
+  // MARK: - 댓글 수정하기
+  func modifyComment(completion: @escaping () -> Void){
+    guard let content = commentTextField.text else { return }
+    
+    commentButton.setTitle("수정", for: .normal)
+    commentButton.addAction(UIAction { _ in
+      let provider = MoyaProvider<networkingAPI>()
+      provider.request(.modifyComment(_commentId: self.commentId ?? 0,
+                                      _content: content)) {
+        switch $0 {
+        case .success(let response):
+          print(response.response)
+          completion()
+        case .failure(let response):
+          print(response.response)
+        }
+      }
+    }, for: .touchUpInside)
+  }
+
   func afterCommentButtonTapped(){
     self.getCommentList {
       self.commentTableView.reloadData()
       
       self.tableViewResizing()
       
-      self.showToast(message: "댓글이 작성됐어요", alertCheck: false)
+      let message = self.commentId == nil ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
+      self.showToast(message: message, alertCheck: true)
+      
+      self.commentButton.setTitle("등록", for: .normal)
+      self.commentId = nil
     }
   }
   
@@ -787,7 +818,7 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
-  // MARK: - 댓글페이지로 이도
+  // MARK: - 댓글페이지로 이동
   func moveToCommentViewButtonTapped(){
     let commentVC = CommentViewController()
     
@@ -796,10 +827,24 @@ final class PostedStudyViewController: NaviHelper {
     navigationController?.pushViewController(commentVC, animated: true)
   }
   
+  // MARK: - 테이블뷰 사이즈 동적으로 조정
   func tableViewResizing(){
     let tableViewHeight = 86 * (self.commentData?.content.count ?? 0)
     self.commentTableView.snp.updateConstraints {
       $0.height.equalTo(tableViewHeight)
+    }
+  }
+  
+  func deleteComment(completion: @escaping () -> Void){
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.deleteComment(_commentId: commentId ?? 0)) {
+      switch $0 {
+      case .success(let response):
+        completion()
+       
+      case .failure(let response):
+        print(response.response)
+      }
     }
   }
 }
@@ -915,35 +960,30 @@ extension PostedStudyViewController: CommentCellDelegate {
 
 extension PostedStudyViewController: BottomSheetDelegate {
   func firstButtonTapped(postID: Int?) {
-    dismiss(animated: true)
- 
+    // 네비게이션 컨트롤러에 이미 있는데 또 올릴려고 그래서..?
     let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
                                       desc: "")
     popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+
+    self.present(popupVC, animated: true)
     
     popupVC.popupView.rightButtonAction = {
-      print("hh")
-      let provider = MoyaProvider<networkingAPI>()
-      provider.request(.deleteComment(_commentId: postID ?? 0)) {
-        switch $0 {
-        case .success(let response):
-          print(response.response)
-          self.dismiss(animated: true)
-          
-          self.getCommentList {
-            self.tableViewResizing()
-            self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
+      self.dismiss(animated: true) {
+        DispatchQueue.main.async {
+          self.deleteComment {
+            self.getCommentList {
+              self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
+              self.tableViewResizing()
+            }
           }
-        case .failure(let response):
-          print(response.response)
         }
       }
     }
+
   }
   
   func secondButtonTapped(postID: Int?) {
-    print("둘")
- 
+    commentButton.setTitle("수정", for: .normal)
+    commentId = postID
   }
 }

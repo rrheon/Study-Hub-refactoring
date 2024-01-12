@@ -43,7 +43,6 @@ final class CommentCell: UITableViewCell {
     button.setImage(UIImage(named: "MenuButton"), for: .normal)
     button.addAction(UIAction { _ in
       self.menuButtonTapped()
-      print("hhhh")
     }, for: .touchUpInside)
     return button
   }()

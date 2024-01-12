@@ -67,6 +67,11 @@ struct WriteList: Codable {
   let size: Int
 }
 
+struct ModifyComment: Codable {
+  let commentId: Int
+  let content: String
+}
+
 //MARK: - Networking (서버와 통신하는) 클래스 모델
 final class PostDataManager {
   
