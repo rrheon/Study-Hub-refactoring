@@ -801,6 +801,8 @@ final class PostedStudyViewController: NaviHelper {
       self.showToast(message: message, alertCheck: true)
       
       self.commentButton.setTitle("등록", for: .normal)
+      self.commentTextField.text = nil
+      self.commentTextField.resignFirstResponder()
       self.commentId = nil
     }
   }
@@ -961,6 +963,8 @@ extension PostedStudyViewController: CommentCellDelegate {
 extension PostedStudyViewController: BottomSheetDelegate {
   func firstButtonTapped(postID: Int?) {
     // 네비게이션 컨트롤러에 이미 있는데 또 올릴려고 그래서..?
+    self.commentTextField.text = nil
+    self.commentTextField.resignFirstResponder()
     let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
                                       desc: "")
     popupVC.modalPresentationStyle = .overFullScreen

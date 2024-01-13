@@ -38,27 +38,30 @@ class NaviHelper: UIViewController {
   
   @objc func rightButtonTapped() {
     // postid관련 수정필요
-    let viewControllerToPresent = BottomSheet(postID: 1,
-                                              firstButtonTitle: "삭제하기",
-                                              secondButtonTitle: "수정하기")
-    if #available(iOS 15.0, *) {
-      if let sheet = viewControllerToPresent.sheetPresentationController {
-        if #available(iOS 16.0, *) {
-          sheet.detents = [.custom(resolver: { context in
-            return 228.0
-          })]
-        } else {
-          // Fallback on earlier versions
+    if self.presentedViewController == nil {
+      
+      let viewControllerToPresent = BottomSheet(postID: 1,
+                                                firstButtonTitle: "삭제하기",
+                                                secondButtonTitle: "수정하기")
+      if #available(iOS 15.0, *) {
+        if let sheet = viewControllerToPresent.sheetPresentationController {
+          if #available(iOS 16.0, *) {
+            sheet.detents = [.custom(resolver: { context in
+              return 228.0
+            })]
+          } else {
+            // Fallback on earlier versions
+          }
+          sheet.largestUndimmedDetentIdentifier = nil
+          sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+          sheet.prefersEdgeAttachedInCompactHeight = true
+          sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+          sheet.preferredCornerRadius = 20
         }
-        sheet.largestUndimmedDetentIdentifier = nil
-        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        sheet.prefersEdgeAttachedInCompactHeight = true
-        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-        sheet.preferredCornerRadius = 20
+      } else {
+        // Fallback on earlier versions
       }
-    } else {
-      // Fallback on earlier versions
+      present(viewControllerToPresent, animated: true, completion: nil)
     }
-    present(viewControllerToPresent, animated: true, completion: nil)
   }
 }
