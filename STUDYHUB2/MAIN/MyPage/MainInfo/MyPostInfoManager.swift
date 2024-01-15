@@ -56,6 +56,11 @@ struct Sort: Codable {
 final class MyPostInfoManager {
   // 내가 쓴 게시글 정보
   private var myPostDatas: [MyPostcontent]?
+  private var myPostData: MyPostData?
+  
+  func getMyTotalPostData() -> MyPostData? {
+    return myPostData
+  }
   
   func getMyPostData() -> [MyPostcontent]? {
     return myPostDatas
@@ -78,6 +83,8 @@ final class MyPostInfoManager {
       case.success(let response):
         do {
           let postContent = try JSONDecoder().decode(MyPostData.self, from: response.data)
+    
+          self.myPostData = postContent
           self.myPostDatas = postContent.posts.myPostcontent
         } catch {
           print("Failed to decode JSON: \(error)")

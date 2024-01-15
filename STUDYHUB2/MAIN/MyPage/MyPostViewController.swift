@@ -88,6 +88,8 @@ final class MyPostViewController: NaviHelper {
     return scrollView
   }()
   
+  private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
+  
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -100,7 +102,7 @@ final class MyPostViewController: NaviHelper {
     
     registerCell()
     
-    getMyPostData {
+    getMyPostData(size: 5) {
       self.setupLayout()
       self.makeUI()
     }
@@ -197,19 +199,22 @@ final class MyPostViewController: NaviHelper {
     self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
   }
   
-  func getMyPostData(completion: @escaping () -> Void) {
-      self.myPostDataManager.fetchMyPostInfo(page: 0, size: 5) { [weak self] success in
-          if success {
-              DispatchQueue.main.async {
-                  self?.myPostDatas = self?.myPostDataManager.getMyPostData()
-                self?.countPostNumber = self?.myPostDatas?. ?? 0
-                  self?.myPostCollectionView.reloadData()
-                  completion()
-              }
-          }
+  func getMyPostData(size: Int,
+                     completion: @escaping () -> Void) {
+    self.myPostDataManager.fetchMyPostInfo(page: 0, size: size) { [weak self] success in
+      if success {
+        DispatchQueue.main.async {
+          self?.myPostDatas = self?.myPostDataManager.getMyPostData()
+          
+          guard let postCount = self?.myPostDataManager.getMyTotalPostData() else { return }
+          self?.countPostNumber = postCount.totalCount
+          self?.myPostCollectionView.reloadData()
+          completion()
+        }
       }
+    }
   }
-
+  
   
   // MARK: - 전체삭제
   // 전체삭제 알람표시
@@ -344,6 +349,7 @@ extension MyPostViewController: MyPostCellDelegate{
     present(bottomSheetVC, animated: true, completion: nil)
   }
   
+  // MARK: - 게시글 모집 마감
   func closeButtonTapped(in cell: MyPostCell){
     // Postid수정필요
     let popupVC = PopupViewController(title: "이 글의 모집을 마감할까요?",
@@ -351,6 +357,14 @@ extension MyPostViewController: MyPostCellDelegate{
                                       rightButtonTilte: "마감")
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
+  }
+  
+  // MARK: - 스크롤해서 데이터 가져오기
+  func fetchMoreData(){
+    guard let countData = myPostDatas?.count else { return }
+    getMyPostData(size: countData + 5) {
+      self.myPostCollectionView.reloadData()
+    }
   }
 }
 
@@ -371,6 +385,22 @@ extension MyPostViewController: BottomSheetDelegate {
       createVC.modifyPostID = postID
       createVC.modalPresentationStyle = .overFullScreen
       self.present(createVC, animated: true)
+    }
+  }
+}
+
+// MARK: - 스크롤할 때 네트워킹 요청
+extension MyPostViewController {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let tableView = myPostCollectionView
+    if (tableView.contentOffset.y > (tableView.contentSize.height - tableView.bounds.size.height)){
+      let myPostTotalData = myPostDataManager.getMyTotalPostData()
+      
+      guard let last = myPostTotalData?.posts.last else { return }
+      
+      if !last {
+        fetchMoreData()
+      }
     }
   }
 }
