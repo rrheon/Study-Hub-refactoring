@@ -37,9 +37,7 @@ class NaviHelper: UIViewController {
   }
   
   @objc func rightButtonTapped() {
-    // postid관련 수정필요
     if self.presentedViewController == nil {
-      
       let viewControllerToPresent = BottomSheet(postID: 1,
                                                 firstButtonTitle: "삭제하기",
                                                 secondButtonTitle: "수정하기")
@@ -50,7 +48,6 @@ class NaviHelper: UIViewController {
               return 228.0
             })]
           } else {
-            // Fallback on earlier versions
           }
           sheet.largestUndimmedDetentIdentifier = nil
           sheet.prefersScrollingExpandsWhenScrolledToEdge = false

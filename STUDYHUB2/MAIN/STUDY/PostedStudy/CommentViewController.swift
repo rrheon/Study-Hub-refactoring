@@ -13,7 +13,9 @@ import Moya
 final class CommentViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
   
+  var previousVC: PostedStudyViewController?
   var commentData: GetCommentList?
+  var commentId: Int?
   var countComment: Int = 0 {
     didSet {
       self.navigationItem.title = "댓글 \(countComment)"
@@ -45,14 +47,13 @@ final class CommentViewController: NaviHelper {
     button.backgroundColor = .o30
     button.layer.cornerRadius = 10
     button.addAction(UIAction { _ in
-      self.commentButtonTapped {
-        self.getCommentList {
-          self.commentTableView.reloadData()
-          
-          let tableViewHeight = 86 * (self.commentData?.content.count ?? 0)
-          self.commentTableView.snp.updateConstraints {
-            $0.height.equalTo(tableViewHeight)
-          }
+      if self.commentId != nil {
+        self.modifyComment {
+          self.afterCommentButtonTapped()
+        }
+      } else {
+        self.commentButtonTapped {
+          self.afterCommentButtonTapped()
         }
       }
     }, for: .touchUpInside)
@@ -68,7 +69,13 @@ final class CommentViewController: NaviHelper {
   private lazy var pageStackView = createStackView(axis: .vertical,
                                                    spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
-
+  
+  // MARK: - 이전페이지로 넘어갈 때
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent { previousVC?.tableViewReload() }
+  }
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -179,6 +186,65 @@ final class CommentViewController: NaviHelper {
     }
   }
   
+  // MARK: - 댓글 수정하기
+  func modifyComment(completion: @escaping () -> Void){
+    guard let content = commentTextField.text else { return }
+    
+    commentButton.setTitle("수정", for: .normal)
+    commentButton.addAction(UIAction { _ in
+      let provider = MoyaProvider<networkingAPI>()
+      provider.request(.modifyComment(_commentId: self.commentId ?? 0,
+                                      _content: content)) {
+        switch $0 {
+        case .success(let response):
+          print(response.response)
+          completion()
+        case .failure(let response):
+          print(response.response)
+        }
+      }
+    }, for: .touchUpInside)
+  }
+  
+  // MARK: - 댓글 삭제하기
+  func deleteComment(commentId: Int, completion: @escaping () -> Void){
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.deleteComment(_commentId: commentId )) {
+      switch $0 {
+      case .success(let response):
+        completion()
+        print(response.response)
+        print(response)
+       
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
+  func afterCommentButtonTapped(){
+    self.getCommentList {
+      self.commentTableView.reloadData()
+      
+      self.tableViewResizing()
+      
+      let message = self.commentId == nil ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
+      self.showToast(message: message, alertCheck: true)
+      
+      self.commentButton.setTitle("등록", for: .normal)
+      self.commentTextField.text = nil
+      self.commentTextField.resignFirstResponder()
+      self.commentId = nil
+    }
+  }
+  
+  // MARK: - 테이블뷰 사이즈 동적조절
+  func tableViewResizing(){
+    let tableViewHeight = 86 * (self.commentData?.content.count ?? 0)
+    self.commentTableView.snp.updateConstraints {
+      $0.height.equalTo(tableViewHeight)
+    }
+  }
   // MARK: - 댓글 리스트 가져오기
   func getCommentList(completion: @escaping () -> Void){
     detailPostDataManager.getCommentList(postId: postId,
@@ -189,7 +255,6 @@ final class CommentViewController: NaviHelper {
       self.countComment = self.commentData?.content.count ?? 0
       self.commentTableView.reloadData()
 
-      
       completion()
     }
   }
@@ -205,8 +270,11 @@ extension CommentViewController: UITableViewDelegate, UITableViewDataSource  {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = commentTableView.dequeueReusableCell(withIdentifier: CommentCell.cellId,
                                                     for: indexPath) as! CommentCell
-
+    cell.delegate = self
     cell.model = commentData?.content[indexPath.row]
+    cell.selectionStyle = .none
+    cell.contentView.isUserInteractionEnabled = false
+    
     return cell
   }
   
@@ -222,5 +290,63 @@ extension CommentViewController {
       commentButton.backgroundColor = .o50
       commentButton.isEnabled = true
     }
+  }
+}
+
+// MARK: - cell에 메뉴버튼 눌렀을 때
+extension CommentViewController: CommentCellDelegate {
+  func menuButtonTapped(in cell: CommentCell, commentId: Int) {
+    let bottomSheetVC = BottomSheet(postID: commentId)
+    bottomSheetVC.delegate = self
+    
+    if #available(iOS 15.0, *) {
+      if let sheet = bottomSheetVC.sheetPresentationController {
+        if #available(iOS 16.0, *) {
+          sheet.detents = [.custom(resolver: { context in
+            return 228.0
+          })]
+        } else {
+          // Fallback on earlier versions
+        }
+        sheet.largestUndimmedDetentIdentifier = nil
+        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        sheet.prefersEdgeAttachedInCompactHeight = true
+        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        sheet.preferredCornerRadius = 20
+      }
+    } else {
+      // Fallback on earlier versions
+    }
+    present(bottomSheetVC, animated: true, completion: nil)
+  }
+}
+
+extension CommentViewController: BottomSheetDelegate {
+  func firstButtonTapped(postID: Int?) {
+    self.commentTextField.text = nil
+    self.commentTextField.resignFirstResponder()
+    let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
+                                      desc: "")
+    popupVC.modalPresentationStyle = .overFullScreen
+
+    self.present(popupVC, animated: true)
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true) {
+        DispatchQueue.main.async {
+          self.deleteComment(commentId: postID ?? 0) {
+            self.getCommentList {
+              self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
+              self.tableViewResizing()
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  func secondButtonTapped(postID: Int?) {
+    commentButton.setTitle("수정", for: .normal)
+    commentId = postID
   }
 }

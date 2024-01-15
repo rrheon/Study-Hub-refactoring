@@ -325,7 +325,6 @@ final class PostedStudyViewController: NaviHelper {
     button.backgroundColor = .o30
     button.layer.cornerRadius = 10
     button.addAction(UIAction { _ in
-      
       if self.commentId != nil {
         self.modifyComment {
           self.afterCommentButtonTapped()
@@ -826,6 +825,7 @@ final class PostedStudyViewController: NaviHelper {
     
     guard let postId = postedDate?.postID else { return }
     commentVC.postId = postId
+    commentVC.previousVC = self
     navigationController?.pushViewController(commentVC, animated: true)
   }
   
@@ -837,17 +837,27 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
-  func deleteComment(completion: @escaping () -> Void){
+  func deleteComment(commentId: Int, completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.deleteComment(_commentId: commentId ?? 0)) {
       switch $0 {
       case .success(let response):
+        print(response)
         completion()
        
       case .failure(let response):
         print(response.response)
       }
     }
+  }
+  
+  func tableViewReload(){
+    self.getCommentList {
+      self.commentTableView.reloadData()
+      
+      self.tableViewResizing()
+    }
+    
   }
 }
 
@@ -974,7 +984,7 @@ extension PostedStudyViewController: BottomSheetDelegate {
     popupVC.popupView.rightButtonAction = {
       self.dismiss(animated: true) {
         DispatchQueue.main.async {
-          self.deleteComment {
+          self.deleteComment(commentId: postID ?? 0) {
             self.getCommentList {
               self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
               self.tableViewResizing()
@@ -983,7 +993,6 @@ extension PostedStudyViewController: BottomSheetDelegate {
         }
       }
     }
-
   }
   
   func secondButtonTapped(postID: Int?) {
