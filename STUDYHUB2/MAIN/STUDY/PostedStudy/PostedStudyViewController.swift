@@ -837,6 +837,7 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
+  // MARK: - 댓글삭제
   func deleteComment(commentId: Int, completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.deleteComment(_commentId: commentId ?? 0)) {
@@ -851,13 +852,21 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
+  // MARK: - 댓글 리로드
   func tableViewReload(){
     self.getCommentList {
       self.commentTableView.reloadData()
       
       self.tableViewResizing()
     }
-    
+  }
+  
+  override func deletePost() {
+    let popupVC = PopupViewController(title: "글을 삭제할까요?",
+                                      desc: "")
+    popupVC.modalPresentationStyle = .overFullScreen
+
+    self.present(popupVC, animated: true)
   }
 }
 
@@ -975,6 +984,7 @@ extension PostedStudyViewController: BottomSheetDelegate {
     // 네비게이션 컨트롤러에 이미 있는데 또 올릴려고 그래서..?
     self.commentTextField.text = nil
     self.commentTextField.resignFirstResponder()
+    
     let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
                                       desc: "")
     popupVC.modalPresentationStyle = .overFullScreen
@@ -999,4 +1009,6 @@ extension PostedStudyViewController: BottomSheetDelegate {
     commentButton.setTitle("수정", for: .normal)
     commentId = postID
   }
+  
 }
+

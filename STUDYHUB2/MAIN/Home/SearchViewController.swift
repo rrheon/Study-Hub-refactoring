@@ -3,9 +3,8 @@ import UIKit
 import SnapKit
 
 final class SearchViewController: NaviHelper {
-  
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
-  
+  let detailPostDataManager = PostDetailInfoManager.shared
   // MARK: - 서치바
   private let searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
@@ -137,7 +136,7 @@ final class SearchViewController: NaviHelper {
   }
   
   @objc func bookmarkpageButtonTapped() {
-    let bookmarkViewController = BookmarkViewController()
+    let bookmarkViewController = BookmarkViewController(postID: 0)
     let navigationController = UINavigationController(rootViewController: bookmarkViewController)
     navigationController.modalPresentationStyle = .fullScreen
     present(navigationController, animated: true, completion: nil)
@@ -284,8 +283,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    
-    let postedVC = PostedStudyViewController()
+    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    let postedVC = PostedStudyViewController(postID: postID)
   
     self.navigationController?.pushViewController(postedVC, animated: true)
   }

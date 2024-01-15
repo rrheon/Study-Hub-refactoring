@@ -60,6 +60,7 @@ enum networkingAPI {
   case getCommentList(_postId: Int, _page: Int, _size: Int)
   case deleteComment(_commentId: Int)
   case modifyComment(_commentId: Int, _content: String)
+  case getMyPostList(_page: Int, _size: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -104,13 +105,17 @@ extension networkingAPI: TargetType {
       return "/v1/comments/\(commentId)"
     case .modifyComment(let commentId, let content):
       return "/v1/comments"
+      
+    case .getMyPostList(_page: _, _size: _):
+      return "/v1/study-posts/mypost"
     }
   }
   
   var method: Moya.Method {
     switch self {
     case .searchSinglePost(_postId: _),
-        .getCommentList(_postId: _, _page: _, _size: _):
+        .getCommentList(_postId: _, _page: _, _size: _),
+        .getMyPostList(_page: _, _size: _):
       return .get
       
     case .storeImage(_image: _),
@@ -179,6 +184,10 @@ extension networkingAPI: TargetType {
       let parmas = ModifyComment(commentId: commentId, content: content)
       return .requestJSONEncodable(parmas)
       
+    case .getMyPostList(let page, let size):
+      let params: [String : Any] = [ "page": page, "size": size]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -202,7 +211,8 @@ extension networkingAPI: TargetType {
       return ["Accept" : "application/json"]
       
     case .writeComment(_content: _, _postId: _),
-        .modifyComment(_commentId: _, _content: _):
+        .modifyComment(_commentId: _, _content: _),
+        .getMyPostList(_page: _, _size: _):
       return ["Content-type": "application/json",
               "Authorization": "\(acceessToken)"]
       

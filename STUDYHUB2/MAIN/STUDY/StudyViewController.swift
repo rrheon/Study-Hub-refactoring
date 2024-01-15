@@ -3,8 +3,7 @@ import UIKit
 import SnapKit
 
 // searchResultCell이랑 같은 형식 , collectionview랑 추가버튼 같이 뜨게 수정해야함
-final class
-StudyViewController: NaviHelper {
+final class StudyViewController: NaviHelper {
   
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
@@ -347,8 +346,8 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    
-    let postedVC = PostedStudyViewController()
+    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    let postedVC = PostedStudyViewController(postID: postID)
     postedVC.hidesBottomBarWhenPushed = true
 
     guard let postId = recentDatas?.postDataByInquiries.content[indexPath.row].postID else { return }

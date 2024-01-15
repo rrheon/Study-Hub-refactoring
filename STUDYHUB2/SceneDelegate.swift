@@ -32,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = navigationController
 
       } else {
-        let loginViewController = PostedStudyViewController()
+        let loginViewController = PostedStudyViewController(postID: 0)
         let navigationController = UINavigationController(rootViewController: loginViewController)
         window?.rootViewController = navigationController
       }

@@ -5,7 +5,7 @@ import SnapKit
 
 // 로그인, 비로그인 나눠야함
 final class BookmarkViewController: NaviHelper {
-  
+  let detailPostDataManager = PostDetailInfoManager.shared
   // MARK: - 화면 구성
   var countNumber: Int = 4
   private lazy var totalCountLabel = createLabel(title: "전체 \(countNumber)",
@@ -162,7 +162,8 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    let postedVC = PostedStudyViewController()
+    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    let postedVC = PostedStudyViewController(postID: postID)
     self.navigationController?.pushViewController(postedVC, animated: true)
   }
   

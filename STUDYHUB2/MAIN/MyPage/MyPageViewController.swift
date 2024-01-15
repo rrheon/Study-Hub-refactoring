@@ -406,7 +406,7 @@ final class MyPageViewController: NaviHelper {
   
   @objc func writtenButtonTapped(){
     let myPostVC = MyPostViewController()
-  
+    myPostVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(myPostVC, animated: true)
   }
   

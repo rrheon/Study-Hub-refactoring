@@ -365,11 +365,11 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-  
-    let postedVC = PostedStudyViewController()
+    guard let postID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+    let postedVC = PostedStudyViewController(postID: postID)
     postedVC.hidesBottomBarWhenPushed = true
     
-    detailPostDataManager.getPostDetailData(postID: newPostDatas?.postDataByInquiries.content[indexPath.row].postID ?? 0) {
+    detailPostDataManager.getPostDetailData(postID: postID) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedDate = cellData
     }

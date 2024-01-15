@@ -12,7 +12,7 @@ import SnapKit
 final class MyPostViewController: NaviHelper {
   let myPostDataManager = MyPostInfoManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
-  var myPostDatas: [MyPostInfo] = []
+  var myPostDatas: [MyPostcontent]?
   
   var countPostNumber = 0 {
     didSet {
@@ -104,8 +104,8 @@ final class MyPostViewController: NaviHelper {
       self.setupLayout()
       self.makeUI()
     }
-    setupLayout()
-    makeUI()
+//    setupLayout()
+//    makeUI()
   }
   
   // MARK: - setupLayout
@@ -198,17 +198,18 @@ final class MyPostViewController: NaviHelper {
   }
   
   func getMyPostData(completion: @escaping () -> Void) {
-    DispatchQueue.global().async {
-      self.myPostDataManager.getMyPostDataFromApi {
-        DispatchQueue.main.async {
-          self.myPostDatas = self.myPostDataManager.getMyPostData()
-          self.countPostNumber = self.myPostDatas.count
-          self.myPostCollectionView.reloadData()
-          completion()
-        }
+      self.myPostDataManager.fetchMyPostInfo(page: 0, size: 5) { [weak self] success in
+          if success {
+              DispatchQueue.main.async {
+                  self?.myPostDatas = self?.myPostDataManager.getMyPostData()
+                self?.countPostNumber = self?.myPostDatas?. ?? 0
+                  self?.myPostCollectionView.reloadData()
+                  completion()
+              }
+          }
       }
-    }
   }
+
   
   // MARK: - 전체삭제
   // 전체삭제 알람표시
@@ -230,10 +231,10 @@ final class MyPostViewController: NaviHelper {
   func deleteAllPost() {
     let dispatchGroup = DispatchGroup()
     
-    myPostDatas.forEach { post in
+    myPostDatas?.forEach { post in
       dispatchGroup.enter() // 진입
       
-      myPostDataManager.fetchDeletePostInfo(postID: post.postId) { [weak self] result in
+      myPostDataManager.fetchDeletePostInfo(postID: post.postID) { [weak self] result in
         guard let self = self else { return }
         defer {
           dispatchGroup.leave() // 완료되면 나가기
@@ -262,16 +263,16 @@ final class MyPostViewController: NaviHelper {
 extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return myPostDatas.count
+    return myPostDatas?.count ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    
-    let postedVC = PostedStudyViewController()
+    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    let postedVC = PostedStudyViewController(postID: postID)
     
     // 단건조회 시 연관된 포스트도 같이 나옴
-    detailPostDataManager.getPostDetailData(postID: myPostDatas[indexPath.row].postId) {
+    detailPostDataManager.getPostDetailData(postID: myPostDatas?[indexPath.row].postID ?? 0) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedDate = cellData
     }
@@ -285,12 +286,12 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                                   for: indexPath) as! MyPostCell
     
     cell.delegate = self
-    cell.majorLabel.text = convertMajor(myPostDatas[indexPath.row].major,
+    cell.majorLabel.text = convertMajor(myPostDatas?[indexPath.row].major ?? "",
                                         isEnglish: false)
-    cell.titleLabel.text = myPostDatas[indexPath.row].title
-    cell.infoLabel.text = myPostDatas[indexPath.row].content
-    cell.remainCount = myPostDatas[indexPath.row].remainingSeat
-    cell.postID = myPostDatas[indexPath.row].postId
+    cell.titleLabel.text = myPostDatas?[indexPath.row].title
+    cell.infoLabel.text = myPostDatas?[indexPath.row].content
+    cell.remainCount = myPostDatas?[indexPath.row].remainingSeat ?? 0
+    cell.postID = myPostDatas?[indexPath.row].postID
     
     return cell
   }

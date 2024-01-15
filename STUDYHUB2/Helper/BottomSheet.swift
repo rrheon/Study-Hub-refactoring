@@ -21,15 +21,19 @@ final class BottomSheet: UIViewController {
   private let postID: Int
   private let firstButtonTitle: String
   private let secondButtonTitle: String
+  private let checkMyPost: Bool
   
   let detailPostDataManager = PostDetailInfoManager.shared
-  
+  var deletePostButtonAction: (() -> Void)?
+
   init(postID: Int,
+       checkMyPost: Bool = false,
        firstButtonTitle: String = "삭제하기",
        secondButtonTitle: String = "수정하기") {
     self.postID = postID
     self.firstButtonTitle = firstButtonTitle
     self.secondButtonTitle = secondButtonTitle
+    self.checkMyPost = checkMyPost
     
     super.init(nibName: nil, bundle: nil)
   }
@@ -45,7 +49,13 @@ final class BottomSheet: UIViewController {
     let buttonColor = firstButtonTitle == "삭제하기" ? UIColor.o50 : UIColor.bg80
     button.setTitleColor(buttonColor, for: .normal)
     button.addAction(UIAction { _ in
-      self.firstButtonTapped()
+      if self.checkMyPost {
+        self.deletePostButtonTapped()
+      }else{
+        self.firstButtonTapped()
+      }
+      
+    
     }, for: .touchUpInside)
     return button
   }()
@@ -116,7 +126,6 @@ final class BottomSheet: UIViewController {
     dismiss(animated: true) {
       self.delegate?.firstButtonTapped(postID: self.postID)
     }
-
   }
   
   @objc func dissMissButtonTapped(){
@@ -127,5 +136,9 @@ final class BottomSheet: UIViewController {
     dismiss(animated: true) {
       self.delegate?.secondButtonTapped(postID: self.postID)
     }
+  }
+  
+  func deletePostButtonTapped(){
+    deletePostButtonAction?()
   }
 }
