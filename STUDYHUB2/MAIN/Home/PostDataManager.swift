@@ -7,6 +7,11 @@
 
 import Foundation
 
+// MARK: - RecommendList
+struct RecommendList: Codable {
+  let recommendList: [String]
+}
+
 // MARK: - PostDataContent
 struct PostDataContent: Codable {
   let totalCount: Int

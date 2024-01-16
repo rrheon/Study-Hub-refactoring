@@ -62,6 +62,7 @@ enum networkingAPI {
   case modifyComment(_commentId: Int, _content: String)
   case getMyPostList(_page: Int, _size: Int)
   case deleteMyPost(_postId: Int)
+  case recommendSearch(_keyword: String)
 }
 
 extension networkingAPI: TargetType {
@@ -111,6 +112,9 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts/mypost"
     case .deleteMyPost(let postId):
       return "/v1/study-posts/\(postId)"
+      
+    case .recommendSearch(_keyword: _):
+      return "/v1/study-post/recommend"
     }
   }
   
@@ -118,7 +122,8 @@ extension networkingAPI: TargetType {
     switch self {
     case .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
-        .getMyPostList(_page: _, _size: _):
+        .getMyPostList(_page: _, _size: _),
+        .recommendSearch(_keyword: _):
       return .get
       
     case .storeImage(_image: _),
@@ -192,6 +197,10 @@ extension networkingAPI: TargetType {
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .recommendSearch(let keyword):
+      let params: [String : Any] = [ "keyword" : keyword]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -208,7 +217,8 @@ extension networkingAPI: TargetType {
     case  .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
         .searchSinglePost(_postId: _),
-        .getCommentList(_postId: _, _page: _, _size: _):
+        .getCommentList(_postId: _, _page: _, _size: _),
+        .recommendSearch(_keyword: _):
       return ["Content-type": "application/json"]
       
       

@@ -4,8 +4,13 @@ import UIKit
 import SnapKit
 
 final class CustomCell: UITableViewCell {
+  var model: RecommendList? {
+    didSet {
+      bind()
+    }
+  }
+
   static let cellId = "CellId"
-  
   var buttonAction: (() -> Void) = {}
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -43,6 +48,9 @@ final class CustomCell: UITableViewCell {
     }
   }
 
+  func bind(){
+    print("바인드")
+  }
 }
 
 

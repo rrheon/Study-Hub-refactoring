@@ -1,10 +1,24 @@
 import UIKit
 
 import SnapKit
+import Moya
 
 final class SearchViewController: NaviHelper {
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
   let detailPostDataManager = PostDetailInfoManager.shared
+  var keyword: String?
+  var recommendData: RecommendList?
+  
+  init(keyword: String? = nil) {
+    self.keyword = keyword
+    super.init()
+    print(keyword)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - 서치바
   private let searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
@@ -114,6 +128,7 @@ final class SearchViewController: NaviHelper {
       searchBarTextField.layer.borderColor = UIColor.clear.cgColor
     }
   }
+  
   // MARK: -  네비게이션바 재설정
   func redesignNavigationbar(){
     let bookMarkImg = UIImage(named: "BookMarkImg")?.withRenderingMode(.alwaysOriginal)
@@ -154,6 +169,28 @@ final class SearchViewController: NaviHelper {
     recentButton.setTitleColor(.bg70, for: .normal)
     popularButton.setTitleColor(.black, for: .normal)
   }
+  
+  // MARK: - 추천어 검색하기
+  func searchRecommend(){
+    guard let keyword = keyword else { return }
+    print(keyword)
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.recommendSearch(_keyword: keyword)) {
+      switch $0 {
+      case .success(let response):
+        do {
+          let recommendList = try JSONDecoder().decode(RecommendList.self, from: response.data)
+          self.recommendData = recommendList
+          print(recommendList)
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+        print(response.response)
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -163,6 +200,7 @@ extension SearchViewController: UISearchBarDelegate {
     
     print(keyword)
     searchTapped(keyword: keyword)
+    searchRecommend()
   }
   
   func searchTapped(keyword: String){
@@ -191,6 +229,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
                                                    for: indexPath) as! CustomCell
     
     let imageView = UIImageView()
+    cell.model = recommendData
     imageView.image = UIImage(named: "ScearchImgGray")
     cell.contentView.addSubview(imageView)
     
@@ -271,6 +310,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   func reloadTalbeView(){
     resultTableView.reloadData()
   }
+
 }
 
 // MARK: - collectionView
@@ -294,6 +334,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
                                                   for: indexPath)
+
     return cell
   }
 }

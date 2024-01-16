@@ -342,7 +342,7 @@ extension HomeViewController: UISearchBarDelegate {
     if keyword.isEmpty {
       print("검색 결과가 없음")
     } else {
-      let searchViewController = SearchViewController()
+      let searchViewController = SearchViewController(keyword: keyword)
       self.navigationController?.pushViewController(searchViewController, animated: true)
     }
   }
