@@ -16,7 +16,7 @@ final class PostedStudyViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
   var commentId: Int?
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
-  var postedDate: PostDetailData? {
+  var postedData: PostDetailData? {
     didSet {
       self.getCommentList {
         DispatchQueue.main.async {
@@ -706,34 +706,34 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 데이터 받아오고 ui다시 그리는 함수
   func redrawUI(){
-    if let postDate = self.postedDate?.createdDate {
+    if let postDate = self.postedData?.createdDate {
       self.postedDateLabel.text = "\(postDate[0]). \(postDate[1]). \(postDate[2])"
     }
     
-    let major = self.convertMajor(self.postedDate?.major ?? "",
+    let major = self.convertMajor(self.postedData?.major ?? "",
                                  isEnglish: false)
     self.postedMajorLabel.text = "   \(major)   "
-    self.postedTitleLabel.text = self.postedDate?.title
-    self.memberNumberCount = self.postedDate?.remainingSeat ?? 0
-    self.fineCount = self.postedDate?.penalty ?? 0
+    self.postedTitleLabel.text = self.postedData?.title
+    self.memberNumberCount = self.postedData?.remainingSeat ?? 0
+    self.fineCount = self.postedData?.penalty ?? 0
     
    
-    self.gender = self.convertGender(gender: self.postedDate?.filteredGender ?? "무관")
+    self.gender = self.convertGender(gender: self.postedData?.filteredGender ?? "무관")
     
-    self.aboutStudyDeatilLabel.text = self.postedDate?.content
+    self.aboutStudyDeatilLabel.text = self.postedData?.content
     
-    guard let startDate = self.postedDate?.studyStartDate,
-          let endDate = self.postedDate?.studyEndDate else { return }
+    guard let startDate = self.postedData?.studyStartDate,
+          let endDate = self.postedData?.studyEndDate else { return }
     
     self.periodLabel.text = "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
-    self.meetLabel.text = self.convertStudyWay(wayToStudy: self.postedDate?.studyWay ?? "혼합")
-    self.majorLabel.text = self.convertMajor(self.postedDate?.major ?? "",
+    self.meetLabel.text = self.convertStudyWay(wayToStudy: self.postedData?.studyWay ?? "혼합")
+    self.majorLabel.text = self.convertMajor(self.postedData?.major ?? "",
                                              isEnglish: false)
-    self.writerMajorLabel.text = self.convertMajor(self.postedDate?.postedUser.major ?? "",
+    self.writerMajorLabel.text = self.convertMajor(self.postedData?.postedUser.major ?? "",
                                                    isEnglish: false)
-    self.nickNameLabel.text = self.postedDate?.postedUser.nickname
+    self.nickNameLabel.text = self.postedData?.postedUser.nickname
     
-    if let imageURL = URL(string: postedDate?.postedUser.imageURL ?? "") {
+    if let imageURL = URL(string: postedData?.postedUser.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
             
       self.profileImageView.kf.setImage(with: imageURL,
@@ -757,7 +757,7 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 댓글 작성하기
   func commentButtonTapped(completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    guard let postId = postedDate?.postID,
+    guard let postId = postedData?.postID,
           let content = commentTextField.text else { return }
     provider.request(.writeComment(_content: content, _postId: postId)) {
       switch $0 {
@@ -808,7 +808,7 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 댓글 리스트 가져오기
   func getCommentList(completion: @escaping () -> Void){
-    guard let postId = postedDate?.postID else { return }
+    guard let postId = postedData?.postID else { return }
     detailPostDataManager.getCommentList(postId: postId,
                                          page: 0,
                                          size: 8) {
@@ -823,7 +823,7 @@ final class PostedStudyViewController: NaviHelper {
   func moveToCommentViewButtonTapped(){
     let commentVC = CommentViewController()
     
-    guard let postId = postedDate?.postID else { return }
+    guard let postId = postedData?.postID else { return }
     commentVC.postId = postId
     commentVC.previousVC = self
     navigationController?.pushViewController(commentVC, animated: true)
@@ -861,9 +861,12 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
+  // MARK: - 네비게이션바의 deletePost 재정의
   override func deletePost() {
+    guard let postID = postedData?.postID else { return }
     let popupVC = PopupViewController(title: "글을 삭제할까요?",
-                                      desc: "")
+                                      desc: "",
+                                      postID: postID)
     popupVC.modalPresentationStyle = .overFullScreen
 
     self.present(popupVC, animated: true)
@@ -875,7 +878,7 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-      return postedDate?.relatedPost.count ?? 0
+      return postedData?.relatedPost.count ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -884,8 +887,8 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SimilarPostCell.id,
                                                     for: indexPath)
       if let cell = cell as? SimilarPostCell {
-        if indexPath.item < postedDate?.relatedPost.count ?? 0 {
-          let data = postedDate?.relatedPost[indexPath.item]
+        if indexPath.item < postedData?.relatedPost.count ?? 0 {
+          let data = postedData?.relatedPost[indexPath.item]
           cell.model = data
         }
       }
@@ -899,7 +902,7 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
       let postedVC = PostedStudyViewController()
       detailPostDataManager.getPostDetailData(postID: cell.postID ?? 0) {
         let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedDate = cellData
+        postedVC.postedData = cellData
       }
       self.navigationController?.pushViewController(postedVC, animated: true)
     }
@@ -981,7 +984,6 @@ extension PostedStudyViewController: CommentCellDelegate {
 
 extension PostedStudyViewController: BottomSheetDelegate {
   func firstButtonTapped(postID: Int?) {
-    // 네비게이션 컨트롤러에 이미 있는데 또 올릴려고 그래서..?
     self.commentTextField.text = nil
     self.commentTextField.resignFirstResponder()
     

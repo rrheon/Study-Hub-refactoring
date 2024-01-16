@@ -371,7 +371,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     detailPostDataManager.getPostDetailData(postID: postID) {
       let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedDate = cellData
+      postedVC.postedData = cellData
     }
     
     self.navigationController?.pushViewController(postedVC, animated: true)

@@ -353,7 +353,7 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     guard let postId = recentDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
     detailPostDataManager.searchSinglePostData(postId: postId) {
       let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedDate = cellData
+      postedVC.postedData = cellData
       print(cellData)
     }
 

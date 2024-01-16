@@ -54,7 +54,7 @@ class NaviHelper: UIViewController {
                                     checkMyPost: true,
                                     firstButtonTitle: "삭제하기",
                                     secondButtonTitle: "수정하기")
-    
+    // 네비게이션바에서 바텀시트 열고 첫번째 버튼 누르면 postid전달이 안된다
     bottomSheetVC.deletePostButtonAction = { [weak self] in
       bottomSheetVC.dismiss(animated: true) {
         self?.deletePost()

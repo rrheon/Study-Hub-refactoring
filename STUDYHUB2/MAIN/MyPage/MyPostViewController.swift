@@ -236,24 +236,24 @@ final class MyPostViewController: NaviHelper {
   func deleteAllPost() {
     let dispatchGroup = DispatchGroup()
     
-    myPostDatas?.forEach { post in
-      dispatchGroup.enter() // 진입
-      
-      myPostDataManager.fetchDeletePostInfo(postID: post.postID) { [weak self] result in
-        guard let self = self else { return }
-        defer {
-          dispatchGroup.leave() // 완료되면 나가기
-        }
-        
-        switch result {
-        case .success:
-          print("모든 게시글 삭제")
-        case .failure(let error):
-          // 삭제 실패 시의 처리
-          print("게시글 삭제 실패: \(error)")
-        }
-      }
-    }
+//    myPostDatas?.forEach { post in
+//      dispatchGroup.enter() // 진입
+//    
+//      myPostDataManager.fetchDeletePostInfo(postID: post.postID) { [weak self] result in
+//        guard let self = self else { return }
+//        defer {
+//          dispatchGroup.leave() // 완료되면 나가기
+//        }
+//        
+//        switch result {
+//        case .success:
+//          print("모든 게시글 삭제")
+//        case .failure(let error):
+//          // 삭제 실패 시의 처리
+//          print("게시글 삭제 실패: \(error)")
+//        }
+//      }
+//    }
     
     dispatchGroup.notify(queue: .main) {
       // 모든 비동기 작업이 완료된 후 실행될 코드
@@ -273,13 +273,14 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+  
+    guard let postID = myPostDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
     
     // 단건조회 시 연관된 포스트도 같이 나옴
-    detailPostDataManager.getPostDetailData(postID: myPostDatas?[indexPath.row].postID ?? 0) {
+    detailPostDataManager.getPostDetailData(postID: postID) {
       let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedDate = cellData
+      postedVC.postedData = cellData
     }
     self.navigationController?.pushViewController(postedVC, animated: true)
     

@@ -31,25 +31,27 @@ final class PopupViewController: UIViewController {
     }
     
     self.popupView.rightButtonAction = { [weak self] in
-      self?.myPostInfoManager.fetchDeletePostInfo(postID: postID) { result in
-        guard let self = self else { return }
+      self?.myPostInfoManager.deleteMyPost(postId: postID,
+                                           completion: { result in
+        
         switch result {
         case .success:
           DispatchQueue.main.async {
-            self.dismiss(animated: false) {
+            self?.dismiss(animated: false) {
               bottomeSheet?.dismiss(animated: false)
             }
           }
-          
+
           DispatchQueue.main.async {
-            self.showToast(message: "글이 삭제되었어요.", alertCheck: true)
+            self?.showToast(message: "글이 삭제되었어요.", alertCheck: true)
           }
-          
+
         case .failure(let error):
           // 삭제 실패 시의 처리
           print("게시글 삭제 실패: \(error)")
         }
-      }
+        print("삭제")
+      })
     }
     
     self.popupView.endButtonAction = {

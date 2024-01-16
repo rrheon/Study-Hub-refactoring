@@ -61,6 +61,7 @@ enum networkingAPI {
   case deleteComment(_commentId: Int)
   case modifyComment(_commentId: Int, _content: String)
   case getMyPostList(_page: Int, _size: Int)
+  case deleteMyPost(_postId: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -108,6 +109,8 @@ extension networkingAPI: TargetType {
       
     case .getMyPostList(_page: _, _size: _):
       return "/v1/study-posts/mypost"
+    case .deleteMyPost(let postId):
+      return "/v1/study-posts/\(postId)"
     }
   }
   
@@ -127,7 +130,8 @@ extension networkingAPI: TargetType {
       
     case .deleteImage,
          .deleteID,
-         .deleteComment(_commentId: _):
+         .deleteComment(_commentId: _),
+         .deleteMyPost(_postId: _):
       return .delete
       
     case .verifyPassword(_password: _),
@@ -191,7 +195,8 @@ extension networkingAPI: TargetType {
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
-        .deleteComment(_commentId: _):
+        .deleteComment(_commentId: _),
+        .deleteMyPost(_postId: _):
       return .requestPlain
       
     }
@@ -222,8 +227,10 @@ extension networkingAPI: TargetType {
     case .deleteImage,
         .deleteID ,
         .verifyPassword(_),
-        .deleteComment(_commentId: _):
+        .deleteComment(_commentId: _),
+        .deleteMyPost(_postId: _):
       return [ "Authorization": "\(acceessToken)"]
+      
     default:
       return ["Content-type": "application/json",
               "Content-Type" : "multipart/form-data",

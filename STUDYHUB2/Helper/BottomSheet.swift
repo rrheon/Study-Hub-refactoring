@@ -54,8 +54,6 @@ final class BottomSheet: UIViewController {
       }else{
         self.firstButtonTapped()
       }
-      
-    
     }, for: .touchUpInside)
     return button
   }()
@@ -140,5 +138,6 @@ final class BottomSheet: UIViewController {
   
   func deletePostButtonTapped(){
     deletePostButtonAction?()
+    print("Hhh")
   }
 }
