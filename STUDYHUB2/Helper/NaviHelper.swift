@@ -9,7 +9,7 @@ import UIKit
 
 class NaviHelper: UIViewController {
   private let postID: Int?
-
+  
   init(postID: Int? = nil) {
     self.postID = postID
     
@@ -22,6 +22,7 @@ class NaviHelper: UIViewController {
   
   // MARK: - navi 설정
   func navigationItemSetting() {
+    
     let homeImg = UIImage(named: "LeftArrow")?.withRenderingMode(.alwaysOriginal)
     let leftButton = UIBarButtonItem(image: homeImg,
                                      style: .plain,
@@ -49,7 +50,6 @@ class NaviHelper: UIViewController {
   }
   
   @objc func rightButtonTapped() {
-    print(postID)
     let bottomSheetVC = BottomSheet(postID: postID ?? 0,
                                     checkMyPost: true,
                                     firstButtonTitle: "삭제하기",

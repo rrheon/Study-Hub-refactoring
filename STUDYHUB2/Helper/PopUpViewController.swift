@@ -2,10 +2,16 @@ import UIKit
 
 import SnapKit
 
+protocol PopupViewDelegate: AnyObject {
+  func afterDeletePost(completion: @escaping () -> Void)
+}
+
 final class PopupViewController: UIViewController {
   let popupView: PopupView
   var check: Bool?
   let myPostInfoManager = MyPostInfoManager.shared
+  
+  weak var delegate: PopupViewDelegate?
   
   init(title: String, desc: String, postID: Int = 0,
        bottomeSheet: BottomSheet? = nil,
@@ -44,6 +50,10 @@ final class PopupViewController: UIViewController {
 
           DispatchQueue.main.async {
             self?.showToast(message: "글이 삭제되었어요.", alertCheck: true)
+          }
+          
+          self?.delegate?.afterDeletePost {
+            
           }
 
         case .failure(let error):

@@ -13,6 +13,7 @@ final class MyPostViewController: NaviHelper {
   let myPostDataManager = MyPostInfoManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   var myPostDatas: [MyPostcontent]?
+  var previousMyPage: MyPageViewController?
   
   var countPostNumber = 0 {
     didSet {
@@ -34,9 +35,7 @@ final class MyPostViewController: NaviHelper {
     button.addAction(UIAction { _ in
       print("tap button")
       self.confirmDeleteAll()
-    },
-                     for: .touchUpInside
-    )
+    },for: .touchUpInside)
     return button
   }()
   
@@ -62,9 +61,7 @@ final class MyPostViewController: NaviHelper {
     button.backgroundColor = .o50
     button.layer.cornerRadius = 5
     button.addAction(UIAction{ _ in
-      let createPostVC = CreateStudyViewController()
-      createPostVC.modalPresentationStyle = .overFullScreen
-      self.present(createPostVC, animated: true)
+      self.moveToCreateVC()
     }, for: .touchUpInside)
     return button
   }()
@@ -89,6 +86,15 @@ final class MyPostViewController: NaviHelper {
   }()
   
   private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
+  
+  // MARK: - 이전페이지로 넘어갈 때
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent {
+      previousMyPage?.fetchUserData()
+    }
+  }
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -231,37 +237,33 @@ final class MyPostViewController: NaviHelper {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
-  
+
   // 전체 삭제를 수행하는 메서드
   func deleteAllPost() {
     let dispatchGroup = DispatchGroup()
-    
-//    myPostDatas?.forEach { post in
-//      dispatchGroup.enter() // 진입
-//    
-//      myPostDataManager.fetchDeletePostInfo(postID: post.postID) { [weak self] result in
-//        guard let self = self else { return }
-//        defer {
-//          dispatchGroup.leave() // 완료되면 나가기
-//        }
-//        
-//        switch result {
-//        case .success:
-//          print("모든 게시글 삭제")
-//        case .failure(let error):
-//          // 삭제 실패 시의 처리
-//          print("게시글 삭제 실패: \(error)")
-//        }
-//      }
-//    }
+    myPostDatas?.forEach({
+      dispatchGroup.enter()
+      myPostDataManager.deleteMyPost(postId: $0.postID) { result in
+        defer {
+          dispatchGroup.leave() // 완료되면 나가기
+        }
+        switch result{
+        case .success(let response):
+          print(response)
+        case .failure(let response):
+          print(response)
+        }
+      }
+    })
     
     dispatchGroup.notify(queue: .main) {
       // 모든 비동기 작업이 완료된 후 실행될 코드
       self.showToast(message: "모든 글이 삭제되었어요", alertCheck: true)
-      self.myPostCollectionView.reloadData()
+      self.getMyPostData(size: 5) {
+        print("전체삭제 완료")
+      }
     }
   }
-  
 }
 
 // MARK: - collectionView
@@ -276,7 +278,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
     guard let postID = myPostDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
-    
+    postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
     detailPostDataManager.getPostDetailData(postID: postID) {
       let cellData = self.detailPostDataManager.getPostDetailData()
@@ -367,14 +369,21 @@ extension MyPostViewController: MyPostCellDelegate{
       self.myPostCollectionView.reloadData()
     }
   }
+  
+  func moveToCreateVC(){
+    let createPostVC = CreateStudyViewController()
+    navigationController?.pushViewController(createPostVC, animated: true)
+  }
 }
 
+// 삭제하고 뒤로가면 마이페이지인데 이거 데이터도 다시 잡아줘야함, 게시글 상세조회에서 할때도
 extension MyPostViewController: BottomSheetDelegate {
   // 수정해야할수도
   func firstButtonTapped(postID: Int?) {
     let popupVC = PopupViewController(title: "이 글을 삭제할까요?",
                                       desc: "삭제한 글과 참여자는 다시 볼 수 없어요",
                                       postID: postID ?? 0)
+    popupVC.delegate = self
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
@@ -403,5 +412,14 @@ extension MyPostViewController {
         fetchMoreData()
       }
     }
+  }
+}
+
+extension MyPostViewController: PopupViewDelegate {
+  func afterDeletePost(completion: @escaping () -> Void) {
+    getMyPostData(size: 5) {
+      self.myPostCollectionView.reloadData()
+    }
+    print("test")
   }
 }

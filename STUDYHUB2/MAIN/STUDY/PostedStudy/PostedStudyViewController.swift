@@ -12,9 +12,12 @@ import Kingfisher
 import Moya
 
 final class PostedStudyViewController: NaviHelper {
-  
+
   let detailPostDataManager = PostDetailInfoManager.shared
   var commentId: Int?
+  var previousHomeVC: HomeViewController?
+  var previousMyPostVC: MyPostViewController?
+  
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedData: PostDetailData? {
     didSet {
@@ -867,6 +870,7 @@ final class PostedStudyViewController: NaviHelper {
     let popupVC = PopupViewController(title: "글을 삭제할까요?",
                                       desc: "",
                                       postID: postID)
+    popupVC.delegate = self
     popupVC.modalPresentationStyle = .overFullScreen
 
     self.present(popupVC, animated: true)
@@ -1011,6 +1015,20 @@ extension PostedStudyViewController: BottomSheetDelegate {
     commentButton.setTitle("수정", for: .normal)
     commentId = postID
   }
-  
 }
 
+// MARK: - 네비게이션바 아이템으로 삭제 후 작업
+extension PostedStudyViewController: PopupViewDelegate {
+  func afterDeletePost(completion: @escaping () -> Void) {
+    navigationController?.popViewController(animated: true)
+    if (previousHomeVC != nil) {
+      previousHomeVC?.fetchData {
+        print("삭제 후 리로드")
+      }
+    }else {
+      previousMyPostVC?.afterDeletePost {
+        print("삭제 후 마이페이")
+      }
+    }
+  }
+}

@@ -737,7 +737,6 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
   
   // MARK: - 완료버튼 누를 때 함수
   @objc func completeButtonTapped() {
-  
     // 수정하려면 postid도 넣어야함
     let test = (modifyPostID == nil) ? "POST" : "PUT"
     print(test)
@@ -786,7 +785,7 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
         studyStartDate: startDateButton.currentTitle ?? "",
         studyWay: contactMethod ?? "CONTACT",
         title: studytitleTextField.text ?? "")
-      
+      print(studyData)
       postManager.createPost(createPostDatas: studyData) {
         print("생성시작")
       }

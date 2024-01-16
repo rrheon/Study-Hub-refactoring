@@ -367,6 +367,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
+    postedVC.previousHomeVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
     detailPostDataManager.getPostDetailData(postID: postID) {
@@ -416,4 +417,3 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     }
   }
 }
-

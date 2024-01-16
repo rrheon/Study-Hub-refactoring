@@ -12,27 +12,7 @@ final class MyPageViewController: NaviHelper {
   var myPageUserData: UserDetailData? {
     didSet {
       DispatchQueue.main.async {
-        self.nickNameLabel.text = self.myPageUserData?.nickname
-        self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
-        
-        if let imageURL = URL(string: self.myPageUserData?.imageURL ?? "") {
-          let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))
-          
-          KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
-          
-          self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
-            switch result {
-            case .success(let value):
-              DispatchQueue.main.async {
-                self.profileImageView.image = value.image
-                self.profileImageView.layer.cornerRadius = 20
-                self.profileImageView.clipsToBounds = true
-              }
-            case .failure(let error):
-              print("Image download failed: \(error)")
-            }
-          }
-        }
+        self.updateVC()
       }
     }
   }
@@ -406,6 +386,7 @@ final class MyPageViewController: NaviHelper {
   
   @objc func writtenButtonTapped(){
     let myPostVC = MyPostViewController()
+    myPostVC.previousMyPage = self
     myPostVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(myPostVC, animated: true)
   }
@@ -438,5 +419,34 @@ final class MyPageViewController: NaviHelper {
     
     
     self.navigationController?.pushViewController(myinformViewController, animated: true)
+  }
+  
+  func updateVC(){
+    self.nickNameLabel.text = self.myPageUserData?.nickname
+    self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
+    
+    self.writtenCountLabel.text = "\(self.myPageUserData?.postCount ?? 0)"
+    self.joinstudyCountLabel.text = "\(self.myPageUserData?.participateCount ?? 0)"
+    self.bookmarkCountLabel.text = "\(self.myPageUserData?.bookmarkCount ?? 0)"
+
+    if let imageURL = URL(string: self.myPageUserData?.imageURL ?? "") {
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))
+      
+      KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
+      
+      self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
+          DispatchQueue.main.async {
+            self.profileImageView.image = value.image
+            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.clipsToBounds = true
+          }
+        case .failure(let error):
+          print("Image download failed: \(error)")
+        }
+      }
+    }
+
   }
 }
