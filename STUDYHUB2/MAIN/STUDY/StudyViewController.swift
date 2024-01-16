@@ -264,12 +264,9 @@ final class StudyViewController: NaviHelper {
   }
   
   @objc func addButtonTapped() {
-    let createStudyViewController = CreateStudyViewController()
-    let navigationController = UINavigationController(rootViewController: createStudyViewController)
-    navigationController.modalPresentationStyle = .fullScreen
-    
-    // Present the navigation controller modally
-    present(navigationController, animated: true, completion: nil)
+    let createStudyVC = CreateStudyViewController()
+    createStudyVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(createStudyVC, animated: true)
   }
   
   @objc func recentButtonTapped(){

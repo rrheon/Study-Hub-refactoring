@@ -3,7 +3,7 @@ import UIKit
 import SnapKit
 
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
-final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
+final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   let tokenManager = TokenManager.shared
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
@@ -102,27 +102,6 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
   let endDatePicker = UIDatePicker()
   let endDateTextField = UITextField()
   var selectedEndDate: Date?
-  
-  private let headerStackView: UIStackView = {
-    let headerStackView = UIStackView()
-    headerStackView.axis = .horizontal
-    headerStackView.alignment = .center
-    headerStackView.spacing = 8
-    return headerStackView
-  }()
-  
-  private lazy var backButton: UIButton = {
-    let backButton = UIButton(type: .system)
-    backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-    backButton.tintColor = .white
-    backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-    return backButton
-  }()
-  
-  private lazy var createStudyLabel = createLabel(title: "스터디 만들기",
-                                                  textColor: .white,
-                                                  fontType: "Pretendard",
-                                                  fontSize: 18)
   
   private lazy var headerContentStackView = createStackView(axis: .vertical,
                                                             spacing: 40)
@@ -307,21 +286,17 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
     super.viewDidLoad()
     view.backgroundColor = .black
     
+    navigationItemSetting()
+    
     setUpLayout()
     makeUI()
     postModify()
-    print("@@@@")
-    print(modifyPostID)
 
   }
   
   // MARK: - setUpLayout
   func setUpLayout(){
-    headerStackView.addArrangedSubview(backButton)
-    headerStackView.addArrangedSubview(createStudyLabel)
-    
-    view.addSubview(headerStackView)
-    
+
     headerContentStackView.addArrangedSubview(chatLinkStackView)
     headerContentStackView.addArrangedSubview(chatLinkDividerLine)
     headerContentStackView.addArrangedSubview(studyinfoStackView)
@@ -426,15 +401,15 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
   }
   // MARK: - makeUI
   func makeUI(){
-    headerStackView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-      make.leading.equalTo(view.snp.leading).offset(-60)
-      make.trailing.equalTo(view.snp.trailing).offset(-16)
-    }
-    
-    createStudyLabel.snp.makeConstraints { make in
-      make.centerX.equalTo(headerStackView.snp.centerX).offset(100)
-    }
+//    headerStackView.snp.makeConstraints { make in
+//      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+//      make.leading.equalTo(view.snp.leading).offset(-60)
+//      make.trailing.equalTo(view.snp.trailing).offset(-16)
+//    }
+//
+//    createStudyLabel.snp.makeConstraints { make in
+//      make.centerX.equalTo(headerStackView.snp.centerX).offset(100)
+//    }
     headerContentStackView.snp.makeConstraints { make in
       make.top.equalTo(scrollView.snp.top).offset(30)
       make.leading.trailing.bottom.equalTo(scrollView)
@@ -619,11 +594,20 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(headerStackView.snp.bottom).offset(16)
-      make.leading.equalTo(view)
-      make.trailing.equalTo(view)
-      make.bottom.equalTo(view)
+//      make.top.equalTo(headerStackView.snp.bottom).offset(16)
+//      make.leading.equalTo(view)
+//      make.trailing.equalTo(view)
+//      make.bottom.equalTo(view)
+      make.edges.equalTo(view)
     }
+  }
+  
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+    
+    navigationItem.rightBarButtonItems = .none
+    self.navigationItem.title = "게시글 작성하기"
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
   }
   
   // MARK: -  선택한 학과에 대한 버튼을 생성
@@ -874,12 +858,6 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
     }
   }
   
-  // MARK: - 뒤로 가는 함수
-  @objc func goBack() {
-    
-    self.dismiss(animated: true, completion: nil)
-  }
-  
   // MARK: - calenderTapped함수
   @objc func calendarButtonTapped(_ sender: Any) {
     let viewControllerToPresent = CalendarViewController()
@@ -925,7 +903,7 @@ final class CreateStudyViewController: UIViewController, ChangeDateProtocol {
     print("createpage")
     
     guard let postID = modifyPostID else { return }
-    createStudyLabel.text = "수정하기"
+//    createStudyLabel.text = "수정하기"
     postInfoManager.getPostDetailData(postID: postID) {
       let modifyData = self.postInfoManager.getPostDetailData()
       

@@ -238,7 +238,7 @@ final class MyPostViewController: NaviHelper {
     self.present(popupVC, animated: false)
   }
 
-  // 전체 삭제를 수행하는 메서드
+  // MARK: -  전체 삭제를 수행하는 메서드
   func deleteAllPost() {
     let dispatchGroup = DispatchGroup()
     myPostDatas?.forEach({
@@ -370,8 +370,10 @@ extension MyPostViewController: MyPostCellDelegate{
     }
   }
   
+  // MARK: - 스터디 생성 VC로 이동
   func moveToCreateVC(){
     let createPostVC = CreateStudyViewController()
+    createPostVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(createPostVC, animated: true)
   }
 }
@@ -420,6 +422,5 @@ extension MyPostViewController: PopupViewDelegate {
     getMyPostData(size: 5) {
       self.myPostCollectionView.reloadData()
     }
-    print("test")
   }
 }
