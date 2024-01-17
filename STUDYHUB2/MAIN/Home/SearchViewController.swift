@@ -171,8 +171,7 @@ final class SearchViewController: NaviHelper {
   }
   
   // MARK: - 추천어 검색하기
-  func searchRecommend(){
-    guard let keyword = keyword else { return }
+  func searchRecommend(keyword: String){
     print(keyword)
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.recommendSearch(_keyword: keyword)) {
@@ -181,6 +180,9 @@ final class SearchViewController: NaviHelper {
         do {
           let recommendList = try JSONDecoder().decode(RecommendList.self, from: response.data)
           self.recommendData = recommendList
+          DispatchQueue.main.async {
+            self.resultTableView.reloadData()
+          }
           print(recommendList)
         } catch {
           print("Failed to decode JSON: \(error)")
@@ -199,11 +201,11 @@ extension SearchViewController: UISearchBarDelegate {
     guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
     
     print(keyword)
-    searchTapped(keyword: keyword)
-    searchRecommend()
+    searchTapped()
+    searchRecommend(keyword: keyword)
   }
   
-  func searchTapped(keyword: String){
+  func searchTapped(){
     view.setNeedsLayout()
     view.layoutIfNeeded()
     
@@ -221,7 +223,7 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   // UITableViewDataSource 함수
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 4
+    return recommendData?.recommendList.count ?? 0
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -232,7 +234,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     cell.model = recommendData
     imageView.image = UIImage(named: "ScearchImgGray")
     cell.contentView.addSubview(imageView)
-    
+    cell.name.text = recommendData?.recommendList[indexPath.row]
     imageView.snp.makeConstraints { make in
       make.leading.equalToSuperview()
       make.centerY.equalTo(cell.contentView)

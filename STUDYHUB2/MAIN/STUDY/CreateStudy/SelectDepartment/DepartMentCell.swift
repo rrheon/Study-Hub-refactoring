@@ -49,7 +49,7 @@ final class CustomCell: UITableViewCell {
   }
 
   func bind(){
-    print("바인드")
+//    name.text = model?.recommend
   }
 }
 
