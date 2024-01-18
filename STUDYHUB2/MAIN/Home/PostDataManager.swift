@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Moya
+
 // MARK: - RecommendList
 struct RecommendList: Codable {
   let recommendList: [String]
@@ -94,6 +96,51 @@ final class PostDataManager {
     } else {
       // 처리할 값이 없는 경우에 대한 처리를 수행합니다.
       return nil
+    }
+  }
+
+  func getPostData(hot: String,
+                   text: String? = nil,
+                   page: Int,
+                   size: Int,
+                   titleAndMajor: String,
+                   completion: @escaping (PostDataContent) -> Void) {
+    fectchPostData(hot: hot,
+                   text: text,
+                   page: page,
+                   size: size,
+                   titleAndMajor: titleAndMajor) {
+      guard let data = self.newPostDatas else { return }
+      completion(data)
+    }
+  }
+  
+  private func fectchPostData(hot: String,
+                   text: String? = nil,
+                   page: Int,
+                   size: Int,
+                   titleAndMajor: String,
+                   completion: @escaping () -> Void){
+    
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.searchPostList(_hot: hot,
+                                     text: text ?? "",
+                                     page: page,
+                                     size: size,
+                                     titleAndMajor: titleAndMajor)) { result in
+      switch result {
+      case.success(let response):
+        do {
+          let searchResult = try JSONDecoder().decode(PostDataContent.self, from: response.data)
+          self.newPostDatas = searchResult
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+        print(response.response)
+      case .failure(let response):
+        print(response.response)
+      }
+      completion()
     }
   }
   

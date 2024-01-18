@@ -6,13 +6,18 @@ import Moya
 final class SearchViewController: NaviHelper {
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
   let detailPostDataManager = PostDetailInfoManager.shared
+  let postDataManager = PostDataManager.shared
   var keyword: String?
   var recommendData: RecommendList?
+  var searchResultData: PostDataContent? {
+    didSet{
+      countLabel.text = "\(searchResultData?.totalCount ?? 0)개"
+    }
+  }
   
   init(keyword: String? = nil) {
     self.keyword = keyword
     super.init()
-    print(keyword)
   }
   
   required init?(coder: NSCoder) {
@@ -57,6 +62,7 @@ final class SearchViewController: NaviHelper {
     return button
   }()
   
+  
   private lazy var countLabel = createLabel(title: "4개",
                                             textColor: .bg80,
                                             fontType: "Pretendard",
@@ -91,9 +97,12 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
-    setUpLayout()
-    makeUI()
-    
+    searchRecommend(keyword: keyword ?? "") {
+      self.setUpLayout()
+      self.makeUI()
+
+      self.resultTableView.reloadData()
+    }
   }
   
   func makeUI() {
@@ -107,6 +116,14 @@ final class SearchViewController: NaviHelper {
     
     resultCollectionView.register(SearchResultCell.self,
                                   forCellWithReuseIdentifier: SearchResultCell.id)
+    view.setNeedsLayout()
+    view.layoutIfNeeded()
+    
+    resultTableView.snp.makeConstraints { make in
+      make.top.equalTo(searchBar.snp.bottom).offset(10)
+      make.leading.trailing.equalTo(searchBar).offset(10)
+      make.bottom.equalTo(view).offset(-10)
+    }
     
     searchBar.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
@@ -116,7 +133,12 @@ final class SearchViewController: NaviHelper {
   }
   
   func setUpLayout() {
-    view.addSubview(searchBar)
+    [
+      searchBar,
+      resultTableView
+    ].forEach {
+      view.addSubview($0)
+    }
   }
   
   // MARK: - 서치바 재설정
@@ -171,8 +193,7 @@ final class SearchViewController: NaviHelper {
   }
   
   // MARK: - 추천어 검색하기
-  func searchRecommend(keyword: String){
-    print(keyword)
+  func searchRecommend(keyword: String , completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.recommendSearch(_keyword: keyword)) {
       switch $0 {
@@ -180,86 +201,40 @@ final class SearchViewController: NaviHelper {
         do {
           let recommendList = try JSONDecoder().decode(RecommendList.self, from: response.data)
           self.recommendData = recommendList
+
+          completion()
+
           DispatchQueue.main.async {
             self.resultTableView.reloadData()
           }
-          print(recommendList)
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-        print(response.response)
       case .failure(let response):
         print(response.response)
       }
     }
   }
-}
-
-extension SearchViewController: UISearchBarDelegate {
-  // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-    
-    print(keyword)
-    searchTapped()
-    searchRecommend(keyword: keyword)
-  }
   
-  func searchTapped(){
-    view.setNeedsLayout()
-    view.layoutIfNeeded()
-    
-    view.addSubview(resultTableView)
-    resultTableView.snp.makeConstraints { make in
-      make.top.equalTo(searchBar.snp.bottom).offset(10)
-      make.leading.trailing.equalTo(searchBar)
-      make.bottom.equalTo(view).offset(-10)
-    }
-    
-  }
-}
-
-// MARK: - tableView cell 함수
-extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-  // UITableViewDataSource 함수
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return recommendData?.recommendList.count ?? 0
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = resultTableView.dequeueReusableCell(withIdentifier: CustomCell.cellId,
-                                                   for: indexPath) as! CustomCell
-    
-    let imageView = UIImageView()
-    cell.model = recommendData
-    imageView.image = UIImage(named: "ScearchImgGray")
-    cell.contentView.addSubview(imageView)
-    cell.name.text = recommendData?.recommendList[indexPath.row]
-    imageView.snp.makeConstraints { make in
-      make.leading.equalToSuperview()
-      make.centerY.equalTo(cell.contentView)
-    }
-    
-    cell.backgroundColor = .white
-    
-    return cell
-  }
-  
-  // UITableViewDelegate 함수 (선택)
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  // MARK: - 검색 후 추천어를 눌렀을 때
+  func updateUI(){
     resultTableView.isHidden = true
     
     navigationItem.rightBarButtonItems = .none
     
     navigationController?.navigationBar.topItem?.title = "검색결과"
     navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
-    view.addSubview(recentButton)
-    view.addSubview(separateLine)
-    view.addSubview(popularButton)
-    view.addSubview(countLabel)
-    view.addSubview(divideLine)
-    view.addSubview(scrollView)
+
+    [
+      recentButton,
+      separateLine,
+      popularButton,
+      countLabel,
+      divideLine,
+      scrollView
+    ].forEach {
+      view.addSubview($0)
+    }
     
     scrollView.addSubview(resultCollectionView)
     
@@ -283,7 +258,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     countLabel.snp.makeConstraints { make in
       make.centerY.equalTo(recentButton)
-      make.trailing.equalToSuperview().offset(-10)
+      make.trailing.equalToSuperview().offset(-20)
     }
     
     divideLine.backgroundColor = .bg30
@@ -300,9 +275,62 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(divideLine.snp.bottom).offset(10)
       make.leading.trailing.bottom.equalTo(view)
-      
+    }
+  }
+}
+
+// MARK: - 서치바 함수
+extension SearchViewController: UISearchBarDelegate {
+  // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
+    
+    searchRecommend(keyword: keyword) {
+      print("검색완료")
+    }
+  }
+  
+}
+
+// MARK: - tableView cell 함수
+extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
+  // UITableViewDataSource 함수
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return recommendData?.recommendList.count ?? 0
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = resultTableView.dequeueReusableCell(withIdentifier: CustomCell.cellId,
+                                                   for: indexPath) as! CustomCell
+    
+    let imageView = UIImageView()
+    cell.model = recommendData
+    
+    imageView.image = UIImage(named: "ScearchImgGray")
+    
+    cell.contentView.addSubview(imageView)
+    cell.name.text = recommendData?.recommendList[indexPath.row]
+    imageView.snp.makeConstraints { make in
+      make.leading.equalToSuperview()
+      make.centerY.equalTo(cell.contentView)
     }
     
+    cell.backgroundColor = .white
+    
+    return cell
+  }
+  
+  // UITableViewDelegate 함수 (선택)
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    postDataManager.getPostData(hot: "true",
+                                text: keyword,
+                                page: 0,
+                                size: 5,
+                                titleAndMajor: "true") { result in
+      self.searchResultData = result
+      self.updateUI()
+    }
+   
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -320,7 +348,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return 4
+    return searchResultData?.totalCount ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -335,8 +363,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
-                                                  for: indexPath)
-
+                                                  for: indexPath) as! SearchResultCell
+    cell.model = searchResultData?.postDataByInquiries.content[indexPath.row]
     return cell
   }
 }
@@ -348,7 +376,6 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     
     return CGSize(width: 350, height: 247)
-    
   }
 }
 

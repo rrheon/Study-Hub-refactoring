@@ -47,21 +47,28 @@ struct CommentedUserData: Codable {
 enum networkingAPI {
   case storeImage(_image: UIImage)
   case deleteImage
+  
   case editUserNickName(_nickname: String)
   case editUserMaojr(_major: String)
   case editUserPassword(_checkPassword: Bool, _password: String)
+  
   case verifyPassword(_password: String)
   case verifyEmail(_code: String, _email: String)
   case checkEmailDuplication(_email: String)
   case sendEmailCode(_email: String)
+  
   case deleteID
-  case searchSinglePost(_postId: Int)
-  case writeComment(_content: String, _postId: Int)
+  
   case getCommentList(_postId: Int, _page: Int, _size: Int)
+  case writeComment(_content: String, _postId: Int)
   case deleteComment(_commentId: Int)
   case modifyComment(_commentId: Int, _content: String)
+  
   case getMyPostList(_page: Int, _size: Int)
   case deleteMyPost(_postId: Int)
+  case searchSinglePost(_postId: Int)
+  
+  case searchPostList(_hot: String, text: String, page: Int, size: Int, titleAndMajor: String)
   case recommendSearch(_keyword: String)
 }
 
@@ -112,6 +119,8 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts/mypost"
     case .deleteMyPost(let postId):
       return "/v1/study-posts/\(postId)"
+    case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
+      return "/v2/study-posts"
       
     case .recommendSearch(_keyword: _):
       return "/v1/study-post/recommend"
@@ -123,7 +132,8 @@ extension networkingAPI: TargetType {
     case .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
         .getMyPostList(_page: _, _size: _),
-        .recommendSearch(_keyword: _):
+        .recommendSearch(_keyword: _),
+        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return .get
       
     case .storeImage(_image: _),
@@ -201,6 +211,16 @@ extension networkingAPI: TargetType {
       let params: [String : Any] = [ "keyword" : keyword]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .searchPostList(let hot, let text, let page, let size, let titleAndMajor):
+      let parmas: [String: Any] = [
+        "hot" : hot,
+        "inquiryText": text,
+        "page":page,
+        "size": size,
+        "titleAndMajor": titleAndMajor
+      ]
+      return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -218,7 +238,8 @@ extension networkingAPI: TargetType {
         .sendEmailCode(_email: _),
         .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
-        .recommendSearch(_keyword: _):
+        .recommendSearch(_keyword: _),
+        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return ["Content-type": "application/json"]
       
       
