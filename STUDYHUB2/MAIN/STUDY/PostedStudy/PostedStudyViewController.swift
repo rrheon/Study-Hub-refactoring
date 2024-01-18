@@ -14,10 +14,14 @@ import Moya
 final class PostedStudyViewController: NaviHelper {
 
   let detailPostDataManager = PostDetailInfoManager.shared
+  let myPostDataManager = MyPostInfoManager.shared
+  
   var commentId: Int?
+  // 이전페이지의 종류가 스터디VC , 검색결과 VC도 있음
   var previousHomeVC: HomeViewController?
   var previousMyPostVC: MyPostViewController?
-  
+  var myPostIDList: [Int] = []
+
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedData: PostDetailData? {
     didSet {
@@ -401,13 +405,18 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
+    navigationItemSetting()
+    
+    DispatchQueue.main.async {
+      self.getMyPostID {
+        self.navigationItemSetting()
+      }
+    }
     
     view.backgroundColor = .white
     
     setupDelegate()
     registerCell()
-    
-    navigationItemSetting()
   }
   
   // MARK: - setUpLayout
@@ -875,6 +884,42 @@ final class PostedStudyViewController: NaviHelper {
 
     self.present(popupVC, animated: true)
   }
+  
+  // MARK: - 내가 쓴 post의 postid가져오기, 지금 화면이넘어갈때 처음 초기세팅이 잠깐 보였다가 바뀜
+  func getMyPostID(page: Int = 0, size: Int = 5, completion: @escaping () -> Void) {
+    myPostDataManager.fetchMyPostInfo(page: page, size: size) { _ in
+      let data = self.myPostDataManager.getMyTotalPostData()
+      guard let last = data?.posts.last else { return }
+      
+      if last {
+        let finalData = self.myPostDataManager.getMyTotalPostData()
+        
+        if let posts = finalData?.posts.myPostcontent {
+          for i in posts {
+            self.myPostIDList.append(i.postID)
+          }
+        }
+        
+        print(self.myPostIDList)
+        completion()
+      } else {
+        self.getMyPostID(page: page,
+                         size: size + 5,
+                         completion: completion) // completion 파라미터 추가
+      }
+    }
+  }
+
+  
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+    
+    if !myPostIDList.contains(postedData?.postID ?? 0) {
+     print("11")
+      self.navigationItem.rightBarButtonItem = nil
+    }
+  }
+
 }
 
 // MARK: - collectionView
@@ -1017,7 +1062,7 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
 }
 
-// MARK: - 네비게이션바 아이템으로 삭제 후 작업
+// MARK: - 네비게이션바 아이템으로 삭제 후 작업, 서치뷰도 있음..
 extension PostedStudyViewController: PopupViewDelegate {
   func afterDeletePost(completion: @escaping () -> Void) {
     navigationController?.popViewController(animated: true)

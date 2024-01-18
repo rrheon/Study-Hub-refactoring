@@ -353,8 +353,14 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    guard let postID = searchResultData?.postDataByInquiries.content[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
+    postedVC.hidesBottomBarWhenPushed = true
+    
+    detailPostDataManager.searchSinglePostData(postId: postID) {
+      let cellData = self.detailPostDataManager.getPostDetailData()
+      postedVC.postedData = cellData
+    }
   
     self.navigationController?.pushViewController(postedVC, animated: true)
   }

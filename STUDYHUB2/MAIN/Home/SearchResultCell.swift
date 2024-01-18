@@ -267,6 +267,16 @@ final class SearchResultCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
+  func convertGender(gender: String) -> String {
+    if gender == "FEMALE" {
+      return "여자"
+    } else if gender == "MALE" {
+      return "남자"
+    } else {
+      return "무관"
+    }
+  }
+  
   private func bind() {
     //    titleLabel.text = model
     guard let data = model else { return }
@@ -284,7 +294,7 @@ final class SearchResultCell: UICollectionViewCell {
     
     fineLabel.text = "\(data.penalty)원"
     
-    genderLabel.text = "  \(data.filteredGender)  "
+    genderLabel.text = convertGender(gender: data.filteredGender)
     
     nickNameLabel.text = data.userData.nickname
     postedDate.text = "\(data.createdDate[0]).\(data.createdDate[1]).\(data.createdDate[2])"

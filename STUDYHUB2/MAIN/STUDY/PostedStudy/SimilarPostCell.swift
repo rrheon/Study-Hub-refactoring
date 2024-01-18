@@ -99,25 +99,24 @@ final class SimilarPostCell: UICollectionViewCell {
   
   private func configure() {
     majorLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(10)
-      make.leading.equalToSuperview().offset(10)
+      make.top.equalToSuperview().offset(15)
+      make.leading.equalToSuperview().offset(15)
       make.height.equalTo(24)
     }
     
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(majorLabel.snp.bottom)
+      make.top.equalTo(majorLabel.snp.bottom).offset(10)
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
     remainMemeber.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom)
+      make.top.equalTo(titleLabel.snp.bottom).offset(5)
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
     profileImageView.snp.makeConstraints { make in
-      make.top.equalTo(remainMemeber.snp.bottom).offset(20)
       make.leading.equalTo(majorLabel.snp.leading)
-      make.bottom.equalToSuperview().offset(-10)
+      make.bottom.equalToSuperview().offset(-15)
     }
     
     writerMajorLabel.snp.makeConstraints { make in
