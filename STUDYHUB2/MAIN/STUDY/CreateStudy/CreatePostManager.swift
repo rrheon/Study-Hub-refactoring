@@ -69,28 +69,8 @@ final class PostManager {
     }
   }
   
-  func updatePost(updatePostDatas: UpdateStudyRequest,
-                  completion: @escaping () -> Void) {
-    networkingManager.fetchData(type: "PUT",
-                                apiVesrion: "v1",
-                                urlPath: "/study-posts",
-                                queryItems: nil,
-                                tokenNeed: true,
-                                createPostData: updatePostDatas) { result in
-      switch result {
-      case .success(let postResponse):
-        print(postResponse) // 이제 id는 Int 타입의 값입니다.
-        print("성공")
-
-        completion()
-      case .failure(let error):
-        print("Error: \(error)")
-      }
-    }
-    
-  }
-  
-  func modifyPost(data: UpdateStudyRequest){
+  func modifyPost(data: UpdateStudyRequest,
+                  completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.modifyMyPost(_data: data)) { result in
       switch result {
@@ -98,7 +78,7 @@ final class PostManager {
         
         let strData = String(data: postResponse.data, encoding: .utf8)
         print("Response body: \(strData ?? "")")
-        
+        completion()
       case .failure(let error):
         print("Error: \(error)")
       }

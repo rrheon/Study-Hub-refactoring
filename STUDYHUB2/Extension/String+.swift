@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum DateFormat: String {
+    case format1 = "yyyy'년' MM'월' dd'일'"
+    case format2 = "yyyy/MM/dd"
+    case format3 = "yyyy-M-d"
+}
+
 extension String {
   func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
     let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
@@ -17,22 +23,19 @@ extension String {
     return ceil(boundingBox.width)
   }
   
-  func dateConvert() -> String {
-    let inputFormat = "yyyy'년' MM'월' dd'일'"
-    let outputFormat = "yyyy-MM-dd"
+  func convertDateString(from format: DateFormat,
+                         to outputFormat: String) -> String {
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = format.rawValue
 
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = inputFormat
-
-    if let date = dateFormatter.date(from: self) {
-        dateFormatter.dateFormat = outputFormat
-        let outputDate = dateFormatter.string(from: date)
-        return outputDate
-    } else {
-      return "fail"
-    }
+      if let date = dateFormatter.date(from: self) {
+          dateFormatter.dateFormat = outputFormat
+          let outputDate = dateFormatter.string(from: date)
+          return outputDate
+      } else {
+        return "fail"
+      }
   }
-  
   
   func convertMajor(_ koreanName: String, isEnglish: Bool) -> String {
     let conversionTable: [String: String] = [

@@ -604,10 +604,23 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   
   override func navigationItemSetting() {
     super.navigationItemSetting()
-    
+
     navigationItem.rightBarButtonItems = .none
     self.navigationItem.title = "게시글 작성하기"
     self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+  }
+  
+  // MARK: - 수정 시 뒤로가기 눌렀을 때
+  @objc override func leftButtonTapped(_ sender: UIBarButtonItem) {
+    guard let postID = modifyPostID else { return }
+    let popupVC = PopupViewController(title: "수정을 취소할까요?",
+                                      desc: "취소할 시 내용이 저장되지 않아요",
+                                      leftButtonTitle: "아니요",
+                                      rightButtonTilte: "네")
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
+    }
+    self.present(popupVC, animated: true)
   }
   
   // MARK: -  선택한 학과에 대한 버튼을 생성
@@ -723,7 +736,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   @objc func completeButtonTapped() {
     // 수정하려면 postid도 넣어야함
     let test = (modifyPostID == nil) ? "POST" : "PUT"
-    print(test)
+    
     if test == "PUT" {
       let chatUrl = chatLinkTextField.text ?? ""
       let content = studyproduceTextView.text ?? ""
@@ -756,11 +769,10 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
                                               studyStartDate: studyStartDate,
                                               studyWay: studyWay,
                                               title: title)
-      print(updatePostData)
-//      postManager.updatePost(updatePostDatas: updatePostData) {
-//        print("수정시작")
-//      }
-      postManager.modifyPost(data: updatePostData)
+      postManager.modifyPost(data: updatePostData) {
+        self.navigationController?.popViewController(animated: true)
+        self.showToast(message: "글이 수정됐어요.", alertCheck: true)
+      }
     } else {
       let studyData = CreateStudyRequest(
         chatUrl: chatLinkTextField.text ?? "",
@@ -905,12 +917,15 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     }
   }
   
-  // MARK: - 수정하기
+  // MARK: - 수정하기눌렀을 때 데이터 가져옴
   func postModify(){
-    print("createpage")
-    
     guard let postID = modifyPostID else { return }
-//    createStudyLabel.text = "수정하기"
+    
+    self.navigationItem.title = "수정하기"
+    self.navigationController?.navigationBar.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.white
+    ]
+    
     postInfoManager.getPostDetailData(postID: postID) {
       let modifyData = self.postInfoManager.getPostDetailData()
       
@@ -959,15 +974,20 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
           
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
           let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
-          self.startDateButton.setTitle(startDate, for: .normal)
+
+          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+          self.startDateButton.setTitle(changedStartDate, for: .normal)
+          
           let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
-          self.endDateButton.setTitle(endDate, for: .normal)
+          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
         
+          self.endDateButton.setTitle(changedEndDate, for: .normal)
         }
       }
 
     }
   }
+  
 }
 
 // MARK: - textField 0 입력 시
