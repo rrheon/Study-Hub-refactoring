@@ -25,6 +25,7 @@ final class BottomSheet: UIViewController {
   
   let detailPostDataManager = PostDetailInfoManager.shared
   var deletePostButtonAction: (() -> Void)?
+  var modifyPostButtonAction: (() -> Void)?
 
   init(postID: Int,
        checkMyPost: Bool = false,
@@ -63,7 +64,11 @@ final class BottomSheet: UIViewController {
     button.setTitle(secondButtonTitle, for: .normal)
     button.setTitleColor(.bg80, for: .normal)
     button.addAction(UIAction { _ in
-      self.secondButtonTapped()
+      if self.checkMyPost {
+        self.modifyPostButtonTapped()
+      }else{
+        self.secondButtonTapped()
+      }
     }, for: .touchUpInside)
     return button
   }()
@@ -139,5 +144,10 @@ final class BottomSheet: UIViewController {
   func deletePostButtonTapped(){
     deletePostButtonAction?()
     print("Hhh")
+  }
+  
+  func modifyPostButtonTapped(){
+    modifyPostButtonAction?()
+    print("게시글 수정하기")
   }
 }

@@ -90,7 +90,10 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     return textField
   }
   
-  func createLabel(title: String, textColor: UIColor, fontType: String, fontSize: CGFloat) -> UILabel {
+  func createLabel(title: String,
+                   textColor: UIColor,
+                   fontType: String,
+                   fontSize: CGFloat) -> UILabel {
     let label = UILabel()
     label.text = title
     label.textColor = textColor

@@ -731,29 +731,36 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       let major = convertMajor(selectedMajor ?? "", isEnglish: true)
       let penalty = Int(fineAmountTextField.text ?? "0") ?? 0
       let penaltyWay = fineTypesTextField.text ?? ""
-      let studyEndDate = endDateButton.currentTitle ?? ""
+
+      let endDate = endDateButton.currentTitle ?? ""
+      let studyEndDate = endDate.replacingOccurrences(of: ". ", with: "-")
+
       let studyPerson = Int(studymemberTextField.text ?? "") ?? 0
-      let studyStartDate = startDateButton.currentTitle ?? ""
+
+      let stratDate = endDateButton.currentTitle ?? ""
+      let studyStartDate = stratDate.replacingOccurrences(of: ". ", with: "-")
       let studyWay = contactMethod ?? "CONTACT"
       let title = studytitleTextField.text ?? ""
 
-      let updatePostData = UpdateStudyRequest(chatURL: chatUrl,
+        // 시작하는 날 종료하는 날의 버튼형식이 이상함, postedData에서 가져오는거라 처음에 .으로 가져와짐 -> - 으로 바꿔야함
+      let updatePostData = UpdateStudyRequest(chatUrl: chatUrl,
                                               close: false,
                                               content: content,
                                               gender: gender,
                                               major: major,
                                               penalty: penalty,
                                               penaltyWay: penaltyWay,
-                                              postID: modifyPostID ?? 0,
+                                              postId: modifyPostID ?? 0,
                                               studyEndDate: studyEndDate,
                                               studyPerson: studyPerson,
                                               studyStartDate: studyStartDate,
                                               studyWay: studyWay,
                                               title: title)
-
-      postManager.updatePost(updatePostDatas: updatePostData) {
-        print("수정시작")
-      }
+      print(updatePostData)
+//      postManager.updatePost(updatePostDatas: updatePostData) {
+//        print("수정시작")
+//      }
+      postManager.modifyPost(data: updatePostData)
     } else {
       let studyData = CreateStudyRequest(
         chatUrl: chatLinkTextField.text ?? "",
@@ -950,9 +957,10 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
           
           self.fineAmountTextField.text = String($0.penalty)
           
-          let startDate = "\($0.studyStartDate[0]). \($0.studyStartDate[1]). \($0.studyStartDate[2])"
+          // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
+          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
           self.startDateButton.setTitle(startDate, for: .normal)
-          let endDate = "\($0.studyEndDate[0]). \($0.studyEndDate[1]). \($0.studyEndDate[2])"
+          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
           self.endDateButton.setTitle(endDate, for: .normal)
         
         }

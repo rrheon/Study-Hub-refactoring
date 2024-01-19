@@ -61,6 +61,12 @@ class NaviHelper: UIViewController {
       }
     }
     
+    bottomSheetVC.modifyPostButtonAction = { [weak self] in
+      bottomSheetVC.dismiss(animated: true) {
+        self?.modifyPost()
+      }
+    }
+    
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
         if #available(iOS 16.0, *) {
@@ -85,4 +91,7 @@ class NaviHelper: UIViewController {
     print("삭제하자")
   }
   
+  func modifyPost(){
+    print("수정하자")
+  }
 }

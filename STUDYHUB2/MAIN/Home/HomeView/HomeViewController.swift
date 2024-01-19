@@ -365,8 +365,13 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+    guard let newPost = newPostDatas?.postDataByInquiries.content[indexPath.row].postID,
+          let deadLinePost =  deadlinePostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+    
+    let postID = collectionView.tag == 1 ? newPost : deadLinePost
+    
     let postedVC = PostedStudyViewController(postID: postID)
+ 
     postedVC.previousHomeVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
@@ -396,7 +401,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
       if let cell = cell as? DeadLineCell {
         let content = deadlinePostDatas?.postDataByInquiries.content[indexPath.row]
         cell.model = content
-      
       }
       return cell
     }

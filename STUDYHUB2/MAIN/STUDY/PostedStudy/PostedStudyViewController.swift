@@ -15,6 +15,7 @@ final class PostedStudyViewController: NaviHelper {
 
   let detailPostDataManager = PostDetailInfoManager.shared
   let myPostDataManager = MyPostInfoManager.shared
+  let createPostManager = PostManager.shared
   
   var commentId: Int?
   // 이전페이지의 종류가 스터디VC , 검색결과 VC도 있음
@@ -885,8 +886,31 @@ final class PostedStudyViewController: NaviHelper {
     self.present(popupVC, animated: true)
   }
   
+  // MARK: - 네비게이션바의 modifyPost재정의
+  override func modifyPost() {
+    guard let postID = postedData?.postID else { return }
+    let popupVC = PopupViewController(title: "글을 수정할까요?",
+                                      desc: "",
+                                      postID: postID)
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
+      
+      let modifyVC = CreateStudyViewController()
+      modifyVC.modifyPostID = postID
+      
+      self.navigationController?.pushViewController(modifyVC, animated: true)
+    }
+    
+    popupVC.delegate = self
+    popupVC.modalPresentationStyle = .overFullScreen
+
+    self.present(popupVC, animated: true)
+  }
+  
   // MARK: - 내가 쓴 post의 postid가져오기, 지금 화면이넘어갈때 처음 초기세팅이 잠깐 보였다가 바뀜
-  func getMyPostID(page: Int = 0, size: Int = 5, completion: @escaping () -> Void) {
+  func getMyPostID(page: Int = 0,
+                   size: Int = 5,
+                   completion: @escaping () -> Void) {
     myPostDataManager.fetchMyPostInfo(page: page, size: size) { _ in
       let data = self.myPostDataManager.getMyTotalPostData()
       guard let last = data?.posts.last else { return }
@@ -905,18 +929,19 @@ final class PostedStudyViewController: NaviHelper {
       } else {
         self.getMyPostID(page: page,
                          size: size + 5,
-                         completion: completion) // completion 파라미터 추가
+                         completion: completion)
       }
     }
   }
 
-  
+  // MARK: - 네비게이션바 세팅
   override func navigationItemSetting() {
     super.navigationItemSetting()
     
     if !myPostIDList.contains(postedData?.postID ?? 0) {
-     print("11")
       self.navigationItem.rightBarButtonItem = nil
+    } else {
+      bottomButtonStackView.isHidden = true
     }
   }
 

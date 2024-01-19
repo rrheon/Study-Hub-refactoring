@@ -65,10 +65,13 @@ enum networkingAPI {
   case modifyComment(_commentId: Int, _content: String)
   
   case getMyPostList(_page: Int, _size: Int)
+  case modifyMyPost(_data: UpdateStudyRequest)
   case deleteMyPost(_postId: Int)
   case searchSinglePost(_postId: Int)
   
-  case searchPostList(_hot: String, text: String, page: Int, size: Int, titleAndMajor: String)
+  case searchPostList(_hot: String, text: String,
+                      page: Int, size: Int,
+                      titleAndMajor: String)
   case recommendSearch(_keyword: String)
 }
 
@@ -119,6 +122,8 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts/mypost"
     case .deleteMyPost(let postId):
       return "/v1/study-posts/\(postId)"
+    case .modifyMyPost(_data: _):
+      return "/v1/study-posts"
     case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return "/v2/study-posts"
       
@@ -140,7 +145,8 @@ extension networkingAPI: TargetType {
         .editUserNickName(_nickname: _),
         .editUserMaojr(_major: _),
         .editUserPassword(_checkPassword: _, _password: _),
-        .modifyComment(_commentId: _, _content: _):
+        .modifyComment(_commentId: _, _content: _),
+        .modifyMyPost(_data: _):
       return .put
       
     case .deleteImage,
@@ -203,6 +209,9 @@ extension networkingAPI: TargetType {
       let parmas = ModifyComment(commentId: commentId, content: content)
       return .requestJSONEncodable(parmas)
       
+    case .modifyMyPost(let data):
+      return .requestJSONEncodable(data)
+
     case .getMyPostList(let page, let size):
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
@@ -248,7 +257,8 @@ extension networkingAPI: TargetType {
       
     case .writeComment(_content: _, _postId: _),
         .modifyComment(_commentId: _, _content: _),
-        .getMyPostList(_page: _, _size: _):
+        .getMyPostList(_page: _, _size: _),
+        .modifyMyPost(_data: _):
       return ["Content-type": "application/json",
               "Authorization": "\(acceessToken)"]
       

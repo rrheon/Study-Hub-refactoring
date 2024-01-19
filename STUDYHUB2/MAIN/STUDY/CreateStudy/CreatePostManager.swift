@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Moya
+
 struct CreateStudyRequest: Codable {
   var chatUrl: String
   var close: Bool
@@ -21,22 +23,15 @@ struct CreateStudyRequest: Codable {
 
 // MARK: - UpdataePost
 struct UpdateStudyRequest: Codable {
-    let chatURL: String
-    let close: Bool
-    let content, gender, major: String
-    let penalty: Int
-    let penaltyWay: String
-    let postID: Int
-    let studyEndDate: String
-    let studyPerson: Int
-    let studyStartDate, studyWay, title: String
-
-    enum CodingKeys: String, CodingKey {
-        case chatURL = "chatUrl"
-        case close, content, gender, major, penalty, penaltyWay
-        case postID = "postId"
-        case studyEndDate, studyPerson, studyStartDate, studyWay, title
-    }
+  let chatUrl: String
+  let close: Bool
+  let content, gender, major: String
+  let penalty: Int
+  let penaltyWay: String?
+  let postId: Int
+  let studyEndDate: String
+  let studyPerson: Int
+  let studyStartDate, studyWay, title: String
 }
 
 struct PostResponse: Codable {
@@ -93,5 +88,20 @@ final class PostManager {
       }
     }
     
+  }
+  
+  func modifyPost(data: UpdateStudyRequest){
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.modifyMyPost(_data: data)) { result in
+      switch result {
+      case .success(let postResponse):
+        
+        let strData = String(data: postResponse.data, encoding: .utf8)
+        print("Response body: \(strData ?? "")")
+        
+      case .failure(let error):
+        print("Error: \(error)")
+      }
+    }
   }
 }
