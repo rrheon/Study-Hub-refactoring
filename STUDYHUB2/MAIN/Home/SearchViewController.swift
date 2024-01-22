@@ -97,12 +97,8 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
-    searchRecommend(keyword: keyword ?? "") {
-      self.setUpLayout()
-      self.makeUI()
-
-      self.resultTableView.reloadData()
-    }
+    setUpLayout()
+    makeUI()
   }
   
   func makeUI() {

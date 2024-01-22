@@ -1,30 +1,31 @@
+//
+//  ParticipateVC.swift
+//  STUDYHUB2
+//
+//  Created by 최용헌 on 2024/01/22.
+//
+
 import UIKit
+
 import SnapKit
 
-protocol WriteRefuseReasonVCDelegate: AnyObject {
-  func completeButtonTapped(reason: String)
-}
-
-final class WriteRefuseReasonVC: NaviHelper {
-  weak var delegate: WriteRefuseReasonVCDelegate?
+final class ParticipateVC: NaviHelper {
   
-  private lazy var titleLabel: UILabel = {
-    let label = createLabel(title: "해당 참여자를 거절하게 된 이유를 적어주세요 😢",
-                            textColor: .black,
-                            fontType: "Pretendard",
-                            fontSize: 16)
-    label.numberOfLines = 0
-    return label
-  }()
+  // MARK: - UI세팅
+  private lazy var titleLabel = createLabel(title: "자기소개나 스터디에 대한 의지를 스터디 팀장에게 알려 주세요! 💬",
+                                            textColor: .black,
+                                            fontType: "Pretendard",
+                                            fontSize: 16)
   
   private lazy var reasonTextView: UITextView = {
     let textView = UITextView()
-    textView.text = "ex) 욕설 등의 부적절한 말을 사용했습니다, 저희 스터디와 맞지 않습니다"
+    textView.text =
+    "ex) 안녕하세요, 저는 경영학부에 재학 중인 허브입니다! 지각이나 잠수 없이 열심히 참여하겠습니다. 잘 부탁드립니다 :)"
     textView.textColor = .bg70
     textView.layer.cornerRadius = 10
     textView.layer.borderWidth = 1
     textView.layer.borderColor = UIColor.bg50.cgColor
-    textView.font = UIFont(name: "Pretendard", size: 16)
+    textView.font = UIFont(name: "Pretendard", size: 14)
     textView.delegate = self
     return textView
   }()
@@ -37,95 +38,123 @@ final class WriteRefuseReasonVC: NaviHelper {
     return label
   }()
   
-  private lazy var bottomLabel = createLabel(title: "- 해당 내용은 사용자에게 전송돼요",
-                                             textColor: .bg60,
-                                             fontType: "Pretendard",
-                                             fontSize: 12)
+  private lazy var bottomLabel = createLabel(
+    title: "- 수락 여부는 알림으로 알려드려요\n- 채팅방 링크는 ‘마이페이지-참여한 스터디’에서 확인할 수 있어요",
+    textColor: .bg60,
+    fontType: "Pretendard",
+    fontSize: 12)
 
-  
   private lazy var completeButton: UIButton = {
     let button = UIButton()
     button.setTitle("완료", for: .normal)
     button.setTitleColor(.white, for: .normal)
     button.backgroundColor = .o30
     button.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
-    button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    button.addAction(UIAction { _ in
+      self.completeButtonTapped()
+    }, for: .touchUpInside)
     button.isEnabled = false
     button.layer.cornerRadius = 10
     return button
   }()
   
-  // MARK: - Lifecycle Methods
+  // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setupUI()
-    
-    navigationItemSetting()
-    redesignNavigationbar()
-  }
-  
-  // MARK: - UI Setup
-  
-  private func setupUI() {
     view.backgroundColor = .white
     
+    navigationItemSetting()
+    
+    setupLayout()
+    makeUI()
+    
+    changeTitleLabelColor()
+  }
+  
+  // MARK: - setupLayout
+  func setupLayout(){
     [
       titleLabel,
       reasonTextView,
       countContentLabel,
-      completeButton,
-      bottomLabel
+      bottomLabel,
+      completeButton
     ].forEach {
       view.addSubview($0)
     }
-    
+  }
+  
+  // MARK: - makeUI
+  func makeUI(){
+    titleLabel.numberOfLines = 0
     titleLabel.snp.makeConstraints {
-      $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+      $0.top.equalToSuperview().offset(30)
       $0.leading.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-10)
+      $0.trailing.equalToSuperview().offset(-20)
     }
     
     reasonTextView.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(20)
-      $0.leading.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-10)
-      $0.height.equalTo(186)
+      $0.leading.trailing.equalTo(titleLabel)
+      $0.height.equalTo(170)
     }
     
     countContentLabel.snp.makeConstraints {
-      $0.trailing.equalTo(reasonTextView)
-      $0.top.equalTo(reasonTextView.snp.bottom).offset(5)
+      $0.top.equalTo(reasonTextView.snp.bottom).offset(10)
+      $0.trailing.equalTo(reasonTextView.snp.trailing)
     }
     
+    bottomLabel.numberOfLines = 0
+    bottomLabel.setLineSpacing(spacing: 5)
     bottomLabel.snp.makeConstraints {
       $0.bottom.equalTo(completeButton.snp.top).offset(-30)
       $0.leading.equalTo(completeButton)
     }
     
     completeButton.snp.makeConstraints {
-      $0.bottom.equalToSuperview().offset(-30)
+      $0.bottom.equalToSuperview().offset(-40)
       $0.leading.equalToSuperview().offset(20)
       $0.trailing.equalToSuperview().offset(-20)
       $0.height.equalTo(55)
     }
   }
   
-  func redesignNavigationbar() {
-    navigationItem.rightBarButtonItems = nil
-    navigationItem.title = "거절사유"
-    navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+  // MARK: - 네비게이션 세팅
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+    
+    navigationItem.title = "참여하기"
+    navigationController?.navigationBar.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.white
+    ]
+    navigationItem.rightBarButtonItem = .none
   }
   
-  // MARK: - Button Action
-  @objc private func completeButtonTapped() {
-    delegate?.completeButtonTapped(reason: reasonTextView.text)
-    navigationController?.popViewController(animated: true)
+  // MARK: - 메인라벨 텍스트 색상 변경
+  func changeTitleLabelColor(){
+    titleLabel.changeColor(label: titleLabel,
+                           wantToChange: "자기소개",
+                           color: .o50)
+    titleLabel.changeColor(label: titleLabel,
+                           wantToChange: "스터디에 대한 의지",
+                           color: .o50)
+
+  }
+  
+  // MARK: - 완료버튼 tapped
+  func completeButtonTapped(){
+    if reasonTextView.text.count < 10 {
+      showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
+    } else {
+      navigationController?.popViewController(animated: true)
+      showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+    }
   }
 }
 
 // MARK: - textview
-extension WriteRefuseReasonVC {
+extension ParticipateVC {
   override func textViewDidBeginEditing(_ textView: UITextView) {
     if textView.textColor == UIColor.bg70 {
       textView.text = nil
@@ -163,3 +192,5 @@ extension WriteRefuseReasonVC {
     return changedText.count <= 199
   }
 }
+
+  

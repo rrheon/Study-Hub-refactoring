@@ -48,7 +48,7 @@ final class PostedStudyViewController: NaviHelper {
     didSet {
       memeberNumberCountLabel.text = "\(memberNumberCount)/30명"
       memeberNumberCountLabel.changeColor(label: memeberNumberCountLabel,
-                                          wantToChange: memberNumberCount,
+                                          wantToChange: "\(memberNumberCount)",
                                           color: .changeInfo)
     }
   }
@@ -57,7 +57,7 @@ final class PostedStudyViewController: NaviHelper {
     didSet{
       fineCountLabel.text = "\(fineCount)원"
       fineCountLabel.changeColor(label: fineCountLabel,
-                                 wantToChange: fineCount,
+                                 wantToChange: "\(fineCount)",
                                  color: .changeInfo)
       
       fineAmountLabel.text = "결석비 \(fineCount)원"
@@ -163,10 +163,11 @@ final class PostedStudyViewController: NaviHelper {
                                                  textColor: .black,
                                                  fontType: "Pretendard",
                                                  fontSize: 14)
-  private lazy var aboutStudyDeatilLabel = createLabel(title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
-                                                       textColor: .lightGray,
-                                                       fontType: "Pretendard",
-                                                       fontSize: 15)
+  private lazy var aboutStudyDeatilLabel = createLabel(
+    title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
+    textColor: .lightGray,
+    fontType: "Pretendard",
+    fontSize: 15)
   
   private lazy var aboutStudyStackView = createStackView(axis: .vertical,
                                                          spacing: 10)
@@ -391,6 +392,9 @@ final class PostedStudyViewController: NaviHelper {
     button.setTitleColor(UIColor.white, for: .normal)
     button.backgroundColor = .o50
     button.layer.cornerRadius = 10
+    button.addAction(UIAction { _ in
+      self.participateButtonTapped()
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -945,6 +949,11 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
 
+  // MARK: - 참여하기 버튼
+  func participateButtonTapped(){
+    let participateVC = ParticipateVC()
+    navigationController?.pushViewController(participateVC, animated: true)
+  }
 }
 
 // MARK: - collectionView

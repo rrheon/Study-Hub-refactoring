@@ -365,8 +365,8 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     if let cell = cell as? SearchResultCell {
       let content = recentDatas?.postDataByInquiries.content[indexPath.row]
       cell.model = content
-      
     }
+    
     return cell
   }
 }

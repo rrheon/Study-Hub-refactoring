@@ -245,6 +245,7 @@ final class CommentViewController: NaviHelper {
       $0.height.equalTo(tableViewHeight)
     }
   }
+  
   // MARK: - 댓글 리스트 가져오기
   func getCommentList(completion: @escaping () -> Void){
     detailPostDataManager.getCommentList(postId: postId,

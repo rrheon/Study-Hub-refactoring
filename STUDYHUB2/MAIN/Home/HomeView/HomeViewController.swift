@@ -346,6 +346,7 @@ extension HomeViewController: UISearchBarDelegate {
       self.navigationController?.pushViewController(searchViewController, animated: true)
     }
   }
+  
 }
 
 // MARK: - collectionView
@@ -365,17 +366,22 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let newPost = newPostDatas?.postDataByInquiries.content[indexPath.row].postID,
-          let deadLinePost =  deadlinePostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+    var postID: Int? = nil
     
-    let postID = collectionView.tag == 1 ? newPost : deadLinePost
+    if collectionView.tag == 1 {
+      guard let newPostID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+      postID = newPostID
+    } else {
+      guard let deadLinePostID = deadlinePostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+      postID = deadLinePostID
+    }
     
     let postedVC = PostedStudyViewController(postID: postID)
  
     postedVC.previousHomeVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
-    detailPostDataManager.getPostDetailData(postID: postID) {
+    detailPostDataManager.getPostDetailData(postID: postID ?? 0) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = cellData
     }

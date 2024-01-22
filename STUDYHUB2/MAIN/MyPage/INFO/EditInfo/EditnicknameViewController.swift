@@ -217,7 +217,7 @@ extension EditnicknameViewController {
     
     characterCountLabel.text = "\(changedText.count)/10"
     characterCountLabel.changeColor(label: characterCountLabel,
-                                    wantToChange: changedText.count,
+                                    wantToChange: "\(changedText.count)",
                                     color: .bg90)
     return changedText.count <= 9
   }
