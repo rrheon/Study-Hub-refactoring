@@ -41,7 +41,7 @@ final class MyPageViewController: NaviHelper {
     return imageView
   }()
   
-  private lazy var majorLabel = createLabel(title: convertMajor(myPageUserData?.major! ?? "",
+  private lazy var majorLabel = createLabel(title: convertMajor(myPageUserData?.major ?? "없음",
                                                                 isEnglish: false),
                                             textColor: .bg80,
                                             fontType: "Pretendard",
@@ -174,13 +174,11 @@ final class MyPageViewController: NaviHelper {
     redesignNavigationbar()
     
     fetchUserData()
-    
-    print(loginStatus)
   }
   
   // MARK: - setUpLayout
   func setUpLayout(){
-    
+    print(loginStatus)
     if loginStatus == false {
       [
         loginFailLabel,
@@ -371,12 +369,12 @@ final class MyPageViewController: NaviHelper {
   
   // MARK: - 유저 정보 가저오는 함수
   func fetchUserData() {
-    userInfoManager.fetchUserInfo {
-      self.myPageUserData = self.userInfoManager.getUserInfo()
+    userInfoManager.getUserInfo { result in
+      self.myPageUserData = result
       
-      let status = self.myPageUserData == nil ? false : true
+      let status = self.myPageUserData?.email == nil ? false : true
       self.loginStatus = status
-      
+
       DispatchQueue.main.async {
         self.setUpLayout()
         self.makeUI()
@@ -410,7 +408,7 @@ final class MyPageViewController: NaviHelper {
     myinformViewController.previousVC = self
     
     // Pass major information to MyinformViewController
-    myinformViewController.major = convertMajor(myPageUserData?.major! ?? "", isEnglish: false)
+    myinformViewController.major = convertMajor(myPageUserData?.major ?? "", isEnglish: false)
     myinformViewController.nickname = myPageUserData?.nickname
     myinformViewController.email = myPageUserData?.email
     myinformViewController.gender = convertGender(gender: myPageUserData?.gender ?? "없음")

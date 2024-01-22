@@ -7,14 +7,53 @@
 
 import UIKit
 
+import Moya
+
+struct AccessTokenResponse: Codable {
+  let accessToken: String
+  let refreshToken: String
+}
+
 class LoginManager: UIViewController {
   
   let tokenManager = TokenManager.shared
   static let shared = LoginManager()
-  struct AccessTokenResponse: Codable {
-    let accessToken: String
-    let refreshToken: String
+  
+  func moyaNetworking(networkingChoice: networkingAPI,
+                      completion: @escaping (Result<Response, MoyaError>) -> Void) {
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(networkingChoice) { result in
+      completion(result)
+    }
   }
+  
+  func refreshAccessToken(completion: @escaping (Bool) -> Void) {
+    guard let refreshToken = tokenManager.loadRefreshToken() else {
+      completion(false)
+      return
+    }
+    moyaNetworking(networkingChoice: .refreshAccessToken(refreshToken)) { result in
+      switch result {
+      case .success(let response):
+        do {
+          if response.statusCode == 200 {
+            let refreshResult = try JSONDecoder().decode(AccessTokenResponse.self,
+                                                         from: response.data)
+            self.tokenManager.deleteTokens()
+            
+            let saveResult = self.tokenManager.saveTokens(accessToken: refreshResult.accessToken,
+                                                          refreshToken: refreshResult.refreshToken)
+            completion(saveResult)
+          }
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+      case .failure(let error):
+        print(error)
+      }
+    }
+  }
+
   
   func autoLogin() {
     guard let autoLoginURL = URL(string: "https://study-hub.site:443/api/v1/jwt/accessToken") else {
@@ -83,7 +122,9 @@ class LoginManager: UIViewController {
   }
   
   
-  func login(email: String, password: String){
+  func login(email: String,
+             password: String,
+             completion: @escaping (Bool) -> Void){
     guard let loginURL = URL(string: "https://study-hub.site:443/api/v1/users/login") else {
       return
     }
@@ -116,19 +157,16 @@ class LoginManager: UIViewController {
             let accessTokenResponse = try decoder.decode(AccessTokenResponse.self, from: data)
             
             self?.tokenManager.deleteTokens()
-            self?.tokenManager.saveTokens(accessToken: accessTokenResponse.accessToken,
-                                         refreshToken: accessTokenResponse.refreshToken)
-            
-            print("Access Token: \(accessTokenResponse.accessToken)")
-            print("Refresh Token: \(accessTokenResponse.refreshToken)")
+            guard let loginResult = self?.tokenManager.saveTokens(
+              accessToken: accessTokenResponse.accessToken,
+              refreshToken: accessTokenResponse.refreshToken) else { return }
+                    
+            completion(loginResult)
           } catch {
             print("JSON Decoding Error: \(error)")
           }
         } else {
-          // Login failed, show an alert
-          DispatchQueue.main.async {
-            self?.alertShow(title: "로그인 실패", message: "존재하지 않는 사용자입니다.")
-          }
+          completion(false)
         }
       }
       

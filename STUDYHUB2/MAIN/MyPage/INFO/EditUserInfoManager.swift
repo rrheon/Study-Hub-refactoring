@@ -11,7 +11,7 @@ struct StoreImage: Codable {
   let image: String
 }
 
-struct Response: Codable {
+struct DuplicationResponse: Codable {
   let status: String
   let message: String
 }
@@ -57,19 +57,19 @@ final class EditUserInfoManager {
     // Networking 인스턴스를 사용하여 요청을 보냅니다.
     networkingManager.fetchData(type: "GET",
                                 apiVesrion: "v1",
-                                          urlPath: urlPath,
-                                          queryItems: queryItems,
-                                          tokenNeed: false,
-                                          createPostData: nil,
-                                          completion: { (result: Result<Response, NetworkError>) in
-        switch result {
-        case .success(let response):
-          completion(response.status)
-        case .failure(let error):
-            // 에러 발생 시 처리
-            print("Error: \(error)")
-            completion("Error")
-        }
+                                urlPath: urlPath,
+                                queryItems: queryItems,
+                                tokenNeed: false,
+                                createPostData: nil,
+                                completion: { (result: Result<DuplicationResponse, NetworkError>) in
+      switch result {
+      case .success(let response):
+        completion(response.status)
+      case .failure(let error):
+        // 에러 발생 시 처리
+        print("Error: \(error)")
+        completion("Error")
+      }
     })
   }
   

@@ -160,6 +160,7 @@ final class LoginViewController: UIViewController {
     self.passwordTextField.rightView = eyeButton
     self.passwordTextField.rightViewMode = .always
   }
+  
   // MARK: - setUpLayout
   func setUpLayout(){
     [
@@ -309,19 +310,21 @@ final class LoginViewController: UIViewController {
     
     
     loginManager.login(email: emailTextField.text ?? "",
-                              password: passwordTextField.text ?? "")
-    
-   // MARK: - 로그인하여 토큰이 생기는 경우 로그인
-    if (tokenManager.loadAccessToken() != nil) {
-      DispatchQueue.main.async {
-        let tapbarcontroller = TabBarController()
-        let navigationController = UINavigationController(rootViewController: tapbarcontroller)
-        navigationController.modalPresentationStyle = .fullScreen
+                       password: passwordTextField.text ?? "") { result in
+      switch result {
+      case true:
+        DispatchQueue.main.async {
+          let tapbarcontroller = TabBarController()
+          let navigationController = UINavigationController(rootViewController: tapbarcontroller)
+          navigationController.modalPresentationStyle = .fullScreen
+          
+          self.present(navigationController, animated: true, completion: nil)
+        }
+      case false:
+        self.alertShow(title: "경고", message: "잘못된 주소")
         
-        self.present(navigationController, animated: true, completion: nil)
       }
     }
-    
   }
 
   // MARK: - email action 함수
@@ -349,6 +352,9 @@ final class LoginViewController: UIViewController {
   
   // MARK: - 둘러보기 함수
   @objc func exploreButtonTapped() {
+    tokenManager.deleteTokens()
+    
+    print(tokenManager.loadRefreshToken())
     let tapbarcontroller = TabBarController()
     let navigationController = UINavigationController(rootViewController: tapbarcontroller)
     navigationController.modalPresentationStyle = .fullScreen

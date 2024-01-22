@@ -36,12 +36,13 @@ final class UserInfoManager {
   
   private var userData: UserDetailData?
   
-  func getUserInfo() -> UserDetailData? {
-    guard let data = userData else { return nil}
-    return data
+  func getUserInfo(completion: @escaping (UserDetailData?) -> Void) {
+    fetchUserInfo {
+      completion(self.userData)
+    }
   }
 
-  func fetchUserInfo(completion: @escaping () -> Void){
+  private func fetchUserInfo(completion: @escaping () -> Void){
     networkingManager.fetchData(type: "GET",
                                 apiVesrion: "v1",
                                 urlPath: "/users",
@@ -51,14 +52,8 @@ final class UserInfoManager {
                                                         NetworkError>) in
       switch result {
       case .success(let userData):
-        // 사용자 정보를 사용하여 원하는 작업을 수행합니다.
-        print("Email: \(userData.email)")
-        print("Gender: \(userData.gender)")
-        print(userData.imageURL)
         
-        if userData.email != nil {
-          self.userData = userData
-        }
+        self.userData = userData
         
         completion()
         

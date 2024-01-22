@@ -10,6 +10,10 @@ import Foundation
 import Moya
 import UIKit
 
+struct RefreshAccessToken: Codable {
+  let refreshToken: String
+}
+
 // MARK: - GetCommentList
 struct GetCommentList: Codable {
   let content: [CommentConetent]
@@ -45,6 +49,8 @@ struct CommentedUserData: Codable {
 }
 
 enum networkingAPI {
+  case refreshAccessToken(_ refreshToken: String)
+  
   case storeImage(_image: UIImage)
   case deleteImage
   
@@ -129,6 +135,9 @@ extension networkingAPI: TargetType {
       
     case .recommendSearch(_keyword: _):
       return "/v1/study-post/recommend"
+      
+    case .refreshAccessToken(_refreshToken: _):
+      return "/jwt/v1/accessToken"
     }
   }
   
@@ -159,7 +168,8 @@ extension networkingAPI: TargetType {
         .verifyEmail(_code: _, _email: _),
         .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
-        .writeComment(_content: _, _postId: _):
+        .writeComment(_content: _, _postId: _),
+        .refreshAccessToken(_refreshToken: _):
       return .post
     }
   }
@@ -230,6 +240,10 @@ extension networkingAPI: TargetType {
       ]
       return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
       
+    case .refreshAccessToken(let refreshToken):
+      let params = RefreshAccessToken(refreshToken: refreshToken)
+      return .requestJSONEncodable(params)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -248,7 +262,8 @@ extension networkingAPI: TargetType {
         .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
         .recommendSearch(_keyword: _),
-        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
+        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _),
+        .refreshAccessToken(_refreshToken: _):
       return ["Content-type": "application/json"]
       
       

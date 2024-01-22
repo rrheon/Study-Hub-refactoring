@@ -410,7 +410,6 @@ final class MyInformViewController: NaviHelper {
         navigationController.present(loginVC, animated: true, completion: nil)
       }
     }
-    
   }
   
   // MARK: - 탈퇴하기

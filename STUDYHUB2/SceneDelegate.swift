@@ -18,26 +18,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     
     let accessToken = TokenManager.shared.loadAccessToken()
-    loginManager.autoLogin()
-    // api연결해서 refresh 토근 던져주고 acess와 같으면 로그인
-    if accessToken == "a" {
-      // 로그인 성공한 경우 HomeViewController 표시
-      let tabBarController = TabBarController()
-      window?.rootViewController = tabBarController
-    } else {
-      // 로그인하지 않은 경우 LoginViewController 표시
-      if #available(iOS 16.0, *) {
+    loginManager.refreshAccessToken { result in
+      switch result {
+      case true:
+        let tabBarController = TabBarController()
+        self.window?.rootViewController = tabBarController
+      case false:
         let loginViewController = LoginViewController()
         let navigationController = UINavigationController(rootViewController: loginViewController)
-        window?.rootViewController = navigationController
-
-      } else {
-        let loginViewController = PostedStudyViewController(postID: 0)
-        let navigationController = UINavigationController(rootViewController: loginViewController)
-        window?.rootViewController = navigationController
+        self.window?.rootViewController = navigationController
       }
-   
     }
+    
+//    if accessToken == "a" {
+//      // 로그인 성공한 경우 HomeViewController 표시
+//      let tabBarController = TabBarController()
+//      window?.rootViewController = tabBarController
+//    } else {
+//      // 로그인하지 않은 경우 LoginViewController 표시
+//      if #available(iOS 16.0, *) {
+//        let loginViewController = LoginViewController()
+//        let navigationController = UINavigationController(rootViewController: loginViewController)
+//        window?.rootViewController = navigationController
+//
+//      } else {
+//        let loginViewController = PostedStudyViewController(postID: 0)
+//        let navigationController = UINavigationController(rootViewController: loginViewController)
+//        window?.rootViewController = navigationController
+//      }
+//
+//    }
     window?.makeKeyAndVisible()
 
   }
