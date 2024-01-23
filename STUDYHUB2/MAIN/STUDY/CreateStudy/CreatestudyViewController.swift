@@ -612,7 +612,12 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   
   // MARK: - 수정 시 뒤로가기 눌렀을 때
   @objc override func leftButtonTapped(_ sender: UIBarButtonItem) {
-    guard let postID = modifyPostID else { return }
+    
+    guard let postID = modifyPostID else {
+      navigationController?.popViewController(animated: true)
+      return
+    }
+    
     let popupVC = PopupViewController(title: "수정을 취소할까요?",
                                       desc: "취소할 시 내용이 저장되지 않아요",
                                       leftButtonTitle: "아니요",

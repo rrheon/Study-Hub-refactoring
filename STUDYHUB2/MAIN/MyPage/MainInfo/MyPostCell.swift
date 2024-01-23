@@ -15,6 +15,7 @@ final class MyPostCell: UICollectionViewCell {
 
   var postID: Int?
   var studyId: Int?
+  var buttonColor: UIColor?
   
   var model: MyPostcontent? {
     didSet {
@@ -80,7 +81,6 @@ final class MyPostCell: UICollectionViewCell {
   private lazy var closeButton: UIButton = {
     let button = UIButton()
     button.setTitle("마감", for: .normal)
-    button.setTitleColor(UIColor.o50, for: .normal)
     button.titleLabel?.textAlignment = .center
     button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     return button
@@ -91,7 +91,7 @@ final class MyPostCell: UICollectionViewCell {
   private lazy var checkPersonButton: UIButton = {
     let button = UIButton()
     button.setTitle("참여자", for: .normal)
-    button.setTitleColor(UIColor.bg80, for: .normal)
+    button.setTitleColor(.bg80, for: .normal)
     button.titleLabel?.textAlignment = .center
     button.addAction(UIAction { _ in
       self.acceptButtonTapped()
@@ -99,6 +99,7 @@ final class MyPostCell: UICollectionViewCell {
     return button
   }()
   
+  // MARK: - init
   override init(frame: CGRect) {
     super.init(frame: frame)
     
@@ -113,8 +114,18 @@ final class MyPostCell: UICollectionViewCell {
     fatalError()
   }
   
+  // MARK: - addsubviews
   private func addSubviews() {
+    // 버튼 스텍뷰
+    [
+      closeButton,
+      seperateLineinStackView,
+      checkPersonButton
+    ].forEach {
+      buttonStackView.addArrangedSubview($0)
+    }
     
+    // 화면구성
     [
       majorLabel,
       menuButton,
@@ -126,13 +137,9 @@ final class MyPostCell: UICollectionViewCell {
     ].forEach {
       addSubview($0)
     }
-    
-    let data = [closeButton, seperateLineinStackView, checkPersonButton]
-    for data in data{
-      buttonStackView.addArrangedSubview(data)
-    }
   }
   
+  // MARK: - configure
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
@@ -167,7 +174,6 @@ final class MyPostCell: UICollectionViewCell {
       make.height.equalTo(1)
     }
     
-    
     seperateLineinStackView.backgroundColor = .bg30
     seperateLineinStackView.snp.makeConstraints { make in
       make.height.equalTo(20)
@@ -189,16 +195,25 @@ final class MyPostCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
+  // MARK: - bind
   private func bind() {
+    if model?.close == true {
+      remainLabel.text = "마감됐어요"
+      closeButton.setTitleColor(buttonColor, for: .normal)
+      closeButton.isEnabled = false
+    } else {
+      remainCount = model?.remainingSeat ?? 0
+      closeButton.setTitleColor(buttonColor, for: .normal)
+    }
+    
     majorLabel.text = model?.major.convertMajor(model?.major ?? "" , isEnglish: false)
     titleLabel.text = model?.title
     infoLabel.text = model?.content
-    remainCount = model?.remainingSeat ?? 0
     postID = model?.postID
     studyId = model?.studyId
   }
   
-  
+  // MARK: - 버튼함수
   @objc func menuButtonTapped(){
     delegate?.menuButtonTapped(in: self, postID: postID ?? 0)
   }

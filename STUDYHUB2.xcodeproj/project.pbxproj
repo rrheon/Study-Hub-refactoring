@@ -76,6 +76,9 @@
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
 		EEFD5D262B5F6C4D00D1CE00 /* CommonNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D252B5F6C4D00D1CE00 /* CommonNetworking.swift */; };
+		EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D272B600B6500D1CE00 /* PostDTO.swift */; };
+		EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D292B600BA600D1CE00 /* UserDTO.swift */; };
+		EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */; };
 		F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421912A7D6816006C6B87 /* AppDelegate.swift */; };
 		F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421932A7D6816006C6B87 /* SceneDelegate.swift */; };
 		F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421952A7D6816006C6B87 /* LoginViewController.swift */; };
@@ -176,6 +179,9 @@
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
 		EEFD5D252B5F6C4D00D1CE00 /* CommonNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNetworking.swift; sourceTree = "<group>"; };
+		EEFD5D272B600B6500D1CE00 /* PostDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDTO.swift; sourceTree = "<group>"; };
+		EEFD5D292B600BA600D1CE00 /* UserDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDTO.swift; sourceTree = "<group>"; };
+		EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDTO.swift; sourceTree = "<group>"; };
 		F804218E2A7D6816006C6B87 /* STUDYHUB2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STUDYHUB2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F80421912A7D6816006C6B87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F80421932A7D6816006C6B87 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -422,6 +428,9 @@
 			isa = PBXGroup;
 			children = (
 				EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */,
+				EEFD5D272B600B6500D1CE00 /* PostDTO.swift */,
+				EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */,
+				EEFD5D292B600BA600D1CE00 /* UserDTO.swift */,
 				EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */,
 			);
 			path = DTO;
@@ -696,6 +705,7 @@
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
+				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
 				EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */,
 				EE0A8B852B0A22F7001C3F41 /* PostDetailManager.swift in Sources */,
@@ -708,6 +718,7 @@
 				EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */,
 				EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */,
 				EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */,
+				EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */,
 				EE07ADBD2AEFF7BD0096890F /* ConvertMajor.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginManager.swift in Sources */,
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
@@ -741,6 +752,7 @@
 				EE0A8B602AFA7FD2001C3F41 /* SearchResultCell.swift in Sources */,
 				EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
+				EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */,
 				F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */,
 				F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */,
 				EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */,

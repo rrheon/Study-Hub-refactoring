@@ -9,25 +9,11 @@ import UIKit
 
 import Moya
 
-struct AccessTokenResponse: Codable {
-  let accessToken: String
-  let refreshToken: String
-}
-
 class LoginManager: UIViewController {
   
   let tokenManager = TokenManager.shared
   let commonNetworking = CommonNetworking.shared
   static let shared = LoginManager()
-//
-//  func commonNetworking(networkingChoice: networkingAPI,
-//                      completion: @escaping (Result<Response, MoyaError>) -> Void) {
-//    let provider = MoyaProvider<networkingAPI>()
-//    provider.request(networkingChoice) { result in
-//      completion(result)
-//    }
-//  }
-  
   
   func refreshAccessToken(completion: @escaping (Bool) -> Void) {
     guard let refreshToken = tokenManager.loadRefreshToken() else {

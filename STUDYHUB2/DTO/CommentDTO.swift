@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - GetCommentList
+// MARK: - 댓글정보
 struct GetCommentList: Codable {
   let content: [CommentConetent]
   let empty, first, last: Bool
@@ -15,7 +15,7 @@ struct GetCommentList: Codable {
   let size: Int
 }
 
-// MARK: - Content
+// 댓글의 Content
 struct CommentConetent: Codable {
   let commentID: Int
   let commentedUserData: CommentedUserData
@@ -29,7 +29,7 @@ struct CommentConetent: Codable {
   }
 }
 
-// MARK: - CommentedUserData
+// 댓글의 UserData
 struct CommentedUserData: Codable {
   let imageURL, major, nickname: String
   let userID: Int
@@ -39,4 +39,16 @@ struct CommentedUserData: Codable {
     case major, nickname
     case userID = "userId"
   }
+}
+
+// MARK: - 댓글작성
+struct WriteComment: Codable {
+  let content: String
+  let postId: Int
+}
+
+// MARK: - 댓글 수정
+struct ModifyComment: Codable {
+  let commentId: Int
+  let content: String
 }

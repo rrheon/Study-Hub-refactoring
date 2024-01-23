@@ -7,26 +7,6 @@
 
 import Foundation
 
-//MARK: - 네트워크에서 발생할 수 있는 에러 정의
-enum NetworkError: Error {
-  case networkingError
-  case dataError
-  case parseError
-}
-
-struct UserDetailData: Codable {
-  var bookmarkCount: Int?
-  var email, gender, imageURL, major: String?
-  var nickname: String?
-  var participateCount, postCount: Int?
-  
-  enum CodingKeys: String, CodingKey {
-    case bookmarkCount, email, gender
-    case imageURL = "imageUrl"
-    case major, nickname, participateCount, postCount
-  }
-}
-
 //MARK: - 사용자의 정보 가져오는 클래스
 final class UserInfoManager {
   

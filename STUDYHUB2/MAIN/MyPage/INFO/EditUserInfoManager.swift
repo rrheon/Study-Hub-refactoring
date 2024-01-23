@@ -7,41 +7,6 @@
 
 import Foundation
 
-struct StoreImage: Codable {
-  let image: String
-}
-
-struct DuplicationResponse: Codable {
-  let status: String
-  let message: String
-}
-
-struct EditNickName: Codable {
-  let nickname: String
-}
-
-struct EditMajor: Codable {
-  let major: String
-}
-
-struct EditPassword: Codable {
-  let auth: Bool
-  let password: String
-}
-
-struct VerifyPassword: Codable {
-  let password: String
-}
-
-struct VerifyEmail: Codable {
-  let authCode: String
-  let email: String
-}
-
-struct CheckEmailDuplication: Codable {
-  let email: String
-}
-
 final class EditUserInfoManager {
   static let shared = EditUserInfoManager()
   let networkingManager = Networking.networkinhShared

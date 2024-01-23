@@ -207,13 +207,15 @@ final class MyPostViewController: NaviHelper {
     self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
   }
   
+  // MARK: - 내가쓴 포스트 데이터 가져오기
   func getMyPostData(size: Int,
                      completion: @escaping () -> Void) {
     self.myPostDataManager.fetchMyPostInfo(page: 0, size: size) { [weak self] success in
       if success {
         DispatchQueue.main.async {
           self?.myPostDatas = self?.myPostDataManager.getMyPostData()
-    
+          self?.moveDataToBottom()
+
           guard let postCount = self?.myPostDataManager.getMyTotalPostData() else { return }
           self?.countPostNumber = postCount.totalCount
           self?.myPostCollectionView.reloadData()
@@ -265,6 +267,15 @@ final class MyPostViewController: NaviHelper {
       }
     }
   }
+  
+  // MARK: - 마감인 데이터 아래로 보내는 함수
+  func moveDataToBottom(){
+    guard let index = myPostDatas?.firstIndex(where:{ $0.close}) else { return }
+      
+    guard let data = myPostDatas?.remove(at: index) else { return }
+    myPostDatas?.append(data)
+    myPostCollectionView.reloadData()
+  }
 }
 
 // MARK: - collectionView
@@ -286,7 +297,6 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
       postedVC.postedData = cellData
     }
     self.navigationController?.pushViewController(postedVC, animated: true)
-    print(myPostDatas?[indexPath.row].postID , myPostDatas?[indexPath.row].studyId)
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -295,8 +305,9 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                                   for: indexPath) as! MyPostCell
     
     cell.delegate = self
+    cell.buttonColor = myPostDatas?[indexPath.row].close == true ? .bg60 : .o50
+    print( myPostDatas?[indexPath.row].close)
     cell.model = myPostDatas?[indexPath.row]
-    
     return cell
   }
 }
@@ -346,7 +357,7 @@ extension MyPostViewController: MyPostCellDelegate {
     present(bottomSheetVC, animated: true, completion: nil)
   }
   
-  // MARK: - 게시글 모집 마감, 마감한 애를 어떻게 맨 밑으로 내릴까나 api는 동작함
+  // MARK: - 게시글 모집 마감, 마감한 애를 어떻게 맨 밑으로 내릴까나 api는 동작함, close 가 true이면 맨밑으론 내리고 비활성화
   func closeButtonTapped(in cell: MyPostCell, postID: Int){
     // Postid수정필요
     let popupVC = PopupViewController(title: "이 글의 모집을 마감할까요?",
@@ -360,6 +371,12 @@ extension MyPostViewController: MyPostCellDelegate {
         switch result {
         case .success(let response):
           print(response.response)
+          if response.statusCode == 200 {
+            self.getMyPostData(size: 5) {
+              print("데이터리로드")
+            }
+            self.dismiss(animated: true)
+          }
         case .failure(let response):
           print(response.response)
         }

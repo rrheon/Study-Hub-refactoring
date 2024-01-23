@@ -9,36 +9,6 @@ import Foundation
 
 import Moya
 
-struct CreateStudyRequest: Codable {
-  var chatUrl: String
-  var close: Bool
-  var content, gender, major: String
-  var penalty: Int
-  let penaltyWay: String?
-  var studyEndDate: String
-  var studyPerson: Int
-  var studyStartDate, studyWay, title: String
-  
-}
-
-// MARK: - UpdataePost
-struct UpdateStudyRequest: Codable {
-  let chatUrl: String
-  let close: Bool
-  let content, gender, major: String
-  let penalty: Int
-  let penaltyWay: String?
-  let postId: Int
-  let studyEndDate: String
-  let studyPerson: Int
-  let studyStartDate, studyWay, title: String
-}
-
-struct PostResponse: Codable {
-  let id: Int
-}
-
-
 final class PostManager {
   static let shared = PostManager()
   

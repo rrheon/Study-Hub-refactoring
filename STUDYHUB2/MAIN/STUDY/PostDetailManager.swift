@@ -8,59 +8,6 @@ import Foundation
 
 import Moya
 
-// MARK: - MyPostData
-struct PostDetailData: Codable {
-    let postID: Int
-    let title: String
-    let createdDate: [Int]
-    let content, major: String
-    let studyPerson: Int
-    let filteredGender, studyWay: String
-    let penalty: Int
-    let penaltyWay: String?
-    let studyStartDate, studyEndDate: [Int]
-    let remainingSeat: Int
-    let chatURL: String
-    let postedUser: PostedUser
-    let relatedPost: [RelatedPost]
-    let usersPost, bookmarked: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case postID = "postId"
-        case title, createdDate, content, major, studyPerson, filteredGender,
-             studyWay, penalty, penaltyWay, studyStartDate, studyEndDate, remainingSeat
-        case chatURL = "chatUrl"
-        case postedUser, relatedPost, usersPost, bookmarked
-    }
-}
-
-// MARK: - PostedUser
-struct PostedUser: Codable {
-    let userID: Int
-    let major, nickname: String
-    let imageURL: String
-
-    enum CodingKeys: String, CodingKey {
-        case userID = "userId"
-        case major, nickname
-        case imageURL = "imageUrl"
-    }
-}
-
-// MARK: - RelatedPost
-struct RelatedPost: Codable {
-    let postID: Int
-    let title, major: String
-    let remainingSeat: Int
-    let userData: PostedUser
-
-    enum CodingKeys: String, CodingKey {
-        case postID = "postId"
-        case title, major, remainingSeat, userData
-    }
-}
-
-
 //MARK: - Networking (서버와 통신하는) 클래스 모델
 final class PostDetailInfoManager {
   static let shared = PostDetailInfoManager()
