@@ -12,6 +12,8 @@ import SnapKit
 final class MyPostViewController: NaviHelper {
   let myPostDataManager = MyPostInfoManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
+  let commonNetworking = CommonNetworking.shared
+  
   var myPostDatas: [MyPostcontent]?
   var previousMyPage: MyPageViewController?
   
@@ -211,7 +213,7 @@ final class MyPostViewController: NaviHelper {
       if success {
         DispatchQueue.main.async {
           self?.myPostDatas = self?.myPostDataManager.getMyPostData()
-          
+    
           guard let postCount = self?.myPostDataManager.getMyTotalPostData() else { return }
           self?.countPostNumber = postCount.totalCount
           self?.myPostCollectionView.reloadData()
@@ -220,7 +222,6 @@ final class MyPostViewController: NaviHelper {
       }
     }
   }
-  
   
   // MARK: - 전체삭제
   // 전체삭제 알람표시
@@ -285,7 +286,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
       postedVC.postedData = cellData
     }
     self.navigationController?.pushViewController(postedVC, animated: true)
-    
+    print(myPostDatas?[indexPath.row].postID , myPostDatas?[indexPath.row].studyId)
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -294,12 +295,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                                   for: indexPath) as! MyPostCell
     
     cell.delegate = self
-    cell.majorLabel.text = convertMajor(myPostDatas?[indexPath.row].major ?? "",
-                                        isEnglish: false)
-    cell.titleLabel.text = myPostDatas?[indexPath.row].title
-    cell.infoLabel.text = myPostDatas?[indexPath.row].content
-    cell.remainCount = myPostDatas?[indexPath.row].remainingSeat ?? 0
-    cell.postID = myPostDatas?[indexPath.row].postID
+    cell.model = myPostDatas?[indexPath.row]
     
     return cell
   }
@@ -315,18 +311,16 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - MyPostcell 함수
-extension MyPostViewController: MyPostCellDelegate{
+extension MyPostViewController: MyPostCellDelegate {
+  // 참여자 버튼
   func acceptButtonTapped(in cell: MyPostCell, postID: Int) {
-    guard let navigationController = self.navigationController else {
-      // navigationController가 정의되지 않은 경우 오류 처리
-      return
-    }
+    guard let navigationController = self.navigationController else { return}
     
     let checkParticipateVC = CheckParticipantsVC()
     navigationController.pushViewController(checkParticipateVC, animated: true)
   }
-  
-  
+
+  // 메뉴버튼
   func menuButtonTapped(in cell: MyPostCell, postID: Int) {
     let bottomSheetVC = BottomSheet(postID: postID)
     bottomSheetVC.delegate = self
@@ -352,14 +346,25 @@ extension MyPostViewController: MyPostCellDelegate{
     present(bottomSheetVC, animated: true, completion: nil)
   }
   
-  // MARK: - 게시글 모집 마감
-  func closeButtonTapped(in cell: MyPostCell){
+  // MARK: - 게시글 모집 마감, 마감한 애를 어떻게 맨 밑으로 내릴까나 api는 동작함
+  func closeButtonTapped(in cell: MyPostCell, postID: Int){
     // Postid수정필요
     let popupVC = PopupViewController(title: "이 글의 모집을 마감할까요?",
                                       desc: "마감하면 다시 모집할 수 없어요",
                                       rightButtonTilte: "마감")
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
+    
+    popupVC.popupView.rightButtonAction = {
+      self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
+        switch result {
+        case .success(let response):
+          print(response.response)
+        case .failure(let response):
+          print(response.response)
+        }
+      }
+    }
   }
   
   // MARK: - 스크롤해서 데이터 가져오기
@@ -424,3 +429,4 @@ extension MyPostViewController: PopupViewDelegate {
     }
   }
 }
+

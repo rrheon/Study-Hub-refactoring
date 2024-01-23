@@ -34,6 +34,5 @@ extension UISearchBar {
     
     return bar
   }
-  
 }
 

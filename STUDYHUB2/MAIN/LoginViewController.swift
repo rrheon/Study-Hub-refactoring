@@ -5,6 +5,12 @@
 //  Created by HYERYEONG on 2023/08/05.
 //
 
+
+/*
+ 전반적으로 수정 필요..
+ 
+ */
+
 import UIKit
 import SnapKit
 
@@ -13,36 +19,40 @@ final class LoginViewController: UIViewController {
   let loginManager = LoginManager.shared
   
   // MARK: - 화면구성
-  lazy var emailTextField: UITextField =  {
+  private lazy var emailTextField: UITextField =  {
     let emailTF = UITextField()
-    emailTF.attributedPlaceholder = NSAttributedString(string: "이메일 주소를 입력해주세요 (@inu.ac.kr)",
-                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+    emailTF.attributedPlaceholder = NSAttributedString(
+      string: "이메일 주소를 입력해주세요 (@inu.ac.kr)",
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
+    emailTF.font = UIFont(name: "Pretendard",
+                          size: 14)
     emailTF.textColor = .white
     emailTF.backgroundColor = .black
-    emailTF.borderStyle = .roundedRect
     emailTF.addTarget(self,
                       action: #selector(emailTextFieldDidChange),
                       for: .editingChanged)
     
-    emailTF.autocorrectionType = .no
-    emailTF.autocapitalizationType = .none
-    emailTF.becomeFirstResponder()
+//    emailTF.autocorrectionType = .no
+//    emailTF.autocapitalizationType = .none
+//    emailTF.becomeFirstResponder()
     return emailTF
   }()
   
   private let emailTextFielddividerLine: UIView = {
     let lineView = UIView()
-    lineView.backgroundColor = .gray
+    lineView.backgroundColor = .g100
     return lineView
   }()
   
-  lazy var passwordTextField: UITextField = {
+  private lazy var passwordTextField: UITextField = {
     let passwordTF = UITextField()
-    passwordTF.attributedPlaceholder = NSAttributedString(string: "비밀번호를 입력해주세요",
-                                                          attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+    passwordTF.attributedPlaceholder = NSAttributedString(
+      string: "비밀번호를 입력해주세요",
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
+    passwordTF.font = UIFont(name: "Pretendard",
+                          size: 14)
     passwordTF.textColor = .white
     passwordTF.backgroundColor = .black
-    passwordTF.borderStyle = .roundedRect
     passwordTF.addTarget(self,
                          action: #selector(passwordTextFieldDidChange),
                          for: .editingChanged)
@@ -54,33 +64,36 @@ final class LoginViewController: UIViewController {
   
   private let passwordTextFielddividerLine: UIView = {
     let passwordLine = UIView()
-    passwordLine.backgroundColor = .gray
+    passwordLine.backgroundColor = .g100
     return passwordLine
   }()
   
   private let mainImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(named: "Image 7") // Set the image name
-    imageView.contentMode = .scaleAspectFit // Adjust content mode as needed
+    imageView.image = UIImage(named: "Image 7")
+    imageView.contentMode = .scaleAspectFit
     return imageView
   }()
   
   private let emailLabel: UILabel = {
     let emailLabel = UILabel()
     emailLabel.text = "이메일"
-    emailLabel.textColor = .white
+    emailLabel.textColor = .g50
+    emailLabel.font = UIFont(name: "Pretendard",
+                                size: 14)
     return emailLabel
   }()
   
   private let passwordLabel: UILabel = {
-    // '비밀번호' 텍스트
     let passwordLabel = UILabel()
     passwordLabel.text = "비밀번호"
-    passwordLabel.textColor = .white
+    passwordLabel.textColor = .g50
+    passwordLabel.font = UIFont(name: "Pretendard",
+                                size: 14)
     return passwordLabel
   }()
   
-  lazy var loginButton: UIButton = {
+  private lazy var loginButton: UIButton = {
     let loginButton = UIButton(type: .system)
     loginButton.setTitle("로그인하기", for: .normal)
     loginButton.setTitleColor(.white, for: .normal)
@@ -93,36 +106,42 @@ final class LoginViewController: UIViewController {
     return loginButton
   }()
   
-  private let forgotPasswordButton: UIButton = {
+  private lazy var forgotPasswordButton: UIButton = {
     let forgotPasswordButton = UIButton(type: .system)
     forgotPasswordButton.setTitle("비밀번호가 기억나지 않으시나요?",
                                   for: .normal)
-    forgotPasswordButton.setTitleColor(.gray,
+    forgotPasswordButton.setTitleColor(.g70,
                                        for: .normal)
-    forgotPasswordButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+    forgotPasswordButton.titleLabel?.font = UIFont(name: "Pretendard",
+                                                   size: 12)
+    forgotPasswordButton.addAction(UIAction { _ in
+      self.forgotPasswordButtonTapped()
+    }, for: .touchUpInside)
     return forgotPasswordButton
   }()
   
-  lazy var exploreButton: UIButton = {
+  private lazy var exploreButton: UIButton = {
     let exploreButton = UIButton(type: .system)
     exploreButton.setTitle("둘러보기",
                            for: .normal)
     exploreButton.setTitleColor(.white,
                                 for: .normal)
-    exploreButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+    exploreButton.titleLabel?.font = UIFont(name: "Pretendard",
+                                            size: 14)
     exploreButton.addTarget(self,
                             action: #selector(exploreButtonTapped),
                             for: .touchUpInside)
     return exploreButton
   }()
   
-  lazy var signUpButton: UIButton = {
+  private lazy var signUpButton: UIButton = {
     let signUpButton = UIButton(type: .system)
     signUpButton.setTitle("회원가입",
                           for: .normal)
     signUpButton.setTitleColor(UIColor(hexCode: "FF5935"),
                                for: .normal)
-    signUpButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+    signUpButton.titleLabel?.font = UIFont(name: "Pretendard",
+                                          size: 16)
     signUpButton.addTarget(self,
                            action: #selector(signUpButtonTapped),
                            for: .touchUpInside)
@@ -354,7 +373,6 @@ final class LoginViewController: UIViewController {
   @objc func exploreButtonTapped() {
     tokenManager.deleteTokens()
     
-    print(tokenManager.loadRefreshToken())
     let tapbarcontroller = TabBarController()
     let navigationController = UINavigationController(rootViewController: tapbarcontroller)
     navigationController.modalPresentationStyle = .fullScreen
@@ -379,6 +397,12 @@ final class LoginViewController: UIViewController {
   
   @objc func backButtonTapped() {
     navigationController?.popViewController(animated: true)
+  }
+  
+  // MARK: - 비밀번호 잊었을 때
+  func forgotPasswordButtonTapped(){
+    let forgotPasswordVC = FindPasswordViewController()
+    navigationController?.pushViewController(forgotPasswordVC, animated: true)
   }
 }
 

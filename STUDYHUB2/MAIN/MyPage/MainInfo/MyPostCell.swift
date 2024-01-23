@@ -5,34 +5,26 @@ import SnapKit
 
 protocol MyPostCellDelegate: AnyObject {
   func menuButtonTapped(in cell: MyPostCell, postID: Int)
-  func closeButtonTapped(in cell: MyPostCell)
+  func closeButtonTapped(in cell: MyPostCell, postID: Int)
   func acceptButtonTapped(in cell: MyPostCell, postID: Int)
 }
 
-struct CellData {
-  var major, title, info: String
-  var remainNum: Int
-}
 
 final class MyPostCell: UICollectionViewCell {
   weak var delegate: MyPostCellDelegate?
-  
-  @objc func menuButtonTapped(){
-    delegate?.menuButtonTapped(in: self, postID: postID ?? 0)
-  }
-  
-  @objc func closeButtonTapped(){
-    delegate?.closeButtonTapped(in: self)
-  }
-  
-  func acceptButtonTapped(){
-    delegate?.acceptButtonTapped(in: self, postID: postID ?? 0)
-  }
-  
+
   var postID: Int?
+  var studyId: Int?
+  
+  var model: MyPostcontent? {
+    didSet {
+      bind()
+    }
+  }
+  
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  lazy var majorLabel: UILabel = {
+  private lazy var majorLabel: UILabel = {
     let label = UILabel()
     label.text = " 세무회계학과 "
     label.textColor = .o50
@@ -198,7 +190,25 @@ final class MyPostCell: UICollectionViewCell {
   }
   
   private func bind() {
+    majorLabel.text = model?.major.convertMajor(model?.major ?? "" , isEnglish: false)
+    titleLabel.text = model?.title
+    infoLabel.text = model?.content
+    remainCount = model?.remainingSeat ?? 0
+    postID = model?.postID
+    studyId = model?.studyId
   }
   
+  
+  @objc func menuButtonTapped(){
+    delegate?.menuButtonTapped(in: self, postID: postID ?? 0)
+  }
+  
+  @objc func closeButtonTapped(){
+    delegate?.closeButtonTapped(in: self, postID: postID ?? 0)
+  }
+  
+  func acceptButtonTapped(){
+    delegate?.acceptButtonTapped(in: self, postID: postID ?? 0)
+  }
 }
 

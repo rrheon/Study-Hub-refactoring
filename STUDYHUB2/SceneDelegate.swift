@@ -17,7 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
     
-    let accessToken = TokenManager.shared.loadAccessToken()
     loginManager.refreshAccessToken { result in
       switch result {
       case true:

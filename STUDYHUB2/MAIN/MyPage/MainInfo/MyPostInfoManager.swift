@@ -28,13 +28,13 @@ struct Posts: Codable {
 struct MyPostcontent: Codable {
   let close: Bool
   let content, major: String
-  let postID, remainingSeat: Int
+  let postID, remainingSeat, studyId: Int
   let title: String
   
   enum CodingKeys: String, CodingKey {
     case close, content, major
     case postID = "postId"
-    case remainingSeat, title
+    case remainingSeat, title, studyId
   }
 }
 

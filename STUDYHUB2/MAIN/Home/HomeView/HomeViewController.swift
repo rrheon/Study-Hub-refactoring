@@ -335,18 +335,12 @@ final class HomeViewController: NaviHelper {
 // MARK: - 서치바 관련
 extension HomeViewController: UISearchBarDelegate {
   // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-    
-    
-    if keyword.isEmpty {
-      print("검색 결과가 없음")
-    } else {
-      let searchViewController = SearchViewController(keyword: keyword)
-      self.navigationController?.pushViewController(searchViewController, animated: true)
-    }
+
+  func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+    let searchViewController = SearchViewController()
+    self.navigationController?.pushViewController(searchViewController, animated: true)
+    return false
   }
-  
 }
 
 // MARK: - collectionView

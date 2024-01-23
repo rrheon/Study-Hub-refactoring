@@ -10,75 +10,40 @@ import Foundation
 import Moya
 import UIKit
 
-struct RefreshAccessToken: Codable {
-  let refreshToken: String
-}
-
-// MARK: - GetCommentList
-struct GetCommentList: Codable {
-  let content: [CommentConetent]
-  let empty, first, last: Bool
-  let number, numberOfElements: Int
-  let size: Int
-} 
-
-// MARK: - Content
-struct CommentConetent: Codable {
-  let commentID: Int
-  let commentedUserData: CommentedUserData
-  let content:String
-  let createdDate:  [Int]
-  let usersComment: Bool
-  
-  enum CodingKeys: String, CodingKey {
-    case commentID = "commentId"
-    case commentedUserData, content, createdDate, usersComment
-  }
-}
-
-// MARK: - CommentedUserData
-struct CommentedUserData: Codable {
-  let imageURL, major, nickname: String
-  let userID: Int
-  
-  enum CodingKeys: String, CodingKey {
-    case imageURL = "imageUrl"
-    case major, nickname
-    case userID = "userId"
-  }
-}
-
 enum networkingAPI {
+  // 토큰관련
   case refreshAccessToken(_ refreshToken: String)
   
-  case storeImage(_image: UIImage)
+  // 유저 프로필 이미지 관련
+  case storeImage(_ image: UIImage)
   case deleteImage
   
+  // 유저정보 수정
   case editUserNickName(_nickname: String)
   case editUserMaojr(_major: String)
   case editUserPassword(_checkPassword: Bool, _password: String)
-  
   case verifyPassword(_password: String)
   case verifyEmail(_code: String, _email: String)
   case checkEmailDuplication(_email: String)
   case sendEmailCode(_email: String)
-  
   case deleteID
   
+  // 댓글 관련
   case getCommentList(_postId: Int, _page: Int, _size: Int)
   case writeComment(_content: String, _postId: Int)
   case deleteComment(_commentId: Int)
   case modifyComment(_commentId: Int, _content: String)
   
+  // 게시글관련
   case getMyPostList(_page: Int, _size: Int)
   case modifyMyPost(_data: UpdateStudyRequest)
   case deleteMyPost(_postId: Int)
   case searchSinglePost(_postId: Int)
-  
   case searchPostList(_hot: String, text: String,
                       page: Int, size: Int,
                       titleAndMajor: String)
   case recommendSearch(_keyword: String)
+  case closePost(_ postId: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -88,11 +53,17 @@ extension networkingAPI: TargetType {
   
   var path: String {
     switch self {
+      // 토큰관련
+    case .refreshAccessToken(_refreshToken: _):
+      return "/jwt/v1/accessToken"
+      
+      // 유저 프로필 이미지 관련
     case .storeImage(_image: _):
       return "/v1/users/image"
     case .deleteImage:
       return "/v1/users/image"
       
+      // 유저정보 수정
     case .editUserNickName(_nickname: _):
       return "/v1/users/nickname"
     case .editUserMaojr(_major: _):
@@ -101,20 +72,16 @@ extension networkingAPI: TargetType {
       return "/v1/users/password"
     case .verifyPassword(_password: _):
       return "/v1/users/password/verify"
-      
     case .verifyEmail(_code:_, _email: _):
       return "/v1/email/verify"
     case .checkEmailDuplication(_email: _):
       return "/v1/email/duplication"
     case .sendEmailCode(_email: _):
       return "/v1/email"
-      
     case .deleteID:
       return "/v1/users"
       
-    case .searchSinglePost(let postId):
-      return "/v1/study-posts/\(postId)"
-      
+      // 댓글관련
     case .writeComment(_content: _ , _postId: _):
       return "/v1/comments"
     case .getCommentList(let postId, _page: _, _size: _):
@@ -124,6 +91,7 @@ extension networkingAPI: TargetType {
     case .modifyComment(let commentId, let content):
       return "/v1/comments"
       
+      // 게시글 관련
     case .getMyPostList(_page: _, _size: _):
       return "/v1/study-posts/mypost"
     case .deleteMyPost(let postId):
@@ -132,12 +100,12 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts"
     case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return "/v2/study-posts"
-      
+    case .searchSinglePost(let postId):
+      return "/v1/study-posts/\(postId)"
     case .recommendSearch(_keyword: _):
       return "/v1/study-post/recommend"
-      
-    case .refreshAccessToken(_refreshToken: _):
-      return "/jwt/v1/accessToken"
+    case .closePost(let postId):
+      return "/v1/study-posts/\(postId)/close"
     }
   }
   
@@ -155,7 +123,8 @@ extension networkingAPI: TargetType {
         .editUserMaojr(_major: _),
         .editUserPassword(_checkPassword: _, _password: _),
         .modifyComment(_commentId: _, _content: _),
-        .modifyMyPost(_data: _):
+        .modifyMyPost(_data: _),
+        .closePost(_):
       return .put
       
     case .deleteImage,
@@ -248,14 +217,15 @@ extension networkingAPI: TargetType {
         .searchSinglePost(_postId: _),
         .deleteImage,
         .deleteComment(_commentId: _),
-        .deleteMyPost(_postId: _):
+        .deleteMyPost(_postId: _),
+        .closePost(_):
       return .requestPlain
       
     }
   }
   
   var headers: [String : String]? {
-    guard let acceessToken = TokenManager.shared.loadAccessToken() else { return nil }
+    guard let accessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {
     case  .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
@@ -270,28 +240,31 @@ extension networkingAPI: TargetType {
     case .verifyEmail(_code: _, _email: _):
       return ["Accept" : "application/json"]
       
+
+   
     case .writeComment(_content: _, _postId: _),
         .modifyComment(_commentId: _, _content: _),
         .getMyPostList(_page: _, _size: _),
-        .modifyMyPost(_data: _):
+        .modifyMyPost(_data: _),
+        .closePost(_):
       return ["Content-type": "application/json",
-              "Authorization": "\(acceessToken)"]
+              "Authorization": "\(accessToken)"]
       
     case .storeImage(_image: _):
       return [ "Content-Type" : "multipart/form-data",
-               "Authorization": "\(acceessToken)" ]
+               "Authorization": "\(accessToken)" ]
     case .deleteImage,
         .deleteID ,
         .verifyPassword(_),
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _):
-      return [ "Authorization": "\(acceessToken)"]
+      return [ "Authorization": "\(accessToken)"]
       
     default:
       return ["Content-type": "application/json",
               "Content-Type" : "multipart/form-data",
               "Accept": "application/json",
-              "Authorization": "\(acceessToken)"]
+              "Authorization": "\(accessToken)"]
     }
   }
 }

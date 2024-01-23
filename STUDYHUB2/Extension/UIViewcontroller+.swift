@@ -166,8 +166,11 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     textView.layer.borderWidth = 1.0 // 테두리 두께 초기화
   }
   
-  // MARK: - toast message, 이미지가 뒤에 나오고 있음 앞으로 빼기
-  func showToast(message: String, alertCheck: Bool, large: Bool = false) {
+  // MARK: - toast message, 이미지가 뒤에 나오고 있음 앞으로 빼기, 이미지 없을 때도 있음
+  func showToast(message: String,
+                 imageCheck: Bool = true,
+                 alertCheck: Bool,
+                 large: Bool = false) {
     let toastContainer = UIView()
     toastContainer.backgroundColor = .g100
     toastContainer.layer.cornerRadius = 10

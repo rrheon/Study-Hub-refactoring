@@ -401,13 +401,14 @@ final class MyInformViewController: NaviHelper {
     self.present(popupVC, animated: false)
     
     popupVC.popupView.rightButtonAction = { [weak self] in
-      if let navigationController = self?.navigationController {
-        navigationController.dismiss(animated: true)
-        navigationController.popToRootViewController(animated: false)
-       
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .overFullScreen
-        navigationController.present(loginVC, animated: true, completion: nil)
+      self?.dismiss(animated: true) {
+        if let navigationController = self?.navigationController {
+          navigationController.popToRootViewController(animated: false)
+          
+          let loginVC = LoginViewController()
+          loginVC.modalPresentationStyle = .overFullScreen
+          navigationController.present(loginVC, animated: true, completion: nil)
+        }
       }
     }
   }
@@ -455,7 +456,7 @@ extension MyInformViewController: UIImagePickerControllerDelegate & UINavigation
       }
       
       let provider = MoyaProvider<networkingAPI>()
-      provider.request(.storeImage(_image: image)) { result in
+      provider.request(.storeImage(image)) { result in
         switch result {
         case .success(let response):
           
