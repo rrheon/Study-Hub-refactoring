@@ -428,29 +428,17 @@ final class LoginViewController: UIViewController {
   
   // Action for the "회원가입" (Signup) button
   @objc func signUpButtonTapped() {
-    let signUpViewController = SignUpViewController()
+    let termsOfServiceVC = TermsOfServiceViewController()
+    let nacigationVC = UINavigationController(rootViewController: termsOfServiceVC)
+    nacigationVC.modalPresentationStyle = .fullScreen
     
-      let backButton = UIBarButtonItem(title: "",
-                                       style: .plain,
-                                       target: self,
-                                       action: #selector(backButtonTapped))
-      backButton.image = UIImage(systemName: "chevron.left")
-      backButton.tintColor = .white
-      signUpViewController.navigationItem.leftBarButtonItem = backButton
-      
-      navigationController?.pushViewController(signUpViewController, animated: true)
-  }
-  
-  @objc func backButtonTapped() {
-    navigationController?.popViewController(animated: true)
+    self.present(nacigationVC, animated: true, completion: nil)
   }
   
   // MARK: - 비밀번호 잊었을 때
   func forgotPasswordButtonTapped(){
-    
     let forgotPasswordVC = FindPasswordViewController()
     let navigationController = UINavigationController(rootViewController: forgotPasswordVC)
-
     navigationController.modalPresentationStyle = .fullScreen
     
     self.present(navigationController, animated: true, completion: nil)  }

@@ -25,6 +25,7 @@ extension UIColor {
 
   static let g100 = UIColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.00)
   static let g10 = UIColor(red: 0.91, green: 0.91, blue: 0.91, alpha: 1.00)
+  static let g40 = UIColor(red: 0.74, green: 0.74, blue: 0.74, alpha: 1.00)
   static let g50 = UIColor(red: 0.65, green: 0.65, blue: 0.65, alpha: 1.00)
   static let g60 = UIColor(red: 0.56, green: 0.56, blue: 0.56, alpha: 1.00)
   static let g70 = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1.00)
@@ -39,6 +40,7 @@ extension UIColor {
   static let o30 = UIColor(red: 1.00, green: 0.71, blue: 0.64, alpha: 1.00)
   static let o40 = UIColor(red: 1.00, green: 0.52, blue: 0.40, alpha: 1.00)
   static let o50 = UIColor(red: 1.00, green: 0.33, blue: 0.19, alpha: 1.00)
+  static let o60 = UIColor(red: 0.44, green: 0.17, blue: 0.11, alpha: 1.00)
 
   static let cellShadow = UIColor(red: 0.13, green: 0.13, blue: 0.13, alpha: 1.00)
   
