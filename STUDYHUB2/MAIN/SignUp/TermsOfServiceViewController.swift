@@ -111,7 +111,7 @@ final class TermsOfServiceViewController: NaviHelper {
   private lazy var nextButton: UIButton = {
     let button = UIButton()
     button.setTitle("다음", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
+    button.setTitleColor(UIColor.g90, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendara-Medium",
                                      size: 14)
     button.layer.cornerRadius = 6
@@ -248,7 +248,9 @@ final class TermsOfServiceViewController: NaviHelper {
     }
     
     let nextButtonColor = !agreeAllCheckButton.isSelected ? UIColor.o50 : UIColor.o60
+    let nextButtonTextColor = !agreeAllCheckButton.isSelected ? UIColor.white : UIColor.g90
     nextButton.backgroundColor = nextButtonColor
+    nextButton.setTitleColor(nextButtonTextColor, for: .normal)
     
     agreeAllCheckButton.isSelected.toggle()
   }
@@ -267,13 +269,15 @@ final class TermsOfServiceViewController: NaviHelper {
     
     if allSelected {
       nextButton.backgroundColor = .o50
+      nextButton.setTitleColor(.white, for: .normal)
       agreeAllCheckButton.isSelected.toggle()
     } else {
       nextButton.backgroundColor = .o60
+      nextButton.setTitleColor(.g90, for: .normal)
     }
   }
 
-
+  // MARK: - 다음버튼, 밑에꺼 하나만 눌러도 넘어감 - 고치자
   func nextButtonTapped(){
     if agreeAllCheckButton.isSelected {
       let signUpVC = SignUpViewController()
@@ -281,5 +285,4 @@ final class TermsOfServiceViewController: NaviHelper {
     }
 
   }
-  
 }

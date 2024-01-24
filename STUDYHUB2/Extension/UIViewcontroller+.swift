@@ -213,8 +213,9 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       make.centerY.equalTo(toastContainer)
       if imageCheck {
         make.leading.equalTo(imageView.snp.trailing).offset(8)
+      } else {
+        make.leading.equalTo(toastContainer).offset(30)
       }
-      make.leading.equalTo(toastContainer).offset(30)
       make.trailing.equalTo(toastContainer).offset(-16)
     }
     

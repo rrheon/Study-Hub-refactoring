@@ -11,6 +11,7 @@ import SnapKit
 import Moya
 
 final class FindPasswordViewController: NaviHelper {
+  let editUserInfoManager = EditUserInfoManager.shared
   
   var previousVC: EditPasswordViewController?
   var userEmail: String? {
@@ -74,10 +75,11 @@ final class FindPasswordViewController: NaviHelper {
                                                   fontSize: 16)
   private lazy var newPasswordTextField = createTextField(title: "새 비밀번호를 한 번 더 입력")
   
-  private lazy var checkValidPasswordLabel = createLabel(title: "사용할 수 없는 비밀번호예요. (10자리 이상, 특수문자 포함 필수)",
-                                                         textColor: .r50,
-                                                         fontType: "Pretendard",
-                                                         fontSize: 12)
+  private lazy var checkValidPasswordLabel = createLabel(
+    title: "사용할 수 없는 비밀번호예요. (10자리 이상, 특수문자 포함 필수)",
+    textColor: .r50,
+    fontType: "Pretendard",
+    fontSize: 12)
   
   private lazy var checkEqualPasswordLabel = createLabel(title: "비밀번호가 일치하지 않아요",
                                                          textColor: .r50,
@@ -90,7 +92,6 @@ final class FindPasswordViewController: NaviHelper {
     view.backgroundColor = .white
     
     navigationItemSetting()
-    redesignNavigationbar()
     
     setUpLayout()
     makeUI()
@@ -126,11 +127,16 @@ final class FindPasswordViewController: NaviHelper {
   }
   
   override func leftButtonTapped(_ sender: UIBarButtonItem) {
-    dismiss(animated: true)
+    if previousVC != nil {
+      navigationController?.popViewController(animated: true)
+    } else {
+      dismiss(animated: true)
+    }
   }
   
   // MARK: - 네비게이션 재설정
-  func redesignNavigationbar(){
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
     
     navigationItem.rightBarButtonItem = .none
     navigationItem.title = "비밀번호 찾기"
@@ -143,14 +149,13 @@ final class FindPasswordViewController: NaviHelper {
                                          action: .none)
     navigationItem.rightBarButtonItem = completeButton
   }
-  
+    
   // MARK: - 이메일 입력 시
   func checkTextFields(checkEmail: Bool) {
-    guard let textField1Text = emailTextField.text, !textField1Text.isEmpty else {
-      return
-    }
+    guard let textField1Text = emailTextField.text, !textField1Text.isEmpty else { return }
    
     let choseFunc = checkEmail ? #selector(checkValidCode) : #selector(checkEmailValid)
+    print(checkEmail)
     let completeImg = UIImage(named: "ableNextButton")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,
                                          style: .plain,
@@ -162,25 +167,17 @@ final class FindPasswordViewController: NaviHelper {
   // MARK: - 이메일 가입여부 확인
   @objc func checkEmailValid(){
     guard let email = emailTextField.text else { return }
-    print(email)
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.checkEmailDuplication(_email: email)) {
-      switch $0 {
-      case.success(let response):
-        switch response.statusCode{
-        case 200:
-          self.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
-                         alertCheck: false)
-        default:
-          DispatchQueue.main.async {
-            self.userEmail = email
-            self.checkEmail = true
-            self.nextButtonTapped()
-          }
+    
+    editUserInfoManager.checkEmailDuplication(email: email) { result in
+      if result {
+        DispatchQueue.main.async {
+          self.userEmail = email
+          self.checkEmail = true
+          self.nextButtonTapped()
         }
-        // 성공일 때 nextbuttontapped누를 수 있도록 수정해야함
-      case .failure(let response):
-        print(response.response)
+      } else {
+        self.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
+                       alertCheck: false)
       }
     }
   }
@@ -191,7 +188,7 @@ final class FindPasswordViewController: NaviHelper {
     let completeButton = UIBarButtonItem(image: completeImg,
                                          style: .plain,
                                          target: self,
-                                         action: .none)
+                                         action: #selector(checkValidCode))
     navigationItem.rightBarButtonItem = completeButton
     
     sendCodeButtonTapped(resend: false)
@@ -229,51 +226,30 @@ final class FindPasswordViewController: NaviHelper {
   
   // MARK: - 전송받은 코드 유효성 확인
   @objc func checkValidCode(){
+    print("코드체크전")
     guard let code = codeTextField.text else { return }
     guard let email = userEmail else { return }
-  
-    let provider = MoyaProvider<networkingAPI>()
-  
-    provider.request(.verifyEmail(_code: code, _email: email)) { result in
-      switch result {
-      case .success(let response):
-        let res = String(data: response.data, encoding: .utf8) ?? "No data"
-        if let i = res.firstIndex(of: ":"), let j = res.firstIndex(of: "}") {
-          let startIndex = res.index(after: i)
-          let endIndex = res.index(before: j)
-          let codeCheck = res[startIndex...endIndex]
-          
-          switch codeCheck{
-          case "true":
-            self.afterCheckCode()
-          case "false":
-            self.showToast(message: "인증코드가 일치하지 않아요. 다시 입력하거나 새 인증코드를 받아주세요.",
-                           alertCheck: false,
-                           large: true)
-          default:
-            return
-          }
-        }
-  
-      case .failure(let response):
-        print(response.response)
+    
+    editUserInfoManager.checkValidCode(code: code,
+                                       email: email) { result in
+      if result == "true" {
+        self.afterCheckCode()
+      } else {
+        self.showToast(message: "인증코드가 일치하지 않아요. 다시 입력하거나 새 인증코드를 받아주세요.",
+                       alertCheck: false,
+                       large: true)
       }
     }
+    
   }
 
   // MARK: - 이메일 검증 코드 전송
   func sendCodeButtonTapped(resend: Bool){
     guard let email = userEmail else { return }
     
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.sendEmailCode(_email: email)) {
-      switch $0{
-      case .success(let response):
-        if resend {
-          self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
-        }
-      case .failure(let response):
-        print(response.response)
+    editUserInfoManager.sendEmailCode(email: email) {
+      if resend {
+        self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
       }
     }
   }
@@ -403,25 +379,15 @@ final class FindPasswordViewController: NaviHelper {
   @objc func completeButtonTapped(){
     guard let password = enterNewPasswordTextField.text else { return }
 
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.editUserPassword(_checkPassword: true,
-                                       _password: password)) {
-      switch $0 {
-      case .success(let response):
-        print(response.response)
-        
-        DispatchQueue.main.async {
-          if self.previousVC == nil {
-            self.dismiss(animated: true)
-          } else {
-            self.navigationController?.popViewController(animated: true)
-          }
-        
-          self.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
+    editUserInfoManager.changePassword(password: password) {
+      DispatchQueue.main.async {
+        if self.previousVC == nil {
+          self.dismiss(animated: true)
+        } else {
+          self.navigationController?.popViewController(animated: true)
         }
-        
-      case .failure(let respose):
-        print(respose.response)
+      
+        self.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
       }
     }
   }

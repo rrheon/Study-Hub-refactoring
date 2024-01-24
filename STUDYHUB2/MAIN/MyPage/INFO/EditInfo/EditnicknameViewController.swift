@@ -95,34 +95,21 @@ final class EditnicknameViewController: NaviHelper {
   // 중복검사하는 기능 - 못하고 있음, 특문 이런거 확인하는 기능, 닉네임이 변경가능할 때
   @objc func completeButtonTapped() {
     guard let nickname = newNickNameTextField.text else { return }
-    
-    
+
     checkValidandDuplication(nickname: nickname) { isValid in      
       if isValid {
-        let provider = MoyaProvider<networkingAPI>()
-        provider.request(.editUserNickName(_nickname: nickname)) { result in
-          switch result {
-          case let .success(response):
-            let result = try? response.map(String.self)
-            print(result)
-            
+        self.editUserInfo.editUserNickname(nickname) {
+          DispatchQueue.main.async {
             self.changeNickname = nickname
-            
-            DispatchQueue.main.async {
-              self.showToast(message: "닉네임이 변경되었어요", alertCheck: true)
-              
-              self.navigationController?.popViewController(animated: true)
-            }
-            
-          case let .failure(error):
-            print(error.localizedDescription)
+            self.showToast(message: "닉네임이 변경되었어요", alertCheck: true)
+          
+            self.navigationController?.popViewController(animated: true)
           }
         }
       }
     }
   }
 
-  
   func checkValidandDuplication(nickname: String, completion: @escaping (Bool) -> Void) {
     let checkNickname = checkValidNickname(nickname: nickname)
 
