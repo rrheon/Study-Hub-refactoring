@@ -184,7 +184,9 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     let alertImage = alertCheck ? "SuccessImage" : "WarningImg"
     let imageView = UIImageView(image: UIImage(named: alertImage))
     
-    toastContainer.addSubview(imageView)
+    if imageCheck {
+      toastContainer.addSubview(imageView)
+    }
     toastContainer.addSubview(toastLabel)
   
     guard let keyWindow = UIApplication.shared.keyWindow else { return }
@@ -200,14 +202,19 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       make.height.equalTo(size)
     }
     
-    imageView.snp.makeConstraints { make in
-      make.centerY.equalTo(toastContainer)
-      make.leading.equalTo(toastContainer).offset(15)
+    if imageCheck {
+      imageView.snp.makeConstraints { make in
+        make.centerY.equalTo(toastContainer)
+        make.leading.equalTo(toastContainer).offset(15)
+      }
     }
     
     toastLabel.snp.makeConstraints { make in
       make.centerY.equalTo(toastContainer)
-      make.leading.equalTo(imageView.snp.trailing).offset(8)
+      if imageCheck {
+        make.leading.equalTo(imageView.snp.trailing).offset(8)
+      }
+      make.leading.equalTo(toastContainer).offset(30)
       make.trailing.equalTo(toastContainer).offset(-16)
     }
     

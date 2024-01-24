@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.rootViewController = tabBarController
       case false:
         let loginViewController = LoginViewController()
-        let navigationController = UINavigationController(rootViewController: loginViewController)
-        self.window?.rootViewController = navigationController
+//        let navigationController = UINavigationController(rootViewController: loginViewController)
+        self.window?.rootViewController = loginViewController
       }
     }
     

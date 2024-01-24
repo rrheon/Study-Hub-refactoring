@@ -125,8 +125,13 @@ final class FindPasswordViewController: NaviHelper {
     }
   }
   
+  override func leftButtonTapped(_ sender: UIBarButtonItem) {
+    dismiss(animated: true)
+  }
+  
   // MARK: - 네비게이션 재설정
   func redesignNavigationbar(){
+    
     navigationItem.rightBarButtonItem = .none
     navigationItem.title = "비밀번호 찾기"
     navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
