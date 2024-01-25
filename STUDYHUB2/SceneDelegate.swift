@@ -17,17 +17,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
     
-    loginManager.refreshAccessToken { result in
-      switch result {
-      case true:
-        let tabBarController = TabBarController()
-        self.window?.rootViewController = tabBarController
-      case false:
-        let loginViewController = LoginViewController()
-//        let navigationController = UINavigationController(rootViewController: loginViewController)
-        self.window?.rootViewController = loginViewController
-      }
-    }
+//    loginManager.refreshAccessToken { result in
+//      switch result {
+//      case true:
+//        let tabBarController = TabBarController()
+//        self.window?.rootViewController = tabBarController
+//      case false:
+//        let loginViewController = LoginViewController()
+//        self.window?.rootViewController = loginViewController
+//      }
+//    }
+    
+    let forgotPasswordVC = PasswordViewController()
+    let navigationController = UINavigationController(rootViewController: forgotPasswordVC)
+   
+    
+    self.window?.rootViewController = navigationController
     
 //    if accessToken == "a" {
 //      // 로그인 성공한 경우 HomeViewController 표시

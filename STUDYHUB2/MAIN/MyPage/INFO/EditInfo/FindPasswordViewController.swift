@@ -340,7 +340,7 @@ final class FindPasswordViewController: NaviHelper {
     sender.isSelected = !isPasswordVisible
   }
   
-  // MARK: - 비밀번호 특수문자 등 유효서 확인
+  // MARK: - 비밀번호 특수문자 등 유효성 확인
   func checkValidPassword(firstPassword: String, secondPassword: String) {
     let specialCharacterRegEx = ".*[!&^%$#@()/]+.*"
     let textTest = NSPredicate(format:"SELF MATCHES %@", specialCharacterRegEx)
