@@ -5,9 +5,11 @@ import Moya
 
 final class EditnicknameViewController: NaviHelper {
   
+  
   let editUserInfo = EditUserInfoManager.shared
   var changeNickname: String?
   
+  // MARK: - UI
   private lazy var titleLabel = createLabel(title: "새로운 닉네임을 알려주세요",
                                             textColor: .black,
                                             fontType: "Pretendard-Bold",
@@ -27,6 +29,7 @@ final class EditnicknameViewController: NaviHelper {
   
   var previousVC: MyInformViewController?
 
+  // MARK: - viewWillDisappear
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
@@ -84,6 +87,7 @@ final class EditnicknameViewController: NaviHelper {
     checkNicknameLabel.isHidden = true
   }
   
+  // MARK: - navigation
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
     navigationItem.title = "닉네임 변경"
@@ -92,7 +96,7 @@ final class EditnicknameViewController: NaviHelper {
     changeRightNavigationItem(complete: false)
   }
   
-  // 중복검사하는 기능 - 못하고 있음, 특문 이런거 확인하는 기능, 닉네임이 변경가능할 때
+  // MARK: - 중복검사하는 기능 - 못하고 있음, 특문 이런거 확인하는 기능, 닉네임이 변경가능할 때
   @objc func completeButtonTapped() {
     guard let nickname = newNickNameTextField.text else { return }
 
@@ -110,6 +114,7 @@ final class EditnicknameViewController: NaviHelper {
     }
   }
 
+  // MARK: - 닉네임 중복 확인
   func checkValidandDuplication(nickname: String, completion: @escaping (Bool) -> Void) {
     let checkNickname = checkValidNickname(nickname: nickname)
 
@@ -153,7 +158,7 @@ final class EditnicknameViewController: NaviHelper {
     completion(false)
   }
   
-  // 오른쪽 버튼 비활성화/ 활성화
+  // MARK: - 오른쪽 버튼 활성화, 비활성화
   func changeRightNavigationItem(complete: Bool){
     if complete == true {
       let completeImg = UIImage(named: "CompleteImage")?.withRenderingMode(.alwaysOriginal)
@@ -173,12 +178,12 @@ final class EditnicknameViewController: NaviHelper {
     }
   }
   
+  // MARK: - 유효성 검사
   func checkValidNickname(nickname: String) -> Bool {
     let pattern = "^[a-zA-Z0-9가-힣]*$"
     let regex = try? NSRegularExpression(pattern: pattern)
     let range = NSRange(location: 0, length: nickname.utf16.count)
 
-    // 유효성 검사를 수행합니다.
     return regex?.firstMatch(in: nickname, options: [], range: range) != nil ? true : false
   }
 }

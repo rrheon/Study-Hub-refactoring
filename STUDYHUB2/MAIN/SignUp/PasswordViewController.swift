@@ -48,7 +48,7 @@ final class PasswordViewController: NaviHelper {
     textField.placeholder = "비밀번호를 입력하세요"
     textField.attributedPlaceholder = NSAttributedString(
       string: "비밀번호를 입력해주세요",
-      attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
     textField.textColor = .white
     textField.backgroundColor = .black
     textField.borderStyle = .roundedRect
@@ -65,7 +65,6 @@ final class PasswordViewController: NaviHelper {
     }, for: .touchUpInside)
     return button
   }()
-  
 
   private lazy var passwordTextFielddividerLine: UIView = {
     let uiView = UIView()
@@ -85,7 +84,7 @@ final class PasswordViewController: NaviHelper {
     textField.placeholder = "비밀번호를 한 번 더 입력해주세요"
     textField.attributedPlaceholder = NSAttributedString(
       string: "비밀번호를 한 번 더 입력해주세요",
-      attributes:[NSAttributedString.Key.foregroundColor: UIColor.gray])
+      attributes:[NSAttributedString.Key.foregroundColor: UIColor.g80])
     textField.textColor = .white
     textField.backgroundColor = .black
     textField.borderStyle = .roundedRect
@@ -326,7 +325,7 @@ final class PasswordViewController: NaviHelper {
       nextButton.backgroundColor = .o50
       nextButton.setTitleColor(.white, for: .normal)
     } else {
-      nextButton.isEnabled = true
+      nextButton.isEnabled = false
       nextButton.backgroundColor = .o60
       nextButton.setTitleColor(.g90, for: .normal)
     }
@@ -339,9 +338,12 @@ final class PasswordViewController: NaviHelper {
       return
     }
     
-    guard firstTextFieldStatusLabel.textColor == .g_10,
-          secondTextfieldStatusLabel.textColor == .g_10 else { return }
-    checkNextButton(check: true)
+   let checkFirst = firstTextFieldStatusLabel.textColor == .g_10
+   let checkSecond = secondTextfieldStatusLabel.textColor == .g_10
+
+    if checkFirst && checkSecond {
+      checkNextButton(check: true)
+    }
   }
   
   // MARK: - 닉네임 설정화면으로 이동

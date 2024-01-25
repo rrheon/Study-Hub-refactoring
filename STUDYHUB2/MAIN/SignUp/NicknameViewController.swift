@@ -1,144 +1,181 @@
+
 import UIKit
 
 import SnapKit
 
-final class NicknameViewController: UIViewController {
+final class NicknameViewController: NaviHelper {
   
   var email: String?
   var password: String?
   var gender: String?
   var nickname: String?
   
+  let editUserInfo = EditUserInfoManager.shared
+  
   // MARK: - 화면구성
-  lazy var femaleButton: UIButton = {
-    let femaleBtn = UIButton()
-    femaleBtn.setTitle("여자", for: .normal)
-    femaleBtn.setTitleColor(UIColor(hexCode: "#8F8F8F"), for: .normal)
-    femaleBtn.backgroundColor = UIColor(hexCode: "#363636")
-    femaleBtn.layer.cornerRadius = 5
-    femaleBtn.layer.borderWidth = 1
-    femaleBtn.layer.borderColor = UIColor(hexCode: "#636363").cgColor
-    femaleBtn.addTarget(self,
-                        action: #selector(genderButtonTapped(_:)),
-                        for: .touchUpInside)
-    return femaleBtn
+  private lazy var pageNumberLabel = createLabel(
+    title: "4/5",
+    textColor: .g60,
+    fontType: "Pretendard-SemiBold",
+    fontSize: 18)
+  
+  private lazy var titleLabel = createLabel(
+    title: "스터디 참여에 필요한 정보를 알려주세요",
+    textColor: .white,
+    fontType: "Pretendard-Bold",
+    fontSize: 20)
+  
+  private lazy var underTitleLabel = createLabel(
+    title: "성별은 추후에 수정이 불가해요",
+    textColor: .g40,
+    fontType: "Pretendard-Medium",
+    fontSize: 14)
+  
+  // 닉네임 입력
+  private lazy var nicknameLabel = createLabel(
+    title: "닉네임",
+    textColor: .g50,
+    fontType: "Pretendard-Medium",
+    fontSize: 14)
+  
+  private lazy var nicknameTextfield: UITextField = {
+    let textField = UITextField()
+    textField.attributedPlaceholder = NSAttributedString(
+      string: "닉네임을 입력해주세요.",
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+    textField.textColor = .white
+    textField.backgroundColor = .black
+    return textField
   }()
   
-  lazy var maleButton: UIButton = {
-    let maleBtn = UIButton()
-    maleBtn.setTitle("남자", for: .normal)
-    maleBtn.setTitleColor(UIColor(hexCode: "#8F8F8F"), for: .normal)
-    maleBtn.backgroundColor = UIColor(hexCode: "#363636")
-    maleBtn.layer.cornerRadius = 5
-    maleBtn.layer.borderWidth = 1
-    maleBtn.layer.borderColor = UIColor(hexCode: "#636363").cgColor
-    maleBtn.addTarget(self,
-                      action: #selector(genderButtonTapped(_:)),
-                      for: .touchUpInside)
-    return maleBtn
+  // 중복확인 버튼
+  private lazy var checkDuplicationButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("중복 확인", for: .normal)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
+                                     size: 14)
+    button.backgroundColor = .o50
+    button.layer.cornerRadius = 4
+    button.addAction(UIAction { _ in
+      self.completeButtonTapped()
+    }, for: .touchUpInside
+    )
+    return button
   }()
   
-  private let nicknameTextField: UITextField = {
-    let nicknameTF = UITextField()
-    nicknameTF.placeholder = "닉네임을 입력하세요"
-    nicknameTF.attributedPlaceholder = NSAttributedString(string: "닉네임을 입력해주세요",
-                                                          attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
-    nicknameTF.textColor = .white
-    nicknameTF.backgroundColor = .black
-    nicknameTF.borderStyle = .roundedRect
-    nicknameTF.becomeFirstResponder()
-
-    return nicknameTF
-  }()
-    
-  private let titleLabel: UILabel = {
-    // '회원가입' 텍스트
-    let titleLabel = UILabel()
-    titleLabel.text = "회원가입"
-    titleLabel.textColor = .white
-    titleLabel.font = UIFont.boldSystemFont(ofSize: 22) 
-    return titleLabel
+  private lazy var nicknameUnderLineView: UIView = {
+    let uiView = UIView()
+    uiView.backgroundColor = .g100
+    return uiView
   }()
   
-  private let progressLabel: UILabel = {
-    let progressLabel = UILabel()
-    progressLabel.text = "3/4"
-    progressLabel.textColor = .gray
-    progressLabel.font = UIFont.boldSystemFont(ofSize: 20)
-    return progressLabel
+  private lazy var nicknameStatusLabel = createLabel(
+    title: "이미 존재하는 닉네임이예요",
+    textColor: .r50,
+    fontType: "Pretendard-Medium",
+    fontSize: 12)
+  
+  // 닉네임 세는 라벨
+  private lazy var characterCountLabel = createLabel(
+    title: "0/10",
+    textColor: .bg70,
+    fontType: "Pretendard-Medium",
+    fontSize: 12)
+  
+  // 성별라벨
+  private lazy var genderLabel = createLabel(
+    title: "성별",
+    textColor: .g50,
+    fontType: "Pretendard-Medium",
+    fontSize: 14)
+  
+  // 성별선택 버튼
+  private lazy var choiceFemaleButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("여자", for: .normal)
+    button.setTitleColor(UIColor.g60, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold",
+                                     size: 16)
+    button.backgroundColor = .g100
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor.g80.cgColor
+    button.layer.cornerRadius = 5
+    button.addAction(UIAction { _ in
+      self.genderButtonTapped(button)
+    }, for: .touchUpInside)
+    return button
   }()
   
-  private let nicknamePromptLabel: UILabel = {
-    let nicknamePromptLabel = UILabel()
-    nicknamePromptLabel.text = "스터디 참여에 필요한 정보를 알려주세요"
-    nicknamePromptLabel.textColor = .white
-    nicknamePromptLabel.font = UIFont.boldSystemFont(ofSize: 22)
-    return nicknamePromptLabel
+  private lazy var choiceMaleButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("남자", for: .normal)
+    button.setTitleColor(UIColor.g60, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold",
+                                     size: 16)
+    button.backgroundColor = .g100
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor.g80.cgColor
+    button.layer.cornerRadius = 5
+    button.addAction(UIAction { _ in
+      self.genderButtonTapped(button)
+    }, for: .touchUpInside)
+    return button
   }()
   
-  private let genderfixLabel: UILabel = {
-    let genderfixLabel = UILabel()
-    genderfixLabel.text = "성별은 추후에 수정이 불가해요"
-    genderfixLabel.textColor = .gray
-    genderfixLabel.font = UIFont.systemFont(ofSize: 13)
-    return genderfixLabel
-  }()
-  
-  private let nicknameLabel: UILabel = {
-    let nicknameLabel = UILabel()
-    nicknameLabel.text = "닉네임"
-    nicknameLabel.textColor = .white
-    return nicknameLabel
-  }()
-  
-  private let nicknameTextFielddividerLine: UIView = {
-    let nicknameTextFielddividerLine = UIView()
-    nicknameTextFielddividerLine.backgroundColor = .gray
-    return nicknameTextFielddividerLine
-  }()
-  
-  private let genderLabel: UILabel = {
-    let genderLabel = UILabel()
-    genderLabel.text = "성별"
-    genderLabel.textColor = .white
-    return genderLabel
-  }()
-  
-  lazy var nextButton: UIButton = {
-    let nextButton = UIButton(type: .system)
-    nextButton.setTitle("다음", for: .normal)
-    nextButton.setTitleColor(.white, for: .normal)
-    nextButton.backgroundColor = UIColor(hexCode: "FF5935")
-    nextButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-    nextButton.layer.cornerRadius = 10
-    nextButton.addTarget(self,
-                         action: #selector(nextButtonTapped),
-                         for: .touchUpInside)
-    return nextButton
+  // 다음 버튼
+  private lazy var nextButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.setTitle("다음", for: .normal)
+    button.setTitleColor(UIColor(hexCode: "#6F6F6F"), for: .normal)
+    button.backgroundColor = UIColor(hexCode: "#6F2B1C")
+    button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+    button.layer.cornerRadius = 10
+    button.addAction(UIAction { _ in
+      self.nextButtonTapped()
+    }, for: .touchUpInside)
+    return button
   }()
   
   // MARK: - viewDidLoad
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .black
-        
-      setUpLayout()
-      makeUI()
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    view.backgroundColor = .black
+    
+    navigationItemSetting()
+    
+    setUpLayout()
+    makeUI()
+  }
+  
+  // MARK: - 네비게이션 바
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+    
+    navigationItem.rightBarButtonItem = .none
+    
+    self.navigationItem.title = "회원가입"
+    self.navigationController?.navigationBar.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.white
+    ]
+  }
   
   // MARK: - setUpLayout
   func setUpLayout(){
     [
+      pageNumberLabel,
       titleLabel,
-      progressLabel,
-      nicknamePromptLabel,
-      genderfixLabel,
+      underTitleLabel,
       nicknameLabel,
-      nicknameTextFielddividerLine,
-      nicknameTextField,
+      nicknameTextfield,
+      checkDuplicationButton,
+      nicknameUnderLineView,
+      characterCountLabel,
+      nicknameStatusLabel,
       genderLabel,
-      femaleButton,
-      maleButton,
+      choiceFemaleButton,
+      choiceMaleButton,
       nextButton
     ].forEach {
       view.addSubview($0)
@@ -147,176 +184,194 @@ final class NicknameViewController: UIViewController {
   
   // MARK: - makeUI
   func makeUI(){
-    titleLabel.snp.makeConstraints { make in
-        make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-40)
-        make.centerX.equalToSuperview()
+    pageNumberLabel.snp.makeConstraints {
+      $0.top.equalToSuperview().offset(40)
+      $0.leading.equalToSuperview().offset(20)
     }
     
-    progressLabel.snp.makeConstraints { make in
-        make.top.equalTo(titleLabel.snp.bottom).offset(50)
-        make.trailing.equalTo(view.snp.trailing).offset(-350)
+    titleLabel.snp.makeConstraints {
+      $0.top.equalTo(pageNumberLabel.snp.bottom).offset(10)
+      $0.leading.equalTo(pageNumberLabel.snp.leading)
     }
     
-    nicknamePromptLabel.snp.makeConstraints { make in
-        make.top.equalTo(progressLabel.snp.bottom).offset(10)
-        make.leading.equalTo(view.snp.leading).offset(20)
+    underTitleLabel.snp.makeConstraints {
+      $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+      $0.leading.equalTo(titleLabel.snp.leading)
     }
     
-    genderfixLabel.snp.makeConstraints { make in
-        make.top.equalTo(progressLabel.snp.bottom).offset(40)
-        make.leading.equalTo(view.snp.leading).offset(20)
+    nicknameLabel.snp.makeConstraints {
+      $0.top.equalTo(underTitleLabel.snp.bottom).offset(30)
+      $0.leading.equalTo(underTitleLabel.snp.leading)
     }
     
-    nicknameLabel.snp.makeConstraints { make in
-        make.top.equalTo(nicknamePromptLabel.snp.bottom).offset(80)
-        make.leading.equalTo(view.snp.leading).offset(15)
+    nicknameTextfield.delegate = self
+    nicknameTextfield.snp.makeConstraints {
+      $0.top.equalTo(nicknameLabel.snp.bottom).offset(20)
+      $0.leading.equalTo(nicknameLabel.snp.leading)
     }
     
-    nicknameTextField.snp.makeConstraints { make in
-        make.top.equalTo(nicknameLabel.snp.bottom).offset(20)
-        make.leading.equalTo(nicknameLabel.snp.leading)
-        make.trailing.equalTo(view.snp.trailing).offset(-70)
-        make.height.equalTo(30)
+    checkDuplicationButton.snp.makeConstraints {
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.centerY.equalTo(nicknameTextfield)
+      $0.width.equalTo(68)
+      $0.height.equalTo(30)
     }
     
-    // Divider line constraints
-    nicknameTextFielddividerLine.snp.makeConstraints { make in
-        make.leading.trailing.equalTo(view)
-        make.top.equalTo(nicknameTextField.snp.bottom).offset(5)
-        make.height.equalTo(1)
+    nicknameUnderLineView.snp.makeConstraints {
+      $0.top.equalTo(nicknameTextfield.snp.bottom).offset(10)
+      $0.leading.equalTo(nicknameTextfield.snp.leading)
+      $0.trailing.equalToSuperview().offset(-10)
+      $0.height.equalTo(1)
     }
     
-    genderLabel.snp.makeConstraints { make in
-        make.top.equalTo(nicknameTextFielddividerLine.snp.bottom).offset(40)
-        make.leading.equalTo(view.snp.leading).offset(20)
+    nicknameStatusLabel.isHidden = true
+    nicknameStatusLabel.snp.makeConstraints {
+      $0.top.equalTo(nicknameUnderLineView.snp.bottom).offset(5)
+      $0.leading.equalTo(nicknameUnderLineView.snp.leading)
     }
     
-    femaleButton.snp.makeConstraints { make in
-        make.top.equalTo(genderLabel.snp.bottom).offset(20)
-        make.leading.equalTo(view.snp.leading).offset(15)
-        make.width.equalTo(180)
-        make.height.equalTo(45)
+    characterCountLabel.snp.makeConstraints {
+      $0.top.equalTo(nicknameUnderLineView.snp.bottom).offset(5)
+      $0.trailing.equalTo(nicknameUnderLineView.snp.trailing)
     }
     
-    maleButton.snp.makeConstraints { make in
-        make.top.equalTo(genderLabel.snp.bottom).offset(20)
-        make.leading.equalTo(femaleButton.snp.trailing).offset(5)
-        make.width.equalTo(180)
-        make.height.equalTo(45)
+    genderLabel.snp.makeConstraints {
+      $0.top.equalTo(nicknameUnderLineView.snp.bottom).offset(70)
+      $0.leading.equalTo(nicknameLabel.snp.leading)
     }
     
-    nextButton.snp.makeConstraints { make in
-        make.centerX.equalToSuperview()
-        make.top.equalTo(nicknameTextFielddividerLine.snp.bottom).offset(350)
-        make.height.equalTo(55)
-        make.width.equalTo(400)
+    choiceFemaleButton.snp.makeConstraints {
+      $0.top.equalTo(genderLabel.snp.bottom).offset(20)
+      $0.leading.equalTo(genderLabel.snp.leading)
+      $0.width.equalTo(172)
+      $0.height.equalTo(45)
+    }
+    
+    choiceMaleButton.snp.makeConstraints {
+      $0.top.equalTo(choiceFemaleButton)
+      $0.leading.equalTo(choiceFemaleButton.snp.trailing).offset(10)
+      $0.width.equalTo(172)
+      $0.height.equalTo(45)
+    }
+    
+    nextButton.snp.makeConstraints {
+      $0.bottom.equalToSuperview().offset(-40)
+      $0.height.equalTo(55)
+      $0.leading.trailing.equalTo(nicknameUnderLineView)
     }
   }
+  
+  // MARK: - 성별 선택
+  func genderButtonTapped(_ sender: UIButton) {
+    if sender == choiceFemaleButton {
+      choiceFemaleButton.backgroundColor = .o60
+      choiceFemaleButton.setTitleColor(.o20, for: .normal)
+      choiceFemaleButton.layer.borderColor = UIColor.o50.cgColor
+      
+      choiceMaleButton.backgroundColor = .g100
+      choiceMaleButton.setTitleColor(.g60, for: .normal)
+      choiceMaleButton.layer.borderColor = UIColor.g80.cgColor
+      
+      gender = "여자"
+    } else if sender == choiceMaleButton {
+      choiceMaleButton.backgroundColor = .o60
+      choiceMaleButton.setTitleColor(.o20, for: .normal)
+      choiceMaleButton.layer.borderColor = UIColor.o50.cgColor
+      
+      choiceFemaleButton.backgroundColor = .g100
+      choiceFemaleButton.setTitleColor(.g60, for: .normal)
+      choiceFemaleButton.layer.borderColor = UIColor.g80.cgColor
 
-  // MARK: - 함수
-    @objc func genderButtonTapped(_ sender: UIButton) {
-        // Reset button colors
-        femaleButton.backgroundColor = UIColor(hexCode: "#363636")
-        femaleButton.setTitleColor(UIColor(hexCode: "#8F8F8F"), for: .normal)
-        femaleButton.layer.borderColor = UIColor(hexCode: "#636363").cgColor
-        maleButton.backgroundColor = UIColor(hexCode: "#363636")
-        maleButton.setTitleColor(UIColor(hexCode: "#8F8F8F"), for: .normal)
-        maleButton.layer.borderColor = UIColor(hexCode: "#636363").cgColor
-        
-        
-        // Change the color of the tapped button
-        sender.backgroundColor = UIColor(hexCode: "#6F2B1C")
-        sender.setTitleColor(UIColor(hexCode: "#FFD7CC"), for: .normal)
-        sender.layer.borderColor = UIColor(hexCode: "#FF5530").cgColor
-        
-        if sender == femaleButton {
-            gender = "FEMALE"
-        } else if sender == maleButton {
-            gender = "MALE"
+      gender = "남자"
+    }
+  }
+  
+  // MARK: - 유효성 검사
+  func checkValidNickname(nickname: String) -> Bool {
+    let pattern = "^[a-zA-Z0-9가-힣]*$"
+    let regex = try? NSRegularExpression(pattern: pattern)
+    let range = NSRange(location: 0, length: nickname.utf16.count)
+    
+    return regex?.firstMatch(in: nickname, options: [], range: range) != nil ? true : false
+  }
+  
+  // MARK: - 중복검사하는 기능
+  @objc func completeButtonTapped() {
+    guard let nickname = nicknameTextfield.text else { return }
+    
+    checkValidandDuplication(nickname: nickname) { isValid in
+      if isValid {
+        DispatchQueue.main.async {
+          self.nicknameUnderLineView.backgroundColor = .g_10
+          
+          self.characterCountLabel.isHidden = true
+          
+          self.nicknameStatusLabel.isHidden = false
+          self.nicknameStatusLabel.textColor = .g_10
+          self.nicknameStatusLabel.text = "사용 가능한 닉네임이에요"
         }
+      }
     }
+  }
+  
+  //   MARK: - 닉네임 중복 확인
+  func checkValidandDuplication(nickname: String,
+                                completion: @escaping (Bool) -> Void) {
+    let checkNickname = checkValidNickname(nickname: nickname)
     
-    
-    @objc func nextButtonTapped() {
-        let nickname = nicknameTextField.text
-        
-        // 서버에 POST 요청을 보냅니다.
-        sendNicknameToServer(nickname: nickname)
-    }
-    
-    // 서버에 GET 요청을 보내는 메서드
-    func sendNicknameToServer(nickname: String?) {
-        guard let nickname = nickname, !nickname.isEmpty else {
-            // 닉네임이 비어있을 경우에 대한 처리
-            return
+    if checkNickname == true {
+      editUserInfo.checkNicknameDuplication(nickName: nickname) { status in
+        // badrequest == 중복 , error == 가능
+        if status == "Error" {
+       
+          completion(true)
+        } else {
+          DispatchQueue.main.async {
+            self.failToCheckDuplicaiton(content: "이미 존재하는 닉네임이에요")
+          }
+          completion(false)
         }
-        
-        // API 엔드포인트 URL과 쿼리 파라미터 준비
-        var urlComponents = URLComponents(string: "https://study-hub.site:443/api/v1/users/duplication-nickname")!
-        urlComponents.queryItems = [URLQueryItem(name: "nickname", value: nickname)]
-        
-        guard let url = urlComponents.url else {
-            // 잘못된 URL 처리
-            return
-        }
-        
-        // URLRequest 생성 (GET 요청으로 수정)
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // URLSession을 사용하여 서버 요청을 보냅니다.
-        let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
-            // 서버 응답 처리
-            if let data = data,
-               let response = response as? HTTPURLResponse,
-               response.statusCode == 200 {
-                // 서버로부터 ACCEPTED 응답을 받았을 때의 처리
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("서버 응답: \(responseString)")
-                }
-                DispatchQueue.main.async {
-                    // "사용 가능한 닉네임입니다" 알림 표시
-                    self?.showAlert(message: "사용 가능한 닉네임입니다") {
-                        // 확인 버튼을 눌렀을 때 실행할 코드
-                        self?.navigateToDepartmentViewController()
-                    }
-                }
-            } else {
-                // 기타 오류 응답일 때의 처리
-                if let responseString = String(data: data ?? Data(), encoding: .utf8) {
-                    print("서버 응답: \(responseString)")
-                }
-                DispatchQueue.main.async {
-                    // nicknameTextFielddividerLine 색상을 빨강색으로 변경
-                    // "중복된 닉네임입니다" 경고 표시
-                    self?.showAlert(message: "중복된 닉네임입니다") {
-                        // 확인 버튼을 눌렀을 때 실행할 코드 (예를 들어 다른 처리나 다이얼로그 닫기)
-                    }
-                }
-            }
-        }
-        task.resume()
+      }
+    } else {
+      self.failToCheckDuplicaiton(content: "이모티콘,특수문자,띄어쓰기는 사용할 수 없어요")
     }
+    completion(false)
+  }
+  
+  // MARK: - 중복 확인에 실패
+  func failToCheckDuplicaiton(content: String){
+    self.nicknameUnderLineView.backgroundColor = .r50
     
-    // UIAlertController를 사용하여 알림을 표시하는 메서드
-    func showAlert(message: String, completion: (() -> Void)?) {
-        let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            // 확인 버튼을 눌렀을 때 실행할 코드
-            completion?()
-        })
-        present(alert, animated: true, completion: nil)
-    }
+    self.characterCountLabel.isHidden = true
     
-    // DepartmentViewController로 화면 전환하는 메서드
-    func navigateToDepartmentViewController() {
-        let departmentVC = DepartmentViewController()
-        departmentVC.email = email
-        departmentVC.password = password
-        departmentVC.gender = gender
-        departmentVC.nickname = nicknameTextField.text
-        
-        // Use the navigation controller to push the DepartmentViewController onto the navigation stack
-        navigationController?.pushViewController(departmentVC, animated: true)
+    self.nicknameStatusLabel.textColor = .r50
+    self.nicknameStatusLabel.isHidden = false
+    self.nicknameStatusLabel.text = content
+  }
+  
+  func nextButtonTapped(){
+    guard let choiceGender = gender else { return }
+    
+    if nicknameStatusLabel.textColor == .g_10 {
+      let departmentVC = DepartmentViewController()
+      navigationController?.pushViewController(departmentVC, animated: true)
     }
+  }
+}
+
+extension NicknameViewController {
+  func textField(_ textField: UITextField,
+                 shouldChangeCharactersIn range: NSRange,
+                 replacementString string: String) -> Bool {
+    let currentText = textField.text ?? ""
+    guard let stringRange = Range(range, in: currentText) else { return false }
+    
+    let changedText = currentText.replacingCharacters(in: stringRange, with: string)
+    
+    characterCountLabel.text = "\(changedText.count)/10"
+    characterCountLabel.changeColor(label: characterCountLabel,
+                                    wantToChange: "\(changedText.count)",
+                                    color: .white)
+    return changedText.count <= 9
+  }
 }
