@@ -28,6 +28,8 @@ final class CustomCell: UITableViewCell {
   lazy var name: UILabel = {
     let label = UILabel()
     label.text = "정보통신학과"
+    label.textColor = .white
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   

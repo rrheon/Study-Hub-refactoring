@@ -15,21 +15,6 @@ final class EditMajorViewController: NaviHelper {
   var changedMajor: String?
   var previousVC: MyInformViewController?
   
-  private lazy var majorSet = ["공연예술과", "IBE전공", "건설환경공학", "건축공학",
-                               "경영학부", "경제학과", "국어교육과", "국어국문학과",
-                               "기계공학과","데이터과학과","도시건축학","도시공학과",
-                               "도시행정학과","독어독문학과","동북아통상전공","디자인학부",
-                               "무역학부","문헌정보학과","물리학과","미디어커뮤니케이션학과",
-                               "바이오-로봇 시스템 공학과","법학부", "불어불문학과","사회복지학과",
-                               "산업경영공학과","생명공학부(나노바이오공학전공)","생명공학부(생명공학전공)",
-                               "생명과학부(분자의생명전공)","생명과학부(생명과학전공)","서양화전공(조형예술학부)",
-                               "세무회계학과","소비자학과","수학과","수학교육과", "스마트물류공학전공", "스포츠과학부",
-                               "신소재공학과","안전공학과","에너지화학공학","역사교육과","영어교육과","영어영문학과",
-                               "운동건강학부","유아교육과","윤리교육과","일본지역문화학과","일어교육과","임베디드시스템공과",
-                               "전기공학과","전자공학과","정보통신학과","정치외교학과","중어중국학과","창의인개발학과",
-                               "체육교육과","컴퓨터공학부","테크노경영학과","패션산업학과","한국화전공(조형예술학부)",
-                               "해양학과","행정학과","화학과","환경공학"]
-  
   var resultDepartments: [String] = []
   
   private lazy var titleLabel = createLabel(title: "변경할 학과를 알려주세요",
@@ -59,7 +44,6 @@ final class EditMajorViewController: NaviHelper {
       }
     }
   }
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -106,7 +90,8 @@ final class EditMajorViewController: NaviHelper {
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
     navigationItem.title = "학과 변경"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+    navigationController?.navigationBar.titleTextAttributes = [
+      .foregroundColor: UIColor.white]
     
     let completeImg = UIImage(named: "DeCompletedImg")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,

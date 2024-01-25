@@ -42,7 +42,7 @@ final class NicknameViewController: NaviHelper {
     let textField = UITextField()
     textField.attributedPlaceholder = NSAttributedString(
       string: "닉네임을 입력해주세요.",
-      attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
     textField.textColor = .white
     textField.backgroundColor = .black
     return textField
@@ -349,6 +349,7 @@ final class NicknameViewController: NaviHelper {
     self.nicknameStatusLabel.text = content
   }
   
+  // MARK: - 다음 버튼
   func nextButtonTapped(){
     guard let choiceGender = gender else { return }
     
