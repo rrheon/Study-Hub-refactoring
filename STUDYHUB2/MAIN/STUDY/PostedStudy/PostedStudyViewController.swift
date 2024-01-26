@@ -983,10 +983,12 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
                       didSelectItemAt indexPath: IndexPath) {
     if let cell = collectionView.cellForItem(at: indexPath) as? SimilarPostCell {
       let postedVC = PostedStudyViewController()
-      detailPostDataManager.getPostDetailData(postID: cell.postID ?? 0) {
+      
+      detailPostDataManager.searchSinglePostData(postId: cell.postID ?? 0) {
         let cellData = self.detailPostDataManager.getPostDetailData()
         postedVC.postedData = cellData
       }
+   
       self.navigationController?.pushViewController(postedVC, animated: true)
     }
   }

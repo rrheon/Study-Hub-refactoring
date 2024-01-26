@@ -80,17 +80,17 @@ final class PostDetailInfoManager {
     return postDetailData
   }
   
-  func getPostDetailData(postID: Int, completion: @escaping () -> Void){
-    fetchPostDetailData(postID: postID) { result in
-      switch result {
-      case .success(let postDetailData):
-        self.postDetailData = postDetailData
-        completion()
-      case .failure(let error):
-        print("Network Error:", error)
-      }
-    }
-  }
+//  func getPostDetailData(postID: Int, completion: @escaping () -> Void){
+//    fetchPostDetailData(postID: postID) { result in
+//      switch result {
+//      case .success(let postDetailData):
+//        self.postDetailData = postDetailData
+//        completion()
+//      case .failure(let error):
+//        print("Network Error:", error)
+//      }
+//    }
+//  }
   
   func searchSinglePostData(postId: Int, completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()

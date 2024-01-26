@@ -343,15 +343,14 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
+    guard let postId = recentDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
+    print(postId)
+    let postedVC = PostedStudyViewController(postID: postId)
     postedVC.hidesBottomBarWhenPushed = true
 
-    guard let postId = recentDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
     detailPostDataManager.searchSinglePostData(postId: postId) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = cellData
-      print(cellData)
     }
 
     self.navigationController?.pushViewController(postedVC, animated: true)

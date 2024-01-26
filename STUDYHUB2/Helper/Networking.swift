@@ -104,7 +104,7 @@ extension networkingAPI: TargetType {
     case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return "/v2/study-posts"
     case .searchSinglePost(let postId):
-      return "/v1/study-posts/\(postId)"
+      return "/v2/study-posts/\(postId)"
     case .recommendSearch(_keyword: _):
       return "/v1/study-post/recommend"
     case .closePost(let postId):

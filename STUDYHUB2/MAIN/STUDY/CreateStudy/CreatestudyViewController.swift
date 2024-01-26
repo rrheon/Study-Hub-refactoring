@@ -931,7 +931,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       NSAttributedString.Key.foregroundColor: UIColor.white
     ]
     
-    postInfoManager.getPostDetailData(postID: postID) {
+    postInfoManager.searchSinglePostData(postId: postID) {
       let modifyData = self.postInfoManager.getPostDetailData()
       
       DispatchQueue.main.async {
@@ -978,12 +978,13 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
           self.fineAmountTextField.text = String($0.penalty)
           
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
-          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
-
+//          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
+          let startDate = ""
           let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
           self.startDateButton.setTitle(changedStartDate, for: .normal)
           
-          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
+//          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
+          let endDate = ""
           let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
         
           self.endDateButton.setTitle(changedEndDate, for: .normal)

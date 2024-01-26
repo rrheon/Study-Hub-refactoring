@@ -375,11 +375,11 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     postedVC.previousHomeVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
-    detailPostDataManager.getPostDetailData(postID: postID ?? 0) {
+    detailPostDataManager.searchSinglePostData(postId: postID ?? 0) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = cellData
+      print(cellData)
     }
-    
     self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
