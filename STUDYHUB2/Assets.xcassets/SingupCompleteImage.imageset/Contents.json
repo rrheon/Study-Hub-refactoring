@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "image_join_success.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -13,7 +14,6 @@
       "scale" : "3x"
     },
     {
-      "filename" : "0540f2a0d7629f23@2x~iphone.png",
       "idiom" : "iphone",
       "scale" : "1x"
     },

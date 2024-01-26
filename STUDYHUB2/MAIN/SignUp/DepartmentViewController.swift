@@ -217,6 +217,7 @@ final class DepartmentViewController: NaviHelper {
 
   // MARK: - 다음버튼
   func nextButtonTapped(){
+   
     guard let email = email,
           let gender = gender,
           let nickname = nickname,
@@ -230,7 +231,8 @@ final class DepartmentViewController: NaviHelper {
                                     password: password)
     createAccountManager.createNewAccount(accountData: accountData) {
       let completeVC = CompleteViewController()
-      self.navigationController?.pushViewController(completeVC, animated: true)
+      completeVC.modalPresentationStyle = .fullScreen
+      self.present(completeVC, animated: true)
     }
   }
 }
