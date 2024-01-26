@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //      }
 //    }
     
-    let forgotPasswordVC = DepartmentViewController()
+    let forgotPasswordVC = NicknameViewController()
     let navigationController = UINavigationController(rootViewController: forgotPasswordVC)
    
     

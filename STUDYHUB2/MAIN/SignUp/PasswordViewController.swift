@@ -4,11 +4,9 @@ import UIKit
 import SnapKit
 
 final class PasswordViewController: NaviHelper {
-  
+ 
   var email: String?
-  var password: String?
   
-  // 비밀번호 설정은 비밀번호 수정하고 비슷하지 않을가..
   // MARK: - 화면구성
   private lazy var pageNumberLabel: UILabel = {
     let label = UILabel()
@@ -128,7 +126,7 @@ final class PasswordViewController: NaviHelper {
     return button
   }()
   
-  
+  // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -348,7 +346,12 @@ final class PasswordViewController: NaviHelper {
   
   // MARK: - 닉네임 설정화면으로 이동
   func goToNicknameVC(){
+    guard let password = passwordTextField.text else { return }
+    
     let nicknameVC = NicknameViewController()
+    nicknameVC.email = email
+    nicknameVC.password = password
+    
     navigationController?.pushViewController(nicknameVC, animated: true)
   }
 }
@@ -376,3 +379,4 @@ extension PasswordViewController {
     checkTextFields()
   }
 }
+

@@ -80,6 +80,7 @@
 		EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D292B600BA600D1CE00 /* UserDTO.swift */; };
 		EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */; };
 		EEFD5D2E2B60D37A00D1CE00 /* TermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */; };
+		EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */; };
 		F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421912A7D6816006C6B87 /* AppDelegate.swift */; };
 		F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421932A7D6816006C6B87 /* SceneDelegate.swift */; };
 		F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421952A7D6816006C6B87 /* LoginViewController.swift */; };
@@ -184,6 +185,7 @@
 		EEFD5D292B600BA600D1CE00 /* UserDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDTO.swift; sourceTree = "<group>"; };
 		EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDTO.swift; sourceTree = "<group>"; };
 		EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceViewController.swift; sourceTree = "<group>"; };
+		EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountManager.swift; sourceTree = "<group>"; };
 		F804218E2A7D6816006C6B87 /* STUDYHUB2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STUDYHUB2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F80421912A7D6816006C6B87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F80421932A7D6816006C6B87 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				EE07ADC62AF241A30096890F /* PopUpView.swift */,
 				EEFD5D252B5F6C4D00D1CE00 /* CommonNetworking.swift */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
+				EE271F212AD0584900190E7A /* Extension */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -473,7 +476,6 @@
 				F80421912A7D6816006C6B87 /* AppDelegate.swift */,
 				F80421932A7D6816006C6B87 /* SceneDelegate.swift */,
 				EE07ADC92AF25F1E0096890F /* Helper */,
-				EE271F212AD0584900190E7A /* Extension */,
 				EEFD5D222B5F67C300D1CE00 /* DTO */,
 				F8085D3F2A815DB00067D4DE /* MAIN */,
 				EE0A8B712B0896B4001C3F41 /* Font */,
@@ -488,6 +490,7 @@
 		F80421C42A7D7C25006C6B87 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */,
 				EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */,
 				F80421C72A7D800E006C6B87 /* SignUpViewController.swift */,
 				F80421C92A7D9534006C6B87 /* PasswordViewController.swift */,
@@ -702,6 +705,7 @@
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,
 				EE02B1162B15FEEE0092082F /* ParticipateCell.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
+				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteIDViewController.swift in Sources */,
 				EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,

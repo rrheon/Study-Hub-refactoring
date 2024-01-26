@@ -4,8 +4,16 @@ import UIKit
 import SnapKit
 
 final class DepartmentViewController: NaviHelper {
+  
+  let createAccountManager = CreateAccountManager.shared
+  
   var resultDepartments: [String] = []
-
+  
+  var email: String?
+  var password: String?
+  var gender: String?
+  var nickname: String?
+  
   // MARK: - 화면구성
   private lazy var pageNumberLabel = createLabel(
     title: "5/5",
@@ -155,7 +163,7 @@ final class DepartmentViewController: NaviHelper {
     resultTableView.snp.makeConstraints { make in
       make.top.equalTo(departmentUnderLineView.snp.bottom).offset(10)
       make.leading.trailing.equalTo(majorTextfield)
-      make.bottom.equalTo(view).offset(-10)
+      make.bottom.equalTo(nextButton.snp.top).offset(10)
     }
     
     nextButton.snp.makeConstraints {
@@ -173,15 +181,19 @@ final class DepartmentViewController: NaviHelper {
   
   // MARK: - 학과 입력시 실시간 반영
   @objc func majorTextfieldDidChange(){
-    guard let keyword = majorTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return  }
+    guard let keyword = majorTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
     
     departmentUnderLineView.backgroundColor = .g60
     searchButton.setImage(UIImage(named: "DeleteImg"), for: .normal)
     let matchingDepartments = majorSet.filter { $0.contains(keyword) }
     
-    if !matchingDepartments.isEmpty { searchTapped(department: matchingDepartments) }
+    if !matchingDepartments.isEmpty {
+      searchTapped(department: matchingDepartments)
+      
+      nextButton.backgroundColor = .o50
+      nextButton.setTitleColor(.white, for: .normal)
+    }
     reloadTalbeView()
-    
   }
   
   // MARK: - 입력할 때
@@ -203,12 +215,27 @@ final class DepartmentViewController: NaviHelper {
     }
   }
 
+  // MARK: - 다음버튼
   func nextButtonTapped(){
+    guard let email = email,
+          let gender = gender,
+          let nickname = nickname,
+          let password = password,
+          let major = majorTextfield.text else { return }
     
+    let accountData = CreateAccount(email: email,
+                                    gender: gender,
+                                    major: major,
+                                    nickname: nickname,
+                                    password: password)
+    createAccountManager.createNewAccount(accountData: accountData) {
+      let completeVC = CompleteViewController()
+      self.navigationController?.pushViewController(completeVC, animated: true)
+    }
   }
 }
 
-// MARK: - cell 함수
+// MARK: - tableview 함수
 extension DepartmentViewController: UITableViewDelegate,
                                     UITableViewDataSource {
   // UITableViewDataSource 함수

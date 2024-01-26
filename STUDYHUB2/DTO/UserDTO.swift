@@ -7,6 +7,15 @@
 
 import Foundation
 
+// MARK: - 회원가입
+struct CreateAccount: Codable {
+  let email: String
+  let gender: String
+  let major: String
+  let nickname: String
+  let password: String
+}
+
 // MARK: - 게시글에서 해당 유저 Data
 struct UserData: Codable {
   let userID: Int

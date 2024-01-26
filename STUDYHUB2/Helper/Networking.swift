@@ -19,6 +19,7 @@ enum networkingAPI {
   case deleteImage
   
   // 유저정보 수정
+  case createNewAccount(accountData: CreateAccount)
   case editUserNickName(_nickname: String)
   case editUserMaojr(_major: String)
   case editUserPassword(_checkPassword: Bool, _password: String)
@@ -64,6 +65,8 @@ extension networkingAPI: TargetType {
       return "/v1/users/image"
       
       // 유저정보 수정
+    case .createNewAccount(accountData: _):
+      return "/v1/users/signup"
     case .editUserNickName(_nickname: _):
       return "/v1/users/nickname"
     case .editUserMaojr(_major: _):
@@ -115,7 +118,8 @@ extension networkingAPI: TargetType {
         .getCommentList(_postId: _, _page: _, _size: _),
         .getMyPostList(_page: _, _size: _),
         .recommendSearch(_keyword: _),
-        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
+        .searchPostList(_hot: _, text: _,
+                        page: _, size: _, titleAndMajor: _):
       return .get
       
     case .storeImage(_image: _),
@@ -138,7 +142,8 @@ extension networkingAPI: TargetType {
         .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
         .writeComment(_content: _, _postId: _),
-        .refreshAccessToken(_refreshToken: _):
+        .refreshAccessToken(_refreshToken: _),
+        .createNewAccount(accountData: _):
       return .post
     }
   }
@@ -213,6 +218,9 @@ extension networkingAPI: TargetType {
       let params = RefreshAccessToken(refreshToken: refreshToken)
       return .requestJSONEncodable(params)
       
+    case .createNewAccount(let accountData):
+      return .requestJSONEncodable(accountData)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -232,16 +240,15 @@ extension networkingAPI: TargetType {
         .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
         .recommendSearch(_keyword: _),
-        .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _),
-        .refreshAccessToken(_refreshToken: _):
+        .searchPostList(_hot: _, text: _, page: _,
+                        size: _, titleAndMajor: _),
+        .refreshAccessToken(_refreshToken: _),
+        .createNewAccount(accountData: _):
       return ["Content-type": "application/json"]
-      
       
     case .verifyEmail(_code: _, _email: _):
       return ["Accept" : "application/json"]
       
-
-   
     case .writeComment(_content: _, _postId: _),
         .modifyComment(_commentId: _, _content: _),
         .getMyPostList(_page: _, _size: _),

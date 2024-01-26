@@ -5,12 +5,10 @@ import SnapKit
 
 final class NicknameViewController: NaviHelper {
   
+  let editUserInfo = EditUserInfoManager.shared
   var email: String?
   var password: String?
   var gender: String?
-  var nickname: String?
-  
-  let editUserInfo = EditUserInfoManager.shared
   
   // MARK: - 화면구성
   private lazy var pageNumberLabel = createLabel(
@@ -45,6 +43,9 @@ final class NicknameViewController: NaviHelper {
       attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
     textField.textColor = .white
     textField.backgroundColor = .black
+    textField.addTarget(self,
+                        action: #selector(nicknameTextfieldDidchange),
+                        for: .editingDidEnd)
     return textField
   }()
   
@@ -284,6 +285,8 @@ final class NicknameViewController: NaviHelper {
 
       gender = "남자"
     }
+    
+    nextbuttonUIChange()
   }
   
   // MARK: - 유효성 검사
@@ -314,7 +317,7 @@ final class NicknameViewController: NaviHelper {
     }
   }
   
-  //   MARK: - 닉네임 중복 확인
+  // MARK: - 닉네임 중복 확인
   func checkValidandDuplication(nickname: String,
                                 completion: @escaping (Bool) -> Void) {
     let checkNickname = checkValidNickname(nickname: nickname)
@@ -347,14 +350,35 @@ final class NicknameViewController: NaviHelper {
     self.nicknameStatusLabel.textColor = .r50
     self.nicknameStatusLabel.isHidden = false
     self.nicknameStatusLabel.text = content
+    
+    self.nextButton.backgroundColor = .o60
+    self.nextButton.setTitleColor(.g90, for: .normal)
+  }
+  
+  @objc func nicknameTextfieldDidchange(){
+    guard let text = nicknameTextfield.text,
+          let gender = gender else { return }
+
+    nextbuttonUIChange()
+  }
+  
+  func nextbuttonUIChange(){
+    nextButton.backgroundColor = .o50
+    nextButton.setTitleColor(.white, for: .normal)
   }
   
   // MARK: - 다음 버튼
   func nextButtonTapped(){
-    guard let choiceGender = gender else { return }
+    guard let choiceGender = gender,
+          let nickname = nicknameTextfield.text else { return }
     
     if nicknameStatusLabel.textColor == .g_10 {
       let departmentVC = DepartmentViewController()
+      departmentVC.email = email
+      departmentVC.password = password
+      departmentVC.nickname = nickname
+      departmentVC.gender = gender
+      
       navigationController?.pushViewController(departmentVC, animated: true)
     }
   }
@@ -376,3 +400,5 @@ extension NicknameViewController {
     return changedText.count <= 9
   }
 }
+
+

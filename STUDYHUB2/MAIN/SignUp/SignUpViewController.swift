@@ -327,7 +327,7 @@ final class SignUpViewController: NaviHelper {
                                    email: email) { result in
       
       if result == "true" {
-        self.goToPasswordVC()
+        self.goToPasswordVC(email)
       } else {
         self.showToast(message: "인증코드가 일치하지 않아요.",
                        alertCheck: false,
@@ -337,9 +337,9 @@ final class SignUpViewController: NaviHelper {
   }
   
   // MARK: - 비밀번호 설정화면으로 이동
-  func goToPasswordVC(){
+  func goToPasswordVC(_ email: String){
     let passwordVC = PasswordViewController()
+    passwordVC.email = email
     navigationController?.pushViewController(passwordVC, animated: true)
   }
 }
-  
