@@ -45,6 +45,9 @@ enum networkingAPI {
                       titleAndMajor: String)
   case recommendSearch(_keyword: String)
   case closePost(_ postId: Int)
+  
+  // 스터디 참여 신청 관련
+  case participateStudy(introduce: String, studyId: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -109,6 +112,10 @@ extension networkingAPI: TargetType {
       return "/v1/study-post/recommend"
     case .closePost(let postId):
       return "/v1/study-posts/\(postId)/close"
+      
+      // 스터디 신청관련
+    case .participateStudy(introduce: _, studyId: _):
+      return "/v1/study"
     }
   }
   
@@ -143,7 +150,8 @@ extension networkingAPI: TargetType {
         .sendEmailCode(_email: _),
         .writeComment(_content: _, _postId: _),
         .refreshAccessToken(_refreshToken: _),
-        .createNewAccount(accountData: _):
+        .createNewAccount(accountData: _),
+        .participateStudy(introduce: _, studyId: _):
       return .post
     }
   }
@@ -195,7 +203,7 @@ extension networkingAPI: TargetType {
       
     case .modifyMyPost(let data):
       return .requestJSONEncodable(data)
-
+      
     case .getMyPostList(let page, let size):
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
@@ -220,6 +228,13 @@ extension networkingAPI: TargetType {
       
     case .createNewAccount(let accountData):
       return .requestJSONEncodable(accountData)
+      
+    case .participateStudy(let introduce, let studyId):
+      let params: [String: Any] = [
+        "introduce": introduce,
+        "studyId": studyId
+      ]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .deleteID,
         .searchSinglePost(_postId: _),
@@ -253,7 +268,8 @@ extension networkingAPI: TargetType {
         .modifyComment(_commentId: _, _content: _),
         .getMyPostList(_page: _, _size: _),
         .modifyMyPost(_data: _),
-        .closePost(_):
+        .closePost(_),
+        .participateStudy(introduce: _, studyId: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       

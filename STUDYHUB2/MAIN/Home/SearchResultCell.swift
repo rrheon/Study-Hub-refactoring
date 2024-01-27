@@ -247,7 +247,6 @@ final class SearchResultCell: UICollectionViewCell {
       make.top.equalTo(infoStackView.snp.bottom).offset(20)
       make.leading.equalTo(majorLabel)
       make.height.width.equalTo(34)
-      
     }
     
     nickNameLabel.snp.makeConstraints { make in
