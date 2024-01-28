@@ -273,7 +273,7 @@ final class NicknameViewController: NaviHelper {
       choiceMaleButton.setTitleColor(.g60, for: .normal)
       choiceMaleButton.layer.borderColor = UIColor.g80.cgColor
       
-      gender = "여자"
+      gender = "FEMALE"
     } else if sender == choiceMaleButton {
       choiceMaleButton.backgroundColor = .o60
       choiceMaleButton.setTitleColor(.o20, for: .normal)
@@ -283,7 +283,7 @@ final class NicknameViewController: NaviHelper {
       choiceFemaleButton.setTitleColor(.g60, for: .normal)
       choiceFemaleButton.layer.borderColor = UIColor.g80.cgColor
 
-      gender = "남자"
+      gender = "MALE"
     }
     
     nextbuttonUIChange()

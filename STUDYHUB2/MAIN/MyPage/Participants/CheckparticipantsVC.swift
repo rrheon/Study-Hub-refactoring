@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 
 final class CheckParticipantsVC: NaviHelper {
+  let participateManager = ParticipateManager.shared
+
+  var studyID: Int = 0
+  var applyUserData: TotalApplyUserData?
   
   private lazy var topItemStackView = createStackView(axis: .horizontal,
                                                       spacing: 10)
@@ -100,10 +104,18 @@ final class CheckParticipantsVC: NaviHelper {
     navigationItemSetting()
     redesignNavigationbar()
     
-    setupLayout()
-    makeUI()
+    participateManager.getApplyUserData(page: 0,
+                                        size :5,
+                                        studyID) { result in
+      self.applyUserData = result
     
-    registerCell()
+      DispatchQueue.main.async {
+        self.setupLayout()
+        self.makeUI()
+        
+        self.registerCell()
+      }
+    }
   }
   
   // MARK: - setupLayout
@@ -230,7 +242,7 @@ final class CheckParticipantsVC: NaviHelper {
 extension CheckParticipantsVC: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return 5
+    return applyUserData?.applyUserData.numberOfElements ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -239,6 +251,11 @@ extension CheckParticipantsVC: UICollectionViewDelegate, UICollectionViewDataSou
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WaitCell.id,
                                                     for: indexPath) as! WaitCell
       cell.delegate = self
+      
+      if let content = applyUserData?.applyUserData.content {
+        cell.model = content
+      }
+      print(cell.model)
       return cell
 
     } else if collectionView.tag == 2{
@@ -260,7 +277,7 @@ extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     if collectionView.tag == 1 {
-      return CGSize(width: 350, height: 181)
+      return CGSize(width: 350, height: 220)
     } else if collectionView.tag == 2 {
       return CGSize(width: 335, height: 86)
     } else {

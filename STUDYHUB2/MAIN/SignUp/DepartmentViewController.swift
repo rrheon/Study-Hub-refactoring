@@ -222,13 +222,15 @@ final class DepartmentViewController: NaviHelper {
           let gender = gender,
           let nickname = nickname,
           let password = password,
-          let major = majorTextfield.text else { return }
-    
+          let originMajor = majorTextfield.text else { return }
+    let major = convertMajor(originMajor, isEnglish: true)
+
     let accountData = CreateAccount(email: email,
                                     gender: gender,
                                     major: major,
                                     nickname: nickname,
                                     password: password)
+    
     createAccountManager.createNewAccount(accountData: accountData) {
       let completeVC = CompleteViewController()
       completeVC.modalPresentationStyle = .fullScreen
@@ -267,7 +269,6 @@ extension DepartmentViewController: UITableViewDelegate,
     if indexPath.row < resultDepartments.count {
       let selectedMajor = resultDepartments[indexPath.row]
           
-      
       majorTextfield.text = selectedMajor
       resultTableView.isHidden = true
     }

@@ -8,6 +8,7 @@
 import UIKit
 
 import SnapKit
+import Kingfisher
 
 protocol ParticipantsCellDelegate: AnyObject {
   func refuseButtonTapped(in cell: WaitCell)
@@ -17,6 +18,11 @@ protocol ParticipantsCellDelegate: AnyObject {
 final class WaitCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   weak var delegate: ParticipantsCellDelegate?
+  var model: [ApplyUserContent]? {
+    didSet {
+      bind()
+    }
+  }
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -28,7 +34,7 @@ final class WaitCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "경영학부"
     label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
   
@@ -36,7 +42,7 @@ final class WaitCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "경영이"
     label.textColor = .black
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     return label
   }()
   
@@ -44,7 +50,7 @@ final class WaitCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "2023. 9 . 8 신청 "
     label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
   
@@ -53,6 +59,7 @@ final class WaitCell: UICollectionViewCell {
     textView.textColor = .bg80
     textView.backgroundColor = .bg20
     textView.text = "안녕하세요, 저는 경영학부에 재학 중입니다. 지각이나 잠수 없이 열심히 참여하겠습니다. 잘 부탁드립니다 :)"
+    textView.font = UIFont(name: "Pretendard-Medium", size: 14)
     textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     return textView
   }()
@@ -70,6 +77,7 @@ final class WaitCell: UICollectionViewCell {
     let button = UIButton()
     button.setTitle("거절", for: .normal)
     button.setTitleColor(UIColor.bg80, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addAction(UIAction { _ in
       self.delegate?.refuseButtonTapped(in: self)
     }, for: .touchUpInside)
@@ -80,6 +88,7 @@ final class WaitCell: UICollectionViewCell {
     let button = UIButton()
     button.setTitle("수락", for: .normal)
     button.setTitleColor(UIColor.g_10, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addAction(UIAction { _ in
       self.delegate?.acceptButtonTapped(in: self)
     }, for: .touchUpInside)
@@ -146,7 +155,7 @@ final class WaitCell: UICollectionViewCell {
     }
     
     dateLabel.snp.makeConstraints {
-      $0.top.equalTo(nickNameLabel.snp.bottom)
+      $0.top.equalTo(nickNameLabel.snp.bottom).offset(5)
       $0.leading.equalTo(majorLabel)
     }
     
@@ -174,8 +183,37 @@ final class WaitCell: UICollectionViewCell {
     buttonStackView.snp.makeConstraints {
       $0.top.equalTo(seperateLine.snp.bottom)
       $0.leading.equalTo(profileImageView.snp.trailing)
+      $0.height.equalTo(46)
       $0.trailing.equalTo(describeTextView.snp.trailing).offset(-50)
       $0.bottom.equalToSuperview()
+    }
+  }
+  
+  func bind(){
+    guard let model = model else { return }
+    model.map {
+      majorLabel.text = $0.major.convertMajor($0.major, isEnglish: false)
+      nickNameLabel.text = $0.nickname
+      describeTextView.text = $0.introduce
+      dateLabel.text = "\($0.createdDate[0]). \($0.createdDate[1]). \($0.createdDate[2])"
+      
+      if let imageURL = URL(string: $0.imageURL ?? "") {
+        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
+              
+        self.profileImageView.kf.setImage(with: imageURL,
+                                          options: [.processor(processor)]) { result in
+          switch result {
+          case .success(let value):
+            DispatchQueue.main.async {
+              self.profileImageView.image = value.image
+              self.profileImageView.layer.cornerRadius = 20
+              self.profileImageView.clipsToBounds = true
+            }
+          case .failure(let error):
+            print("Image download failed: \(error)")
+          }
+        }
+      }
     }
   }
 }

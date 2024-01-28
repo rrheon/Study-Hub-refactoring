@@ -307,7 +307,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     cell.delegate = self
     cell.buttonColor = myPostDatas?[indexPath.row].close == true ? .bg60 : .o50
-    print( myPostDatas?[indexPath.row].close)
+    print(myPostDatas?[indexPath.row].close)
     cell.model = myPostDatas?[indexPath.row]
     return cell
   }
@@ -325,10 +325,11 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - MyPostcell 함수
 extension MyPostViewController: MyPostCellDelegate {
   // 참여자 버튼
-  func acceptButtonTapped(in cell: MyPostCell, postID: Int) {
+  func acceptButtonTapped(in cell: MyPostCell, studyID: Int) {
     guard let navigationController = self.navigationController else { return}
-    
     let checkParticipateVC = CheckParticipantsVC()
+    checkParticipateVC.studyID = studyID
+    print(studyID)
     navigationController.pushViewController(checkParticipateVC, animated: true)
   }
 

@@ -28,7 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       }
     }
     
-    
 //    if accessToken == "a" {
 //      // 로그인 성공한 경우 HomeViewController 표시
 //      let tabBarController = TabBarController()

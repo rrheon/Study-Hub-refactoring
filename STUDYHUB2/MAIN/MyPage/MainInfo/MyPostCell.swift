@@ -6,7 +6,7 @@ import SnapKit
 protocol MyPostCellDelegate: AnyObject {
   func menuButtonTapped(in cell: MyPostCell, postID: Int)
   func closeButtonTapped(in cell: MyPostCell, postID: Int)
-  func acceptButtonTapped(in cell: MyPostCell, postID: Int)
+  func acceptButtonTapped(in cell: MyPostCell, studyID: Int)
 }
 
 
@@ -223,7 +223,7 @@ final class MyPostCell: UICollectionViewCell {
   }
   
   func acceptButtonTapped(){
-    delegate?.acceptButtonTapped(in: self, postID: postID ?? 0)
+    delegate?.acceptButtonTapped(in: self, studyID: studyId ?? 0)
   }
 }
 

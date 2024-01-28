@@ -932,6 +932,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     ]
     
     postInfoManager.searchSinglePostData(postId: postID) {
+
       let modifyData = self.postInfoManager.getPostDetailData()
       
       DispatchQueue.main.async {

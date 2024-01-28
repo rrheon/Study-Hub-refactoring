@@ -951,7 +951,10 @@ final class PostedStudyViewController: NaviHelper {
 
   // MARK: - 참여하기 버튼
   func participateButtonTapped(){
+    guard let studyId = postedData?.studyID else { return }
     let participateVC = ParticipateVC()
+    print(postedData?.studyID)
+    participateVC.studyId = studyId
     navigationController?.pushViewController(participateVC, animated: true)
   }
 }

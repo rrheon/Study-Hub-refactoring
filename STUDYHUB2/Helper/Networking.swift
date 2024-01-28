@@ -48,6 +48,8 @@ enum networkingAPI {
   
   // 스터디 참여 신청 관련
   case participateStudy(introduce: String, studyId: Int)
+  case getMyParticipateList(page: Int, size: Int)
+  case searchParticipateInfo(page: Int, size: Int, studyId: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -116,6 +118,10 @@ extension networkingAPI: TargetType {
       // 스터디 신청관련
     case .participateStudy(introduce: _, studyId: _):
       return "/v1/study"
+    case .getMyParticipateList(page: _, size: _):
+      return "/v1/participated-study"
+    case .searchParticipateInfo(page: _, size: _, studyId: _):
+      return "/v1/study"
     }
   }
   
@@ -126,7 +132,9 @@ extension networkingAPI: TargetType {
         .getMyPostList(_page: _, _size: _),
         .recommendSearch(_keyword: _),
         .searchPostList(_hot: _, text: _,
-                        page: _, size: _, titleAndMajor: _):
+                        page: _, size: _, titleAndMajor: _),
+        .getMyParticipateList(page: _, size: _),
+        .searchParticipateInfo(page: _, size: _, studyId: _):
       return .get
       
     case .storeImage(_image: _),
@@ -236,6 +244,21 @@ extension networkingAPI: TargetType {
       ]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .getMyParticipateList(let page, let size):
+      let parmas: [String: Any] = [
+        "page": page,
+        "size": size
+      ]
+      return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
+      
+    case .searchParticipateInfo(let page, let size, let studyId):
+      let params: [String: Any] = [
+        "page": page,
+        "size": size,
+        "studyId": studyId
+      ]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -258,7 +281,8 @@ extension networkingAPI: TargetType {
         .searchPostList(_hot: _, text: _, page: _,
                         size: _, titleAndMajor: _),
         .refreshAccessToken(_refreshToken: _),
-        .createNewAccount(accountData: _):
+        .createNewAccount(accountData: _),
+        .searchParticipateInfo(page: _, size: _, studyId: _):
       return ["Content-type": "application/json"]
       
     case .verifyEmail(_code: _, _email: _):
@@ -269,7 +293,8 @@ extension networkingAPI: TargetType {
         .getMyPostList(_page: _, _size: _),
         .modifyMyPost(_data: _),
         .closePost(_),
-        .participateStudy(introduce: _, studyId: _):
+        .participateStudy(introduce: _, studyId: _),
+        .getMyParticipateList(page: _, size: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       

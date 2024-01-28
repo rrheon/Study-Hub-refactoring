@@ -82,6 +82,7 @@
 		EEFD5D2E2B60D37A00D1CE00 /* TermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */; };
 		EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */; };
 		EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D322B654C4200D1CE00 /* ParticipateManager.swift */; };
+		EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */; };
 		F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421912A7D6816006C6B87 /* AppDelegate.swift */; };
 		F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421932A7D6816006C6B87 /* SceneDelegate.swift */; };
 		F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421952A7D6816006C6B87 /* LoginViewController.swift */; };
@@ -188,6 +189,7 @@
 		EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceViewController.swift; sourceTree = "<group>"; };
 		EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountManager.swift; sourceTree = "<group>"; };
 		EEFD5D322B654C4200D1CE00 /* ParticipateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateManager.swift; sourceTree = "<group>"; };
+		EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateDTO.swift; sourceTree = "<group>"; };
 		F804218E2A7D6816006C6B87 /* STUDYHUB2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STUDYHUB2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F80421912A7D6816006C6B87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F80421932A7D6816006C6B87 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 				EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */,
 				EEFD5D272B600B6500D1CE00 /* PostDTO.swift */,
 				EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */,
+				EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */,
 				EEFD5D292B600BA600D1CE00 /* UserDTO.swift */,
 				EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */,
 			);
@@ -749,6 +752,7 @@
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
+				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,

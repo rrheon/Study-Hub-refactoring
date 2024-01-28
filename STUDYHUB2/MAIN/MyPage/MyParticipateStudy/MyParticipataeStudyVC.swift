@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 
 final class MyParticipateStudyVC: NaviHelper {
+  let participateManager = ParticipateManager.shared
+  
   var countPostNumber = 2 {
     didSet {
       totalPostCountLabel.text = "전체 \(countPostNumber)"
@@ -85,8 +87,13 @@ final class MyParticipateStudyVC: NaviHelper {
 //      self.setupLayout()
 //      self.makeUI()
 //    }
+    
     setupLayout()
     makeUI()
+    
+    participateManager.getMyParticipateList(0, 5) {
+      print("조회완료")
+    }
   }
   
   // MARK: - setupLayout

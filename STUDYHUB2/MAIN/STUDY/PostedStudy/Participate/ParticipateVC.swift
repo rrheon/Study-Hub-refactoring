@@ -11,6 +11,9 @@ import SnapKit
 
 final class ParticipateVC: NaviHelper {
   
+  let participateManager = ParticipateManager.shared
+  var studyId: Int = 0
+  
   // MARK: - UI세팅
   private lazy var titleLabel = createLabel(title: "자기소개나 스터디에 대한 의지를 스터디 팀장에게 알려 주세요! 💬",
                                             textColor: .black,
@@ -144,11 +147,16 @@ final class ParticipateVC: NaviHelper {
   
   // MARK: - 완료버튼 tapped
   func completeButtonTapped(){
-    if reasonTextView.text.count < 10 {
+    guard let text = reasonTextView.text else { return }
+    if text.count < 10 {
       showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
     } else {
-      navigationController?.popViewController(animated: true)
-      showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+      
+      participateManager.participateStudy(introduce: text,
+                                          studyId: studyId) {
+        self.navigationController?.popViewController(animated: true)
+        self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+      }
     }
   }
 }
