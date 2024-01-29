@@ -5,6 +5,8 @@ import Moya
 import Kingfisher
 
 final class MyInformViewController: NaviHelper {
+  let tokenManager = TokenManager.shared
+  
   var major: String? {
     didSet {
       print("변경된 학과\(major)")
@@ -401,6 +403,8 @@ final class MyInformViewController: NaviHelper {
     self.present(popupVC, animated: false)
     
     popupVC.popupView.rightButtonAction = { [weak self] in
+      self?.tokenManager.deleteTokens()
+      
       self?.dismiss(animated: true) {
         if let navigationController = self?.navigationController {
           navigationController.popToRootViewController(animated: false)

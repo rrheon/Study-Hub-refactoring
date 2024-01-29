@@ -10,6 +10,7 @@ import Foundation
 import Moya
 import UIKit
 
+// MARK: - networkingAPI
 enum networkingAPI {
   // 토큰관련
   case refreshAccessToken(_ refreshToken: String)
@@ -53,10 +54,12 @@ enum networkingAPI {
 }
 
 extension networkingAPI: TargetType {
+  // MARK: - baseURL
   var baseURL: URL {
     return URL(string: "https://study-hub.site:443/api")!
   }
   
+  // MARK: - path
   var path: String {
     switch self {
       // 토큰관련
@@ -125,6 +128,7 @@ extension networkingAPI: TargetType {
     }
   }
   
+  // MARK: - method
   var method: Moya.Method {
     switch self {
     case .searchSinglePost(_postId: _),
@@ -164,6 +168,7 @@ extension networkingAPI: TargetType {
     }
   }
   
+  // MARK: - task
   var task: Moya.Task {
     switch self {
       // 파라미터로 요청
@@ -270,6 +275,7 @@ extension networkingAPI: TargetType {
     }
   }
   
+  // MARK: - headers
   var headers: [String : String]? {
     guard let accessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {

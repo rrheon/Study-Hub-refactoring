@@ -252,6 +252,7 @@ extension DepartmentViewController: UITableViewDelegate,
                                                    for: indexPath) as! CustomCell
     
     cell.backgroundColor = .backgroundBlack
+    cell.textColor = .white
     cell.selectionStyle = .none
     
     if indexPath.row < resultDepartments.count {

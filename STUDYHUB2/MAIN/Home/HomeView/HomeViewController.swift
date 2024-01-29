@@ -24,7 +24,8 @@ final class HomeViewController: NaviHelper {
     detailsButton.setTitle("알아보기", for: .normal)
     detailsButton.setTitleColor(.white, for: .normal)
     detailsButton.backgroundColor = UIColor(hexCode: "FF5935")
-    detailsButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+    detailsButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold",
+                                            size: 20)
     detailsButton.layer.cornerRadius = 8
     detailsButton.addTarget(self, action: #selector(detailsButtonTapped), for: .touchUpInside)
     return detailsButton
@@ -37,7 +38,8 @@ final class HomeViewController: NaviHelper {
   private let newStudyLabel: UILabel = {
     let newStudyLabel = UILabel()
     newStudyLabel.text = "NEW! 모집 중인 스터디예요"
-    newStudyLabel.font = UIFont.boldSystemFont(ofSize: 20)
+    newStudyLabel.font = UIFont(name: "Pretendard-Bold",
+                                size: 20)
     newStudyLabel.textColor = .black
     
     let attributedText = NSMutableAttributedString(string: "NEW! 모집 중인 스터디예요")
@@ -251,16 +253,8 @@ final class HomeViewController: NaviHelper {
       action: #selector(bookmarkpageButtonTapped))
     bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
-    let alertBellImg = UIImage(named: "BellImg")?.withRenderingMode(.alwaysOriginal)
-    lazy var alertBell = UIBarButtonItem(
-      image: alertBellImg,
-      style: .plain,
-      target: self,
-      action: nil)
-    alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    
     navigationItem.leftBarButtonItems = [logo, mainTitle]
-    navigationItem.rightBarButtonItems = [alertBell, bookMark]
+    navigationItem.rightBarButtonItem = bookMark
   }
   
   // MARK: - 알아보기로 이동하는 함수
@@ -335,9 +329,9 @@ final class HomeViewController: NaviHelper {
 // MARK: - 서치바 관련
 extension HomeViewController: UISearchBarDelegate {
   // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
-
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     let searchViewController = SearchViewController()
+    searchViewController.hidesBottomBarWhenPushed = false
     self.navigationController?.pushViewController(searchViewController, animated: true)
     return false
   }

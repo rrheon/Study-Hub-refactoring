@@ -4,12 +4,14 @@ import UIKit
 import SnapKit
 
 final class CustomCell: UITableViewCell {
+
   var model: RecommendList? {
     didSet {
       bind()
     }
   }
 
+  var textColor: UIColor?
   static let cellId = "CellId"
   var buttonAction: (() -> Void) = {}
   
@@ -24,11 +26,10 @@ final class CustomCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  
   lazy var name: UILabel = {
     let label = UILabel()
     label.text = "정보통신학과"
-    label.textColor = .white
+    label.textColor = textColor
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()

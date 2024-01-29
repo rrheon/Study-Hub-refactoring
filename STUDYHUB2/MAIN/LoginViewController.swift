@@ -429,10 +429,10 @@ final class LoginViewController: UIViewController {
   // Action for the "회원가입" (Signup) button
   @objc func signUpButtonTapped() {
     let termsOfServiceVC = TermsOfServiceViewController()
-    let nacigationVC = UINavigationController(rootViewController: termsOfServiceVC)
-    nacigationVC.modalPresentationStyle = .fullScreen
+    let navigationVC = UINavigationController(rootViewController: termsOfServiceVC)
+    navigationVC.modalPresentationStyle = .fullScreen
     
-    self.present(nacigationVC, animated: true, completion: nil)
+    self.present(navigationVC, animated: true, completion: nil)
   }
   
   // MARK: - 비밀번호 잊었을 때

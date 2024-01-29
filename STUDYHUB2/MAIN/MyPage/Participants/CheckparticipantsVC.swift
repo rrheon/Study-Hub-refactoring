@@ -313,6 +313,7 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
     present(bottomVC, animated: true, completion: nil)
   }
   
+  // MARK: - 수락버튼
   func acceptButtonTapped(in cell: WaitCell) {
     let popupVC = PopupViewController(title: "이 신청자를 수락할까요?",
                                       desc: "수락 후,취소가 어려워요",

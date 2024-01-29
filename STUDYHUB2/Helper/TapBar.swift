@@ -20,7 +20,7 @@ class TabBarController: UITabBarController {
     let myPageViewController = MyPageViewController()
     let myPageVCwithNavi = UINavigationController(rootViewController: myPageViewController)
 
-    
+
     self.viewControllers = [homeVCwithNavi, studyVCwithNavi, myPageVCwithNavi]
     
     homeViewController.tabBarItem = UITabBarItem(title: "홈",

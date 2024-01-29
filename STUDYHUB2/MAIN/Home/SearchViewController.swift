@@ -38,40 +38,59 @@ final class SearchViewController: NaviHelper {
   }()
   
   // MARK: - 서치바에서 검색할 때
-  private lazy var recentButton: UIButton = {
+  private lazy var allButton: UIButton = {
     let button = UIButton()
-    button.setTitle("최신순", for: .normal)
-    button.setTitleColor(.black, for: .normal)
-    button.titleLabel?.font = .systemFont(ofSize: 16)
-    button.frame = CGRect(x: 0, y: 0, width: 57, height: 30)
-    button.addTarget(self, action: #selector(recentButtonTapped), for: .touchUpInside)
+    button.setTitle("전체", for: .normal)
+    button.setTitleColor(.bg90, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
+                                     size: 14)
+    button.backgroundColor = .black
+    button.layer.cornerRadius = 20
+    button.addAction(UIAction { _ in
+      self.allButtonTapped()
+    }, for: .touchUpInside)
     
     return button
   }()
-  
-  let separateLine = UIView()
-  
+    
   private lazy var popularButton: UIButton = {
     let button = UIButton()
-    button.setTitle("인기순", for: .normal)
-    button.setTitleColor(.bg70, for: .normal)
-    button.titleLabel?.font = .systemFont(ofSize: 16)
-    button.frame = CGRect(x: 0, y: 0, width: 57, height: 30)
-    button.addTarget(self, action: #selector(popularButtonTapped), for: .touchUpInside)
-    
+    button.setTitle("인기", for: .normal)
+    button.setTitleColor(.bg90, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
+                                     size: 14)
+    button.backgroundColor = .bg30
+    button.layer.cornerRadius = 20
+    button.addAction(UIAction { _ in
+      self.popularButtonTapped()
+    }, for: .touchUpInside)
     return button
   }()
   
+  private lazy var majorButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("학과", for: .normal)
+    button.setTitleColor(.bg90, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
+                                     size: 14)
+    button.backgroundColor = .bg30
+    button.layer.cornerRadius = 20
+    button.addAction(UIAction { _ in
+      self.majroButtonTapped()
+    }, for: .touchUpInside)
+    return button
+  }()
   
   private lazy var countLabel = createLabel(title: "4개",
                                             textColor: .bg80,
-                                            fontType: "Pretendard",
+                                            fontType: "Pretendard-Medium",
                                             fontSize: 14)
   
   private lazy var resultCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
     flowLayout.minimumLineSpacing = 10
+    
     let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     view.backgroundColor = .white
     view.clipsToBounds = false
@@ -157,15 +176,7 @@ final class SearchViewController: NaviHelper {
       action: #selector(bookmarkpageButtonTapped))
     bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
-    let alertBellImg = UIImage(named: "BellImgWithWhite")?.withRenderingMode(.alwaysOriginal)
-    lazy var alertBell = UIBarButtonItem(
-      image: alertBellImg,
-      style: .plain,
-      target: self,
-      action: nil)
-    alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    
-    navigationItem.rightBarButtonItems = [alertBell, bookMark]
+    navigationItem.rightBarButtonItem = bookMark
   }
   
   @objc func bookmarkpageButtonTapped() {
@@ -175,16 +186,25 @@ final class SearchViewController: NaviHelper {
     present(navigationController, animated: true, completion: nil)
   }
   
-  @objc func recentButtonTapped(){
+  // MARK: - 전체버튼 눌렸을 때
+  func allButtonTapped(){
     print("1")
-    recentButton.setTitleColor(.black, for: .normal)
+    allButton.setTitleColor(.black, for: .normal)
     popularButton.setTitleColor(.bg70, for: .normal)
     
   }
   
-  @objc func popularButtonTapped(){
+  // MARK: - 인기버튼 눌렸을 때
+  func popularButtonTapped(){
     print("2")
-    recentButton.setTitleColor(.bg70, for: .normal)
+    allButton.setTitleColor(.bg70, for: .normal)
+    popularButton.setTitleColor(.black, for: .normal)
+  }
+  
+  // MARK: - 학과버튼 눌렸을 때
+  func majroButtonTapped(){
+    print("2")
+    allButton.setTitleColor(.bg70, for: .normal)
     popularButton.setTitleColor(.black, for: .normal)
   }
   
@@ -222,9 +242,9 @@ final class SearchViewController: NaviHelper {
     navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
 
     [
-      recentButton,
-      separateLine,
+      allButton,
       popularButton,
+      majorButton,
       countLabel,
       divideLine,
       scrollView
@@ -234,32 +254,35 @@ final class SearchViewController: NaviHelper {
     
     scrollView.addSubview(resultCollectionView)
     
-    recentButton.snp.makeConstraints { make in
-      make.top.equalTo(searchBar.snp.bottom)
-      make.leading.equalTo(searchBar.snp.leading).offset(10)
+    allButton.snp.makeConstraints {
+      $0.top.equalTo(searchBar.snp.bottom)
+      $0.leading.equalTo(searchBar.snp.leading).offset(10)
+      $0.height.equalTo(34)
+      $0.width.equalTo(57)
     }
     
-    separateLine.backgroundColor = .bg50
-    separateLine.snp.makeConstraints { make in
-      make.top.equalTo(recentButton).offset(10)
-      make.bottom.equalTo(recentButton.snp.bottom).offset(-10)
-      make.leading.equalTo(recentButton.snp.trailing).offset(10)
-      make.width.equalTo(1)
+    popularButton.snp.makeConstraints {
+      $0.top.equalTo(allButton)
+      $0.leading.equalTo(allButton.snp.trailing).offset(10)
+      $0.height.equalTo(34)
+      $0.width.equalTo(57)
     }
     
-    popularButton.snp.makeConstraints { make in
-      make.top.equalTo(recentButton)
-      make.leading.equalTo(separateLine.snp.trailing).offset(10)
+    majorButton.snp.makeConstraints {
+      $0.top.equalTo(allButton)
+      $0.leading.equalTo(popularButton.snp.trailing).offset(10)
+      $0.height.equalTo(34)
+      $0.width.equalTo(57)
     }
     
     countLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(recentButton)
+      make.centerY.equalTo(allButton)
       make.trailing.equalToSuperview().offset(-20)
     }
     
     divideLine.backgroundColor = .bg30
     divideLine.snp.makeConstraints { make in
-      make.top.equalTo(recentButton.snp.bottom).offset(10)
+      make.top.equalTo(allButton.snp.bottom).offset(10)
       make.leading.trailing.equalTo(searchBar)
     }
     

@@ -167,7 +167,7 @@ extension DepartmentselectViewController: UITableViewDelegate, UITableViewDataSo
                                                    for: indexPath) as! CustomCell
     
     cell.backgroundColor = .bg20
-    
+    cell.textColor = .black
     if indexPath.row < resultDepartments.count {
       let department = resultDepartments[indexPath.row]
       cell.name.text = department

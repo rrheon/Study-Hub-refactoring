@@ -24,28 +24,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.rootViewController = tabBarController
       case false:
         let loginViewController = LoginViewController()
+//        let navigationController = UINavigationController(rootViewController: loginViewController)
         self.window?.rootViewController = loginViewController
       }
     }
     
-//    if accessToken == "a" {
-//      // 로그인 성공한 경우 HomeViewController 표시
-//      let tabBarController = TabBarController()
-//      window?.rootViewController = tabBarController
-//    } else {
-//      // 로그인하지 않은 경우 LoginViewController 표시
-//      if #available(iOS 16.0, *) {
-//        let loginViewController = LoginViewController()
-//        let navigationController = UINavigationController(rootViewController: loginViewController)
-//        window?.rootViewController = navigationController
+//    let loginViewController = HomeViewController()
+//    let navigationController = UINavigationController(rootViewController: loginViewController)
 //
-//      } else {
-//        let loginViewController = PostedStudyViewController(postID: 0)
-//        let navigationController = UINavigationController(rootViewController: loginViewController)
-//        window?.rootViewController = navigationController
-//      }
+//    self.window?.rootViewController = navigationController
 //
-//    }
     window?.makeKeyAndVisible()
 
   }
