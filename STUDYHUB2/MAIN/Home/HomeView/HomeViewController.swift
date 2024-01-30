@@ -71,7 +71,9 @@ final class HomeViewController: NaviHelper {
     // 이미지와 타이틀을 조절하여 타이틀이 먼저 오고 이미지가 그 뒤에 옵니다.
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: 0)
-    
+    button.addAction(UIAction { _ in
+      self.allButtonTapped()
+    } , for: .touchUpInside)
     return button
   }()
   
@@ -265,7 +267,7 @@ final class HomeViewController: NaviHelper {
     present(navigationController, animated: true, completion: nil)
   }
   
-  // 북마크 페이지로 이동
+// MARK: -  북마크 버튼 탭
   @objc func bookmarkpageButtonTapped() {
     let bookmarkViewController = BookmarkViewController()
     bookmarkViewController.navigationItem.title = "북마크"
@@ -274,7 +276,7 @@ final class HomeViewController: NaviHelper {
     self.navigationController?.pushViewController(bookmarkViewController, animated: true)
   }
   
-  // 서치바 재설정
+  // MARK: - 서치바 재설정
   func redesignSearchBar(){
     searchBar.placeholder = "관심있는 스터디를 검색해 보세요"
     
@@ -284,7 +286,7 @@ final class HomeViewController: NaviHelper {
     }
   }
   
-  
+  // MARK: - setupDelegate
   private func setupDelegate() {
     recrutingCollectionView.tag = 1
     deadLineCollectionView.tag = 2
@@ -299,6 +301,7 @@ final class HomeViewController: NaviHelper {
     
   }
   
+  // MARK: - registerCell
   private func registerCell() {
     recrutingCollectionView.register(RecruitPostCell.self,
                                      forCellWithReuseIdentifier: RecruitPostCell.id)
@@ -322,6 +325,13 @@ final class HomeViewController: NaviHelper {
           }
         }
       }
+    }
+  }
+  
+  // MARK: - allbuttonTapped
+  func allButtonTapped(){
+    if let tabBarController = self.tabBarController {
+      tabBarController.selectedIndex = 1
     }
   }
 }

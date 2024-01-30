@@ -166,8 +166,10 @@ final class CommentViewController: NaviHelper {
   // MARK: - navigationbar 재설정
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItems = .none
-    self.navigationItem.title = "댓글 \(countComment)"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    
+    settingNavigationTitle(title: "댓글 \(countComment)",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   // MARK: - 댓글 작성하기
@@ -229,8 +231,8 @@ final class CommentViewController: NaviHelper {
       self.tableViewResizing()
       
       let message = self.commentId == nil ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
-      self.showToast(message: message, alertCheck: true)
-      
+      self.showToast(message: message,imageCheck: false)
+
       self.commentButton.setTitle("등록", for: .normal)
       self.commentTextField.text = nil
       self.commentTextField.resignFirstResponder()
@@ -337,7 +339,8 @@ extension CommentViewController: BottomSheetDelegate {
         DispatchQueue.main.async {
           self.deleteComment(commentId: postID ?? 0) {
             self.getCommentList {
-              self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
+              self.showToast(message: "댓글이 삭제됐어요.",
+                             imageCheck: false)
               self.tableViewResizing()
             }
           }

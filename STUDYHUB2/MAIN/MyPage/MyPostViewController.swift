@@ -203,8 +203,9 @@ final class MyPostViewController: NaviHelper {
   // MARK: - navigationbar 재설정
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItems = .none
-    self.navigationItem.title = "작성한 글"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    settingNavigationTitle(title: "작성한 글",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   // MARK: - 내가쓴 포스트 데이터 가져오기

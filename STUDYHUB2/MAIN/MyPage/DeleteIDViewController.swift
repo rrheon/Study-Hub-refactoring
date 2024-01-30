@@ -190,8 +190,9 @@ final class DeleteIDViewContoller: NaviHelper {
   // MARK: - 네비게이션바 재설정
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "탈퇴하기"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+    settingNavigationTitle(title: "탈퇴하기",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   // MARK: - 탈퇴 계속 진행 시

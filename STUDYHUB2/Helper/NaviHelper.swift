@@ -109,4 +109,13 @@ class NaviHelper: UIViewController {
   func modifyPost(){
     print("수정하자")
   }
+  
+  // MARK: - 네비게이션 바 제목설정
+  func settingNavigationTitle(title: String, font: String, size: CGFloat){
+    self.navigationItem.title = title
+    self.navigationController?.navigationBar.titleTextAttributes = [
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.font: UIFont(name: font, size: size)!
+    ]
+  }
 }

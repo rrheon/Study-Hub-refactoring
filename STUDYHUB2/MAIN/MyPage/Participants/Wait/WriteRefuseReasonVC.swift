@@ -113,8 +113,9 @@ final class WriteRefuseReasonVC: NaviHelper {
   
   func redesignNavigationbar() {
     navigationItem.rightBarButtonItems = nil
-    navigationItem.title = "거절사유"
-    navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    settingNavigationTitle(title: "거절사유",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   // MARK: - Button Action

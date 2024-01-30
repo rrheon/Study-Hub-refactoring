@@ -291,6 +291,9 @@ final class PostedStudyViewController: NaviHelper {
   private lazy var countComment: Int = 0 {
     didSet {
       commentLabel.text = "댓글 \(countComment)"
+      
+      let buttonStatus = countComment > 0 ? false : true
+      moveToCommentViewButton.isHidden = buttonStatus
     }
   }
   
@@ -533,6 +536,10 @@ final class PostedStudyViewController: NaviHelper {
       commentLabelStackView.addArrangedSubview($0)
     }
     
+    if countComment == 0 {
+      moveToCommentViewButton.isHidden = true
+    }
+    
     commentStackView.addArrangedSubview(commentTableView)
     
     let commentInfo = [commentTextField, commentButton]
@@ -746,8 +753,11 @@ final class PostedStudyViewController: NaviHelper {
     
     self.periodLabel.text = "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
     self.meetLabel.text = self.convertStudyWay(wayToStudy: self.postedData?.studyWay ?? "혼합")
-    self.majorLabel.text = self.convertMajor(self.postedData?.major ?? "",
-                                             isEnglish: false)
+    
+    let convertedMajor = self.convertMajor(self.postedData?.major ?? "",
+                                           isEnglish: false)
+    self.majorLabel.text = "      \(convertedMajor)      "
+    
     self.writerMajorLabel.text = self.convertMajor(self.postedData?.postedUser.major ?? "",
                                                    isEnglish: false)
     self.nickNameLabel.text = self.postedData?.postedUser.nickname
@@ -816,7 +826,7 @@ final class PostedStudyViewController: NaviHelper {
       self.tableViewResizing()
       
       let message = self.commentId == nil ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
-      self.showToast(message: message, alertCheck: true)
+      self.showToast(message: message,imageCheck: false)
       
       self.commentButton.setTitle("등록", for: .normal)
       self.commentTextField.text = nil
@@ -859,7 +869,7 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 댓글삭제
   func deleteComment(commentId: Int, completion: @escaping () -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.deleteComment(_commentId: commentId ?? 0)) {
+    provider.request(.deleteComment(_commentId: commentId )) {
       switch $0 {
       case .success(let response):
         print(response)
@@ -897,7 +907,9 @@ final class PostedStudyViewController: NaviHelper {
     guard let postID = postedData?.postID else { return }
     let popupVC = PopupViewController(title: "글을 수정할까요?",
                                       desc: "",
-                                      postID: postID)
+                                      postID: postID,
+                                      leftButtonTitle: "아니요",
+                                      rightButtonTilte: "네")
     popupVC.popupView.rightButtonAction = {
       self.dismiss(animated: true)
       
@@ -1129,7 +1141,8 @@ extension PostedStudyViewController: BottomSheetDelegate {
         DispatchQueue.main.async {
           self.deleteComment(commentId: postID ?? 0) {
             self.getCommentList {
-              self.showToast(message: "댓글이 삭제됐어요.", alertCheck: true)
+              self.showToast(message: "댓글이 삭제됐어요.",
+                             imageCheck: false)
               self.tableViewResizing()
             }
           }

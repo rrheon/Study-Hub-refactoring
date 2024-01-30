@@ -319,8 +319,10 @@ final class MyInformViewController: NaviHelper {
   // MARK: - 네비게이션바 재설정
   func redesignNavigationBar(){
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "내 정보"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+
+    settingNavigationTitle(title: "내 정보",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   // MARK: - 프로필 사진 관련 함수

@@ -139,8 +139,10 @@ final class FindPasswordViewController: NaviHelper {
     super.navigationItemSetting()
     
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "비밀번호 찾기"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+    
+    settingNavigationTitle(title: "비밀번호 찾기",
+                           font: "Pretendard-Bold",
+                           size: 18)
     
     let completeImg = UIImage(named: "UnableNextButton")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,

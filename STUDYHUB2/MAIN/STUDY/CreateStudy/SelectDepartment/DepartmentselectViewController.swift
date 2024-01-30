@@ -94,8 +94,10 @@ final class DepartmentselectViewController: NaviHelper {
                                       action: #selector(redesingRightButtonTapped))
     self.navigationItem.rightBarButtonItem = rightButton
     
-    self.navigationItem.title = "관련학과"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    settingNavigationTitle(title: "관련학과",
+                           font: "Pretendard-Bold",
+                           size: 18)
+    
   }
   
   @objc func redesingRightButtonTapped(){

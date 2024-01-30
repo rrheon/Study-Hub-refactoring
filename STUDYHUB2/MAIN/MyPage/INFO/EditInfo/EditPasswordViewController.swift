@@ -128,8 +128,10 @@ final class EditPasswordViewController: NaviHelper {
   
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "비밀번호 변경"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+    
+    settingNavigationTitle(title: "비밀번호 변경",
+                           font: "Pretendard-Bold",
+                           size: 18)
     
     let completeImg = UIImage(named: "UnableNextButton")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,

@@ -89,9 +89,10 @@ final class EditMajorViewController: NaviHelper {
   
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "학과 변경"
-    navigationController?.navigationBar.titleTextAttributes = [
-      .foregroundColor: UIColor.white]
+    
+    settingNavigationTitle(title: "학과 변경",
+                           font: "Pretendard-Bold",
+                           size: 18)
     
     let completeImg = UIImage(named: "DeCompletedImg")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,

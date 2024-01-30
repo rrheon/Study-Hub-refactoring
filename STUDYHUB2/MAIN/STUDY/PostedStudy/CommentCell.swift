@@ -10,10 +10,13 @@ protocol CommentCellDelegate: AnyObject {
 final class CommentCell: UITableViewCell {
   weak var delegate: CommentCellDelegate?
   
+  let userDataManager = UserInfoManager.shared
+  
   static let cellId = "CellId"
   
   var model: CommentConetent? { didSet { bind() } }
   var commentId: Int?
+  var userNickname: String?
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -59,12 +62,21 @@ final class CommentCell: UITableViewCell {
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
+    
     addSubviews()
     configure()
+    
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func getUserData(completion: @escaping () -> Void){
+    userDataManager.getUserInfo { result in
+      self.userNickname = result?.nickname
+      completion()
+    }
   }
   private func addSubviews() {
     [
@@ -109,32 +121,42 @@ final class CommentCell: UITableViewCell {
   }
   
   private func bind() {
-    commentId = model?.commentID
+    getUserData {
+      DispatchQueue.main.async {
+        self.commentId = self.model?.commentID
 
-    nickNameLabel.text = model?.commentedUserData.nickname
-    commentLabel.text = model?.content
+        self.nickNameLabel.text = self.model?.commentedUserData.nickname
     
-    guard let createeData = model?.createdDate else { return }
-    postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
-
-    
-    if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
-      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
-      
-      KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
-      
-      self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
-        switch result {
-        case .success(let value):
-          DispatchQueue.main.async {
-            self.profileImageView.image = value.image
-            self.profileImageView.layer.cornerRadius = 12
-            self.profileImageView.clipsToBounds = true
-          }
-        case .failure(let error):
-          print("Image download failed: \(error)")
+        if self.userNickname != self.nickNameLabel.text {
+          self.menuButton.isHidden = true
         }
+        
+        self.commentLabel.text = self.model?.content
+        
+        guard let createeData = self.model?.createdDate else { return }
+        self.postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
+
+        
+        if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
+          let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
+          
+          KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
+          
+          self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+            switch result {
+            case .success(let value):
+              DispatchQueue.main.async {
+                self.profileImageView.image = value.image
+                self.profileImageView.layer.cornerRadius = 12
+                self.profileImageView.clipsToBounds = true
+              }
+            case .failure(let error):
+              print("Image download failed: \(error)")
+            }
+          }
       }
+    }
+ 
     }
   }
   

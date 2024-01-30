@@ -200,8 +200,9 @@ final class CheckParticipantsVC: NaviHelper {
   // MARK: - 네비게이션바 재설정
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItems = .none
-    self.navigationItem.title = "참여자"
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    settingNavigationTitle(title: "참여자",
+                           font: "Pretendard-Bold",
+                           size: 18)
   }
   
   func waitButtonTapped(){

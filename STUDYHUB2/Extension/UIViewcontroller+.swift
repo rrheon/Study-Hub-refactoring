@@ -63,8 +63,8 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
   func createTextField(title: String) -> UITextField {
     let textField = UITextField()
     let placeholderTextAttributes: [NSAttributedString.Key: Any] = [
-      .foregroundColor: UIColor.bg50,
-      .font: UIFont.systemFont(ofSize: 14)
+      .foregroundColor: UIColor.bg70,
+      .font: UIFont(name: "Pretendard-Medium", size: 14)
     ]
     
     textField.attributedPlaceholder = NSAttributedString(string: title,
@@ -72,10 +72,10 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     
     textField.backgroundColor = .white
     textField.textColor = .black
-    textField.font = UIFont.systemFont(ofSize: 14)
+    textField.font = UIFont(name: "Pretendard-Medium", size: 14)
     textField.borderStyle = .roundedRect
     textField.layer.cornerRadius = 5
-    textField.layer.borderColor = UIColor.lightGray.cgColor
+    textField.layer.borderColor = UIColor.bg50.cgColor
     textField.layer.borderWidth = 0.5
     textField.delegate = self
     return textField
@@ -160,7 +160,7 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
   // MARK: - toast message, 이미지가 뒤에 나오고 있음 앞으로 빼기, 이미지 없을 때도 있음
   func showToast(message: String,
                  imageCheck: Bool = true,
-                 alertCheck: Bool,
+                 alertCheck: Bool = true,
                  large: Bool = false) {
     let toastContainer = UIView()
     toastContainer.backgroundColor = .g100

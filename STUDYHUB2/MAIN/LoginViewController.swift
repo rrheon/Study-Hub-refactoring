@@ -390,7 +390,6 @@ final class LoginViewController: UIViewController {
     }
   }
   
-  
   // MARK: - password action 함수
   @objc func passwordTextFieldDidChange() {
     if let password = passwordTextField.text, !password.isEmpty {

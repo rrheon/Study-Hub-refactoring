@@ -127,10 +127,9 @@ final class ParticipateVC: NaviHelper {
   override func navigationItemSetting() {
     super.navigationItemSetting()
     
-    navigationItem.title = "참여하기"
-    navigationController?.navigationBar.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.white
-    ]
+    settingNavigationTitle(title: "참여하기",
+                           font: "Pretendard-Bold",
+                           size: 18)
     navigationItem.rightBarButtonItem = .none
   }
   

@@ -90,9 +90,10 @@ final class EditnicknameViewController: NaviHelper {
   // MARK: - navigation
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
-    navigationItem.title = "닉네임 변경"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
+
+    settingNavigationTitle(title: "닉네임 변경",
+                           font: "Pretendard-Bold",
+                           size: 18)
     changeRightNavigationItem(complete: false)
   }
   
