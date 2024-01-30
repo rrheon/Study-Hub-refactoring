@@ -33,7 +33,7 @@ final class LoginViewController: UIViewController {
     emailLabel.text = "이메일"
     emailLabel.textColor = .g50
     emailLabel.font = UIFont(name: "Pretendard-Medium",
-                                size: 16)
+                             size: 16)
     return emailLabel
   }()
   
@@ -55,7 +55,7 @@ final class LoginViewController: UIViewController {
     
     emailTF.autocorrectionType = .no
     emailTF.autocapitalizationType = .none
-//    emailTF.becomeFirstResponder()
+    //    emailTF.becomeFirstResponder()
     return emailTF
   }()
   
@@ -86,7 +86,7 @@ final class LoginViewController: UIViewController {
       string: "비밀번호를 입력해주세요",
       attributes: [NSAttributedString.Key.foregroundColor: UIColor.g80])
     passwordTF.font = UIFont(name: "Pretendard-Medium",
-                          size: 14)
+                             size: 14)
     passwordTF.textColor = .white
     passwordTF.backgroundColor = .black
     passwordTF.addTarget(self,
@@ -167,7 +167,7 @@ final class LoginViewController: UIViewController {
     signUpButton.setTitleColor(.o50,
                                for: .normal)
     signUpButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold",
-                                          size: 16)
+                                           size: 16)
     signUpButton.addTarget(self,
                            action: #selector(signUpButtonTapped),
                            for: .touchUpInside)
@@ -179,7 +179,7 @@ final class LoginViewController: UIViewController {
     super.viewDidLoad()
     
     view.backgroundColor = .black
-        
+    
     setUpLayout()
     makeUI()
     
@@ -212,8 +212,8 @@ final class LoginViewController: UIViewController {
     self.passwordTextField.rightView = eyeButton
     self.passwordTextField.rightViewMode = .always
   }
-
-
+  
+  
   // MARK: - setUpLayout
   func setUpLayout(){
     [
@@ -283,7 +283,7 @@ final class LoginViewController: UIViewController {
     eyeButton.snp.makeConstraints {
       $0.trailing.equalTo(passwordTextFielddividerLine.snp.trailing)
     }
-
+    
     passwordTextFielddividerLine.snp.makeConstraints {
       $0.leading.trailing.equalTo(passwordTextField)
       $0.top.equalTo(passwordTextField.snp.bottom).offset(5)
@@ -340,9 +340,9 @@ final class LoginViewController: UIViewController {
     // 페스워트 없으면 경고
     guard let password = passwordTextField.text,
           !password.isEmpty else {
-    showToast(message: "이메일과 비밀번호를 모두 작성해주세요.",
-              imageCheck: false,
-              alertCheck: true)
+      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.",
+                imageCheck: false,
+                alertCheck: true)
       return
     }
     
@@ -355,10 +355,10 @@ final class LoginViewController: UIViewController {
       case true:
         DispatchQueue.main.async {
           let tapbarcontroller = TabBarController()
-          let navigationController = UINavigationController(rootViewController: tapbarcontroller)
-          navigationController.modalPresentationStyle = .fullScreen
+
+          tapbarcontroller.modalPresentationStyle = .fullScreen
           
-          self.present(navigationController, animated: true, completion: nil)
+          self.present(tapbarcontroller, animated: true, completion: nil)
         }
       case false:
         DispatchQueue.main.async {
@@ -409,23 +409,17 @@ final class LoginViewController: UIViewController {
       passwordAlertLabel.isHidden = isValidPassword ? true : false
     }
   }
-
+  
   // MARK: - 둘러보기 함수
   @objc func exploreButtonTapped() {
-    if let navigationController = self.navigationController {
-      navigationController.dismiss(animated: false, completion: nil)
-    }
-    
     tokenManager.deleteTokens()
+
+    let tapbarcontroller = TabBarController()
+    tapbarcontroller.modalPresentationStyle = .fullScreen
     
-    let tabBarController = TabBarController()
-    let navigationController = UINavigationController(rootViewController: tabBarController)
-    navigationController.modalPresentationStyle = .fullScreen
-    
-    self.present(navigationController, animated: true, completion: nil)
+    self.present(tapbarcontroller, animated: true, completion: nil)
   }
 
-  
   // Action for the "회원가입" (Signup) button
   @objc func signUpButtonTapped() {
     let termsOfServiceVC = TermsOfServiceViewController()
@@ -441,6 +435,7 @@ final class LoginViewController: UIViewController {
     let navigationController = UINavigationController(rootViewController: forgotPasswordVC)
     navigationController.modalPresentationStyle = .fullScreen
     
-    self.present(navigationController, animated: true, completion: nil)  }
+    self.present(navigationController, animated: true, completion: nil)
+  }
 }
 

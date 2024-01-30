@@ -406,13 +406,9 @@ final class MyInformViewController: NaviHelper {
       self?.tokenManager.deleteTokens()
       
       self?.dismiss(animated: true) {
-        if let navigationController = self?.navigationController {
-          navigationController.popToRootViewController(animated: false)
-          
-          let loginVC = LoginViewController()
-          loginVC.modalPresentationStyle = .overFullScreen
-          navigationController.present(loginVC, animated: true, completion: nil)
-        }
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .overFullScreen
+        self?.present(loginVC, animated: true, completion: nil)
       }
     }
   }
