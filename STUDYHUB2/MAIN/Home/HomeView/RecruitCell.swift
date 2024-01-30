@@ -60,8 +60,8 @@ final class RecruitPostCell: UICollectionViewCell {
     let label = UILabel()
     label.textColor = .bg80
     label.text = " 잔여 14자리 "
-    label.layer.borderColor = UIColor.bg60.cgColor // 테두리 색상을 초기화 (투명)
-    label.layer.borderWidth = 0.5 // 테두리 두께 초기화
+    label.layer.borderColor = UIColor.bg60.cgColor
+    label.layer.borderWidth = 0.5
     label.layer.cornerRadius = 5
     return label
   }()

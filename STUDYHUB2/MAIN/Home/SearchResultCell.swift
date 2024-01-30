@@ -150,8 +150,11 @@ final class SearchResultCell: UICollectionViewCell {
     
     setViewShadow(backView: self)
     addSubviews()
-    
+
+    closePostUI()
+
     configure()
+    
   }
   
   @available(*, unavailable)
@@ -217,9 +220,11 @@ final class SearchResultCell: UICollectionViewCell {
       make.top.equalToSuperview().offset(10)
     }
     
-    bookMarkButton.snp.makeConstraints { make in
-      make.top.equalTo(majorLabel)
-      make.trailing.equalToSuperview().offset(-10)
+    if model?.close == false {
+      bookMarkButton.snp.makeConstraints { make in
+        make.top.equalTo(majorLabel)
+        make.trailing.equalToSuperview().offset(-10)
+      }
     }
     
     titleLabel.snp.makeConstraints { make in
@@ -305,7 +310,6 @@ final class SearchResultCell: UICollectionViewCell {
         } else if let data = data {
           let image = UIImage(data: data)
           DispatchQueue.main.async {
-            // 다운로드한 이미지를 이미지 뷰에 설정합니다.
             self.profileImageView.layer.cornerRadius = 15
             self.profileImageView.image = image
           }
@@ -313,6 +317,25 @@ final class SearchResultCell: UICollectionViewCell {
       }
       task.resume()
     }
-    
+  }
+  
+  func closePostUI(){
+    print(model?.close)
+    if model?.close == true {
+      majorLabel.textColor = .bg70
+      majorLabel.backgroundColor = .bg30
+      
+      titleLabel.textColor = .bg70
+      periodLabel.textColor = .bg60
+      
+      remainLabel.text = "마감됐어요"
+      remainLabel.textColor = .bg70
+      
+      memberCountLabel.textColor = .bg70
+      fineLabel.textColor = .bg70
+      genderLabel.textColor = .bg70
+      
+      nickNameLabel.textColor = .bg70
+    }
   }
 }

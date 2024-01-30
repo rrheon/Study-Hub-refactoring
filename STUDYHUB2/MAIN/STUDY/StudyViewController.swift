@@ -13,24 +13,20 @@ final class StudyViewController: NaviHelper {
     let button = UIButton()
     button.setTitle("   전체   ", for: .normal)
     button.setTitleColor(.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 14)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
     button.backgroundColor = .black
-    button.layer.cornerRadius = 18
-    button.frame = CGRect(x: 0, y: 0, width: 57, height: 30)
+    button.layer.cornerRadius = 15
     button.addTarget(self, action: #selector(recentButtonTapped), for: .touchUpInside)
     
     return button
   }()
-  
-  let separateLine = UIView()
-  
+    
   private lazy var popularButton: UIButton = {
     let button = UIButton()
     button.setTitle("   인기   ", for: .normal)
     button.setTitleColor(.bg90, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 14)
-    button.layer.cornerRadius = 18
-    button.frame = CGRect(x: 0, y: 0, width: 57, height: 30)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
+    button.layer.cornerRadius = 15
     button.addTarget(self, action: #selector(popularButtonTapped), for: .touchUpInside)
     
     return button
@@ -42,13 +38,11 @@ final class StudyViewController: NaviHelper {
     }
   }
   
-  private lazy var countLabel = createLabel(title: "\(studyCount ?? 0)개",
+  private lazy var countLabel = createLabel(title: "\(studyCount )개",
                                             textColor: .bg80,
                                             fontType: "Pretendard",
                                             fontSize: 14)
-  
-  private lazy var divideLine = createDividerLine(height: 1)
-  
+    
   private lazy var emptyImage = UIImage(named: "EmptyStudy")
   private lazy var emptyImageView = UIImageView(image: emptyImage)
   
@@ -94,6 +88,7 @@ final class StudyViewController: NaviHelper {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     view.backgroundColor = .white
     
     waitingNetworking()
@@ -117,13 +112,11 @@ final class StudyViewController: NaviHelper {
   
   // MARK: - setupLayout
   func setupLayout(){
-    if studyCount ?? 0 > 0 {
+    if studyCount > 0 {
       [
         recentButton,
-        separateLine,
         popularButton,
         countLabel,
-        divideLine,
         scrollView
       ].forEach {
         view.addSubview($0)
@@ -135,10 +128,8 @@ final class StudyViewController: NaviHelper {
     }else {
       [
         recentButton,
-        separateLine,
         popularButton,
         countLabel,
-        divideLine,
         emptyImageView,
         describeLabel,
         addButton
@@ -159,34 +150,24 @@ final class StudyViewController: NaviHelper {
   func makeUI(){
     recentButton.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-      make.leading.equalToSuperview().offset(10)
-    }
-    
-    separateLine.backgroundColor = .bg50
-    separateLine.snp.makeConstraints { make in
-      make.top.equalTo(recentButton).offset(10)
-      make.bottom.equalTo(recentButton.snp.bottom).offset(-10)
-      make.leading.equalTo(recentButton.snp.trailing).offset(10)
-      make.width.equalTo(1)
+      make.leading.equalToSuperview().offset(20)
+      make.height.equalTo(34)
+      make.width.equalTo(57)
     }
     
     popularButton.snp.makeConstraints { make in
       make.top.equalTo(recentButton)
-      make.leading.equalTo(separateLine.snp.trailing).offset(10)
+      make.leading.equalTo(recentButton.snp.trailing).offset(10)
+      make.height.equalTo(34)
+      make.width.equalTo(57)
     }
     
     countLabel.snp.makeConstraints { make in
       make.centerY.equalTo(recentButton)
-      make.trailing.equalToSuperview().offset(-10)
+      make.trailing.equalToSuperview().offset(-20)
     }
     
-    divideLine.backgroundColor = .bg30
-    divideLine.snp.makeConstraints { make in
-      make.top.equalTo(recentButton.snp.bottom).offset(10)
-      make.leading.trailing.equalToSuperview()
-    }
-    
-    if studyCount ?? 0 > 0 {
+    if studyCount > 0 {
       resultCollectionView.snp.makeConstraints { make in
         make.top.equalTo(contentView).offset(20)
         make.leading.trailing.equalTo(contentView)
@@ -204,11 +185,10 @@ final class StudyViewController: NaviHelper {
         make.edges.equalTo(scrollView.contentLayoutGuide)
         make.width.equalTo(scrollView.frameLayoutGuide)
         make.height.equalTo(1200)
-
       }
       
       scrollView.snp.makeConstraints { make in
-        make.top.equalTo(divideLine.snp.bottom).offset(10)
+        make.top.equalTo(recentButton.snp.bottom).offset(10)
         make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
       }
     }else {
@@ -218,7 +198,8 @@ final class StudyViewController: NaviHelper {
       }
       
       describeLabel.numberOfLines = 3
-      describeLabel.changeColor(label: describeLabel, wantToChange: "지금 스터디를 만들어\n  팀원을 구해보세요!",
+      describeLabel.changeColor(label: describeLabel,
+                                wantToChange: "지금 스터디를 만들어\n  팀원을 구해보세요!",
                                 color: .changeInfo)
       describeLabel.snp.makeConstraints { make in
         make.top.equalTo(emptyImageView.snp.bottom).offset(10)
@@ -247,16 +228,9 @@ final class StudyViewController: NaviHelper {
       action: #selector(searchButtonTapped))
     bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
-    let alertBellImg = UIImage(named: "BellImgWithWhite")?.withRenderingMode(.alwaysOriginal)
-    lazy var alertBell = UIBarButtonItem(
-      image: alertBellImg,
-      style: .plain,
-      target: self,
-      action: nil)
-    alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
     navigationItem.leftBarButtonItem = logo
-    navigationItem.rightBarButtonItems = [alertBell, bookMark]
+    navigationItem.rightBarButtonItem = bookMark
   }
   
   @objc func searchButtonTapped() {
@@ -319,6 +293,7 @@ final class StudyViewController: NaviHelper {
   
   // MARK: - 스크롤해서 네트워킹
   func fectMoreData(hotType: String){
+    waitingNetworking()
     postDataManager.getRecentPostDatas(hotType: hotType,
                                        size: (recentDatas?.totalCount ?? 0) + 5) {
       self.recentDatas = self.postDataManager.getRecentPostDatas()

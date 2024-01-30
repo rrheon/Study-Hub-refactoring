@@ -16,13 +16,15 @@ final class PostedStudyViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
   let myPostDataManager = MyPostInfoManager.shared
   let createPostManager = PostManager.shared
+  let userDataManager = UserInfoManager.shared
   
   var commentId: Int?
   // 이전페이지의 종류가 스터디VC , 검색결과 VC도 있음
   var previousHomeVC: HomeViewController?
   var previousMyPostVC: MyPostViewController?
   var myPostIDList: [Int] = []
-
+  var userData: UserDetailData?
+  
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedData: PostDetailData? {
     didSet {
@@ -952,10 +954,51 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 참여하기 버튼
   func participateButtonTapped(){
     guard let studyId = postedData?.studyID else { return }
-    let participateVC = ParticipateVC()
-    print(postedData?.studyID)
-    participateVC.studyId = studyId
-    navigationController?.pushViewController(participateVC, animated: true)
+    
+    // close 정보 얻어와야함, 세부내용에 들어가 있을 때 마감이 되면 못하도록..?
+    userDataManager.getUserInfo { fetchedUserData in
+      self.userData = fetchedUserData
+      DispatchQueue.main.async {
+        if self.userData?.nickname == nil {
+          self.goToLoginVC()
+          return
+        }
+        
+        if self.postedData?.filteredGender != self.userData?.gender {
+          self.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요",
+                         alertCheck: false)
+          return
+        }
+        
+        let participateVC = ParticipateVC()
+        participateVC.studyId = studyId
+        self.navigationController?.pushViewController(participateVC, animated: true)
+      }
+    }
+  }
+  
+  // MARK: - 참여하기를 눌렀는데 로그인이 안되어 있을 경우
+  func goToLoginVC(){
+    
+    DispatchQueue.main.async {
+      let popupVC = PopupViewController(title: "로그인이 필요해요",
+                                        desc: "계속하려면 로그인을 해주세요!",
+                                        rightButtonTilte: "로그인")
+      self.present(popupVC, animated: true)
+     
+      popupVC.popupView.rightButtonAction = {
+        self.dismiss(animated: true) {
+          if let navigationController = self.navigationController {
+            navigationController.popToRootViewController(animated: false)
+            
+            let loginVC = LoginViewController()
+            
+            loginVC.modalPresentationStyle = .overFullScreen
+            navigationController.present(loginVC, animated: true, completion: nil)
+          }
+        }
+      }
+    }
   }
 }
 

@@ -1,3 +1,4 @@
+
 import UIKit
 
 import SnapKit
@@ -7,7 +8,9 @@ final class SearchViewController: NaviHelper {
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
   let detailPostDataManager = PostDetailInfoManager.shared
   let postDataManager = PostDataManager.shared
-  var keyword: String?
+  
+  var searchKeyword: String?
+  
   var recommendData: RecommendList?
   var searchResultData: PostDataContent? {
     didSet{
@@ -16,7 +19,6 @@ final class SearchViewController: NaviHelper {
   }
   
   init(keyword: String? = nil) {
-    self.keyword = keyword
     super.init()
   }
   
@@ -41,7 +43,7 @@ final class SearchViewController: NaviHelper {
   private lazy var allButton: UIButton = {
     let button = UIButton()
     button.setTitle("전체", for: .normal)
-    button.setTitleColor(.bg90, for: .normal)
+    button.setTitleColor(.white, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
                                      size: 14)
     button.backgroundColor = .black
@@ -76,7 +78,7 @@ final class SearchViewController: NaviHelper {
     button.backgroundColor = .bg30
     button.layer.cornerRadius = 20
     button.addAction(UIAction { _ in
-      self.majroButtonTapped()
+      self.majorButtonTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -179,6 +181,7 @@ final class SearchViewController: NaviHelper {
     navigationItem.rightBarButtonItem = bookMark
   }
   
+  // MARK: - 북마크 아이콘 터치
   @objc func bookmarkpageButtonTapped() {
     let bookmarkViewController = BookmarkViewController(postID: 0)
     let navigationController = UINavigationController(rootViewController: bookmarkViewController)
@@ -187,25 +190,33 @@ final class SearchViewController: NaviHelper {
   }
   
   // MARK: - 전체버튼 눌렸을 때
-  func allButtonTapped(){
-    print("1")
-    allButton.setTitleColor(.black, for: .normal)
-    popularButton.setTitleColor(.bg70, for: .normal)
-    
+  func allButtonTapped() {
+    updateButtonColors(selectedButton: allButton,
+                       deselectedButtons: [popularButton, majorButton])
   }
   
   // MARK: - 인기버튼 눌렸을 때
-  func popularButtonTapped(){
-    print("2")
-    allButton.setTitleColor(.bg70, for: .normal)
-    popularButton.setTitleColor(.black, for: .normal)
+  func popularButtonTapped() {
+    updateButtonColors(selectedButton: popularButton,
+                       deselectedButtons: [allButton, majorButton])
   }
   
   // MARK: - 학과버튼 눌렸을 때
-  func majroButtonTapped(){
-    print("2")
-    allButton.setTitleColor(.bg70, for: .normal)
-    popularButton.setTitleColor(.black, for: .normal)
+  func majorButtonTapped() {
+    updateButtonColors(selectedButton: majorButton,
+                       deselectedButtons: [allButton, popularButton])
+  }
+  
+  // 버튼 색상 업데이트 함수
+  private func updateButtonColors(selectedButton: UIButton, deselectedButtons: [UIButton]) {
+    
+    selectedButton.setTitleColor(.white, for: .normal)
+    selectedButton.backgroundColor = .black
+    
+    for button in deselectedButtons {
+      button.setTitleColor(.bg90, for: .normal)
+      button.backgroundColor = .bg30
+    }
   }
   
   // MARK: - 추천어 검색하기
@@ -292,8 +303,9 @@ final class SearchViewController: NaviHelper {
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(divideLine.snp.bottom).offset(10)
-      make.leading.trailing.bottom.equalTo(view)
+        make.top.equalTo(divideLine.snp.bottom).offset(10)
+        make.leading.trailing.equalTo(view)
+        make.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
 }
@@ -306,6 +318,7 @@ extension SearchViewController: UISearchBarDelegate {
     
     searchRecommend(keyword: keyword) {
       print("검색완료")
+      self.searchKeyword = keyword
     }
   }
   
@@ -341,11 +354,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   
   // UITableViewDelegate 함수 (선택)
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    postDataManager.getPostData(hot: "true",
-                                text: keyword,
+    print("여기")
+    print(searchKeyword)
+    postDataManager.getPostData(hot: "false",
+                                text: searchKeyword,
                                 page: 0,
                                 size: 5,
-                                titleAndMajor: "true") { result in
+                                titleAndMajor: "false") { result in
       self.searchResultData = result
       self.updateUI()
     }
