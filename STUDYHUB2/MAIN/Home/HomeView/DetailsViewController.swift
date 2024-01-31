@@ -2,40 +2,9 @@ import UIKit
 
 import SnapKit
 
-class DetailsViewController: UIViewController{
+final class DetailsViewController: NaviHelper {
   
   // MARK: - 화면구성
-  private let headerStackView: UIStackView = {
-    let headerStackView = UIStackView()
-    headerStackView.axis = .horizontal
-    headerStackView.alignment = .center
-    headerStackView.spacing = 8
-    return headerStackView
-  }()
-  
-  lazy var backButton: UIButton = {
-    let backButton = UIButton(type: .system)
-    backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-    backButton.tintColor = .white
-    backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-    return backButton
-  }()
-  
-  private let spacerView: UIView = {
-    let spacerView = UIView()
-    spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    return spacerView
-  }()
-  
-  private let howtouseLabel: UILabel = {
-    // "이용방법" label
-    let howtouseLabel = UILabel()
-    howtouseLabel.text = "이용 방법"
-    howtouseLabel.textColor = .white
-    howtouseLabel.font = UIFont.boldSystemFont(ofSize: 18)
-    return howtouseLabel
-  }()
-  
   private let headerContentStackView: UIStackView = {
     let headerContentStackView = UIStackView()
     headerContentStackView.axis = .vertical
@@ -114,22 +83,31 @@ class DetailsViewController: UIViewController{
     return scrollView
   }()
   
+  // MARK: - viewdidload
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    navigationItemSetting()
     
     setUpLayout()
     makeUI()
   }
   
-  // MARK: - 함수
+  // MARK: - navigationbar
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+    
+    navigationItem.rightBarButtonItem = .none
+    settingNavigationTitle(title: "내용",
+                           font: "Pretendard-Bold",
+                           size: 18)
+  }
+  
+  // MARK: - setupLayout
   func setUpLayout(){
     view.backgroundColor = .black
-    view.addSubview(headerStackView)
     view.addSubview(scrollView)
 
-    headerStackView.addArrangedSubview(backButton)
-    headerStackView.addArrangedSubview(spacerView)
-    headerStackView.addArrangedSubview(howtouseLabel)
     
     let imageViews = [largeImageView, largeImage2View, largeImage3View, largeImage4View,
                       largeImage5View, largeImage6View, largeImage7View, largeImage8View]
@@ -142,13 +120,8 @@ class DetailsViewController: UIViewController{
     scrollView.backgroundColor = .white
   }
 
+  // MARK: - makeui
   func makeUI(){
-    headerStackView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-      make.leading.equalTo(view).offset(16)
-      make.trailing.equalTo(view).offset(-160)
-    }
-    
     headerContentStackView.snp.makeConstraints { make in
       make.top.equalTo(scrollView)
       make.leading.trailing.bottom.equalTo(scrollView)
@@ -205,20 +178,17 @@ class DetailsViewController: UIViewController{
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(headerStackView.snp.bottom).offset(16)
+      make.top.equalToSuperview().offset(10)
       make.leading.trailing.bottom.equalTo(view)
     }
     
   }
-  @objc func goBack() {
-    self.dismiss(animated: true, completion: nil)
-  }
-  
+
+  // MARK: - 작성하기버튼
   @objc func writeButtonTapped() {
     let createStudyViewController = CreateStudyViewController()
-    let navigationController = UINavigationController(rootViewController: createStudyViewController)
-    navigationController.modalPresentationStyle = .fullScreen
+    createStudyViewController.hidesBottomBarWhenPushed = true
     
-    present(navigationController, animated: true, completion: nil)
+    navigationController?.pushViewController(createStudyViewController, animated: true)
   }
 }

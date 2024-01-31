@@ -111,7 +111,9 @@ class NaviHelper: UIViewController {
   }
   
   // MARK: - 네비게이션 바 제목설정
-  func settingNavigationTitle(title: String, font: String, size: CGFloat){
+  func settingNavigationTitle(title: String,
+                              font: String = "Pretendard-Bold",
+                              size: CGFloat = 18){
     self.navigationItem.title = title
     self.navigationController?.navigationBar.titleTextAttributes = [
         NSAttributedString.Key.foregroundColor: UIColor.white,

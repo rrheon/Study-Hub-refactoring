@@ -262,9 +262,8 @@ final class HomeViewController: NaviHelper {
   // MARK: - 알아보기로 이동하는 함수
   @objc func detailsButtonTapped() {
     let detailsViewController = DetailsViewController()
-    let navigationController = UINavigationController(rootViewController: detailsViewController)
-    navigationController.modalPresentationStyle = .fullScreen
-    present(navigationController, animated: true, completion: nil)
+    detailsViewController.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(detailsViewController, animated: true)
   }
   
 // MARK: -  북마크 버튼 탭

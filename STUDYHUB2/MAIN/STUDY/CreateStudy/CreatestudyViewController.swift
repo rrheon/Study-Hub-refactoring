@@ -453,19 +453,6 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       periodStackView.addArrangedSubview($0)
     }
     
-    chatLinkDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
-
-    studyproduceTextView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-    
-    studyinfoStackViewDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
-    
-    // Constraints for the "완료하기" button
-    completeButton.leadingAnchor.constraint(equalTo: periodStackView.leadingAnchor,
-                                            constant: 16).isActive = true
-    completeButton.trailingAnchor.constraint(equalTo: periodStackView.trailingAnchor,
-                                             constant: -16).isActive = true
-    completeButton.heightAnchor.constraint(equalToConstant: 57).isActive = true
-    
     // Create a scroll view to make the content scrollable
 //    scrollView.translatesAutoresizingMaskIntoConstraints = false
     scrollView.addSubview(headerContentStackView)
@@ -487,6 +474,12 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       make.leading.equalTo(chatLinkStackView).offset(16)
       make.trailing.equalTo(chatLinkStackView).offset(10)
     }
+    
+    chatLinkDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
+
+    studyproduceTextView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+    
+    studyinfoStackViewDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
     
     descriptionLabel.snp.makeConstraints { make in
       make.top.equalTo(chatLinkLabel.snp.bottom).offset(10)
@@ -659,6 +652,13 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     endDateButton.snp.makeConstraints { make in
       make.bottom.equalTo(completeButton.snp.top).offset(-40)
     }
+    
+    // Constraints for the "완료하기" button
+    completeButton.leadingAnchor.constraint(equalTo: periodStackView.leadingAnchor,
+                                            constant: 16).isActive = true
+    completeButton.trailingAnchor.constraint(equalTo: periodStackView.trailingAnchor,
+                                             constant: -16).isActive = true
+    completeButton.heightAnchor.constraint(equalToConstant: 57).isActive = true
     
     scrollView.snp.makeConstraints { make in
       //      make.top.equalTo(headerStackView.snp.bottom).offset(16)
@@ -862,7 +862,8 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
         title: studytitleTextField.text ?? "")
       print(studyData)
       postManager.createPost(createPostDatas: studyData) {
-        print("생성시작")
+        self.navigationController?.popViewController(animated: true)
+        self.showToast(message: "글 작성이 완료됐어요.", alertCheck: true)
       }
     }
   }

@@ -17,23 +17,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
     
-    loginManager.refreshAccessToken { result in
-      switch result {
-      case true:
-        let tabBarController = TabBarController()
-        self.window?.rootViewController = tabBarController
-      case false:
-        let loginViewController = LoginViewController()
-//        let navigationController = UINavigationController(rootViewController: loginViewController)
-        self.window?.rootViewController = loginViewController
-      }
-    }
+//    loginManager.refreshAccessToken { result in
+//      switch result {
+//      case true:
+//        let tabBarController = TabBarController()
+//        self.window?.rootViewController = tabBarController
+//      case false:
+//        let loginViewController = LoginViewController()
+////        let navigationController = UINavigationController(rootViewController: loginViewController)
+//        self.window?.rootViewController = loginViewController
+//      }
+//    }
     
-//    let loginViewController = HomeViewController()
-//    let navigationController = UINavigationController(rootViewController: loginViewController)
-//
-//    self.window?.rootViewController = navigationController
-//
+    let loginViewController = NotificationViewController()
+    let navigationController = UINavigationController(rootViewController: loginViewController)
+
+    self.window?.rootViewController = navigationController
+
     window?.makeKeyAndVisible()
 
   }

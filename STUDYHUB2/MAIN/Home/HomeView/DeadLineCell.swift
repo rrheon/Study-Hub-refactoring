@@ -129,7 +129,7 @@ final class DeadLineCell: UICollectionViewCell {
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요!"
     
-    if let url = URL(string: data.userData.imageURL) {
+    if let url = URL(string: data.userData.imageURL ?? "") {
       let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
         if let error = error {
           print("Error: \(error)")

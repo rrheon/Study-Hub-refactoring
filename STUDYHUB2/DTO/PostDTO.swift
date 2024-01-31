@@ -14,14 +14,15 @@ struct RecommendList: Codable {
 
 // MARK: - 포스트 전체조회
 struct PostDataContent: Codable {
-  let totalCount: Int
   var postDataByInquiries: PostDataByInquiries
+  let totalCount: Int
 }
 
-
 struct PostDataByInquiries: Codable {
-  var content: [Content]
+  let content: [Content]
+  let pageable: Pageable
   let size, number: Int
+  let sort: Sort
   let numberOfElements: Int
   let first, last, empty: Bool
 }
@@ -34,7 +35,7 @@ struct Content: Codable {
   let studyPerson: Int
   let filteredGender: String
   let penalty: Int
-  let penaltyWay: String?
+  let penaltyWay: String
   let remainingSeat: Int
   let close: Bool
   let userData: UserData
@@ -166,10 +167,9 @@ struct MyPostcontent: Codable {
 
 // MARK: - Pageable
 struct Pageable: Codable {
-  let offset, pageNumber, pageSize: Int
-  let paged: Bool
   let sort: Sort
-  let unpaged: Bool
+  let pageNumber, pageSize, offset: Int
+  let unpaged, paged: Bool
 }
 
 // MARK: - Sort

@@ -113,11 +113,12 @@ final class MyPageViewController: NaviHelper {
                                                 fontType: "Pretendard",
                                                 fontSize: 14)
   
-  private lazy var joinstudyCountLabel = createLabel(title: "\(myPageUserData?.participateCount ?? 0)",
-                                                     textColor: .black,
-                                                     fontType: "Pretendard-Bold",
-                                                     fontSize: 18)
-
+  private lazy var joinstudyCountLabel = createLabel(
+    title: "\(myPageUserData?.participateCount ?? 0)",
+    textColor: .black,
+    fontType: "Pretendard-Bold",
+    fontSize: 18)
+  
   private lazy var joinstudyButton: UIButton = {
     // Create a button for "참여한 스터디"
     let joinstudyButton = UIButton()
@@ -128,16 +129,17 @@ final class MyPageViewController: NaviHelper {
   }()
   
   // 북마크
-  private lazy var bookmarkCountLabel = createLabel(title: "\(myPageUserData?.bookmarkCount ?? 0)",
-                                                    textColor: .black,
-                                                    fontType: "Pretendard-Bold",
-                                                    fontSize: 18)
+  private lazy var bookmarkCountLabel = createLabel(
+    title: "\(myPageUserData?.bookmarkCount ?? 0)",
+    textColor: .black,
+    fontType: "Pretendard-Bold",
+    fontSize: 18)
   
   private lazy var bookmarkLabel = createLabel(title: "북마크",
                                                textColor: .bg80,
                                                fontType: "Pretendard",
                                                fontSize: 14)
-
+  
   private lazy var bookmarkButton: UIButton = {
     // Create a button for "북마크"
     let bookmarkButton = UIButton()
@@ -159,7 +161,7 @@ final class MyPageViewController: NaviHelper {
   private lazy var bottomButtonStackView = createStackView(axis: .vertical,
                                                            spacing: 16)
   
-  private lazy var informButton = createMypageButton(title: "공지사항")
+  private lazy var notificationButton = createMypageButton(title: "공지사항")
   private lazy var askButton = createMypageButton(title: "문의하기")
   private lazy var howToUseButton = createMypageButton(title: "이용방법")
   private lazy var serviceButton = createMypageButton(title: "서비스 이용약관")
@@ -208,7 +210,7 @@ final class MyPageViewController: NaviHelper {
       bookmarkCountLabel,
       bookmarkLabel,
       boxesDividerLine,
-      informButton,
+      notificationButton,
       askButton,
       howToUseButton,
       serviceButton,
@@ -231,6 +233,10 @@ final class MyPageViewController: NaviHelper {
         $0.top.equalTo(loginFailLabel.snp.bottom).offset(10)
         $0.leading.equalToSuperview().offset(20)
       }
+      
+      writtenButton.isEnabled = false
+      joinstudyButton.isEnabled = false
+      bookmarkButton.isEnabled = false
     }else {
       profileImageView.snp.makeConstraints {
         $0.top.equalToSuperview().offset(30)
@@ -322,13 +328,13 @@ final class MyPageViewController: NaviHelper {
     }
     
     // 공지사항 , 문의하기, 이용방법, 서비스 이용약관, 개인정보처리방침
-    informButton.snp.makeConstraints {
+    notificationButton.snp.makeConstraints {
       $0.top.equalTo(boxesDividerLine.snp.bottom).offset(20)
       $0.leading.equalTo(writtenButton)
     }
     
     askButton.snp.makeConstraints {
-      $0.top.equalTo(informButton.snp.bottom).offset(20)
+      $0.top.equalTo(notificationButton.snp.bottom).offset(20)
       $0.leading.equalTo(writtenButton)
     }
     
@@ -382,6 +388,11 @@ final class MyPageViewController: NaviHelper {
     }
   }
   
+  func buttonFuncSetting(){
+    
+  }
+  
+  // MARK: - 작성한 글 버튼 탭
   @objc func writtenButtonTapped(){
     let myPostVC = MyPostViewController()
     myPostVC.previousMyPage = self
@@ -389,34 +400,39 @@ final class MyPageViewController: NaviHelper {
     self.navigationController?.pushViewController(myPostVC, animated: true)
   }
   
+  // MARK: - 참여한 스터디 버튼 탭
   func joinstudyButtonTapped(){
     let myParticipateVC = MyParticipateStudyVC()
   
     self.navigationController?.pushViewController(myParticipateVC, animated: true)
   }
   
+  // MARK: - 북마크 버튼 탭
   @objc func bookmarkpageButtonTapped() {
     let bookmarkVC = BookmarkViewController()
   
     self.navigationController?.pushViewController(bookmarkVC, animated: true)
   }
   
+  // MARK: - 로그인화면 or 상세페이지 이동
   @objc func chevronButtonTapped() {
-
-    let myinformViewController = MyInformViewController()
+    if loginStatus == false {
+      let loginVC = LoginViewController()
+      loginVC.modalPresentationStyle = .overFullScreen
+      self.present(loginVC, animated: true, completion: nil)
+      
+      return
+    }
     
-    myinformViewController.previousVC = self
+    let myinformVC = MyInformViewController()
+    myinformVC.previousVC = self
+    myinformVC.major = convertMajor(myPageUserData?.major ?? "", isEnglish: false)
+    myinformVC.nickname = myPageUserData?.nickname
+    myinformVC.email = myPageUserData?.email
+    myinformVC.gender = convertGender(gender: myPageUserData?.gender ?? "없음")
+    myinformVC.profileImage = myPageUserData?.imageURL
     
-    // Pass major information to MyinformViewController
-    myinformViewController.major = convertMajor(myPageUserData?.major ?? "", isEnglish: false)
-    myinformViewController.nickname = myPageUserData?.nickname
-    myinformViewController.email = myPageUserData?.email
-    myinformViewController.gender = convertGender(gender: myPageUserData?.gender ?? "없음")
-
-    myinformViewController.profileImage = myPageUserData?.imageURL
-    
-    
-    self.navigationController?.pushViewController(myinformViewController, animated: true)
+    self.navigationController?.pushViewController(myinformVC, animated: true)
   }
   
   func updateVC(){
