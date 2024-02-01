@@ -8,6 +8,8 @@
 import UIKit
 
 class NaviHelper: UIViewController {
+  let bookmarkManager = BookmarkManager.shared
+
   private let postID: Int?
   
   let majorSet = ["공연예술과", "IBE전공", "건설환경공학", "건축공학",
@@ -25,6 +27,8 @@ class NaviHelper: UIViewController {
                   "체육교육과","컴퓨터공학부","테크노경영학과","패션산업학과","한국화전공(조형예술학부)",
                   "해양학과","행정학과","화학과","환경공학"]
   
+  var bookmarkList: [Int] = []
+
   init(postID: Int? = nil) {
     self.postID = postID
     
@@ -119,5 +123,30 @@ class NaviHelper: UIViewController {
         NSAttributedString.Key.foregroundColor: UIColor.white,
         NSAttributedString.Key.font: UIFont(name: font, size: size)!
     ]
+  }
+  
+  // MARK: - 북마크 리스트 가져오기
+  func fetchBookmarkList(completion: @escaping () -> Void){
+    self.bookmarkManager.getBookmarkList(0, 10) { result in
+      var fetchBookmarkList: [Int] = []
+      result.getBookmarkedPostsData.content.map { result in
+        fetchBookmarkList.append(result.postID)
+      }
+      
+      DispatchQueue.main.async {
+        self.bookmarkList = fetchBookmarkList
+        completion()
+      }
+    }
+  }
+  
+  func bookmarkButtonTapped(_ postId: Int,
+                            completion: @escaping () -> Void){
+    bookmarkManager.bookmarkTapped(postId) {
+      
+      self.fetchBookmarkList {
+        completion()
+      }
+    }
   }
 }

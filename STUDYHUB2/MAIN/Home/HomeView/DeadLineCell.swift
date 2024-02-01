@@ -5,9 +5,14 @@ import SnapKit
 
 final class DeadLineCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
+  
+  weak var delegate: BookMarkDelegate?
+  
   var model: Content? { didSet { bind() } }
   var buttonAction: (() -> Void) = {}
   
+  var checkBookmared: Bool?
+
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "ProfileAvatar")
@@ -26,6 +31,9 @@ final class DeadLineCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -115,10 +123,21 @@ final class DeadLineCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
+  // MARK: - 셀 재사용 관련
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    
+    bookMarkButton.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    checkBookmared = false
+  }
+
   private func bind() {
     guard let data = model else { return }
   
     var studyPersonCount = data.studyPerson - data.remainingSeat
+    let bookmarkImage =  checkBookmared ?? false ? "BookMarkChecked": "BookMarkLightImg"
+
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     titleLabel.text = data.title
     
@@ -141,7 +160,6 @@ final class DeadLineCell: UICollectionViewCell {
           }
         }
       }
-      
       task.resume()
     }
     

@@ -150,9 +150,16 @@ final class RecruitPostCell: UICollectionViewCell {
     self.layer.borderColor = UIColor.cellShadow.cgColor
     self.layer.cornerRadius = 10
     
-    fineCountLabel.changeColor(label: fineCountLabel, wantToChange: "900", color: .changeInfo)
-    countMemeberLabel.changeColor(label: countMemeberLabel, wantToChange: "0", color: .changeInfo)
   }
+  
+  // MARK: - 셀 재사용 관련
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    
+    bookMarkButton.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    checkBookmared = false
+  }
+
   
   private func bind() {
     guard let data = model else { return }

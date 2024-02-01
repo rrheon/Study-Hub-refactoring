@@ -6,12 +6,9 @@ import SnapKit
 final class HomeViewController: NaviHelper {
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
-  let bookmarkManager = BookmarkManager.shared
   
   var newPostDatas: PostDataContent?
   var deadlinePostDatas: PostDataContent?
-
-  var bookmarkList: [Int] = []
   
   // MARK: - 화면구성
   private lazy var mainStackView = createStackView(axis: .vertical,
@@ -155,7 +152,6 @@ final class HomeViewController: NaviHelper {
     
     self.bookmarkManager.getBookmarkList(0, 10) { result in
       result.getBookmarkedPostsData.content.map { result in
-        print(result.postID)
         self.bookmarkList.append(result.postID)
       }
       
@@ -423,7 +419,15 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                                                     for: indexPath)
       if let cell = cell as? DeadLineCell {
         let content = deadlinePostDatas?.postDataByInquiries.content[indexPath.row]
+        
+        bookmarkList.map { bookmarkPostId in
+          if content?.postID == bookmarkPostId {
+            cell.checkBookmared = true
+          }
+        }
+        
         cell.model = content
+        cell.delegate = self
       }
       return cell
     }
@@ -445,13 +449,12 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
+// MARK: - 북마크 관련
 extension HomeViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int) {
-    bookmarkManager.bookmarkTapped(postId) {
-      print("북마크 저장")
-      self.bookmarkList.append(postId)
+    bookmarkButtonTapped(postId) {
       self.recrutingCollectionView.reloadData()
-      print(self.bookmarkList)
+      self.deadLineCollectionView.reloadData()
     }
   }
 }

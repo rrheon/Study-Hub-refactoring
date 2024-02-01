@@ -31,6 +31,8 @@ final class PostedStudyViewController: NaviHelper {
       self.getCommentList {
         DispatchQueue.main.async {
           self.redrawUI()
+          self.bookmarkStatus(postId: self.postedData?.postID ?? 0)
+
           self.setUpLayout()
           self.makeUI()
         }
@@ -385,9 +387,19 @@ final class PostedStudyViewController: NaviHelper {
   }
   
   // 참여하기, 북마크버튼
+  private var buttonImage: Bool = false {
+    didSet{
+      let buttonImage = buttonImage ? "BookMarkChecked" : "BookMarkLightImg"
+      self.bookmarkButton.setImage(UIImage(named: buttonImage), for: .normal)
+    }
+  }
+  
   private lazy var bookmarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.bookmarkButtonTappedAtPostedVC()
+    } , for: .touchUpInside)
     return button
   }()
   
@@ -941,8 +953,6 @@ final class PostedStudyViewController: NaviHelper {
             self.myPostIDList.append(i.postID)
           }
         }
-        
-        print(self.myPostIDList)
         completion()
       } else {
         self.getMyPostID(page: page,
@@ -991,7 +1001,6 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 참여하기를 눌렀는데 로그인이 안되어 있을 경우
   func goToLoginVC(){
-    
     DispatchQueue.main.async {
       let popupVC = PopupViewController(title: "로그인이 필요해요",
                                         desc: "계속하려면 로그인을 해주세요!",
@@ -1010,6 +1019,22 @@ final class PostedStudyViewController: NaviHelper {
           }
         }
       }
+    }
+  }
+  
+  // MARK: - 북마크 버튼 탭
+  func bookmarkButtonTappedAtPostedVC(){
+    guard let postId = postedData?.postID else { return }
+    bookmarkButtonTapped(postId) {
+      self.bookmarkStatus(postId: postId)
+    }
+  }
+  
+  // MARK: - 북마크 이미지 확인
+  func bookmarkStatus(postId: Int){
+   
+    fetchBookmarkList {
+      self.buttonImage = self.bookmarkList.contains(postId)
     }
   }
 }

@@ -6,7 +6,6 @@ import SnapKit
 // 로그인, 비로그인 나눠야함
 final class BookmarkViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
-  let bookmarkManager = BookmarkManager.shared
   
   var bookmarkDatas: BookmarkDatas?
   
