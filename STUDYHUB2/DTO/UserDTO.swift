@@ -18,8 +18,8 @@ struct CreateAccount: Codable {
 
 // MARK: - 게시글에서 해당 유저 Data
 struct UserData: Codable {
-  let imageURL, major, nickname: String
-  let userID: Int
+  let imageURL, major, nickname: String?
+  let userID: Int?
   
   enum CodingKeys: String, CodingKey {
     case imageURL = "imageUrl"

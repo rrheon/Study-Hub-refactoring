@@ -7,7 +7,10 @@ final class RecruitPostCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
+  weak var delegate: BookMarkDelegate?
+  
   var model: Content? { didSet { bind() } }
+  var checkBookmared: Bool?
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
@@ -21,6 +24,9 @@ final class RecruitPostCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -152,13 +158,15 @@ final class RecruitPostCell: UICollectionViewCell {
     guard let data = model else { return }
     
     var studyPersonCount = data.studyPerson - data.remainingSeat
+    let bookmarkImage =  checkBookmared ?? false ? "BookMarkChecked": "BookMarkLightImg"
     
     majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
     titleLabel.text = data.title
     remainMemeber.text = "  잔여 \(data.remainingSeat)자리  "
     countMemeberLabel.text = "\(studyPersonCount) / \(data.studyPerson)"
     fineCountLabel.text = "\(data.penalty) 원"
-  
+    
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
 
     
     countMemeberLabel.changeColor(label: countMemeberLabel,

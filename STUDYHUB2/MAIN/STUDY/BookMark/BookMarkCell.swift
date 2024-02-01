@@ -8,11 +8,17 @@ import UIKit
 
 import SnapKit
 
+protocol BookMarkDelegate: AnyObject {
+  func bookmarkTapped(postId: Int)
+}
+
 final class BookMarkCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  var model: String? { didSet { bind() } }
+  weak var delegate: BookMarkDelegate?
+  
+  var model: BookmarkContent? { didSet { bind() } }
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
@@ -25,6 +31,9 @@ final class BookMarkCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
+    button.addAction(UIAction { _ in
+//      self.delegate?.bookmarkTapped(postId: <#T##Int#>)
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -105,17 +114,17 @@ final class BookMarkCell: UICollectionViewCell {
     
     titleLabel.snp.makeConstraints { make in
       make.top.equalTo(majorLabel.snp.bottom).offset(10)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.leading.equalTo(majorLabel.snp.leading)
     }
     
     infoLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(10)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.leading.equalTo(majorLabel.snp.leading)
     }
     
     remainLabel.snp.makeConstraints { make in
       make.top.equalTo(infoLabel.snp.bottom).offset(10)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.leading.equalTo(majorLabel.snp.leading)
     }
     
     enterButton.snp.makeConstraints { make in
@@ -133,7 +142,11 @@ final class BookMarkCell: UICollectionViewCell {
   }
   
   private func bind() {
-    titleLabel.text = model
+    majorLabel.text = model?.major.convertMajor(model?.major ?? "",
+                                                isEnglish: false)
+    titleLabel.text =  model?.title
+    infoLabel.text = model?.content
+    remainLabel.text = "잔여 \(model?.remainingSeat ?? 0)자리"
   }
   
 }

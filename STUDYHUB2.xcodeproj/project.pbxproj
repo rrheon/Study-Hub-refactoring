@@ -61,6 +61,8 @@
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
+		EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93562B2B6B874900D662CC /* BookmarkManager.swift */; };
+		EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93562D2B6B927500D662CC /* BookmarkDTO.swift */; };
 		EE98B1A92B35276D0025C4F8 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1A82B35276D0025C4F8 /* Networking.swift */; };
 		EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */; };
 		EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AC2B3BDE0F0025C4F8 /* EditPasswordViewController.swift */; };
@@ -164,6 +166,8 @@
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		EE93562B2B6B874900D662CC /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
+		EE93562D2B6B927500D662CC /* BookmarkDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDTO.swift; sourceTree = "<group>"; };
 		EE98B1A82B35276D0025C4F8 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditMajorViewController.swift; path = "../../../../../../../Desktop/study-hub-iOS-2/STUDYHUB2/MAIN/MyPage/INFO/EditInfo/EditMajorViewController.swift"; sourceTree = "<group>"; };
 		EE98B1AC2B3BDE0F0025C4F8 /* EditPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditPasswordViewController.swift; path = "../../../../../../../Desktop/study-hub-iOS-2/STUDYHUB2/MAIN/MyPage/INFO/EditInfo/EditPasswordViewController.swift"; sourceTree = "<group>"; };
@@ -298,6 +302,7 @@
 			children = (
 				F873775A2AACD41D0055B041 /* BookmarkViewController.swift */,
 				EE0A8B622AFCB572001C3F41 /* BookMarkCell.swift */,
+				EE93562B2B6B874900D662CC /* BookmarkManager.swift */,
 			);
 			path = BookMark;
 			sourceTree = "<group>";
@@ -444,6 +449,7 @@
 				EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */,
 				EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */,
 				EEFD5D292B600BA600D1CE00 /* UserDTO.swift */,
+				EE93562D2B6B927500D662CC /* BookmarkDTO.swift */,
 				EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */,
 			);
 			path = DTO;
@@ -753,6 +759,7 @@
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
 				EE07ADBF2AF0BB360096890F /* NaviHelper.swift in Sources */,
 				F86E03212A8BFC8000164976 /* DetailsViewController.swift in Sources */,
+				EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */,
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
@@ -794,6 +801,7 @@
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */,
+				EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */,
 				EE98B1A92B35276D0025C4F8 /* Networking.swift in Sources */,
 				EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */,
 			);

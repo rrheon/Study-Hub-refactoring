@@ -303,7 +303,7 @@ final class SearchResultCell: UICollectionViewCell {
     nickNameLabel.text = data.userData.nickname
     postedDate.text = "\(data.createdDate[0]).\(data.createdDate[1]).\(data.createdDate[2])"
     
-    if let url = URL(string: data.userData.imageURL) {
+    if let url = URL(string: data.userData.imageURL ?? "") {
       let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
         if let error = error {
           print("Error: \(error)")

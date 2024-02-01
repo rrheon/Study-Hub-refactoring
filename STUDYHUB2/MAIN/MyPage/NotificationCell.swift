@@ -11,22 +11,7 @@ final class NotificationCell: UITableViewCell {
     }
   }
 
-  static let cellId = "CellId"
-  
-  var buttonAction: (() -> Void) = {}
-  
-  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-    super.init(style: style, reuseIdentifier: reuseIdentifier)
-    
-    setupLayout()
-    makeUI()
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
-  private lazy var titleLabel: UILabel = {
+  lazy var titleLabel: UILabel = {
     let label = UILabel()
     label.text = "제목제목"
     label.textColor = .black
@@ -52,10 +37,27 @@ final class NotificationCell: UITableViewCell {
   }()
   
   
+  static let cellId = "CellId"
+  
+  var buttonAction: (() -> Void) = {}
+  
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    
+    setupLayout()
+    makeUI()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  
   func setupLayout() {
     [
       titleLabel,
-      createdDateLabel
+      createdDateLabel,
+      describeLabel
     ].forEach {
       self.contentView.addSubview($0)
     }
@@ -69,6 +71,12 @@ final class NotificationCell: UITableViewCell {
     
     createdDateLabel.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+      $0.leading.equalTo(titleLabel.snp.leading)
+    }
+    
+    describeLabel.isHidden = true
+    describeLabel.snp.makeConstraints {
+      $0.top.equalTo(createdDateLabel.snp.bottom)
       $0.leading.equalTo(titleLabel.snp.leading)
     }
   }

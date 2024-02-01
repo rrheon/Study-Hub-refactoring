@@ -6,8 +6,12 @@ import SnapKit
 // 로그인, 비로그인 나눠야함
 final class BookmarkViewController: NaviHelper {
   let detailPostDataManager = PostDetailInfoManager.shared
+  let bookmarkManager = BookmarkManager.shared
+  
+  var bookmarkDatas: BookmarkDatas?
+  
   // MARK: - 화면 구성
-  var countNumber: Int = 4
+  var countNumber: Int = 0
   private lazy var totalCountLabel = createLabel(title: "전체 \(countNumber)",
                                                  textColor: .bg80,
                                                  fontType: "Pretendard",
@@ -62,8 +66,11 @@ final class BookmarkViewController: NaviHelper {
     
     registerCell()
     
-    setupLayout()
-    makeUI()
+    getBookmarkList {
+      self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+      self.setupLayout()
+      self.makeUI()
+    }
   }
   
   // MARK: - 네비게이션 바 재설정
@@ -142,6 +149,8 @@ final class BookmarkViewController: NaviHelper {
     bookMarkCollectionView.register(BookMarkCell.self,
                                     forCellWithReuseIdentifier: BookMarkCell.id)
   }
+  
+  // MARK: - 북마크 전체 삭제
   @objc func deleteAllButtonTapped(){
     // postID 수정 필요
     let popupVC = PopupViewController(title: "",
@@ -150,6 +159,14 @@ final class BookmarkViewController: NaviHelper {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
+  
+  // MARK: - 북마크 리스트 조회
+  func getBookmarkList(completion: @escaping () -> Void){
+    bookmarkManager.getBookmarkList(0, 10) { result in
+      self.bookmarkDatas = result
+      completion()
+    }
+  }
 }
 
 // MARK: - collectionView
@@ -157,7 +174,7 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return 4
+    return bookmarkDatas?.totalCount ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -171,7 +188,12 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BookMarkCell.id,
                                                   for: indexPath)
+    let bookmarkCellData = bookmarkDatas?.getBookmarkedPostsData.content[indexPath.row]
     
+    if let cell = cell as? BookMarkCell {
+      cell.model = bookmarkCellData
+    }
+  
     return cell
   }
 }

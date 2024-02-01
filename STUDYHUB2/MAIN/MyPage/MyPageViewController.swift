@@ -410,7 +410,7 @@ final class MyPageViewController: NaviHelper {
   // MARK: - 북마크 버튼 탭
   @objc func bookmarkpageButtonTapped() {
     let bookmarkVC = BookmarkViewController()
-  
+    bookmarkVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(bookmarkVC, animated: true)
   }
   

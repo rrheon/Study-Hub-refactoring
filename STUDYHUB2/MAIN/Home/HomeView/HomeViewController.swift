@@ -6,9 +6,13 @@ import SnapKit
 final class HomeViewController: NaviHelper {
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
+  let bookmarkManager = BookmarkManager.shared
+  
   var newPostDatas: PostDataContent?
   var deadlinePostDatas: PostDataContent?
 
+  var bookmarkList: [Int] = []
+  
   // MARK: - 화면구성
   private lazy var mainStackView = createStackView(axis: .vertical,
                                                    spacing: 10)
@@ -149,10 +153,18 @@ final class HomeViewController: NaviHelper {
     setupDelegate()
     registerCell()
     
-    fetchData{
-      self.setUpLayout()
-      self.makeUI()
+    self.bookmarkManager.getBookmarkList(0, 10) { result in
+      result.getBookmarkedPostsData.content.map { result in
+        print(result.postID)
+        self.bookmarkList.append(result.postID)
+      }
+      
+      self.fetchData {
+        self.setUpLayout()
+        self.makeUI()
+      }
     }
+
     setUpLayout()
     makeUI()
     
@@ -394,7 +406,15 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
       if let cell = cell as? RecruitPostCell {
         let content = newPostDatas?.postDataByInquiries.content[indexPath.row]
+        
+        bookmarkList.map { bookmarkPostId in
+          if content?.postID == bookmarkPostId {
+            cell.checkBookmared = true
+          }
+        }
+        
         cell.model = content
+        cell.delegate = self
       }
 
       return cell
@@ -421,6 +441,17 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
       return CGSize(width: 335, height: 100)
     } else {
       return CGSize(width: 335, height: collectionView.frame.height)
+    }
+  }
+}
+
+extension HomeViewController: BookMarkDelegate {
+  func bookmarkTapped(postId: Int) {
+    bookmarkManager.bookmarkTapped(postId) {
+      print("북마크 저장")
+      self.bookmarkList.append(postId)
+      self.recrutingCollectionView.reloadData()
+      print(self.bookmarkList)
     }
   }
 }

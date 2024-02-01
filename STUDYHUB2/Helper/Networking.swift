@@ -51,6 +51,10 @@ enum networkingAPI {
   case participateStudy(introduce: String, studyId: Int)
   case getMyParticipateList(page: Int, size: Int)
   case searchParticipateInfo(page: Int, size: Int, studyId: Int)
+  
+  // 북마크 관련
+  case changeBookMarkStatus(_ postId: Int)
+  case searchBookMarkList(page: Int, size: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -125,6 +129,12 @@ extension networkingAPI: TargetType {
       return "/v1/participated-study"
     case .searchParticipateInfo(page: _, size: _, studyId: _):
       return "/v1/study"
+      
+    // 북마크 관련
+    case .changeBookMarkStatus(let postId):
+      return "/v1/bookmark/\(postId)"
+    case .searchBookMarkList(page: _, size: _):
+      return "/v1/study-posts/bookmarked"
     }
   }
   
@@ -138,7 +148,8 @@ extension networkingAPI: TargetType {
         .searchPostList(_hot: _, text: _,
                         page: _, size: _, titleAndMajor: _),
         .getMyParticipateList(page: _, size: _),
-        .searchParticipateInfo(page: _, size: _, studyId: _):
+        .searchParticipateInfo(page: _, size: _, studyId: _),
+        .searchBookMarkList(page: _, size: _):
       return .get
       
     case .storeImage(_image: _),
@@ -163,7 +174,8 @@ extension networkingAPI: TargetType {
         .writeComment(_content: _, _postId: _),
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
-        .participateStudy(introduce: _, studyId: _):
+        .participateStudy(introduce: _, studyId: _),
+        .changeBookMarkStatus(_):
       return .post
     }
   }
@@ -264,12 +276,20 @@ extension networkingAPI: TargetType {
       ]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .searchBookMarkList(let page, let size):
+      let parmas: [String: Any] = [
+        "page": page,
+        "size": size
+      ]
+      return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
-        .closePost(_):
+        .closePost(_),
+        .changeBookMarkStatus(_):
       return .requestPlain
       
     }
@@ -300,7 +320,9 @@ extension networkingAPI: TargetType {
         .modifyMyPost(_data: _),
         .closePost(_),
         .participateStudy(introduce: _, studyId: _),
-        .getMyParticipateList(page: _, size: _):
+        .getMyParticipateList(page: _, size: _),
+        .changeBookMarkStatus(_),
+        .searchBookMarkList(page: _, size: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       
