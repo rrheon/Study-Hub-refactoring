@@ -135,7 +135,7 @@ final class MyPageViewController: NaviHelper {
     fontType: "Pretendard-Bold",
     fontSize: 18)
   
-  private lazy var bookmarkLabel = createLabel(title: "북마크",
+  private lazy var bookmarkLabel = createLabel(title: "신청내역",
                                                textColor: .bg80,
                                                fontType: "Pretendard",
                                                fontSize: 14)

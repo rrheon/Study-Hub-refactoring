@@ -55,6 +55,9 @@ enum networkingAPI {
   // 북마크 관련
   case changeBookMarkStatus(_ postId: Int)
   case searchBookMarkList(page: Int, size: Int)
+  
+  // 문의하기
+  case inquiryQuestion(content: String, title: String, toEmail: String)
 }
 
 extension networkingAPI: TargetType {
@@ -135,6 +138,10 @@ extension networkingAPI: TargetType {
       return "/v1/bookmark/\(postId)"
     case .searchBookMarkList(page: _, size: _):
       return "/v1/study-posts/bookmarked"
+      
+      // 문의하기
+    case .inquiryQuestion(content: _, title: _, toEmail: _):
+      return "/v1/email/question"
     }
   }
   
@@ -175,7 +182,8 @@ extension networkingAPI: TargetType {
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
         .participateStudy(introduce: _, studyId: _),
-        .changeBookMarkStatus(_):
+        .changeBookMarkStatus(_),
+        .inquiryQuestion(content: _, title: _, toEmail: _):
       return .post
     }
   }
@@ -283,6 +291,10 @@ extension networkingAPI: TargetType {
       ]
       return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
       
+    case .inquiryQuestion(let content, let title, let toEmail):
+      let params = InquiryDTO(content: content, title: title, toEmail: toEmail)
+      return .requestJSONEncodable(params)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -308,7 +320,8 @@ extension networkingAPI: TargetType {
                         size: _, titleAndMajor: _),
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
-        .searchParticipateInfo(page: _, size: _, studyId: _):
+        .searchParticipateInfo(page: _, size: _, studyId: _),
+        .inquiryQuestion(content: _, title: _, toEmail: _):
       return ["Content-type": "application/json"]
       
     case .verifyEmail(_code: _, _email: _):

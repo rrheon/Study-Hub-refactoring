@@ -76,6 +76,8 @@
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
 		EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */; };
+		EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FC2B6D12990022302E /* InquiryViewController.swift */; };
+		EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
@@ -187,6 +189,8 @@
 		EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseBottomSheet.swift; sourceTree = "<group>"; };
 		EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusePersonCell.swift; sourceTree = "<group>"; };
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
+		EEDD80FC2B6D12990022302E /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
+		EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryDTO.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
@@ -273,6 +277,7 @@
 				EE07ADC62AF241A30096890F /* PopUpView.swift */,
 				EEFD5D252B5F6C4D00D1CE00 /* CommonNetworking.swift */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
+				EE271F212AD0584900190E7A /* Extension */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -448,6 +453,7 @@
 				EEFD5D272B600B6500D1CE00 /* PostDTO.swift */,
 				EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */,
 				EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */,
+				EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */,
 				EEFD5D292B600BA600D1CE00 /* UserDTO.swift */,
 				EE93562D2B6B927500D662CC /* BookmarkDTO.swift */,
 				EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */,
@@ -499,7 +505,6 @@
 				F80421912A7D6816006C6B87 /* AppDelegate.swift */,
 				F80421932A7D6816006C6B87 /* SceneDelegate.swift */,
 				EE07ADC92AF25F1E0096890F /* Helper */,
-				EE271F212AD0584900190E7A /* Extension */,
 				EEFD5D222B5F67C300D1CE00 /* DTO */,
 				F8085D3F2A815DB00067D4DE /* MAIN */,
 				EE0A8B712B0896B4001C3F41 /* Font */,
@@ -576,14 +581,15 @@
 		F89A01662A87FAF600B4C10D /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				EE9356272B6A509E00D662CC /* NotificationViewController.swift */,
-				EE9356292B6A518500D662CC /* NotificationCell.swift */,
 				EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */,
 				EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */,
 				EE1E44172B18635600223436 /* MyParticipateStudy */,
 				EEB51E862B103C2300C23AB4 /* INFO */,
 				EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */,
 				EEB51E892B103C2300C23AB4 /* MyPost */,
+				EE9356272B6A509E00D662CC /* NotificationViewController.swift */,
+				EE9356292B6A518500D662CC /* NotificationCell.swift */,
+				EEDD80FC2B6D12990022302E /* InquiryViewController.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -757,9 +763,11 @@
 				EE07ADBD2AEFF7BD0096890F /* ConvertMajor.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginManager.swift in Sources */,
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
+				EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */,
 				EE07ADBF2AF0BB360096890F /* NaviHelper.swift in Sources */,
 				F86E03212A8BFC8000164976 /* DetailsViewController.swift in Sources */,
 				EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */,
+				EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */,
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
