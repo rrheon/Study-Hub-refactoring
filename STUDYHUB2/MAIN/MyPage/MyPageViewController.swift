@@ -361,12 +361,12 @@ final class MyPageViewController: NaviHelper {
     myPage.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     myPage.isEnabled = false
     
-    let alertBellImg = UIImage(named: "BellImgWithWhite")?.withRenderingMode(.alwaysOriginal)
+    let alertBellImg = UIImage(named: "BookMarkImg")?.withRenderingMode(.alwaysOriginal)
     lazy var alertBell = UIBarButtonItem(
       image: alertBellImg,
       style: .plain,
       target: self,
-      action: nil)
+      action: #selector(bookmarkpageButtonTapped))
     alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
     navigationItem.leftBarButtonItem = myPage

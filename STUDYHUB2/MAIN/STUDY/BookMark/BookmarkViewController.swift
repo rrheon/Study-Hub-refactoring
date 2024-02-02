@@ -10,7 +10,11 @@ final class BookmarkViewController: NaviHelper {
   var bookmarkDatas: BookmarkDatas?
   
   // MARK: - 화면 구성
-  var countNumber: Int = 0
+  var countNumber: Int = 0 {
+    didSet {
+      totalCountLabel.text = "전체 \(countNumber)"
+    }
+  }
   private lazy var totalCountLabel = createLabel(title: "전체 \(countNumber)",
                                                  textColor: .bg80,
                                                  fontType: "Pretendard",
@@ -75,6 +79,8 @@ final class BookmarkViewController: NaviHelper {
   // MARK: - 네비게이션 바 재설정
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItems = .none
+    
+    settingNavigationTitle(title: "북마크")
   }
   
   // MARK: - setupLayout
@@ -157,6 +163,17 @@ final class BookmarkViewController: NaviHelper {
                                       postID: 1, bottomeSheet: nil)
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
+    
+    popupVC.popupView.rightButtonAction = {
+      self.bookmarkDatas?.getBookmarkedPostsData.content.map({ data in
+        self.bookmarkButtonTapped(data.postID) {
+          self.getBookmarkList {
+            self.bookMarkCollectionView.reloadData()
+            self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+          }
+        }
+      })
+    }
   }
   
   // MARK: - 북마크 리스트 조회
@@ -191,6 +208,7 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
     
     if let cell = cell as? BookMarkCell {
       cell.model = bookmarkCellData
+      cell.delegate = self
     }
   
     return cell
@@ -206,3 +224,14 @@ extension BookmarkViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
+// MARK: - 북마크 탭
+extension BookmarkViewController: BookMarkDelegate {
+  func bookmarkTapped(postId: Int) {
+    bookmarkButtonTapped(postId) {
+      self.getBookmarkList {
+        self.bookMarkCollectionView.reloadData()
+        self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+      }
+    }
+  }
+}

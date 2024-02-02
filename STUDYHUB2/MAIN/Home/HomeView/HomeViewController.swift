@@ -279,7 +279,7 @@ final class HomeViewController: NaviHelper {
     let bookmarkViewController = BookmarkViewController()
     bookmarkViewController.navigationItem.title = "북마크"
     self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
+    bookmarkViewController.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(bookmarkViewController, animated: true)
   }
   

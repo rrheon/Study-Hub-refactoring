@@ -1032,7 +1032,6 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 북마크 이미지 확인
   func bookmarkStatus(postId: Int){
-   
     fetchBookmarkList {
       self.buttonImage = self.bookmarkList.contains(postId)
     }
