@@ -176,6 +176,7 @@ final class MyPageViewController: NaviHelper {
     redesignNavigationbar()
     
     fetchUserData()
+    buttonFuncSetting()
   }
   
   // MARK: - setUpLayout
@@ -388,7 +389,19 @@ final class MyPageViewController: NaviHelper {
     }
   }
   
+  // MARK: - 버튼 함수 세팅
   func buttonFuncSetting(){
+    notificationButton.addAction(UIAction { _ in
+      self.notificationButtonTapped()
+    }, for: .touchUpInside)
+    
+    askButton.addAction(UIAction { _ in
+      self.inquiryButtonTapped()
+    }, for: .touchUpInside)
+    
+    howToUseButton.addAction(UIAction { _ in
+      self.howToUseButtonTapped()
+    }, for: .touchUpInside)
     
   }
   
@@ -435,6 +448,7 @@ final class MyPageViewController: NaviHelper {
     self.navigationController?.pushViewController(myinformVC, animated: true)
   }
   
+  // MARK: - updateVC
   func updateVC(){
     self.nickNameLabel.text = self.myPageUserData?.nickname
     self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
@@ -461,6 +475,25 @@ final class MyPageViewController: NaviHelper {
         }
       }
     }
-
+  }
+  
+  // MARK: - 문의하기 버튼 탭
+  func inquiryButtonTapped(){
+    let inquiryVC = InquiryViewController()
+    inquiryVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(inquiryVC, animated: true)
+  }
+  
+  // MARK: - 이용방법 버튼 탭
+  func howToUseButtonTapped(){
+    let howtouseVC = DetailsViewController()
+    howtouseVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(howtouseVC, animated: true)
+  }
+  
+  func notificationButtonTapped(){
+    let notificationVC = NotificationViewController()
+    notificationVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(notificationVC, animated: true)
   }
 }

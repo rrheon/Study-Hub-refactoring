@@ -4,18 +4,23 @@ import UIKit
 import SnapKit
 
 final class NotificationViewController: NaviHelper {
-  let data = ["1","2","3"]
-  let footerdata = ["f1","f2","f3" ]
   
-  private lazy var notificationTableView: UITableView = {
-    let tableView = UITableView()
-    tableView.register(NotificationCell.self,
-                       forCellReuseIdentifier: NotificationCell.cellId)
-    tableView.backgroundColor = .white
-    tableView.separatorInset.left = 0
-    tableView.layer.cornerRadius = 10
-    return tableView
+  let data = ["사과", "배", "수박"]
+  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
+                    "f2","f3" ]
+  var selectedCellIndexPath: IndexPath?
+  
+  private lazy var notificationCollectionView: UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.register(NotificationCell.self,
+                            forCellWithReuseIdentifier: NotificationCell.cellId)
+    
+    collectionView.backgroundColor = .white
+    return collectionView
   }()
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,81 +43,72 @@ final class NotificationViewController: NaviHelper {
   
   // MARK: - setupLayout
   func setupLayout(){
-    view.addSubview(notificationTableView)
-
+    view.addSubview(notificationCollectionView)
   }
   
   // MARK: - makeUI
   func makeUI(){
-    notificationTableView.delegate = self
-    notificationTableView.dataSource = self
+    notificationCollectionView.delegate = self
+    notificationCollectionView.dataSource = self
     
-    notificationTableView.snp.makeConstraints {
+    notificationCollectionView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
-      $0.leading.equalToSuperview().offset(20)
+      $0.leading.equalToSuperview()
       $0.trailing.equalToSuperview()
       $0.bottom.equalTo(view).offset(-10)
     }
-    
-  
   }
 }
 
 // MARK: - cell 함수
-extension NotificationViewController: UITableViewDelegate, UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 3
+extension NotificationViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+  func collectionView(_ collectionView: UICollectionView,
+                      numberOfItemsInSection section: Int) -> Int {
+    return data.count
   }
   
-  
-  func tableView(_ tableView: UITableView,
-                 cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = notificationTableView.dequeueReusableCell(withIdentifier: NotificationCell.cellId,
-                                                         for: indexPath) as! NotificationCell
+  func collectionView(_ collectionView: UICollectionView,
+                      cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NotificationCell.cellId,
+                                                  for: indexPath) as! NotificationCell
     cell.titleLabel.text = data[indexPath.row]
+    
+    let isExpanded = selectedCellIndexPath == indexPath
+    let detailText = isExpanded ? footerdata[indexPath.row] : nil
+    cell.configureWithDetail(detailText, isExpanded: isExpanded)
     
     return cell
   }
   
-  func tableView(_ tableView: UITableView,
-                 didSelectRowAt indexPath: IndexPath) {
-    
+  func collectionView(_ collectionView: UICollectionView,
+                      didSelectItemAt indexPath: IndexPath) {
+    if let selected = selectedCellIndexPath, selected == indexPath {
+      selectedCellIndexPath = nil
+    } else {
+      selectedCellIndexPath = indexPath
+    }
+    collectionView.reloadData()
   }
   
-  
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 86
-  }
-  
-  func reloadTalbeView(){
-    notificationTableView.reloadData()
-  }
 }
 
-// 셀을 누르면 sectiondata에 상세내용을 추가/삭제하고 테이블뷰를 리로드?
-extension NotificationViewController {
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 3
-  }
-  
-  func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-    return footerdata[section]
-  }
-  
-  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    lazy var footerView = UIView()
+// MARK: - cell확장
+extension NotificationViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
+    let maxWidth = collectionView.frame.width
+    let defaultHeight: CGFloat = 86
+    let expandedHeight: CGFloat
     
-    lazy var detailLabel = createLabel(title: footerdata[section],
-                                       textColor: .black,
-                                       fontType: "Pretendard",
-                                       fontSize: 18)
-    footerView.addSubview(detailLabel)
-    detailLabel.snp.makeConstraints {
-      $0.leading.equalTo(footerView.snp.leading).offset(10)
-      $0.centerY.equalTo(footerView)
+    if let selected = selectedCellIndexPath, selected == indexPath {
+      let text = footerdata[indexPath.row]
+      expandedHeight =  defaultHeight + NotificationCell.calculateContentHeight(for: text,
+                                                                                width: maxWidth)
+    } else {
+      expandedHeight = defaultHeight
     }
     
-    return footerView
+    return CGSize(width: maxWidth, height: expandedHeight)
   }
 }

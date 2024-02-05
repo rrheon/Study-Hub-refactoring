@@ -248,5 +248,3 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
   }
 
 }
-
-

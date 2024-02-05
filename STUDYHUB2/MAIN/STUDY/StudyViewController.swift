@@ -32,16 +32,7 @@ final class StudyViewController: NaviHelper {
     return button
   }()
   
-  private lazy var studyCount: Int = recentDatas?.totalCount ?? 0 {
-    didSet {
-      countLabel.text = "\(recentDatas?.totalCount ?? 0)개"
-    }
-  }
-  
-  private lazy var countLabel = createLabel(title: "\(studyCount )개",
-                                            textColor: .bg80,
-                                            fontType: "Pretendard",
-                                            fontSize: 14)
+  private lazy var studyCount: Int = recentDatas?.totalCount ?? 0
     
   private lazy var emptyImage = UIImage(named: "EmptyStudy")
   private lazy var emptyImageView = UIImageView(image: emptyImage)
@@ -116,7 +107,6 @@ final class StudyViewController: NaviHelper {
       [
         recentButton,
         popularButton,
-        countLabel,
         scrollView
       ].forEach {
         view.addSubview($0)
@@ -129,7 +119,6 @@ final class StudyViewController: NaviHelper {
       [
         recentButton,
         popularButton,
-        countLabel,
         emptyImageView,
         describeLabel,
         addButton
@@ -161,12 +150,7 @@ final class StudyViewController: NaviHelper {
       make.height.equalTo(34)
       make.width.equalTo(57)
     }
-    
-    countLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(recentButton)
-      make.trailing.equalToSuperview().offset(-20)
-    }
-    
+  
     if studyCount > 0 {
       resultCollectionView.snp.makeConstraints { make in
         make.top.equalTo(contentView).offset(20)

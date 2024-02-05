@@ -168,6 +168,7 @@ final class BookmarkViewController: NaviHelper {
       self.bookmarkDatas?.getBookmarkedPostsData.content.map({ data in
         self.bookmarkButtonTapped(data.postID) {
           self.getBookmarkList {
+            self.dismiss(animated: true)
             self.bookMarkCollectionView.reloadData()
             self.countNumber = self.bookmarkDatas?.totalCount ?? 0
           }

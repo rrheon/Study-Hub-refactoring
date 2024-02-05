@@ -5,10 +5,9 @@
 //  Created by 최용헌 on 2023/12/22.
 //
 
-import Foundation
+import UIKit
 
 import Moya
-import UIKit
 
 // MARK: - networkingAPI
 enum networkingAPI {
@@ -309,6 +308,15 @@ extension networkingAPI: TargetType {
   
   // MARK: - headers
   var headers: [String : String]? {
+//    LoginManager.shared.refreshAccessToken { result in
+//      switch result {
+//        case true:
+//          print("pass")
+//      case false:
+//          print("fail")
+//      }
+//
+//    }
     guard let accessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {
     case  .checkEmailDuplication(_email: _),
