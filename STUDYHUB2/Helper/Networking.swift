@@ -132,7 +132,7 @@ extension networkingAPI: TargetType {
     case .searchParticipateInfo(page: _, size: _, studyId: _):
       return "/v1/study"
       
-    // 북마크 관련
+      // 북마크 관련
     case .changeBookMarkStatus(let postId):
       return "/v1/bookmark/\(postId)"
     case .searchBookMarkList(page: _, size: _):
@@ -168,9 +168,9 @@ extension networkingAPI: TargetType {
       return .put
       
     case .deleteImage,
-         .deleteID,
-         .deleteComment(_commentId: _),
-         .deleteMyPost(_postId: _):
+        .deleteID,
+        .deleteComment(_commentId: _),
+        .deleteMyPost(_postId: _):
       return .delete
       
     case .verifyPassword(_password: _),
@@ -308,18 +308,18 @@ extension networkingAPI: TargetType {
   
   // MARK: - headers
   var headers: [String : String]? {
-//    LoginManager.shared.refreshAccessToken { result in
-//      switch result {
-//        case true:
-//          print("pass")
-//      case false:
-//          print("fail")
-//      }
-//
-//    }
+    //    LoginManager.shared.refreshAccessToken { result in
+    //      switch result {
+    //        case true:
+    //          print("pass")
+    //      case false:
+    //          print("fail")
+    //      }
+    //
+    //    }
     guard let accessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {
-    case  .checkEmailDuplication(_email: _),
+    case .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
         .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),

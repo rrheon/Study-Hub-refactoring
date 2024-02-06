@@ -154,16 +154,21 @@ final class HomeViewController: NaviHelper {
       result.getBookmarkedPostsData.content.map { result in
         self.bookmarkList.append(result.postID)
       }
-      
       self.fetchData {
+        print("로그인")
+        self.setUpLayout()
+        self.makeUI()
+      }
+      print(result.totalCount)
+    }
+    
+    if self.bookmarkList.isEmpty == true {
+      self.fetchData {
+        print("비로그인")
         self.setUpLayout()
         self.makeUI()
       }
     }
-
-    setUpLayout()
-    makeUI()
-    
   }
   
   // MARK: - setuplayout

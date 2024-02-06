@@ -249,7 +249,6 @@ final class StudyViewController: NaviHelper {
   @objc func popularButtonTapped(){
     postDataManager.getRecentPostDatas(hotType: "true") {
       self.recentDatas = self.postDataManager.getRecentPostDatas()
-      print(self.recentDatas)
       DispatchQueue.main.async {
         self.resultCollectionView.reloadData()
 

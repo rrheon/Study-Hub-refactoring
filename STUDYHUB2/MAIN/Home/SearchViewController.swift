@@ -12,11 +12,7 @@ final class SearchViewController: NaviHelper {
   var searchKeyword: String?
   
   var recommendData: RecommendList?
-  var searchResultData: PostDataContent? {
-    didSet{
-      countLabel.text = "\(searchResultData?.totalCount ?? 0)개"
-    }
-  }
+  var searchResultData: PostDataContent?
   
   init(keyword: String? = nil) {
     super.init()
@@ -82,11 +78,15 @@ final class SearchViewController: NaviHelper {
     }, for: .touchUpInside)
     return button
   }()
+
+  private lazy var emptyImage = UIImage(named: "EmptyStudy")
+  private lazy var emptyImageView = UIImageView(image: emptyImage)
   
-  private lazy var countLabel = createLabel(title: "4개",
-                                            textColor: .bg80,
-                                            fontType: "Pretendard-Medium",
-                                            fontSize: 14)
+  private lazy var emptyLabel = createLabel(
+    title: "관련 스터디가 없어요\n지금 스터디를 만들어보세요!",
+    textColor: .bg60,
+    fontType: "Pretendard-SemiBold",
+    fontSize: 16)
   
   private lazy var resultCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
@@ -99,9 +99,7 @@ final class SearchViewController: NaviHelper {
     
     return view
   }()
-  
-  private lazy var divideLine = createDividerLine(height: 1)
-  
+    
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.backgroundColor = .white
@@ -228,7 +226,7 @@ final class SearchViewController: NaviHelper {
         do {
           let recommendList = try JSONDecoder().decode(RecommendList.self, from: response.data)
           self.recommendData = recommendList
-
+  
           completion()
 
           DispatchQueue.main.async {
@@ -243,9 +241,51 @@ final class SearchViewController: NaviHelper {
     }
   }
   
+  // MARK: - 검색결과가 없을 때
+  func noSearchDataUI(){
+    if self.recommendData?.recommendList.count == 0 {
+      [
+        emptyImageView,
+        emptyLabel
+      ].forEach {
+        view.addSubview($0)
+        $0.isHidden = false
+      }
+      
+      emptyImageView.snp.makeConstraints {
+        $0.centerY.equalToSuperview().offset(-30)
+        $0.centerX.equalToSuperview()
+      }
+      
+      emptyLabel.numberOfLines = 0
+      emptyLabel.textAlignment = .center
+      emptyLabel.snp.makeConstraints {
+        $0.top.equalTo(emptyImageView.snp.bottom).offset(10)
+        $0.centerX.equalTo(emptyImageView)
+      }
+    } else {
+      [
+        emptyImageView,
+        emptyLabel
+      ].forEach {
+        $0.isHidden = true
+      }
+    }
+  }
+  
   // MARK: - 검색 후 추천어를 눌렀을 때
   func updateUI(){
     resultTableView.isHidden = true
+    resultCollectionView.isHidden = false
+    
+    [
+      allButton,
+      popularButton,
+      majorButton,
+      scrollView
+    ].forEach {
+      $0.isHidden = false
+    }
     
     navigationItem.rightBarButtonItems = .none
     
@@ -256,8 +296,6 @@ final class SearchViewController: NaviHelper {
       allButton,
       popularButton,
       majorButton,
-      countLabel,
-      divideLine,
       scrollView
     ].forEach {
       view.addSubview($0)
@@ -286,26 +324,16 @@ final class SearchViewController: NaviHelper {
       $0.width.equalTo(57)
     }
     
-    countLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(allButton)
-      make.trailing.equalToSuperview().offset(-20)
-    }
-    
-    divideLine.backgroundColor = .bg30
-    divideLine.snp.makeConstraints { make in
-      make.top.equalTo(allButton.snp.bottom).offset(10)
-      make.leading.trailing.equalTo(searchBar)
-    }
-    
+    resultCollectionView.reloadData()
     resultCollectionView.snp.makeConstraints { make in
       make.width.equalToSuperview()
       make.height.equalTo(scrollView.snp.height)
     }
     
     scrollView.snp.makeConstraints { make in
-        make.top.equalTo(divideLine.snp.bottom).offset(10)
-        make.leading.trailing.equalTo(view)
-        make.bottom.equalTo(view.safeAreaLayoutGuide)
+      make.top.equalTo(allButton.snp.bottom).offset(10)
+      make.leading.trailing.equalTo(view)
+      make.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
 }
@@ -316,12 +344,21 @@ extension SearchViewController: UISearchBarDelegate {
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
     
+    resultTableView.isHidden = false
+    
+    [
+      allButton,
+      popularButton,
+      majorButton,
+      scrollView
+    ].forEach {
+      $0.isHidden = true
+    }
     searchRecommend(keyword: keyword) {
-      print("검색완료")
       self.searchKeyword = keyword
+      self.noSearchDataUI()
     }
   }
-  
 }
 
 // MARK: - tableView cell 함수
@@ -331,13 +368,14 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     return recommendData?.recommendList.count ?? 0
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  func tableView(_ tableView: UITableView,
+                 cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = resultTableView.dequeueReusableCell(withIdentifier: CustomCell.cellId,
                                                    for: indexPath) as! CustomCell
+    resultCollectionView.isHidden = true
     
     let imageView = UIImageView()
     cell.model = recommendData
-    
     imageView.image = UIImage(named: "ScearchImgGray")
     
     cell.contentView.addSubview(imageView)
@@ -354,17 +392,16 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   
   // UITableViewDelegate 함수 (선택)
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    print("여기")
-    print(searchKeyword)
+    guard let keyword =  recommendData?.recommendList[indexPath.row] else { return }
     postDataManager.getPostData(hot: "false",
-                                text: searchKeyword,
+                                text: keyword,
                                 page: 0,
                                 size: 5,
                                 titleAndMajor: "false") { result in
       self.searchResultData = result
       self.updateUI()
     }
-   
+    searchBar.text = keyword
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

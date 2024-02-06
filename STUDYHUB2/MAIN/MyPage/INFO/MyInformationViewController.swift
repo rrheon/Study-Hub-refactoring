@@ -408,6 +408,8 @@ final class MyInformViewController: NaviHelper {
       self?.tokenManager.deleteTokens()
       
       self?.dismiss(animated: true) {
+        self?.bookmarkList.removeAll()
+        
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .overFullScreen
         self?.present(loginVC, animated: true, completion: nil)

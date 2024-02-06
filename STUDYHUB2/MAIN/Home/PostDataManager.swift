@@ -35,16 +35,13 @@ final class PostDataManager {
                    size: Int,
                    titleAndMajor: String,
                    completion: @escaping (PostDataContent) -> Void) {
-    print("1")
-    print(text)
     fectchPostData(hot: hot,
                    text: text,
                    page: page,
                    size: size,
                    titleAndMajor: titleAndMajor) {
       guard let data = self.newPostDatas else { return }
-      print("3")
-      print(data)
+   
       completion(data)
     }
   }
@@ -71,7 +68,6 @@ final class PostDataManager {
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-        print(response.response)
       case .failure(let response):
         print(response.response)
       }

@@ -107,7 +107,6 @@ final class NotificationCell: UICollectionViewCell {
     describeLabel.isHidden = !isExpanded
     
     layoutIfNeeded()
-
   }
   
   static func calculateContentHeight(for text: String, width: CGFloat) -> CGFloat {
