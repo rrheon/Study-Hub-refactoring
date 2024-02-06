@@ -50,7 +50,7 @@ final class SearchViewController: NaviHelper {
     
     return button
   }()
-    
+  
   private lazy var popularButton: UIButton = {
     let button = UIButton()
     button.setTitle("인기", for: .normal)
@@ -78,7 +78,7 @@ final class SearchViewController: NaviHelper {
     }, for: .touchUpInside)
     return button
   }()
-
+  
   private lazy var emptyImage = UIImage(named: "EmptyStudy")
   private lazy var emptyImageView = UIImageView(image: emptyImage)
   
@@ -99,7 +99,7 @@ final class SearchViewController: NaviHelper {
     
     return view
   }()
-    
+  
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.backgroundColor = .white
@@ -116,8 +116,10 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
-    setUpLayout()
-    makeUI()
+    getBookmarkData {
+      self.setUpLayout()
+      self.makeUI()
+    }
   }
   
   func makeUI() {
@@ -182,9 +184,7 @@ final class SearchViewController: NaviHelper {
   // MARK: - 북마크 아이콘 터치
   @objc func bookmarkpageButtonTapped() {
     let bookmarkViewController = BookmarkViewController(postID: 0)
-    let navigationController = UINavigationController(rootViewController: bookmarkViewController)
-    navigationController.modalPresentationStyle = .fullScreen
-    present(navigationController, animated: true, completion: nil)
+    navigationController?.pushViewController(bookmarkViewController, animated: true)
   }
   
   // MARK: - 전체버튼 눌렸을 때
@@ -226,9 +226,9 @@ final class SearchViewController: NaviHelper {
         do {
           let recommendList = try JSONDecoder().decode(RecommendList.self, from: response.data)
           self.recommendData = recommendList
-  
+          
           completion()
-
+          
           DispatchQueue.main.async {
             self.resultTableView.reloadData()
           }
@@ -291,7 +291,7 @@ final class SearchViewController: NaviHelper {
     
     navigationController?.navigationBar.topItem?.title = "검색결과"
     navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-
+    
     [
       allButton,
       popularButton,
@@ -334,6 +334,15 @@ final class SearchViewController: NaviHelper {
       make.top.equalTo(allButton.snp.bottom).offset(10)
       make.leading.trailing.equalTo(view)
       make.bottom.equalTo(view.safeAreaLayoutGuide)
+    }
+  }
+  
+  func getBookmarkData(completion: @escaping () -> Void){
+    self.bookmarkManager.getBookmarkList(0, 10) { result in
+      result.getBookmarkedPostsData.content.map { result in
+        self.bookmarkList.append(result.postID)
+        completion()
+      }
     }
   }
 }
@@ -441,7 +450,17 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
                                                   for: indexPath) as! SearchResultCell
-    cell.model = searchResultData?.postDataByInquiries.content[indexPath.row]
+    cell.delegate = self
+    let content = searchResultData?.postDataByInquiries.content[indexPath.row]
+
+    bookmarkList.map { bookmarkPostId in
+      if content?.postID == bookmarkPostId {
+        cell.checkBookmarked = true
+      }
+    }
+
+    cell.model = content
+
     return cell
   }
 }
@@ -451,8 +470,15 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
     return CGSize(width: 350, height: 247)
   }
 }
 
+// MARK: - 북마크 관련
+extension SearchViewController: BookMarkDelegate {
+  func bookmarkTapped(postId: Int) {
+    bookmarkButtonTapped(postId) {
+      self.resultCollectionView.reloadData()
+    }
+  }
+}

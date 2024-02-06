@@ -6,6 +6,7 @@ import SnapKit
 final class HomeViewController: NaviHelper {
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
+  let ueserInfoManager = UserInfoManager.shared
   
   var newPostDatas: PostDataContent?
   var deadlinePostDatas: PostDataContent?
@@ -57,7 +58,6 @@ final class HomeViewController: NaviHelper {
     let title = "전체"
     let image = UIImage(named: "RightArrow")
     
-    // 버튼 내부의 요소들을 가로로 배치
     button.semanticContentAttribute = .forceLeftToRight
     button.contentHorizontalAlignment = .left
     
@@ -66,10 +66,8 @@ final class HomeViewController: NaviHelper {
     button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
     button.setImage(image, for: .normal)
     
-    // 이미지와 타이틀 사이의 간격을 설정 (예: 8포인트)
     let spacing: CGFloat = 8
     
-    // 이미지와 타이틀을 조절하여 타이틀이 먼저 오고 이미지가 그 뒤에 옵니다.
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: 0)
     button.addAction(UIAction { _ in
@@ -82,7 +80,7 @@ final class HomeViewController: NaviHelper {
   private lazy var recrutingCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .horizontal
-    flowLayout.minimumLineSpacing = 50 // cell사이의 간격 설정
+    flowLayout.minimumLineSpacing = 50
     //    flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
     let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     view.backgroundColor = .white
@@ -99,7 +97,7 @@ final class HomeViewController: NaviHelper {
   private let deadLineImg: UIImageView = {
     let smallImageView = UIImageView(image: UIImage(named: "FireImg"))
     smallImageView.contentMode = .scaleAspectFit
-    smallImageView.tintColor = UIColor(hexCode: "FF5935") // Set color
+    smallImageView.tintColor = UIColor(hexCode: "FF5935")
     return smallImageView
   }()
   
@@ -109,7 +107,6 @@ final class HomeViewController: NaviHelper {
     textLabel.font = UIFont.boldSystemFont(ofSize: 20)
     textLabel.textColor = .black
     
-    // Apply attributed text to change color of "HUB"
     let textAttributedText = NSMutableAttributedString(string: "마감이 임박한 스터디예요")
     textAttributedText.addAttribute(.foregroundColor, value: UIColor(hexCode: "FF5935"),
                                     range: NSRange(location: 0, length: 2))
@@ -150,23 +147,30 @@ final class HomeViewController: NaviHelper {
     setupDelegate()
     registerCell()
     
-    self.bookmarkManager.getBookmarkList(0, 10) { result in
-      result.getBookmarkedPostsData.content.map { result in
-        self.bookmarkList.append(result.postID)
-      }
-      self.fetchData {
-        print("로그인")
-        self.setUpLayout()
-        self.makeUI()
-      }
-      print(result.totalCount)
-    }
-    
-    if self.bookmarkList.isEmpty == true {
-      self.fetchData {
-        print("비로그인")
-        self.setUpLayout()
-        self.makeUI()
+    settingUI()
+  }
+  
+  // MARK: - UI세팅
+  func settingUI(){
+    ueserInfoManager.getUserInfo { userInfo in
+      if userInfo?.nickname != nil {
+        self.bookmarkManager.getBookmarkList(0, 10) { result in
+          result.getBookmarkedPostsData.content.map { result in
+            self.bookmarkList.append(result.postID)
+          }
+          self.fetchData {
+            print("로그인")
+            self.setUpLayout()
+            self.makeUI()
+          }
+          print(result.totalCount)
+        }
+      }else {
+        self.fetchData {
+          print("비로그인")
+          self.setUpLayout()
+          self.makeUI()
+        }
       }
     }
   }
@@ -394,7 +398,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     detailPostDataManager.searchSinglePostData(postId: postID ?? 0) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = cellData
-      print(cellData)
     }
     self.navigationController?.pushViewController(postedVC, animated: true)
   }
@@ -410,7 +413,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         bookmarkList.map { bookmarkPostId in
           if content?.postID == bookmarkPostId {
-            cell.checkBookmared = true
+            cell.checkBookmarked = true
           }
         }
         
@@ -437,6 +440,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
       return cell
     }
   }
+
 }
 
 // 셀의 각각의 크기

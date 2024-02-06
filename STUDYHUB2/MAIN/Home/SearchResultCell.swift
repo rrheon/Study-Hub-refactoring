@@ -7,7 +7,11 @@ final class SearchResultCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
+  weak var delegate: BookMarkDelegate?
+  
   var model: Content? { didSet { bind() } }
+  
+  var checkBookmarked: Bool?
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
@@ -21,6 +25,9 @@ final class SearchResultCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+    }, for: .touchUpInside)
     return button
   }()
   
@@ -149,17 +156,24 @@ final class SearchResultCell: UICollectionViewCell {
     super.init(frame: frame)
     
     setViewShadow(backView: self)
+    
     addSubviews()
-
-    closePostUI()
-
     configure()
     
+    closePostUI()
   }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError()
+  }
+  
+  // MARK: - 셀 재사용 관련
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    
+    bookMarkButton.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    checkBookmarked = false
   }
   
   private func addSubviews() {
@@ -220,11 +234,9 @@ final class SearchResultCell: UICollectionViewCell {
       make.top.equalToSuperview().offset(10)
     }
     
-    if model?.close == false {
-      bookMarkButton.snp.makeConstraints { make in
-        make.top.equalTo(majorLabel)
-        make.trailing.equalToSuperview().offset(-10)
-      }
+    bookMarkButton.snp.makeConstraints { make in
+      make.top.equalTo(majorLabel)
+      make.trailing.equalToSuperview().offset(-10)
     }
     
     titleLabel.snp.makeConstraints { make in
@@ -284,6 +296,9 @@ final class SearchResultCell: UICollectionViewCell {
   private func bind() {
     //    titleLabel.text = model
     guard let data = model else { return }
+    
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     var countMember = data.studyPerson - data.remainingSeat
     majorLabel.text = " \(data.major.convertMajor(data.major, isEnglish: false)) "

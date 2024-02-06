@@ -10,7 +10,7 @@ final class RecruitPostCell: UICollectionViewCell {
   weak var delegate: BookMarkDelegate?
   
   var model: Content? { didSet { bind() } }
-  var checkBookmared: Bool?
+  var checkBookmarked: Bool?
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
@@ -157,7 +157,7 @@ final class RecruitPostCell: UICollectionViewCell {
     super.prepareForReuse()
     
     bookMarkButton.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
-    checkBookmared = false
+    checkBookmarked = false
   }
 
   
@@ -165,7 +165,7 @@ final class RecruitPostCell: UICollectionViewCell {
     guard let data = model else { return }
     
     var studyPersonCount = data.studyPerson - data.remainingSeat
-    let bookmarkImage =  checkBookmared ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     
     majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
     titleLabel.text = data.title
