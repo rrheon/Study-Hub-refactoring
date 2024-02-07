@@ -14,27 +14,37 @@ final class PostManager {
   
   let tokenManager = TokenManager.shared
   let networkingManager = Networking.networkinhShared
+  let commonNetworking = CommonNetworking.shared
   
   private init() {}
 
   // 게시글 생성, 반환값 나중에 스웨거보고 확인하기
   func createPost(createPostDatas: CreateStudyRequest,
-                  completion: @escaping () -> Void) {
+                  completion: @escaping (String) -> Void) {
     
-    networkingManager.fetchData(type: "POST",
-                                apiVesrion: "v1",
-                                urlPath: "/study-posts",
-                                queryItems: nil,
-                                tokenNeed: true,
-                                createPostData: createPostDatas) { result in
+//    networkingManager.fetchData(type: "POST",
+//                                apiVesrion: "v1",
+//                                urlPath: "/study-posts",
+//                                queryItems: nil,
+//                                tokenNeed: true,
+//                                createPostData: createPostDatas) { result in
+//      switch result {
+//      case .success(let postResponse):
+//        print(postResponse) // 이제 id는 Int 타입의 값입니다.
+//        print("성공")
+//
+//        completion()
+//      case .failure(let error):
+//        print("Error: \(error)")
+//      }
+//    }
+    commonNetworking.moyaNetworking(networkingChoice: .createMyPost(createPostDatas)) { result in
       switch result {
-      case .success(let postResponse):
-        print(postResponse) // 이제 id는 Int 타입의 값입니다.
-        print("성공")
-
-        completion()
-      case .failure(let error):
-        print("Error: \(error)")
+      case .success(let response):
+        let strData = String(data: response.data, encoding: .utf8)
+        completion(strData ?? "")
+      case .failure(let response):
+        print(response.response)
       }
     }
   }

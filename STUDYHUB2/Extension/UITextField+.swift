@@ -17,8 +17,6 @@ extension UITextView: UITextViewDelegate {
         constraint.constant = estimatedSize.height
       }
     }
-    
   }
-  
 }
 

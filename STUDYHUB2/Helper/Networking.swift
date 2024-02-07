@@ -37,6 +37,7 @@ enum networkingAPI {
   
   // 게시글관련
   case getMyPostList(_page: Int, _size: Int)
+  case createMyPost(_ data: CreateStudyRequest)
   case modifyMyPost(_data: UpdateStudyRequest)
   case deleteMyPost(_postId: Int)
   case searchSinglePost(_postId: Int)
@@ -111,6 +112,8 @@ extension networkingAPI: TargetType {
       // 게시글 관련
     case .getMyPostList(_page: _, _size: _):
       return "/v1/study-posts/mypost"
+    case .createMyPost(_):
+      return "/v1/study-posts"
     case .deleteMyPost(let postId):
       return "/v1/study-posts/\(postId)"
     case .modifyMyPost(_data: _):
@@ -182,7 +185,8 @@ extension networkingAPI: TargetType {
         .createNewAccount(accountData: _),
         .participateStudy(introduce: _, studyId: _),
         .changeBookMarkStatus(_),
-        .inquiryQuestion(content: _, title: _, toEmail: _):
+        .inquiryQuestion(content: _, title: _, toEmail: _),
+        .createMyPost(_):
       return .post
     }
   }
@@ -294,6 +298,9 @@ extension networkingAPI: TargetType {
       let params = InquiryDTO(content: content, title: title, toEmail: toEmail)
       return .requestJSONEncodable(params)
       
+    case .createMyPost(let data):
+      return .requestJSONEncodable(data)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -321,7 +328,6 @@ extension networkingAPI: TargetType {
     switch self {
     case .checkEmailDuplication(_email: _),
         .sendEmailCode(_email: _),
-        .searchSinglePost(_postId: _),
         .getCommentList(_postId: _, _page: _, _size: _),
         .recommendSearch(_keyword: _),
         .searchPostList(_hot: _, text: _, page: _,
@@ -340,10 +346,12 @@ extension networkingAPI: TargetType {
         .getMyPostList(_page: _, _size: _),
         .modifyMyPost(_data: _),
         .closePost(_),
+        .searchSinglePost(_postId: _),
         .participateStudy(introduce: _, studyId: _),
         .getMyParticipateList(page: _, size: _),
         .changeBookMarkStatus(_),
-        .searchBookMarkList(page: _, size: _):
+        .searchBookMarkList(page: _, size: _),
+        .createMyPost(_):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       

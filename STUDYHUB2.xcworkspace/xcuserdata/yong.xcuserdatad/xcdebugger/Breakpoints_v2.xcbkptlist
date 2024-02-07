@@ -3,22 +3,4 @@
    uuid = "972C4CA7-5CB6-41EF-8E3B-B4239F9A887B"
    type = "0"
    version = "2.0">
-   <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "63DAF88E-3F82-4D6A-89C1-FEE02782FEE4"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "STUDYHUB2/MAIN/STUDY/CreateStudy/CreatestudyViewController.swift"
-            startingColumnNumber = "38"
-            endingColumnNumber = "57"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "allGenderButton"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-   </Breakpoints>
 </Bucket>

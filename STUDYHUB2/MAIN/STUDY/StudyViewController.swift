@@ -89,14 +89,16 @@ final class StudyViewController: NaviHelper {
     
     setupCollectionView()
    
-    postDataManager.getRecentPostDatas(hotType: "false") {
-      self.recentDatas = self.postDataManager.getRecentPostDatas()
-      DispatchQueue.main.async {
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-        
-        self.setupLayout()
-        self.makeUI()
+    fetchBookmarkList {
+      self.postDataManager.getRecentPostDatas(hotType: "false") {
+        self.recentDatas = self.postDataManager.getRecentPostDatas()
+        DispatchQueue.main.async {
+          self.activityIndicator.stopAnimating()
+          self.activityIndicator.removeFromSuperview()
+          
+          self.setupLayout()
+          self.makeUI()
+        }
       }
     }
   }
@@ -224,6 +226,7 @@ final class StudyViewController: NaviHelper {
   @objc func addButtonTapped() {
     let createStudyVC = CreateStudyViewController()
     createStudyVC.hidesBottomBarWhenPushed = true
+    createStudyVC.delegate = self
     navigationController?.pushViewController(createStudyVC, animated: true)
   }
   
@@ -321,7 +324,14 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
                                                   for: indexPath)
     if let cell = cell as? SearchResultCell {
       let content = recentDatas?.postDataByInquiries.content[indexPath.row]
+      
+      bookmarkList.map { bookmarkPostId in
+        if content?.postID == bookmarkPostId {
+          cell.checkBookmarked = true
+        }
+      }
       cell.model = content
+      cell.delegate = self
     }
     
     return cell
@@ -349,6 +359,28 @@ extension StudyViewController {
       if !last {
         fectMoreData(hotType: "false")
       }
+    }
+  }
+}
+
+extension StudyViewController: AfterCreatePost {
+  func afterCreatePost(postId: Int) {
+    let postedVC = PostedStudyViewController()
+    detailPostDataManager.searchSinglePostData(postId: postId) {
+      let postData = self.detailPostDataManager.getPostDetailData()
+      postedVC.postedData = postData
+    }
+    navigationController?.pushViewController(postedVC, animated: false)
+    
+    showToast(message: "글 작성이 완료됐어요",imageCheck: true, alertCheck: true)
+  }
+}
+
+// MARK: - 북마크 관련
+extension StudyViewController: BookMarkDelegate {
+  func bookmarkTapped(postId: Int) {
+    bookmarkButtonTapped(postId) {
+      self.resultCollectionView.reloadData()
     }
   }
 }

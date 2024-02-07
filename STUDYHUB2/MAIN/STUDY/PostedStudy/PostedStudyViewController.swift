@@ -792,6 +792,12 @@ final class PostedStudyViewController: NaviHelper {
       }
     }
     
+    if postedData?.apply == true {
+      participateButton.setTitle("수락 대기 중", for: .normal)
+      participateButton.backgroundColor = .o30
+      participateButton.isEnabled = false
+    }
+    
     similarCollectionView.reloadData()
   }
   
@@ -986,14 +992,22 @@ final class PostedStudyViewController: NaviHelper {
           return
         }
         
-        if self.postedData?.filteredGender != self.userData?.gender {
+        if self.postedData?.filteredGender != self.userData?.gender &&
+            self.postedData?.filteredGender != "NULL" {
           self.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요",
+                         alertCheck: false)
+          return
+        }
+        
+        if self.postedData?.close == true {
+          self.showToast(message: "이 스터디는 마감된 스터디예요",
                          alertCheck: false)
           return
         }
         
         let participateVC = ParticipateVC()
         participateVC.studyId = studyId
+        participateVC.beforeVC = self
         self.navigationController?.pushViewController(participateVC, animated: true)
       }
     }

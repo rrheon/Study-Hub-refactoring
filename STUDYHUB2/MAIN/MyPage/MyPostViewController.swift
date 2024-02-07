@@ -420,8 +420,7 @@ extension MyPostViewController: BottomSheetDelegate {
     self.dismiss(animated: true) {
       let createVC = CreateStudyViewController()
       createVC.modifyPostID = postID
-      createVC.modalPresentationStyle = .overFullScreen
-      self.present(createVC, animated: true)
+      self.navigationController?.pushViewController(createVC, animated: true)
     }
   }
 }

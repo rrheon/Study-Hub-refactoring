@@ -2,8 +2,12 @@ import UIKit
 
 import SnapKit
 
+protocol AfterCreatePost: AnyObject {
+  func afterCreatePost(postId: Int)
+}
+
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
-final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
+final class CreateStudyViewController: NaviHelper {
   let tokenManager = TokenManager.shared
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
@@ -12,6 +16,8 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   var contactMethod: String?
   var selectedMajor: String?
   var modifyPostID: Int?
+  
+  weak var delegate: AfterCreatePost?
   
   // 선택한 학과를 저장할 프로퍼티
   var selectedDepartment: String? {
@@ -26,245 +32,6 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   var selectDate: String? = ""
   
   // MARK: - UI설정
-  
-  // MARK: - 채팅방 링크
-  private lazy var chatLinkStackView = createStackView(axis: .vertical,
-                                                       spacing: 16)
-  
-  private lazy var chatLinkLabel = createLabel(title: "채팅방 링크",
-                                               textColor: .black,
-                                               fontType: "Pretendard-SemiBold",
-                                               fontSize: 16)
-  
-  private lazy var descriptionLabel = createLabel(
-    title: "참여코드가 없는 카카오톡 오픈 채팅방 링크로 첨부",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12)
-  
-  private lazy var chatLinkTextField = createTextField(title: "채팅방 링크를 첨부해 주세요")
-  
-  private let chatLinkDividerLine: UIView = {
-    let chatLinkDividerLine = UIView()
-    chatLinkDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
-    return chatLinkDividerLine
-  }()
-  
-  // MARK: - 스터디제목
-  private lazy var studytitleLabel = createLabel(title: "스터디 제목",
-                                                 textColor: .black,
-                                                 fontType: "Pretendard-SemiBold",
-                                                 fontSize: 16)
-  
-  private lazy var studytitleTextField = createTextField(title: "제목을 적어주세요")
-  
-  // MARK: - 스터디 소개
-  private lazy var studyinfoStackView = createStackView(axis: .vertical,
-                                                        spacing: 16)
-  
-  private lazy var studyproduceLabel = createLabel(title: "스터디 소개",
-                                                   textColor: .black,
-                                                   fontType: "Pretendard-SemiBold",
-                                                   fontSize: 16)
-  
-  private lazy var studyproduceTextView: UITextView = {
-    let tv = UITextView()
-    tv.text = "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)"
-    tv.textColor = UIColor.bg70
-    tv.font = UIFont(name: "Pretendard-Medium", size: 14)
-    tv.layer.borderWidth = 0.5
-    tv.layer.borderColor = UIColor.bg50.cgColor
-    tv.layer.cornerRadius = 5.0
-    tv.delegate = self
-    tv.textViewDidChange(tv)
-    return tv
-  }()
-  
-  private let studyinfoStackViewDividerLine: UIView = {
-    let uiView = UIView()
-    uiView.backgroundColor = UIColor(hexCode: "#F3F5F6")
-    return uiView
-  }()
-  
-  // MARK: - 관련학과
-  private lazy var associatedepartLabel = createLabel(title: "관련학과 선택",
-                                                      textColor: .black,
-                                                      fontType: "Pretendard-SemiBold",
-                                                      fontSize: 16)
-  
-  private lazy var associatedepartButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-    button.tintColor = .black
-    button.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
-    return button
-  }()
-  
-  private lazy var associatedepartStackView = createStackView(axis: .horizontal,
-                                                              spacing: 16)
-  
-  private lazy var departmentButtonStackView = createStackView(axis: .vertical,
-                                                               spacing: 16)
-  
-  private lazy var selectMajorLabel: BasePaddingLabel = {
-    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
-  
-  private lazy var cancelButton: UIButton = {
-    let button = UIButton()
-    let img = UIImage(named: "DeleteImg")
-    button.setImage(img, for: .normal)
-    button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-    return button
-  }()
-  
-  // MARK: - 스터디 팀원
-  private lazy var studymemberLabel = createLabel(title: "스터디 팀원",
-                                                  textColor: .black,
-                                                  fontType: "Pretendard-SemiBold",
-                                                  fontSize: 16)
-  
-  // MARK: - 인원
-  private lazy var studymembercountLabel = createLabel(title: "인원",
-                                                       textColor: .black,
-                                                       fontType: "Pretendard-SemiBold",
-                                                       fontSize: 16)
-  private lazy var description4Label = createLabel(
-    title: "본인 제외 최대 50명",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12)
-  
-  private lazy var studymemberTextField = createTextField(title: "스터디 인원을 알려주세요")
-  
-  private lazy var countLabel = createLabel(title: "명",
-                                            textColor: .bg80,
-                                            fontType: "Pretendard-SemiBold",
-                                            fontSize: 14)
-  
-  private lazy var countAlert = createLabel(title: "1명부터 가능해요(본인 제외)",
-                                            textColor: .r50,
-                                            fontType: "Pretendard-Medium",
-                                            fontSize: 12)
-  
-  // MARK: - 성별
-  private lazy var genderLabel = createLabel(title: "성별",
-                                             textColor: .black,
-                                             fontType: "Pretendard-Medium",
-                                             fontSize: 16)
-  
-  private lazy var description5Label = createLabel(
-    title: "참여자의 성별 선택",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12)
-  
-  private lazy var allGenderButton = createContactButton(
-    title: "무관",
-    selector: #selector(genderButtonTapped(_:)))
-  
-  private lazy var maleOnlyButton = createContactButton(
-    title: "남자만",
-    selector:#selector(genderButtonTapped(_:)))
-  
-  private lazy var femaleOnlyButton = createContactButton(
-    title: "여자만",
-    selector: #selector(genderButtonTapped(_:)))
-  
-  // MARK: - 스터디 방식
-  private lazy var studymethodLabel = createLabel(title: "스터디 방식",
-                                                  textColor: .black,
-                                                  fontType: "Pretendard-SemiBold",
-                                                  fontSize: 16)
-  
-  // MARK: - 대면 여부
-  private lazy var meetLabel = createLabel(title: "대면 여부",
-                                           textColor: .black,
-                                           fontType: "Pretendard-Medium",
-                                           fontSize: 16)
-  
-  private lazy var description6Label = createLabel(
-    title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12)
-  
-  // 대면 비대면 버튼
-  private lazy var contactButton = createContactButton(title: "대면",
-                                                       selector: #selector(meetButtonTapped(_:)))
-  
-  private lazy var untactButton = createContactButton(title: "비대면",
-                                                      selector: #selector(meetButtonTapped(_:)))
-  
-  private lazy var mixmeetButton = createContactButton(title: "혼합",
-                                                       selector: #selector(meetButtonTapped(_:)))
-  
-  
-  // MARK: - 벌금
-  // 벌금버튼
-  private lazy var haveFineButton = createFineButton(selector: #selector(haveFineButtonTapped(_:)))
-  
-  private lazy var noFineButton = createFineButton(selector: #selector(noFineButtonTapped(_:)))
-  
-  private lazy var fineButtonsStackView = createStackView(axis: .horizontal,
-                                                          spacing: 10)
-  private lazy var finefixStackView = createStackView(axis: .vertical,
-                                                      spacing: 10)
-  
-  private lazy var fineTypesTextField = createTextField(title: "지각비, 결석비 등")
-  
-  private lazy var fineLabel = createLabel(title: "벌금",
-                                           textColor: .black,
-                                           fontType: "Pretendard-Medium",
-                                           fontSize: 16)
-  
-  private lazy var haveFineLabel = createLabel(title: "있어요",
-                                               textColor: .bg70,
-                                               fontType: "Pretendard-Medium",
-                                               fontSize: 16)
-  
-  private lazy var noFineLabel = createLabel(title: "없어요",
-                                             textColor: .bg70,
-                                             fontType: "Pretendard-Medium",
-                                             fontSize: 16)
-  
-  private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
-  
-  // MARK: - 기간
-  private lazy var periodLabel = createLabel(title: "기간",
-                                             textColor: .black,
-                                             fontType: "Pretendard-SemiBold",
-                                             fontSize: 16)
-  
-  private lazy var startLabel = createLabel(title: "시작하는 날",
-                                            textColor: .black,
-                                            fontType: "Pretendard-Medium",
-                                            fontSize: 16)
-  private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
-  
-  
-  private lazy var endLabel = createLabel(title: "종료하는 날",
-                                          textColor: .black,
-                                          fontType: "Pretendard-Medium",
-                                          fontSize: 16)
-  
-  private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
-  
-  private lazy var periodStackView = createStackView(axis: .vertical,
-                                                     spacing: 16)
-  
-  let startDatePicker = UIDatePicker()
-  let startDateTextField = UITextField()
-  var selectedStartDate: Date?
-  
-  let endDatePicker = UIDatePicker()
-  let endDateTextField = UITextField()
-  var selectedEndDate: Date?
-  
-  // MARK: - 완료하기
   private lazy var completeButton: UIButton = {
     let completeButton = UIButton()
     completeButton.setTitle("완료하기", for: .normal)
@@ -277,9 +44,192 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   
   private lazy var categoryStackView = createStackView(axis: .vertical,
                                                        spacing: 16)
+  private lazy var departmentButtonStackView = createStackView(axis: .vertical,
+                                                               spacing: 16)
+  // 성별버튼
+  private lazy var allGenderButton = createContactButton(title: "무관",
+                                                         selector: #selector(genderButtonTapped(_:)))
+  
+  private lazy var maleOnlyButton = createContactButton(title: "남자만",
+                                                        selector:#selector(genderButtonTapped(_:)))
+  private lazy var femaleOnlyButton = createContactButton(title: "여자만",
+                                                          selector: #selector(genderButtonTapped(_:)))
+  // 대면 비대면 버튼
+  private lazy var contactButton = createContactButton(title: "대면",
+                                                       selector: #selector(meetButtonTapped(_:)))
+  
+  private lazy var untactButton = createContactButton(title: "비대면",
+                                                      selector: #selector(meetButtonTapped(_:)))
+  
+  private lazy var mixmeetButton = createContactButton(title: "혼합",
+                                                       selector: #selector(meetButtonTapped(_:)))
+  
+  // 벌금버튼
+  private lazy var haveFineButton = createFineButton(selector: #selector(haveFineButtonTapped(_:)))
+  
+  private lazy var noFineButton = createFineButton(selector: #selector(noFineButtonTapped(_:)))
+  
+  private lazy var fineButtonsStackView = createStackView(axis: .horizontal,
+                                                          spacing: 10)
+  private lazy var finefixStackView = createStackView(axis: .vertical,
+                                                      spacing: 10)
+  
+  private lazy var periodStackView = createStackView(axis: .vertical,
+                                                     spacing: 16)
+  
+  private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  
+  private lazy var chatLinkTextField = createTextField(title: "채팅방 링크를 첨부해 주세요")
+  
+  
+  private lazy var studyproduceTextView: UITextView = {
+    let tv = UITextView()
+    tv.text = "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)"
+    tv.textColor = UIColor.lightGray
+    tv.font = UIFont.systemFont(ofSize: 15)
+    tv.layer.borderWidth = 0.5
+    tv.layer.borderColor = UIColor.lightGray.cgColor
+    tv.layer.cornerRadius = 5.0
+    tv.delegate = self
+    tv.textViewDidChange(tv)
+    return tv
+  }()
+  
+  private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
+  
+  private lazy var studymemberTextField = createTextField(title: "스터디 인원을 알려주세요")
+  private lazy var studytitleTextField = createTextField(title: "제목을 적어주세요")
+  
+  let startDatePicker = UIDatePicker()
+  let startDateTextField = UITextField()
+  var selectedStartDate: Date?
+  
+  let endDatePicker = UIDatePicker()
+  let endDateTextField = UITextField()
+  var selectedEndDate: Date?
   
   private lazy var headerContentStackView = createStackView(axis: .vertical,
                                                             spacing: 40)
+  
+  private lazy var chatLinkStackView = createStackView(axis: .vertical,
+                                                       spacing: 16)
+  
+  private lazy var chatLinkLabel = createLabel(title: "채팅방 링크",
+                                               textColor: .black,
+                                               fontType: "Pretendard",
+                                               fontSize: 18)
+  
+  
+  private lazy var descriptionLabel = createLabel(title: "참여코드가 없는 카카오톡 오픈 채팅방 링크로 첨부",
+                                                  textColor: .gray,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 14)
+  
+  private let chatLinkDividerLine: UIView = {
+    let chatLinkDividerLine = UIView()
+    chatLinkDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
+    return chatLinkDividerLine
+  }()
+  
+  private lazy var studyinfoStackView = createStackView(axis: .vertical,
+                                                        spacing: 16)
+  
+  private lazy var studytitleLabel = createLabel(title: "스터디 제목",
+                                                 textColor: .black,
+                                                 fontType: "Pretendard",
+                                                 fontSize: 18)
+  
+  private lazy var studyproduceLabel = createLabel(title: "내용",
+                                                   textColor: .black,
+                                                   fontType: "Pretendard",
+                                                   fontSize: 18)
+  
+  private let studyinfoStackViewDividerLine: UIView = {
+    let studyinfoStackViewDividerLine = UIView()
+    studyinfoStackViewDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
+    return studyinfoStackViewDividerLine
+  }()
+  
+  private lazy var associatedepartLabel = createLabel(title: "관련 학과 선택",
+                                                      textColor: .black,
+                                                      fontType: "Pretendard",
+                                                      fontSize: 18)
+  private lazy var selectMajorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+    label.textColor = .bg80
+    label.font = UIFont.systemFont(ofSize: 14)
+    return label
+  }()
+  
+  private lazy var cancelButton: UIButton = {
+    let button = UIButton()
+    let img = UIImage(named: "DeleteImg")
+    button.setImage(img, for: .normal)
+    button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+    return button
+  }()
+  
+  private lazy var periodLabel = createLabel(title: "기간",
+                                             textColor: .black,
+                                             fontType: "Pretendard",
+                                             fontSize: 18)
+  
+  private lazy var startLabel = createLabel(title: "시작하는 날",
+                                            textColor: .black,
+                                            fontType: "Pretendard",
+                                            fontSize: 18)
+  
+  
+  private lazy var endLabel = createLabel(title: "종료하는 날",
+                                          textColor: .black,
+                                          fontType: "Pretendard",
+                                          fontSize: 18)
+  
+  
+  private lazy var genderLabel = createLabel(title: "성별",
+                                             textColor: .black,
+                                             fontType: "Pretendard",
+                                             fontSize: 18)
+  
+  private lazy var studymembercountLabel = createLabel(title: "인원",
+                                                       textColor: .black,
+                                                       fontType: "Pretendard",
+                                                       fontSize: 18)
+  
+  private lazy var studymemberLabel = createLabel(title: "스터디 팀원",
+                                                  textColor: .black,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 18)
+  
+  private lazy var studymethodLabel = createLabel(title: "스터디 방식",
+                                                  textColor: .black,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 18)
+  
+  private lazy var meetLabel = createLabel(title: "대면 여부",
+                                           textColor: .black,
+                                           fontType: "Pretendard",
+                                           fontSize: 18)
+ private lazy var fineTypesTextField = createTextField(title: "지각비, 결석비 등")
+
+  private lazy var fineLabel = createLabel(title: "벌금",
+                                           textColor: .black,
+                                           fontType: "Pretendard",
+                                           fontSize: 18)
+  
+  private lazy var haveFineLabel = createLabel(title: "있어요",
+                                               textColor: .black,
+                                               fontType: "Pretendard",
+                                               fontSize: 16)
+  
+  private lazy var noFineLabel = createLabel(title: "없어요",
+                                             textColor: .black,
+                                             fontType: "Pretendard",
+                                             fontSize: 16)
+  
+  private lazy var associatedepartStackView = createStackView(axis: .horizontal,
+                                                              spacing: 16)
   
   private lazy var studymemberStackView = createStackView(axis: .vertical,
                                                           spacing: 16)
@@ -290,8 +240,30 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   private lazy var meetButtonsStackView = createStackView(axis: .horizontal,
                                                           spacing: 16)
   
+  private lazy var description4Label = createLabel(title: "최대 50명 참여 가능",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
+  
+  private lazy var countLabel = createLabel(title: "명",
+                                            textColor: UIColor(hexCode: "#68737D"),
+                                            fontType: "Pretendard",
+                                            fontSize: 15)
+  
+  private lazy var description5Label = createLabel(title: "참여자의 성별 선택",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
+  
+  
   private lazy var studymethodStackView = createStackView(axis: .vertical,
                                                           spacing: 16)
+  
+  
+  private lazy var description6Label = createLabel(title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
   
   private lazy var categoryStackViewDividerLine = createDividerLine(height: 10)
   private lazy var grayDividerLine = createDividerLine(height: 2)
@@ -300,6 +272,18 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   private lazy var studymethodStackViewDividerLine = createDividerLine(height: 10)
   private lazy var grayDividerLine3 = createDividerLine(height: 2)
   
+  private lazy var associatedepartButton: UIButton = {
+    let associatedepartButton = UIButton(type: .system)
+    associatedepartButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+    associatedepartButton.tintColor = .black
+    associatedepartButton.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
+    return associatedepartButton
+  }()
+  
+  private lazy var countAlert = createLabel(title: "1명부터 가능해요(본인 제외)",
+                                            textColor: .r50,
+                                            fontType: "Pretendard",
+                                            fontSize: 12)
   
   let scrollView = UIScrollView()
   
@@ -313,157 +297,125 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     setUpLayout()
     makeUI()
     postModify()
+
   }
   
   // MARK: - setUpLayout
   func setUpLayout(){
+
+    headerContentStackView.addArrangedSubview(chatLinkStackView)
+    headerContentStackView.addArrangedSubview(chatLinkDividerLine)
+    headerContentStackView.addArrangedSubview(studyinfoStackView)
     
-    // MARK: - headerContentStackView
-    [
-      chatLinkStackView,
-      chatLinkDividerLine,
-      studyinfoStackView
-    ].forEach {
-      headerContentStackView.addArrangedSubview($0)
-    }
+    // 키보드 내리기를 위한 탭 제스처 추가
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    view.addGestureRecognizer(tapGesture)
     
-    // MARK: - chatLinkStackView
-    [
-      chatLinkLabel,
-      descriptionLabel,
-      chatLinkTextField
-    ].forEach {
-      chatLinkStackView.addArrangedSubview($0)
-    }
+    chatLinkDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
     
-    // MARK: - studyinfoStackView
-    [
-      studytitleLabel,
-      studytitleTextField,
-      studyproduceLabel,
-      studyproduceTextView
-    ].forEach {
-      studyinfoStackView.addArrangedSubview($0)
-    }
+    chatLinkTextField.clearButtonMode = .always
+    chatLinkStackView.addArrangedSubview(chatLinkLabel)
+    chatLinkStackView.addArrangedSubview(descriptionLabel)
+    chatLinkStackView.addArrangedSubview(chatLinkTextField)
     
-    // MARK: - headerContentStackView
-    [
-      studyinfoStackViewDividerLine,
-      categoryStackView,
-      categoryStackViewDividerLine,
-      studymemberStackView,
-      studymethodStackViewDividerLine,
-      studymethodStackView,
-      studymemberStackViewDividerLine,
-      periodStackView
-    ].forEach {
-      headerContentStackView.addArrangedSubview($0)
-    }
+    studyproduceTextView.heightAnchor.constraint(equalToConstant: 150).isActive = true
     
-    // MARK: - categoryStackView
-    [
-      associatedepartStackView,
-      departmentButtonStackView
-    ].forEach {
-      categoryStackView.addArrangedSubview($0)
-    }
+    studyinfoStackViewDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
     
-    // MARK: - associatedepartStackView
-    [
-      associatedepartLabel,
-      associatedepartButton
-    ].forEach {
-      associatedepartStackView.addArrangedSubview($0)
-    }
+    studyinfoStackView.addArrangedSubview(studytitleLabel)
+    studyinfoStackView.addArrangedSubview(studytitleTextField)
+    studyinfoStackView.addArrangedSubview(studyproduceLabel)
+    studyinfoStackView.addArrangedSubview(studyproduceTextView)
+    
+    headerContentStackView.addArrangedSubview(studyinfoStackViewDividerLine)
+    headerContentStackView.addArrangedSubview(categoryStackView)
+    headerContentStackView.addArrangedSubview(categoryStackViewDividerLine)
+    headerContentStackView.addArrangedSubview(studymemberStackView)
+    headerContentStackView.addArrangedSubview(studymethodStackViewDividerLine)
+    headerContentStackView.addArrangedSubview(studymethodStackView)
+    headerContentStackView.addArrangedSubview(studymemberStackViewDividerLine)
+    headerContentStackView.addArrangedSubview(periodStackView)
+    
+    categoryStackView.addArrangedSubview(associatedepartStackView)
+    categoryStackView.addArrangedSubview(departmentButtonStackView)
+    
+    associatedepartStackView.addArrangedSubview(associatedepartLabel)
+    associatedepartStackView.addArrangedSubview(associatedepartButton)
     
     studymemberTextField.addSubview(countLabel)
     
-    // MARK: - genderButtonsStackView
-    [
-      allGenderButton,
-      maleOnlyButton,
-      femaleOnlyButton
-    ].forEach {
-      genderButtonsStackView.addArrangedSubview($0)
-    }
     genderButtonsStackView.distribution = .fillEqually
+    genderButtonsStackView.addArrangedSubview(allGenderButton)
+    genderButtonsStackView.addArrangedSubview(maleOnlyButton)
+    genderButtonsStackView.addArrangedSubview(femaleOnlyButton)
     
-    // MARK: - studymemberStackView
-    [
-      studymemberLabel,
-      grayDividerLine,
-      studymembercountLabel,
-      description4Label,
-      studymemberTextField,
-      genderLabel,
-      description5Label,
-      genderButtonsStackView
-    ].forEach {
-      studymemberStackView.addArrangedSubview($0)
-    }
+    studymemberStackView.addArrangedSubview(studymemberLabel)
+    studymemberStackView.addArrangedSubview(grayDividerLine)
+    studymemberStackView.addArrangedSubview(studymembercountLabel)
+    studymemberStackView.addArrangedSubview(description4Label)
+    studymemberStackView.addArrangedSubview(studymemberTextField)
+    studymemberStackView.addArrangedSubview(genderLabel)
+    studymemberStackView.addArrangedSubview(description5Label)
+    studymemberStackView.addArrangedSubview(genderButtonsStackView)
     
-    // MARK: - meetButtonsStackView
     meetButtonsStackView.distribution = .fillEqually
-    [
-      mixmeetButton,
-      contactButton,
-      untactButton
-    ].forEach {
-      meetButtonsStackView.addArrangedSubview($0)
-    }
+    meetButtonsStackView.addArrangedSubview(mixmeetButton)
+    meetButtonsStackView.addArrangedSubview(contactButton)
+    meetButtonsStackView.addArrangedSubview(untactButton)
     
-    // MARK: - fineButtonsStackView
-    [
-      haveFineButton,
-      haveFineLabel,
-      noFineButton,
-      noFineLabel
-    ].forEach {
-      fineButtonsStackView.addArrangedSubview($0)
-    }
+    fineButtonsStackView.addArrangedSubview(haveFineButton)
+    fineButtonsStackView.addArrangedSubview(haveFineLabel)
+    fineButtonsStackView.addArrangedSubview(noFineButton)
+    fineButtonsStackView.addArrangedSubview(noFineLabel)
     
-    // MARK: - studymethodStackView
-    [
-      studymethodLabel,
-      grayDividerLine2,
-      meetLabel,
-      description6Label,
-      meetButtonsStackView,
-      fineLabel,
-      fineButtonsStackView,
-      finefixStackView
-    ].forEach {
-      studymethodStackView.addArrangedSubview($0)
-    }
-    
+    studymethodStackView.addArrangedSubview(studymethodLabel)
+    studymethodStackView.addArrangedSubview(grayDividerLine2)
+    studymethodStackView.addArrangedSubview(meetLabel)
+    studymethodStackView.addArrangedSubview(description6Label)
+    studymethodStackView.addArrangedSubview(meetButtonsStackView)
+    studymethodStackView.addArrangedSubview(fineLabel)
+    studymethodStackView.addArrangedSubview(fineButtonsStackView)
+    studymethodStackView.addArrangedSubview(finefixStackView)
     
     // Add UI elements to the headerContentStackView
-    //    startDateButton.tag = 1
-    //    endDateButton.tag = 2
-    // MARK: - periodStackView
-    [
-      periodLabel,
-      grayDividerLine3,
-      startLabel,
-      startDateButton,
-      endLabel,
-      endDateButton,
-      completeButton
-    ].forEach {
-      periodStackView.addArrangedSubview($0)
-    }
+    startDateButton.tag = 1
+    endDateButton.tag = 2
+    periodStackView.addArrangedSubview(periodLabel)
+    periodStackView.addArrangedSubview(grayDividerLine3)
+    periodStackView.addArrangedSubview(startLabel)
+    periodStackView.addArrangedSubview(startDateButton)
+    periodStackView.addArrangedSubview(endLabel)
+    periodStackView.addArrangedSubview(endDateButton)
+    // Add the completeButton to the periodStackView
+    periodStackView.addArrangedSubview(completeButton)
+    
+    // Constraints for the "완료하기" button
+    completeButton.leadingAnchor.constraint(equalTo: periodStackView.leadingAnchor,
+                                            constant: 16).isActive = true
+    completeButton.trailingAnchor.constraint(equalTo: periodStackView.trailingAnchor,
+                                             constant: -16).isActive = true
+    completeButton.heightAnchor.constraint(equalToConstant: 57).isActive = true
     
     // Create a scroll view to make the content scrollable
-//    scrollView.translatesAutoresizingMaskIntoConstraints = false
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
     scrollView.addSubview(headerContentStackView)
     view.addSubview(scrollView)
     
     scrollView.backgroundColor = .white
     
-//    headerContentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+    headerContentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
   }
   // MARK: - makeUI
   func makeUI(){
+//    headerStackView.snp.makeConstraints { make in
+//      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+//      make.leading.equalTo(view.snp.leading).offset(-60)
+//      make.trailing.equalTo(view.snp.trailing).offset(-16)
+//    }
+//
+//    createStudyLabel.snp.makeConstraints { make in
+//      make.centerX.equalTo(headerStackView.snp.centerX).offset(100)
+//    }
     headerContentStackView.snp.makeConstraints { make in
       make.top.equalTo(scrollView.snp.top).offset(30)
       make.leading.trailing.bottom.equalTo(scrollView)
@@ -474,12 +426,6 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       make.leading.equalTo(chatLinkStackView).offset(16)
       make.trailing.equalTo(chatLinkStackView).offset(10)
     }
-    
-    chatLinkDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
-
-    studyproduceTextView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-    
-    studyinfoStackViewDividerLine.heightAnchor.constraint(equalToConstant: 10).isActive = true
     
     descriptionLabel.snp.makeConstraints { make in
       make.top.equalTo(chatLinkLabel.snp.bottom).offset(10)
@@ -653,32 +599,22 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       make.bottom.equalTo(completeButton.snp.top).offset(-40)
     }
     
-    // Constraints for the "완료하기" button
-    completeButton.leadingAnchor.constraint(equalTo: periodStackView.leadingAnchor,
-                                            constant: 16).isActive = true
-    completeButton.trailingAnchor.constraint(equalTo: periodStackView.trailingAnchor,
-                                             constant: -16).isActive = true
-    completeButton.heightAnchor.constraint(equalToConstant: 57).isActive = true
-    
     scrollView.snp.makeConstraints { make in
-      //      make.top.equalTo(headerStackView.snp.bottom).offset(16)
-      //      make.leading.equalTo(view)
-      //      make.trailing.equalTo(view)
-      //      make.bottom.equalTo(view)
+//      make.top.equalTo(headerStackView.snp.bottom).offset(16)
+//      make.leading.equalTo(view)
+//      make.trailing.equalTo(view)
+//      make.bottom.equalTo(view)
       make.edges.equalTo(view)
     }
   }
   
   override func navigationItemSetting() {
     super.navigationItemSetting()
-    
-    navigationItem.rightBarButtonItems = nil
-    
-    settingNavigationTitle(title: "스터디 만들기",
-                           font: "Pretendard-Bold",
-                           size: 18)
+
+    navigationItem.rightBarButtonItems = .none
+    self.navigationItem.title = "게시글 작성하기"
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
   }
-  
   
   // MARK: - 수정 시 뒤로가기 눌렀을 때
   @objc override func leftButtonTapped(_ sender: UIBarButtonItem) {
@@ -693,9 +629,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
                                       leftButtonTitle: "아니요",
                                       rightButtonTilte: "네")
     popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        self.navigationController?.popViewController(animated: true)
-      }
+      self.dismiss(animated: true)
     }
     self.present(popupVC, animated: true)
   }
@@ -704,10 +638,10 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
   func addDepartmentButton(_ department: String) {
     selectedMajor = department
     
-    guard let labelText = selectedMajor else { return }
+    let labelText = selectedMajor
     let labelSize = (labelText as? NSString)?.size(withAttributes: [NSAttributedString.Key.font: selectMajorLabel.font!])
     
-    selectMajorLabel.text = "  \(labelText)  "
+    selectMajorLabel.text = labelText
     selectMajorLabel.clipsToBounds = true
     selectMajorLabel.layer.cornerRadius = 15
     selectMajorLabel.backgroundColor = .bg30
@@ -728,17 +662,22 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     
     cancelButton.snp.makeConstraints { make in
       make.centerY.equalTo(selectMajorLabel.snp.centerY)
-      make.leading.equalTo(selectMajorLabel.snp.trailing).offset(-30)
+      make.leading.equalTo(selectMajorLabel.snp.trailing).offset(-35)
     }
     view.layoutIfNeeded()
   }
   
-  // MARK: - 학과 선택버튼 취소
   @objc func cancelButtonTapped(){
     selectMajorLabel.isHidden = true
     cancelButton.isHidden = true
     
     selectedMajor = nil
+  }
+  
+  // 키보드 내리기 위한 탭 제스처 핸들러
+  @objc func handleTap() {
+    // 키보드를 내립니다.
+    view.endEditing(true)
   }
   
   // MARK: - 벌금 있을 때 함수
@@ -816,18 +755,18 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       let major = convertMajor(selectedMajor ?? "", isEnglish: true)
       let penalty = Int(fineAmountTextField.text ?? "0") ?? 0
       let penaltyWay = fineTypesTextField.text ?? ""
-      
+
       let endDate = endDateButton.currentTitle ?? ""
       let studyEndDate = endDate.replacingOccurrences(of: ". ", with: "-")
-      
+
       let studyPerson = Int(studymemberTextField.text ?? "") ?? 0
-      
+
       let stratDate = endDateButton.currentTitle ?? ""
       let studyStartDate = stratDate.replacingOccurrences(of: ". ", with: "-")
       let studyWay = contactMethod ?? "CONTACT"
       let title = studytitleTextField.text ?? ""
-      
-      // 시작하는 날 종료하는 날의 버튼형식이 이상함, postedData에서 가져오는거라 처음에 .으로 가져와짐 -> - 으로 바꿔야함
+
+        // 시작하는 날 종료하는 날의 버튼형식이 이상함, postedData에서 가져오는거라 처음에 .으로 가져와짐 -> - 으로 바꿔야함
       let updatePostData = UpdateStudyRequest(chatUrl: chatUrl,
                                               close: false,
                                               content: content,
@@ -861,9 +800,10 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
         studyWay: contactMethod ?? "CONTACT",
         title: studytitleTextField.text ?? "")
       print(studyData)
-      postManager.createPost(createPostDatas: studyData) {
-        self.navigationController?.popViewController(animated: true)
-        self.showToast(message: "글 작성이 완료됐어요.", alertCheck: true)
+      postManager.createPost(createPostDatas: studyData) { postId in
+        self.navigationController?.popViewController(animated: false)
+       
+        self.delegate?.afterCreatePost(postId: Int(postId) ?? 0)
       }
     }
   }
@@ -889,6 +829,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       present(navigationController, animated: true, completion: nil)
     }
   }
+  
   
   // MARK: - 성별 눌렸을 때 함수
   @objc func genderButtonTapped(_ sender: UIButton) {
@@ -916,7 +857,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       genderType = "FEMALE"
     }
     else {
-      genderType = "null"
+      genderType = "NULL"
     }
   }
   
@@ -942,7 +883,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
       contactMethod = "CONTACT"
     }
     else if contactMethod == "비대면" {
-      contactMethod = "UNCONTACT"
+      contactMethod = "UNTACT"
     }
     else {
       contactMethod = "MIX"
@@ -980,24 +921,17 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
     self.present(viewControllerToPresent, animated: true, completion: nil)
   }
   
-  // 캘린더에서 선택한 날짜로 바꿈
-  func dataSend(data: String, buttonTag: Int) {
-    if buttonTag == 1 {
-      startDateButton.setTitle(data, for: .normal)
-    } else if buttonTag == 2 {
-      endDateButton.setTitle(data, for: .normal)
-    }
-  }
-  
   // MARK: - 수정하기눌렀을 때 데이터 가져옴
   func postModify(){
     guard let postID = modifyPostID else { return }
-  
-    settingNavigationTitle(title: "수정하기",
-                           font: "Pretendard-Bold",
-                           size: 18)
+    
+    self.navigationItem.title = "수정하기"
+    self.navigationController?.navigationBar.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.white
+    ]
     
     postInfoManager.searchSinglePostData(postId: postID) {
+
       let modifyData = self.postInfoManager.getPostDetailData()
       
       DispatchQueue.main.async {
@@ -1008,7 +942,7 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
           
           self.selectedMajor = self.convertMajor($0.major, isEnglish: false)
           self.addDepartmentButton(self.convertMajor($0.major, isEnglish: false))
-          
+ 
           self.studymemberTextField.text = String($0.studyPerson)
           
           self.genderType = $0.filteredGender
@@ -1044,20 +978,22 @@ final class CreateStudyViewController: NaviHelper, ChangeDateProtocol {
           self.fineAmountTextField.text = String($0.penalty)
           
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
-          //          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
+//          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
           let startDate = ""
           let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
           self.startDateButton.setTitle(changedStartDate, for: .normal)
           
-          //          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
+//          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
           let endDate = ""
           let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          
+        
           self.endDateButton.setTitle(changedEndDate, for: .normal)
         }
       }
+
     }
   }
+  
 }
 
 // MARK: - textField 0 입력 시
@@ -1083,5 +1019,13 @@ extension CreateStudyViewController {
   }
 }
 
-
-
+// MARK: - 캘린더에서 선택한 날짜로 바꿈
+extension CreateStudyViewController: ChangeDateProtocol {
+  func dataSend(data: String, buttonTag: Int) {
+    if buttonTag == 1 {
+      startDateButton.setTitle(data, for: .normal)
+    } else if buttonTag == 2 {
+      endDateButton.setTitle(data, for: .normal)
+    }
+  }
+}

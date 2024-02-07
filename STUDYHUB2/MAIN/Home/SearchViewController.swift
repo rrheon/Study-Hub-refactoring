@@ -116,7 +116,7 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
-    getBookmarkData {
+    fetchBookmarkList {
       self.setUpLayout()
       self.makeUI()
     }
@@ -334,15 +334,6 @@ final class SearchViewController: NaviHelper {
       make.top.equalTo(allButton.snp.bottom).offset(10)
       make.leading.trailing.equalTo(view)
       make.bottom.equalTo(view.safeAreaLayoutGuide)
-    }
-  }
-  
-  func getBookmarkData(completion: @escaping () -> Void){
-    self.bookmarkManager.getBookmarkList(0, 10) { result in
-      result.getBookmarkedPostsData.content.map { result in
-        self.bookmarkList.append(result.postID)
-        completion()
-      }
     }
   }
 }

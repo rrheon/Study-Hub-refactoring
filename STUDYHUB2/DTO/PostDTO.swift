@@ -177,3 +177,6 @@ struct Sort: Codable {
   let empty, sorted, unsorted: Bool
 }
 
+struct PostResponse: Codable {
+  let response: String
+}
