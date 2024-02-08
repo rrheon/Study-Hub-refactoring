@@ -29,6 +29,7 @@ final class CommonNetworking {
         return
       }
     }
+    
   }
   
   func checkingAccessToken(presentVC: UIViewController? = nil,
