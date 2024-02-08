@@ -8,6 +8,7 @@ protocol AfterCreatePost: AnyObject {
 
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
 final class CreateStudyViewController: NaviHelper {
+  let loginManager = LoginManager.shared
   let tokenManager = TokenManager.shared
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
@@ -761,12 +762,11 @@ final class CreateStudyViewController: NaviHelper {
 
       let studyPerson = Int(studymemberTextField.text ?? "") ?? 0
 
-      let stratDate = endDateButton.currentTitle ?? ""
+      let stratDate = startDateButton.currentTitle ?? ""
       let studyStartDate = stratDate.replacingOccurrences(of: ". ", with: "-")
       let studyWay = contactMethod ?? "CONTACT"
       let title = studytitleTextField.text ?? ""
 
-        // 시작하는 날 종료하는 날의 버튼형식이 이상함, postedData에서 가져오는거라 처음에 .으로 가져와짐 -> - 으로 바꿔야함
       let updatePostData = UpdateStudyRequest(chatUrl: chatUrl,
                                               close: false,
                                               content: content,
@@ -780,9 +780,16 @@ final class CreateStudyViewController: NaviHelper {
                                               studyStartDate: studyStartDate,
                                               studyWay: studyWay,
                                               title: title)
-      postManager.modifyPost(data: updatePostData) {
-        self.navigationController?.popViewController(animated: true)
-        self.showToast(message: "글이 수정됐어요.", alertCheck: true)
+      loginManager.refreshAccessToken { result in
+        switch result {
+        case true:
+          self.postManager.modifyPost(data: updatePostData) {
+            self.navigationController?.popViewController(animated: true)
+            self.showToast(message: "글이 수정됐어요.", alertCheck: true)
+          }
+        case false:
+          return
+        }
       }
     } else {
       let studyData = CreateStudyRequest(
@@ -800,11 +807,20 @@ final class CreateStudyViewController: NaviHelper {
         studyWay: contactMethod ?? "CONTACT",
         title: studytitleTextField.text ?? "")
       print(studyData)
-      postManager.createPost(createPostDatas: studyData) { postId in
-        self.navigationController?.popViewController(animated: false)
-       
-        self.delegate?.afterCreatePost(postId: Int(postId) ?? 0)
+      
+      loginManager.refreshAccessToken { result in
+        switch result {
+        case true:
+          self.postManager.createPost(createPostDatas: studyData) { postId in
+            self.navigationController?.popViewController(animated: false)
+            
+            self.delegate?.afterCreatePost(postId: Int(postId) ?? 0)
+          }
+        case false:
+          return
+        }
       }
+      
     }
   }
   
@@ -978,16 +994,17 @@ final class CreateStudyViewController: NaviHelper {
           self.fineAmountTextField.text = String($0.penalty)
           
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
-//          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
-          let startDate = ""
-          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          self.startDateButton.setTitle(changedStartDate, for: .normal)
           
-//          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
-          let endDate = ""
-          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
+//          let startDate = ""
+//          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+          self.startDateButton.setTitle(startDate, for: .normal)
+          
+          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
+//          let endDate = ""
+//          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
         
-          self.endDateButton.setTitle(changedEndDate, for: .normal)
+          self.endDateButton.setTitle(endDate, for: .normal)
         }
       }
 

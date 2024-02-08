@@ -9,19 +9,18 @@ import UIKit
 
 import Moya
 
-class LoginManager: UIViewController {
+class LoginManager {
+  static let shared = LoginManager()
   
   let tokenManager = TokenManager.shared
-  let commonNetworking = CommonNetworking.shared
-  static let shared = LoginManager()
   
   func refreshAccessToken(completion: @escaping (Bool) -> Void) {
     guard let refreshToken = tokenManager.loadRefreshToken() else {
       completion(false)
       return
     }
-    
-    commonNetworking.moyaNetworking(networkingChoice: .refreshAccessToken(refreshToken)) { result in
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.refreshAccessToken(refreshToken)) { result in
       switch result {
       case .success(let response):
         do {
@@ -38,7 +37,7 @@ class LoginManager: UIViewController {
           print("Failed to decode JSON: \(error)")
         }
       case .failure(let error):
-        print(error)
+        completion(false)
       }
     }
   }
@@ -99,6 +98,7 @@ class LoginManager: UIViewController {
       print("JSON Serialization Error: \(error)")
     }
   }
+
 }
 
 

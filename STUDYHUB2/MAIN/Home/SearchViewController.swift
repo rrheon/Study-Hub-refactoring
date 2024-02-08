@@ -6,6 +6,7 @@ import Moya
 
 final class SearchViewController: NaviHelper {
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
+  let loginManager = LoginManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   let postDataManager = PostDataManager.shared
   
@@ -468,7 +469,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - 북마크 관련
 extension SearchViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int) {
-    bookmarkButtonTapped(postId) {
+    self.bookmarkButtonTapped(postId) {
       self.resultCollectionView.reloadData()
     }
   }

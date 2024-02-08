@@ -5,7 +5,7 @@
 //  Created by 최용헌 on 2023/10/14.
 //
 
-import Foundation
+import UIKit
 
 import Moya
 
@@ -21,23 +21,6 @@ final class PostManager {
   // 게시글 생성, 반환값 나중에 스웨거보고 확인하기
   func createPost(createPostDatas: CreateStudyRequest,
                   completion: @escaping (String) -> Void) {
-    
-//    networkingManager.fetchData(type: "POST",
-//                                apiVesrion: "v1",
-//                                urlPath: "/study-posts",
-//                                queryItems: nil,
-//                                tokenNeed: true,
-//                                createPostData: createPostDatas) { result in
-//      switch result {
-//      case .success(let postResponse):
-//        print(postResponse) // 이제 id는 Int 타입의 값입니다.
-//        print("성공")
-//
-//        completion()
-//      case .failure(let error):
-//        print("Error: \(error)")
-//      }
-//    }
     commonNetworking.moyaNetworking(networkingChoice: .createMyPost(createPostDatas)) { result in
       switch result {
       case .success(let response):

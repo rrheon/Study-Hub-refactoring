@@ -5,7 +5,7 @@
 //  Created by 최용헌 on 2024/02/01.
 //
 
-import Foundation
+import UIKit
 
 final class BookmarkManager {
   let commonNetworking = CommonNetworking.shared

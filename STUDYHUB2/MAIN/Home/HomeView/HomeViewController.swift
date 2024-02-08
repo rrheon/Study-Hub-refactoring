@@ -4,6 +4,7 @@ import UIKit
 import SnapKit
 
 final class HomeViewController: NaviHelper {
+  let loginManager = LoginManager.shared
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   let ueserInfoManager = UserInfoManager.shared

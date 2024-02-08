@@ -4,7 +4,7 @@ import SnapKit
 
 // searchResultCell이랑 같은 형식 , collectionview랑 추가버튼 같이 뜨게 수정해야함
 final class StudyViewController: NaviHelper {
-  
+  let loginManager = LoginManager.shared
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   var recentDatas: PostDataContent?
@@ -379,8 +379,10 @@ extension StudyViewController: AfterCreatePost {
 // MARK: - 북마크 관련
 extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int) {
-    bookmarkButtonTapped(postId) {
+    
+    self.bookmarkButtonTapped(postId) {
       self.resultCollectionView.reloadData()
+      
     }
   }
 }
