@@ -33,56 +33,38 @@ final class CreateStudyViewController: NaviHelper {
   var selectDate: String? = ""
   
   // MARK: - UI설정
-  private lazy var completeButton: UIButton = {
-    let completeButton = UIButton()
-    completeButton.setTitle("완료하기", for: .normal)
-    completeButton.setTitleColor(.white, for: .normal)
-    completeButton.backgroundColor = UIColor(hexCode: "#FF5530")
-    completeButton.layer.cornerRadius = 5
-    completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
-    return completeButton
-  }()
+  // 채팅방 링크
+  private lazy var headerContentStackView = createStackView(axis: .vertical,
+                                                            spacing: 40)
   
-  private lazy var categoryStackView = createStackView(axis: .vertical,
-                                                       spacing: 16)
-  private lazy var departmentButtonStackView = createStackView(axis: .vertical,
-                                                               spacing: 16)
-  // 성별버튼
-  private lazy var allGenderButton = createContactButton(title: "무관",
-                                                         selector: #selector(genderButtonTapped(_:)))
+  private lazy var chatLinkLabel = createLabel(title: "채팅방 링크",
+                                               textColor: .black,
+                                               fontType: "Pretendard",
+                                               fontSize: 18)
   
-  private lazy var maleOnlyButton = createContactButton(title: "남자만",
-                                                        selector:#selector(genderButtonTapped(_:)))
-  private lazy var femaleOnlyButton = createContactButton(title: "여자만",
-                                                          selector: #selector(genderButtonTapped(_:)))
-  // 대면 비대면 버튼
-  private lazy var contactButton = createContactButton(title: "대면",
-                                                       selector: #selector(meetButtonTapped(_:)))
-  
-  private lazy var untactButton = createContactButton(title: "비대면",
-                                                      selector: #selector(meetButtonTapped(_:)))
-  
-  private lazy var mixmeetButton = createContactButton(title: "혼합",
-                                                       selector: #selector(meetButtonTapped(_:)))
-  
-  // 벌금버튼
-  private lazy var haveFineButton = createFineButton(selector: #selector(haveFineButtonTapped(_:)))
-  
-  private lazy var noFineButton = createFineButton(selector: #selector(noFineButtonTapped(_:)))
-  
-  private lazy var fineButtonsStackView = createStackView(axis: .horizontal,
-                                                          spacing: 10)
-  private lazy var finefixStackView = createStackView(axis: .vertical,
-                                                      spacing: 10)
-  
-  private lazy var periodStackView = createStackView(axis: .vertical,
-                                                     spacing: 16)
-  
-  private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
-  private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  private lazy var descriptionLabel = createLabel(title: "참여코드가 없는 카카오톡 오픈 채팅방 링크로 첨부",
+                                                  textColor: .gray,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 14)
   
   private lazy var chatLinkTextField = createTextField(title: "채팅방 링크를 첨부해 주세요")
   
+  private lazy var chatLinkStackView = createStackView(axis: .vertical,
+                                                       spacing: 16)
+  
+  // MARK: - 스터디 제목
+  private lazy var studytitleLabel = createLabel(title: "스터디 제목",
+                                                 textColor: .black,
+                                                 fontType: "Pretendard",
+                                                 fontSize: 18)
+  
+  private lazy var studytitleTextField = createTextField(title: "제목을 적어주세요")
+  
+  // MARK: - 스터디 소개
+  private lazy var studyproduceLabel = createLabel(title: "스터디 소개",
+                                                   textColor: .black,
+                                                   fontType: "Pretendard",
+                                                   fontSize: 18)
   
   private lazy var studyproduceTextView: UITextView = {
     let tv = UITextView()
@@ -97,61 +79,7 @@ final class CreateStudyViewController: NaviHelper {
     return tv
   }()
   
-  private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
-  
-  private lazy var studymemberTextField = createTextField(title: "스터디 인원을 알려주세요")
-  private lazy var studytitleTextField = createTextField(title: "제목을 적어주세요")
-  
-  let startDatePicker = UIDatePicker()
-  let startDateTextField = UITextField()
-  var selectedStartDate: Date?
-  
-  let endDatePicker = UIDatePicker()
-  let endDateTextField = UITextField()
-  var selectedEndDate: Date?
-  
-  private lazy var headerContentStackView = createStackView(axis: .vertical,
-                                                            spacing: 40)
-  
-  private lazy var chatLinkStackView = createStackView(axis: .vertical,
-                                                       spacing: 16)
-  
-  private lazy var chatLinkLabel = createLabel(title: "채팅방 링크",
-                                               textColor: .black,
-                                               fontType: "Pretendard",
-                                               fontSize: 18)
-  
-  
-  private lazy var descriptionLabel = createLabel(title: "참여코드가 없는 카카오톡 오픈 채팅방 링크로 첨부",
-                                                  textColor: .gray,
-                                                  fontType: "Pretendard",
-                                                  fontSize: 14)
-  
-  private let chatLinkDividerLine: UIView = {
-    let chatLinkDividerLine = UIView()
-    chatLinkDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
-    return chatLinkDividerLine
-  }()
-  
-  private lazy var studyinfoStackView = createStackView(axis: .vertical,
-                                                        spacing: 16)
-  
-  private lazy var studytitleLabel = createLabel(title: "스터디 제목",
-                                                 textColor: .black,
-                                                 fontType: "Pretendard",
-                                                 fontSize: 18)
-  
-  private lazy var studyproduceLabel = createLabel(title: "내용",
-                                                   textColor: .black,
-                                                   fontType: "Pretendard",
-                                                   fontSize: 18)
-  
-  private let studyinfoStackViewDividerLine: UIView = {
-    let studyinfoStackViewDividerLine = UIView()
-    studyinfoStackViewDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
-    return studyinfoStackViewDividerLine
-  }()
-  
+  // MARK: - 관련학과 선택
   private lazy var associatedepartLabel = createLabel(title: "관련 학과 선택",
                                                       textColor: .black,
                                                       fontType: "Pretendard",
@@ -170,7 +98,115 @@ final class CreateStudyViewController: NaviHelper {
     button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     return button
   }()
+
+  private lazy var associatedepartButton: UIButton = {
+    let associatedepartButton = UIButton(type: .system)
+    associatedepartButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+    associatedepartButton.tintColor = .black
+    associatedepartButton.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
+    return associatedepartButton
+  }()
   
+  // MARK: - 스터디 팀원
+  private lazy var studymemberLabel = createLabel(title: "스터디 팀원",
+                                                  textColor: .black,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 18)
+  
+  // MARK: - 인원
+  private lazy var studymembercountLabel = createLabel(title: "인원",
+                                                       textColor: .black,
+                                                       fontType: "Pretendard",
+                                                       fontSize: 18)
+  
+
+  private lazy var description4Label = createLabel(title: "최대 50명 참여 가능",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
+  
+  private lazy var studymemberTextField = createTextField(title: "스터디 인원을 알려주세요")
+
+  private lazy var countLabel = createLabel(title: "명",
+                                            textColor: UIColor(hexCode: "#68737D"),
+                                            fontType: "Pretendard",
+                                            fontSize: 15)
+  
+  private lazy var countAlert = createLabel(title: "1명부터 가능해요(본인 제외)",
+                                            textColor: .r50,
+                                            fontType: "Pretendard",
+                                            fontSize: 12)
+  
+  // MARK: - 성별
+  private lazy var genderLabel = createLabel(title: "성별",
+                                             textColor: .black,
+                                             fontType: "Pretendard",
+                                             fontSize: 18)
+  
+  private lazy var description5Label = createLabel(title: "참여자의 성별 선택",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
+  
+  private lazy var allGenderButton = createContactButton(title: "무관",
+                                                         selector: #selector(genderButtonTapped(_:)))
+  
+  private lazy var maleOnlyButton = createContactButton(title: "남자만",
+                                                        selector:#selector(genderButtonTapped(_:)))
+  private lazy var femaleOnlyButton = createContactButton(title: "여자만",
+                                                          selector: #selector(genderButtonTapped(_:)))
+  
+  // MARK: - 스터디 방식
+  private lazy var studymethodLabel = createLabel(title: "스터디 방식",
+                                                  textColor: .black,
+                                                  fontType: "Pretendard",
+                                                  fontSize: 18)
+  
+  // MARK: - 대면 여부
+  private lazy var meetLabel = createLabel(title: "대면 여부",
+                                           textColor: .black,
+                                           fontType: "Pretendard",
+                                           fontSize: 18)
+  
+  private lazy var description6Label = createLabel(title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
+                                                   textColor: UIColor(hexCode: "#A1AAB0"),
+                                                   fontType: "Pretendard",
+                                                   fontSize: 12)
+  
+  private lazy var contactButton = createContactButton(title: "대면",
+                                                       selector: #selector(meetButtonTapped(_:)))
+  
+  private lazy var untactButton = createContactButton(title: "비대면",
+                                                      selector: #selector(meetButtonTapped(_:)))
+  
+  private lazy var mixmeetButton = createContactButton(title: "혼합",
+                                                       selector: #selector(meetButtonTapped(_:)))
+  
+  // MARK: - 벌금
+  private lazy var fineLabel = createLabel(title: "벌금",
+                                           textColor: .black,
+                                           fontType: "Pretendard",
+                                           fontSize: 18)
+  
+  private lazy var fineTypesTextField = createTextField(title: "지각비, 결석비 등")
+  private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
+
+   
+   private lazy var haveFineLabel = createLabel(title: "있어요",
+                                                textColor: .black,
+                                                fontType: "Pretendard",
+                                                fontSize: 16)
+
+  private lazy var haveFineButton = createFineButton(selector: #selector(haveFineButtonTapped(_:)))
+
+   private lazy var noFineLabel = createLabel(title: "없어요",
+                                              textColor: .black,
+                                              fontType: "Pretendard",
+                                              fontSize: 16)
+  
+  private lazy var noFineButton = createFineButton(selector: #selector(noFineButtonTapped(_:)))
+  
+  // MARK: - 기간
   private lazy var periodLabel = createLabel(title: "기간",
                                              textColor: .black,
                                              fontType: "Pretendard",
@@ -181,54 +217,63 @@ final class CreateStudyViewController: NaviHelper {
                                             fontType: "Pretendard",
                                             fontSize: 18)
   
+  private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  let startDatePicker = UIDatePicker()
+  let startDateTextField = UITextField()
+  var selectedStartDate: Date?
   
   private lazy var endLabel = createLabel(title: "종료하는 날",
                                           textColor: .black,
                                           fontType: "Pretendard",
                                           fontSize: 18)
   
+  private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+    
+  let endDatePicker = UIDatePicker()
+  let endDateTextField = UITextField()
+  var selectedEndDate: Date?
   
-  private lazy var genderLabel = createLabel(title: "성별",
-                                             textColor: .black,
-                                             fontType: "Pretendard",
-                                             fontSize: 18)
+  // MARK: - 완료하기
+  private lazy var completeButton: UIButton = {
+    let completeButton = UIButton()
+    completeButton.setTitle("완료하기", for: .normal)
+    completeButton.setTitleColor(.white, for: .normal)
+    completeButton.backgroundColor = UIColor(hexCode: "#FF5530")
+    completeButton.layer.cornerRadius = 5
+    completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    return completeButton
+  }()
   
-  private lazy var studymembercountLabel = createLabel(title: "인원",
-                                                       textColor: .black,
-                                                       fontType: "Pretendard",
-                                                       fontSize: 18)
-  
-  private lazy var studymemberLabel = createLabel(title: "스터디 팀원",
-                                                  textColor: .black,
-                                                  fontType: "Pretendard",
-                                                  fontSize: 18)
-  
-  private lazy var studymethodLabel = createLabel(title: "스터디 방식",
-                                                  textColor: .black,
-                                                  fontType: "Pretendard",
-                                                  fontSize: 18)
-  
-  private lazy var meetLabel = createLabel(title: "대면 여부",
-                                           textColor: .black,
-                                           fontType: "Pretendard",
-                                           fontSize: 18)
- private lazy var fineTypesTextField = createTextField(title: "지각비, 결석비 등")
+  private lazy var categoryStackView = createStackView(axis: .vertical,
+                                                       spacing: 16)
+  private lazy var departmentButtonStackView = createStackView(axis: .vertical,
+                                                               spacing: 16)
 
-  private lazy var fineLabel = createLabel(title: "벌금",
-                                           textColor: .black,
-                                           fontType: "Pretendard",
-                                           fontSize: 18)
   
-  private lazy var haveFineLabel = createLabel(title: "있어요",
-                                               textColor: .black,
-                                               fontType: "Pretendard",
-                                               fontSize: 16)
+  private lazy var fineButtonsStackView = createStackView(axis: .horizontal,
+                                                          spacing: 10)
+  private lazy var finefixStackView = createStackView(axis: .vertical,
+                                                      spacing: 10)
   
-  private lazy var noFineLabel = createLabel(title: "없어요",
-                                             textColor: .black,
-                                             fontType: "Pretendard",
-                                             fontSize: 16)
+  private lazy var periodStackView = createStackView(axis: .vertical,
+                                                     spacing: 16)
+
   
+  private let chatLinkDividerLine: UIView = {
+    let chatLinkDividerLine = UIView()
+    chatLinkDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
+    return chatLinkDividerLine
+  }()
+  
+  private lazy var studyinfoStackView = createStackView(axis: .vertical,
+                                                        spacing: 16)
+                                                        
+  private let studyinfoStackViewDividerLine: UIView = {
+    let studyinfoStackViewDividerLine = UIView()
+    studyinfoStackViewDividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
+    return studyinfoStackViewDividerLine
+  }()
+
   private lazy var associatedepartStackView = createStackView(axis: .horizontal,
                                                               spacing: 16)
   
@@ -240,31 +285,9 @@ final class CreateStudyViewController: NaviHelper {
   
   private lazy var meetButtonsStackView = createStackView(axis: .horizontal,
                                                           spacing: 16)
-  
-  private lazy var description4Label = createLabel(title: "최대 50명 참여 가능",
-                                                   textColor: UIColor(hexCode: "#A1AAB0"),
-                                                   fontType: "Pretendard",
-                                                   fontSize: 12)
-  
-  private lazy var countLabel = createLabel(title: "명",
-                                            textColor: UIColor(hexCode: "#68737D"),
-                                            fontType: "Pretendard",
-                                            fontSize: 15)
-  
-  private lazy var description5Label = createLabel(title: "참여자의 성별 선택",
-                                                   textColor: UIColor(hexCode: "#A1AAB0"),
-                                                   fontType: "Pretendard",
-                                                   fontSize: 12)
-  
-  
+
   private lazy var studymethodStackView = createStackView(axis: .vertical,
                                                           spacing: 16)
-  
-  
-  private lazy var description6Label = createLabel(title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
-                                                   textColor: UIColor(hexCode: "#A1AAB0"),
-                                                   fontType: "Pretendard",
-                                                   fontSize: 12)
   
   private lazy var categoryStackViewDividerLine = createDividerLine(height: 10)
   private lazy var grayDividerLine = createDividerLine(height: 2)
@@ -273,19 +296,7 @@ final class CreateStudyViewController: NaviHelper {
   private lazy var studymethodStackViewDividerLine = createDividerLine(height: 10)
   private lazy var grayDividerLine3 = createDividerLine(height: 2)
   
-  private lazy var associatedepartButton: UIButton = {
-    let associatedepartButton = UIButton(type: .system)
-    associatedepartButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-    associatedepartButton.tintColor = .black
-    associatedepartButton.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
-    return associatedepartButton
-  }()
-  
-  private lazy var countAlert = createLabel(title: "1명부터 가능해요(본인 제외)",
-                                            textColor: .r50,
-                                            fontType: "Pretendard",
-                                            fontSize: 12)
-  
+
   let scrollView = UIScrollView()
   
   // MARK: - viewDidLoad
@@ -1016,7 +1027,18 @@ final class CreateStudyViewController: NaviHelper {
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
   override func textFieldDidEndEditing(_ textField: UITextField) {
-    if textField == studymemberTextField, let text = textField.text, text == "0" {
+    if textField == fineAmountTextField {
+      if let text = fineAmountTextField.text,
+         let number = Int(text),
+         number >= 99999 {
+        fineAmountTextField.text = "99999"
+      }
+    }
+
+    if textField == studymemberTextField,
+       let text = textField.text,
+       let number = Int(text),
+       !(2...50).contains(number){
       countAlert.isHidden = false
       studymemberTextField.layer.borderColor = UIColor.r50.cgColor
       

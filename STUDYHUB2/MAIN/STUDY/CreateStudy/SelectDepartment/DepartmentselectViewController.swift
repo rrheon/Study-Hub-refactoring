@@ -51,7 +51,6 @@ final class DepartmentselectViewController: NaviHelper {
     view.backgroundColor = .white
     
     navigationItemSetting()
-    redesignNavigationbar()
     
     setupLayout()
     makeUI()
@@ -86,18 +85,28 @@ final class DepartmentselectViewController: NaviHelper {
   }
   
   // MARK: - 네비게이션바 재설정
-  func redesignNavigationbar(){
+  override func navigationItemSetting() {
+    super.navigationItemSetting()
+
     let rightButtonImg = UIImage(named: "DeCompletedImg.png")?.withRenderingMode(.alwaysOriginal)
     let rightButton = UIBarButtonItem(image: rightButtonImg,
                                       style: .plain,
                                       target: self,
-                                      action: #selector(redesingRightButtonTapped))
+                                      action: nil)
     self.navigationItem.rightBarButtonItem = rightButton
     
     settingNavigationTitle(title: "관련학과",
                            font: "Pretendard-Bold",
                            size: 18)
-    
+  }
+  
+  func redesignNavigationbar(){
+    let rightButtonImg = UIImage(named: "CompleteImage.png")?.withRenderingMode(.alwaysOriginal)
+    let rightButton = UIBarButtonItem(image: rightButtonImg,
+                                      style: .plain,
+                                      target: self,
+                                      action: #selector(redesingRightButtonTapped))
+    self.navigationItem.rightBarButtonItem = rightButton
   }
   
   @objc func redesingRightButtonTapped(){
@@ -204,6 +213,8 @@ extension DepartmentselectViewController: UITableViewDelegate, UITableViewDataSo
     if selectMajorLabel.text != nil {
       showToast(message: "관련학과는 1개만 선택이 가능해요", alertCheck: false)
     }
+    
+    redesignNavigationbar()
     
     selectMajorLabel.text = selectedCell
     selectMajorLabel.clipsToBounds = true
