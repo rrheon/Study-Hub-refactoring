@@ -7,6 +7,9 @@ class CalendarViewController: UIViewController {
   // delegate로 전달해보자
   private var previousVC = CreateStudyViewController()
   private var calendar: FSCalendar?
+  
+  var seledctedStartData: String? = nil
+  
   var selectDate: String?
   let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -56,13 +59,22 @@ class CalendarViewController: UIViewController {
   
   var selectedDate: Date = Date()
   
+  // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // FSCalendar를 생성하고 초기화합니다.
+    calendar?.locale = Locale(identifier: "ko_KR")
+    
+    setupLayout()
+    setupCalendarUI()
+    
+    view.backgroundColor = .white
+  }
+  
+  // MARK: - setupLayout
+  func setupLayout(){
     calendar = FSCalendar(frame: .zero)
     
-    // 옵셔널 체이닝을 사용하여 `calendar`에 접근하고 뷰에 추가합니다.
     if let cal = calendar {
       view.addSubview(cal)
       cal.snp.makeConstraints { make in
@@ -72,7 +84,7 @@ class CalendarViewController: UIViewController {
     }
     
     view.addSubview(titleLabel)
-    // titleLabel 제약 설정
+    
     titleLabel.snp.makeConstraints { make in
       make.leading.equalTo(calendar!).offset(50)
       make.top.equalTo(calendar!).offset(-60)
@@ -83,6 +95,7 @@ class CalendarViewController: UIViewController {
       make.centerY.equalTo(titleLabel)
       make.trailing.equalTo(titleLabel.snp.leading).offset(-20)
     }
+    
     view.addSubview(nextButton)
     // nextButton 제약 설정
     nextButton.snp.makeConstraints { make in
@@ -95,17 +108,17 @@ class CalendarViewController: UIViewController {
       make.centerY.equalTo(titleLabel)
       make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
     }
-    
-    calendar?.allowsMultipleSelection = false
-    
-    setupCalendarUI()
-    
-    view.backgroundColor = .white
   }
   
-  func setupCalendarUI(){
+  // MARK: - setupCalendarUI
+  func setupCalendarUI() {
+    calendar?.allowsSelection = true
+    calendar?.allowsMultipleSelection = false
+    
     calendar?.delegate = self
     calendar?.dataSource = self
+    
+    
     // 상단 요일을 한글로 변경
     self.calendar?.calendarWeekdayView.weekdayLabels[0].text = "일"
     self.calendar?.calendarWeekdayView.weekdayLabels[1].text = "월"
@@ -116,31 +129,69 @@ class CalendarViewController: UIViewController {
     self.calendar?.calendarWeekdayView.weekdayLabels[6].text = "토"
     
     calendar?.headerHeight = 0
-    calendar?.appearance.titleTodayColor = .o50 //Today에 표시되는 특정 글자색
-    calendar?.appearance.todayColor = .o10 //Today에 표시되는 선택 전 동그라미 색
-    calendar?.appearance.todaySelectionColor = .white  //Today에 표시되는 선택 후 동그라미 색
+    
     // 숫자들 글자 폰트 및 사이즈 지정
-    calendar?.appearance.titleFont = UIFont.systemFont(ofSize: 18)
+    calendar?.appearance.titleFont = UIFont(name: "Pretendare-Medium", size: 14)
     
     self.calendar?.appearance.weekdayTextColor = UIColor.bg80
     
     // 양옆 년도, 월 지우기
     calendar?.appearance.headerMinimumDissolvedAlpha = 0.0
     // 달에 유효하지 않은 날짜의 색 지정
-    self.calendar?.appearance.titlePlaceholderColor = UIColor.white.withAlphaComponent(0.2)
+    self.calendar?.appearance.titlePlaceholderColor = UIColor.red.withAlphaComponent(0.2)
     // 평일 날짜 색
     self.calendar?.appearance.titleDefaultColor = UIColor.black.withAlphaComponent(0.8)
+    self.calendar?.placeholderType = .none
+    
+    calendar?.appearance.titlePlaceholderColor = .lightGray
+    
+    calendar?.appearance.titleTodayColor = .o50
+    calendar?.appearance.todayColor = .o10
+    
+    calendar?.reloadData()
   }
   
-  // 날짜 선택 시 콜백 메소드
+  func calendar(_ calendar: FSCalendar,
+                willDisplay cell: FSCalendarCell,
+                for date: Date, at monthPosition: FSCalendarMonthPosition) {
+    let calendarCurrent = Calendar.current
+    let currentMonth = calendarCurrent.component(.month, from: Date())
+    let cellMonth = calendarCurrent.component(.month, from: date)
+    
+    if cellMonth == currentMonth {
+      let currentDay = calendarCurrent.component(.day, from: Date())
+      let cellDay = calendarCurrent.component(.day, from: date)
+      
+      if cellDay < currentDay {
+        cell.isHidden = false
+        cell.titleLabel.textColor = .bg40
+      } else if cellDay == currentDay {
+        cell.isHidden = false
+        cell.titleLabel.textColor = .o50
+      }
+    }
+  }
+  
+  // MARK: - 날짜 선택 시 콜백 메소드
   public func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "YYYY-MM-dd"
     selectDate = dateFormatter.string(from: date)
-    calendar.appearance.selectionColor = .o50
-    calendar.appearance.titleTodayColor = .black
-    calendar.appearance.todayColor = .white
+    
+    let isToday = Calendar.current.isDate(date, inSameDayAs: Date())
+    
+    if !isToday {
+      calendar.appearance.todayColor = .white
+      calendar.appearance.titleTodayColor = .black
+    } else {
+      calendar.appearance.todayColor = nil
+    }
+
+    
+    let selectionColorWithAlpha = UIColor.o50.withAlphaComponent(1.0)
+    calendar.appearance.selectionColor = selectionColorWithAlpha
   }
+  
   
   @objc private func nextCurrentPage(_ sender: UIButton) {
     let cal = Calendar.current
@@ -167,7 +218,7 @@ class CalendarViewController: UIViewController {
     guard let data = selectDate else { return }
     if buttonSelect == true {
       delegate?.dataSend(data: data, buttonTag: 1)
-
+      
     } else {
       delegate?.dataSend(data: data, buttonTag: 2)
     }
@@ -187,10 +238,32 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
   func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
     self.titleLabel.text = self.dateFormatter.string(from: calendar.currentPage)
   }
+  
+  func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
+    let currentDate = Date()
+    let calendar = Calendar.current
+    
+    if calendar.isDate(date, inSameDayAs: currentDate) || date > currentDate {
+      return appearance.titleDefaultColor
+    } else {
+      return UIColor.bg40
+    }
+  }
+  
+  
+  func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
+    let currentDate = Date()
+    let calendar = Calendar.current
+    
+    if calendar.isDate(date, inSameDayAs: currentDate) {
+      return true
+    }
+    
+    return date > currentDate
+  }
 }
 
 protocol ChangeDateProtocol {
   func dataSend(data: String, buttonTag: Int)
 }
-
 

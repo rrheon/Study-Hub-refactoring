@@ -641,10 +641,12 @@ final class CreateStudyViewController: NaviHelper {
       $0.leading.trailing.equalToSuperview()
     }
 
+    startDateButton.tag = 1
     startDateButton.snp.makeConstraints {
       $0.height.equalTo(50)
     }
     
+    endDateButton.tag = 2
     endDateButton.snp.makeConstraints {
       $0.height.equalTo(50)
     }
@@ -993,16 +995,17 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - calenderTapped함수
   @objc func calendarButtonTapped(_ sender: Any) {
-    let viewControllerToPresent = CalendarViewController()
-    viewControllerToPresent.delegate = self
+    let calendarVC = CalendarViewController()
+    calendarVC.delegate = self
     
     if (sender as AnyObject).tag == 1 {
-      viewControllerToPresent.buttonSelect = true
+      calendarVC.buttonSelect = true
     } else {
-      viewControllerToPresent.buttonSelect = false
+      calendarVC.buttonSelect = false
+      calendarVC.seledctedStartData = startDateButton.currentTitle
     }
     if #available(iOS 15.0, *) {
-      if let sheet = viewControllerToPresent.sheetPresentationController {
+      if let sheet = calendarVC.sheetPresentationController {
         if #available(iOS 16.0, *) {
           sheet.detents = [.custom(resolver: { context in
             return 400.0
@@ -1019,7 +1022,7 @@ final class CreateStudyViewController: NaviHelper {
     } else {
       // Fallback on earlier versions
     }
-    self.present(viewControllerToPresent, animated: true, completion: nil)
+    self.present(calendarVC, animated: true, completion: nil)
   }
   
   // MARK: - 수정하기눌렀을 때 데이터 가져옴
@@ -1101,7 +1104,6 @@ final class CreateStudyViewController: NaviHelper {
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
   override func textFieldDidEndEditing(_ textField: UITextField) {
-  
     if textField == fineAmountTextField {
       if let text = fineAmountTextField.text,
          let number = Int(text),
