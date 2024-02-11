@@ -997,12 +997,12 @@ final class CreateStudyViewController: NaviHelper {
   @objc func calendarButtonTapped(_ sender: Any) {
     let calendarVC = CalendarViewController()
     calendarVC.delegate = self
+    calendarVC.selectedStatDate = startDateButton.titleLabel?.text ?? ""
     
     if (sender as AnyObject).tag == 1 {
       calendarVC.buttonSelect = true
     } else {
       calendarVC.buttonSelect = false
-      calendarVC.seledctedStartData = startDateButton.currentTitle
     }
     if #available(iOS 15.0, *) {
       if let sheet = calendarVC.sheetPresentationController {

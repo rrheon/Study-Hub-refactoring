@@ -8,9 +8,10 @@ class CalendarViewController: UIViewController {
   private var previousVC = CreateStudyViewController()
   private var calendar: FSCalendar?
   
-  var seledctedStartData: String? = nil
-  
+  var selectedStatDate: String = ""
   var selectDate: String?
+  var selectedDay: Int = 0
+  
   let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy년 MM월" // 원하는 날짜 형식으로 설정
@@ -57,7 +58,7 @@ class CalendarViewController: UIViewController {
   
   private var currentPage: Date?
   
-  var selectedDate: Date = Date()
+  var selectedDate: Date? = Date()
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -73,6 +74,9 @@ class CalendarViewController: UIViewController {
   
   // MARK: - setupLayout
   func setupLayout(){
+    let endIndex = selectedStatDate.index(selectedStatDate.endIndex, offsetBy: -2)
+    selectedDay = Int(selectedStatDate[endIndex...]) ?? 0
+    
     calendar = FSCalendar(frame: .zero)
     
     if let cal = calendar {
@@ -118,7 +122,6 @@ class CalendarViewController: UIViewController {
     calendar?.delegate = self
     calendar?.dataSource = self
     
-    
     // 상단 요일을 한글로 변경
     self.calendar?.calendarWeekdayView.weekdayLabels[0].text = "일"
     self.calendar?.calendarWeekdayView.weekdayLabels[1].text = "월"
@@ -153,7 +156,8 @@ class CalendarViewController: UIViewController {
   
   func calendar(_ calendar: FSCalendar,
                 willDisplay cell: FSCalendarCell,
-                for date: Date, at monthPosition: FSCalendarMonthPosition) {
+                for date: Date,
+                at monthPosition: FSCalendarMonthPosition) {
     let calendarCurrent = Calendar.current
     let currentMonth = calendarCurrent.component(.month, from: Date())
     let cellMonth = calendarCurrent.component(.month, from: date)
@@ -161,19 +165,26 @@ class CalendarViewController: UIViewController {
     if cellMonth == currentMonth {
       let currentDay = calendarCurrent.component(.day, from: Date())
       let cellDay = calendarCurrent.component(.day, from: date)
-      
+    
       if cellDay < currentDay {
         cell.isHidden = false
         cell.titleLabel.textColor = .bg40
       } else if cellDay == currentDay {
         cell.isHidden = false
         cell.titleLabel.textColor = .o50
+      } else if selectedDay > cellDay {
+        cell.titleLabel.textColor = .bg40
+      } else if selectedDay == cellDay {
+        cell.titleLabel.textColor = .o50
+ 
       }
     }
   }
   
   // MARK: - 날짜 선택 시 콜백 메소드
-  public func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+  public func calendar(_ calendar: FSCalendar,
+                       didSelect date: Date,
+                       at monthPosition: FSCalendarMonthPosition) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "YYYY-MM-dd"
     selectDate = dateFormatter.string(from: date)
@@ -183,11 +194,10 @@ class CalendarViewController: UIViewController {
     if !isToday {
       calendar.appearance.todayColor = .white
       calendar.appearance.titleTodayColor = .black
-    } else {
+    } else if isToday{
       calendar.appearance.todayColor = nil
     }
 
-    
     let selectionColorWithAlpha = UIColor.o50.withAlphaComponent(1.0)
     calendar.appearance.selectionColor = selectionColorWithAlpha
   }
@@ -224,7 +234,6 @@ class CalendarViewController: UIViewController {
     }
     
     self.dismiss(animated: true, completion: nil)
-    
   }
 }
 
@@ -239,7 +248,9 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
     self.titleLabel.text = self.dateFormatter.string(from: calendar.currentPage)
   }
   
-  func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
+  func calendar(_ calendar: FSCalendar,
+                appearance: FSCalendarAppearance,
+                titleDefaultColorFor date: Date) -> UIColor? {
     let currentDate = Date()
     let calendar = Calendar.current
     
@@ -251,7 +262,9 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
   }
   
   
-  func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
+  func calendar(_ calendar: FSCalendar,
+                shouldSelect date: Date,
+                at monthPosition: FSCalendarMonthPosition) -> Bool {
     let currentDate = Date()
     let calendar = Calendar.current
     
