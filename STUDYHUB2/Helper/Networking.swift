@@ -22,7 +22,7 @@ enum networkingAPI {
   case createNewAccount(accountData: CreateAccount)
   case editUserNickName(_nickname: String)
   case editUserMaojr(_major: String)
-  case editUserPassword(_checkPassword: Bool, _password: String)
+  case editUserPassword(_checkPassword: Bool, email: String, _password: String)
   case verifyPassword(_password: String)
   case verifyEmail(_code: String, _email: String)
   case checkEmailDuplication(_email: String)
@@ -86,8 +86,8 @@ extension networkingAPI: TargetType {
       return "/v1/users/nickname"
     case .editUserMaojr(_major: _):
       return "/v1/users/major"
-    case .editUserPassword(_checkPassword: _, _password: _):
-      return "/v1/users/password"
+    case .editUserPassword(_checkPassword: _,email : _, _password: _):
+      return "/v2/users/password"
     case .verifyPassword(_password: _):
       return "/v1/users/password/verify"
     case .verifyEmail(_code:_, _email: _):
@@ -164,7 +164,7 @@ extension networkingAPI: TargetType {
     case .storeImage(_image: _),
         .editUserNickName(_nickname: _),
         .editUserMaojr(_major: _),
-        .editUserPassword(_checkPassword: _, _password: _),
+        .editUserPassword(_checkPassword: _, email: _, _password: _),
         .modifyComment(_commentId: _, _content: _),
         .modifyMyPost(_data: _),
         .closePost(_):
@@ -208,8 +208,8 @@ extension networkingAPI: TargetType {
     case .editUserMaojr(let major):
       let params = EditMajor(major: major)
       return .requestJSONEncodable(params)
-    case .editUserPassword(let checkPassword, let password):
-      let params = EditPassword(auth: checkPassword, password: password)
+    case .editUserPassword(let checkPassword, let email, let password):
+      let params = EditPassword(auth: checkPassword, email: email, password: password)
       return .requestJSONEncodable(params)
     case .verifyPassword(let password):
       let params = VerifyPassword(password: password)
@@ -335,7 +335,8 @@ extension networkingAPI: TargetType {
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
         .searchParticipateInfo(page: _, size: _, studyId: _),
-        .inquiryQuestion(content: _, title: _, toEmail: _):
+        .inquiryQuestion(content: _, title: _, toEmail: _),
+        .editUserPassword(_checkPassword: _, email: _, _password: _):
       return ["Content-type": "application/json"]
       
     case .verifyEmail(_code: _, _email: _):

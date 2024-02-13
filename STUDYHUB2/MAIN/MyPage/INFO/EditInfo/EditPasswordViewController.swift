@@ -301,6 +301,7 @@ final class EditPasswordViewController: NaviHelper {
 
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.editUserPassword(_checkPassword: true,
+                                       email: "",
                                        _password: password)) {
       switch $0 {
       case .success(let response):

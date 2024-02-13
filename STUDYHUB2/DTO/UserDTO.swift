@@ -67,6 +67,7 @@ struct EditMajor: Codable {
 // 비밀번호 수정
 struct EditPassword: Codable {
   let auth: Bool
+  let email: String
   let password: String
 }
 

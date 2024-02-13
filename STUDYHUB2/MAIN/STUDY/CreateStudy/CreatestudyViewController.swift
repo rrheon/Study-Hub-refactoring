@@ -746,12 +746,6 @@ final class CreateStudyViewController: NaviHelper {
     totalSelectMajorStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
   }
   
-  // 키보드 내리기 위한 탭 제스처 핸들러
-  @objc func handleTap() {
-    // 키보드를 내립니다.
-    view.endEditing(true)
-  }
-  
   // MARK: - 벌금이 있을 때
   @objc func haveFineButtonTapped(_ sender: UIButton) {
     sender.isSelected = !sender.isSelected
@@ -900,7 +894,6 @@ final class CreateStudyViewController: NaviHelper {
         studyStartDate: startDateButton.currentTitle ?? "",
         studyWay: contactMethod ?? "CONTACT",
         title: studytitleTextField.text ?? "")
-      print(studyData)
       
       loginManager.refreshAccessToken { result in
         switch result {

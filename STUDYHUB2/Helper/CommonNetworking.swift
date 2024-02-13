@@ -16,20 +16,27 @@ final class CommonNetworking {
   let loginManager = LoginManager.shared
   
   func moyaNetworking(networkingChoice: networkingAPI,
+                      needCheckToken: Bool = false,
                       completion: @escaping (Result<Response, MoyaError>) -> Void) {
   
-    checkingAccessToken { checkingToken in
-      switch checkingToken {
-      case true:
-        let provider = MoyaProvider<networkingAPI>()
-        provider.request(networkingChoice) { result in
-          completion(result)
+    if needCheckToken {
+      checkingAccessToken { checkingToken in
+        switch checkingToken {
+        case true:
+          let provider = MoyaProvider<networkingAPI>()
+          provider.request(networkingChoice) { result in
+            completion(result)
+          }
+        case false:
+          return
         }
-      case false:
-        return
+      }
+    } else {
+      let provider = MoyaProvider<networkingAPI>()
+      provider.request(networkingChoice) { result in
+        completion(result)
       }
     }
-    
   }
   
   func checkingAccessToken(presentVC: UIViewController? = nil,

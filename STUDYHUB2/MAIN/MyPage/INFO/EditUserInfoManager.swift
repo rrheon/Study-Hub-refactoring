@@ -63,11 +63,12 @@ final class EditUserInfoManager {
       switch result {
       case.success(let response):
         print(response.response)
-        switch response.statusCode{
+        switch response.statusCode {
         case 200:
           //가입이 안된경우
           completion(false)
         default:
+          print("q12")
           // 가입이 된경우
           completion(true)
         }
@@ -126,8 +127,10 @@ final class EditUserInfoManager {
   
   // MARK: - 비밀번호 변경
   func changePassword(password: String,
+                      email: String,
                       completion: @escaping () -> Void){
     commonNetworking.moyaNetworking(networkingChoice: .editUserPassword(_checkPassword: true,
+                                                                        email: email,
                                                                         _password: password)) { result in
       switch result {
       case .success(let response):

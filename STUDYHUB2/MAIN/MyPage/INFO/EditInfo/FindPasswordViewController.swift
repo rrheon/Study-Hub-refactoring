@@ -118,6 +118,8 @@ final class FindPasswordViewController: NaviHelper {
     emailTextField.addTarget(self,
                              action: #selector(textFieldDidChange(_:)),
                              for: .editingChanged)
+    emailTextField.autocorrectionType = .no
+    emailTextField.autocapitalizationType = .none
     emailTextField.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel)
@@ -157,7 +159,7 @@ final class FindPasswordViewController: NaviHelper {
     guard let textField1Text = emailTextField.text, !textField1Text.isEmpty else { return }
    
     let choseFunc = checkEmail ? #selector(checkValidCode) : #selector(checkEmailValid)
-    print(checkEmail)
+    print("이메일 체크:\(checkEmail)")
     let completeImg = UIImage(named: "ableNextButton")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,
                                          style: .plain,
@@ -169,8 +171,10 @@ final class FindPasswordViewController: NaviHelper {
   // MARK: - 이메일 가입여부 확인
   @objc func checkEmailValid(){
     guard let email = emailTextField.text else { return }
-    
+    print("이메일 가입 여부")
+    print(email)
     editUserInfoManager.checkEmailDuplication(email: email) { result in
+      print(result)
       if result {
         DispatchQueue.main.async {
           self.userEmail = email
@@ -381,14 +385,10 @@ final class FindPasswordViewController: NaviHelper {
   @objc func completeButtonTapped(){
     guard let password = enterNewPasswordTextField.text else { return }
 
-    editUserInfoManager.changePassword(password: password) {
+    editUserInfoManager.changePassword(password: password, email: userEmail ?? "") {
       DispatchQueue.main.async {
-        if self.previousVC == nil {
-          self.dismiss(animated: true)
-        } else {
-          self.navigationController?.popViewController(animated: true)
-        }
-      
+        self.navigationController?.popViewController(animated: true)
+
         self.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
       }
     }
