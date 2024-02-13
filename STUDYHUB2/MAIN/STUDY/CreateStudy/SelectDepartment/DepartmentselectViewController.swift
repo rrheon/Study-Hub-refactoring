@@ -32,7 +32,7 @@ final class DepartmentselectViewController: NaviHelper {
   private lazy var selectMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
     label.textColor = .bg80
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   

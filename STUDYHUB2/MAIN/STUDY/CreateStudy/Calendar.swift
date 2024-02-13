@@ -93,8 +93,8 @@ class CalendarViewController: UIViewController {
       make.leading.equalTo(calendar!).offset(50)
       make.top.equalTo(calendar!).offset(-60)
     }
+    
     view.addSubview(previousButton)
-    // previousButton 제약 설정
     previousButton.snp.makeConstraints { make in
       make.centerY.equalTo(titleLabel)
       make.trailing.equalTo(titleLabel.snp.leading).offset(-20)
@@ -122,6 +122,8 @@ class CalendarViewController: UIViewController {
     calendar?.delegate = self
     calendar?.dataSource = self
     
+    calendar?.scrollEnabled = false
+    
     // 상단 요일을 한글로 변경
     self.calendar?.calendarWeekdayView.weekdayLabels[0].text = "일"
     self.calendar?.calendarWeekdayView.weekdayLabels[1].text = "월"
@@ -148,8 +150,13 @@ class CalendarViewController: UIViewController {
     
     calendar?.appearance.titlePlaceholderColor = .lightGray
     
-    calendar?.appearance.titleTodayColor = .o50
-    calendar?.appearance.todayColor = .o10
+    if selectedStatDate == "선택하기" {
+      calendar?.appearance.titleTodayColor = .o50
+      calendar?.appearance.todayColor = .o10
+    }else {
+      calendar?.appearance.titleTodayColor = .black
+      calendar?.appearance.todayColor = .white
+    }
     
     calendar?.reloadData()
   }
@@ -165,18 +172,20 @@ class CalendarViewController: UIViewController {
     if cellMonth == currentMonth {
       let currentDay = calendarCurrent.component(.day, from: Date())
       let cellDay = calendarCurrent.component(.day, from: date)
-    
+      
       if cellDay < currentDay {
         cell.isHidden = false
         cell.titleLabel.textColor = .bg40
-      } else if cellDay == currentDay {
+      } else if cellDay == currentDay && selectedStatDate == "선택하기" {
         cell.isHidden = false
         cell.titleLabel.textColor = .o50
       } else if selectedDay > cellDay {
         cell.titleLabel.textColor = .bg40
       } else if selectedDay == cellDay {
         cell.titleLabel.textColor = .o50
- 
+        
+        cell.shapeLayer?.path = UIBezierPath(ovalIn: cell.bounds).cgPath
+        cell.shapeLayer?.fillColor = UIColor.o10.cgColor
       }
     }
   }
@@ -186,10 +195,11 @@ class CalendarViewController: UIViewController {
                        didSelect date: Date,
                        at monthPosition: FSCalendarMonthPosition) {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "YYYY-MM-dd"
+    dateFormatter.dateFormat = "yyyy-MM-dd"
     selectDate = dateFormatter.string(from: date)
     
     let isToday = Calendar.current.isDate(date, inSameDayAs: Date())
+    
     
     if !isToday {
       calendar.appearance.todayColor = .white
@@ -198,28 +208,34 @@ class CalendarViewController: UIViewController {
       calendar.appearance.todayColor = nil
     }
 
-    let selectionColorWithAlpha = UIColor.o50.withAlphaComponent(1.0)
-    calendar.appearance.selectionColor = selectionColorWithAlpha
+    calendar.appearance.selectionColor = .o50
   }
-  
   
   @objc private func nextCurrentPage(_ sender: UIButton) {
     let cal = Calendar.current
     var dateComponents = DateComponents()
-    dateComponents.weekOfMonth = 1
+    dateComponents.month = 1
+    dateFormatter.dateFormat = "yyyy년 MM월"
     
-    self.currentPage = cal.date(byAdding: dateComponents, to: self.currentPage ?? self.today)
-    self.calendar?.setCurrentPage(self.currentPage!, animated: true)
+    self.currentPage = cal.date(byAdding: dateComponents, to: self.currentPage ?? self.today )
+    if let currentPage = self.currentPage {
+      self.calendar?.setCurrentPage(currentPage, animated: true)
+    }
   }
   
   @objc private func prevCurrentPage(_ sender: UIButton) {
     let cal = Calendar.current
     var dateComponents = DateComponents()
-    dateComponents.weekOfMonth = -1
+    dateComponents.month = -1
+    dateFormatter.dateFormat = "yyyy년 MM월"
     
-    self.currentPage = cal.date(byAdding: dateComponents, to: self.currentPage ?? self.today)
-    self.calendar?.setCurrentPage(self.currentPage!, animated: true)
+    self.currentPage = cal.date(byAdding: dateComponents, to: self.currentPage ?? self.today )
+    if let currentPage = self.currentPage {
+      self.calendar?.setCurrentPage(currentPage, animated: true)
+    }
   }
+
+
   
   @objc private func completeButtonTapped(_ sender: UIButton) {
     if selectedDate == nil {
@@ -243,30 +259,26 @@ extension Date {
   }
 }
 
-extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+extension CalendarViewController: FSCalendarDelegate,
+                                  FSCalendarDataSource,
+                                  FSCalendarDelegateAppearance {
   func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
     self.titleLabel.text = self.dateFormatter.string(from: calendar.currentPage)
   }
   
-  func calendar(_ calendar: FSCalendar,
-                appearance: FSCalendarAppearance,
-                titleDefaultColorFor date: Date) -> UIColor? {
-    let currentDate = Date()
-    let calendar = Calendar.current
-    
-    if calendar.isDate(date, inSameDayAs: currentDate) || date > currentDate {
-      return appearance.titleDefaultColor
-    } else {
-      return UIColor.bg40
-    }
-  }
-  
-  
+  // 현재 날짜를 선택할 수 있는지 여부
   func calendar(_ calendar: FSCalendar,
                 shouldSelect date: Date,
                 at monthPosition: FSCalendarMonthPosition) -> Bool {
     let currentDate = Date()
     let calendar = Calendar.current
+
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    if let test = dateFormatter.date(from: selectedStatDate){
+      if date < test && buttonSelect == false {
+        return false
+      }
+    }
     
     if calendar.isDate(date, inSameDayAs: currentDate) {
       return true
@@ -274,6 +286,28 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
     
     return date > currentDate
   }
+  
+  
+  // 기본 색상 설정
+  func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
+    let currentDate = Date()
+    let calendar = Calendar.current
+    
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    
+    if let startDate = dateFormatter.date(from: selectedStatDate),
+       date < startDate && buttonSelect == false {
+      return UIColor.bg40
+    }
+    
+    if calendar.isDate(date, inSameDayAs: currentDate) || date > currentDate {
+      return appearance.titleDefaultColor
+    } else {
+      return UIColor.bg40
+    }
+  }
+
+
 }
 
 protocol ChangeDateProtocol {

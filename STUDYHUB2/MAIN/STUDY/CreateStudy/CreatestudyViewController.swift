@@ -99,7 +99,7 @@ final class CreateStudyViewController: NaviHelper {
   private lazy var selectedMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
     label.textColor = .bg80
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -700,7 +700,7 @@ final class CreateStudyViewController: NaviHelper {
     }
     self.present(popupVC, animated: true)
   }
-  
+
   // MARK: -  선택한 학과에 대한 버튼을 생성
   func addDepartmentButton(_ department: String) {
     totalSelectMajorStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 70, right: 20)
@@ -708,9 +708,8 @@ final class CreateStudyViewController: NaviHelper {
     selectedMajor = department
 
     guard let labelText = selectedMajor else { return }
-    let labelSize = (labelText as? NSString)?.size(withAttributes: [NSAttributedString.Key.font: selectedMajorLabel.font!])
 
-    selectedMajorLabel.text = "  \(labelText)  "
+    selectedMajorLabel.text = "  \(labelText)"
     selectedMajorLabel.clipsToBounds = true
     selectedMajorLabel.layer.cornerRadius = 15
     selectedMajorLabel.backgroundColor = .bg30
@@ -726,14 +725,13 @@ final class CreateStudyViewController: NaviHelper {
     selectedMajorLabel.snp.makeConstraints { make in
       make.top.equalTo(selectMajorLabel.snp.bottom).offset(10)
       make.leading.equalTo(selectMajorLabel)
-      make.width.equalTo((labelSize?.width ?? 30) + 35)
       make.height.equalTo(30)
     }
 
     cancelButton.isHidden = false
     cancelButton.snp.makeConstraints { make in
       make.centerY.equalTo(selectedMajorLabel.snp.centerY)
-      make.leading.equalTo(selectedMajorLabel.snp.trailing).offset(-10)
+      make.leading.equalTo(selectedMajorLabel.snp.trailing).offset(-30)
     }
     
     view.layoutIfNeeded()
