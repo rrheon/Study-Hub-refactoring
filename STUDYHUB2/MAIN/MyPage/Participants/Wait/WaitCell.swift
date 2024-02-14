@@ -11,8 +11,8 @@ import SnapKit
 import Kingfisher
 
 protocol ParticipantsCellDelegate: AnyObject {
-  func refuseButtonTapped(in cell: WaitCell)
-  func acceptButtonTapped(in cell: WaitCell)
+  func refuseButtonTapped(in cell: WaitCell, userId: Int)
+  func acceptButtonTapped(in cell: WaitCell, userId: Int)
 }
 
 final class WaitCell: UICollectionViewCell {
@@ -23,6 +23,8 @@ final class WaitCell: UICollectionViewCell {
       bind()
     }
   }
+  
+  lazy var userId: Int = 0
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -79,7 +81,7 @@ final class WaitCell: UICollectionViewCell {
     button.setTitleColor(UIColor.bg80, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addAction(UIAction { _ in
-      self.delegate?.refuseButtonTapped(in: self)
+      self.delegate?.refuseButtonTapped(in: self, userId: self.userId)
     }, for: .touchUpInside)
     return button
   }()
@@ -90,7 +92,7 @@ final class WaitCell: UICollectionViewCell {
     button.setTitleColor(UIColor.g_10, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addAction(UIAction { _ in
-      self.delegate?.acceptButtonTapped(in: self)
+      self.delegate?.acceptButtonTapped(in: self, userId: self.userId)
     }, for: .touchUpInside)
     return button
   }()
@@ -192,6 +194,8 @@ final class WaitCell: UICollectionViewCell {
   func bind(){
     guard let model = model else { return }
     model.map {
+      userId = $0.id
+
       majorLabel.text = $0.major.convertMajor($0.major, isEnglish: false)
       nickNameLabel.text = $0.nickname
       describeTextView.text = $0.introduce

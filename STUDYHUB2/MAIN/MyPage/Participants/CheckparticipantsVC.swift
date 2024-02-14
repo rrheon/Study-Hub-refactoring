@@ -13,6 +13,9 @@ final class CheckParticipantsVC: NaviHelper {
   let participateManager = ParticipateManager.shared
 
   var studyID: Int = 0
+  var setting: SettinInspection = .standby
+  lazy var settingValue = setting.description
+  
   var applyUserData: TotalApplyUserData?
   
   private lazy var topItemStackView = createStackView(axis: .horizontal,
@@ -104,11 +107,7 @@ final class CheckParticipantsVC: NaviHelper {
     navigationItemSetting()
     redesignNavigationbar()
     
-    participateManager.getApplyUserData(page: 0,
-                                        size :5,
-                                        studyID) { result in
-      self.applyUserData = result
-    
+    getParticipateInfo(type: settingValue.description) {
       DispatchQueue.main.async {
         self.setupLayout()
         self.makeUI()
@@ -205,6 +204,29 @@ final class CheckParticipantsVC: NaviHelper {
                            size: 18)
   }
   
+  // MARK: - 참여자 데이터 가져오기
+  func getParticipateInfo(type: String,
+                          completion: @escaping () -> Void){
+    participateManager.getApplyUserData(inspection: type,
+                                        page: 0,
+                                        size :5,
+                                        studyID) { result in
+      self.applyUserData = result
+    
+      completion()
+    }
+  }
+  
+  func participateTypeButton(type: SettinInspection, collectionView: UICollectionView){
+    setting = type
+    settingValue = setting.description
+    
+    getParticipateInfo(type: settingValue) { [weak self] in
+      collectionView.reloadData()
+    }
+  }
+  
+  // MARK: - 대기인원버튼
   func waitButtonTapped(){
     waitButton.resetUnderline()
 
@@ -214,8 +236,12 @@ final class CheckParticipantsVC: NaviHelper {
     waitingCollectionView.isHidden = false
     participateCollectionView.isHidden = true
     refuseCollectionView.isHidden = true
+    
+    participateTypeButton(type: .standby,
+                          collectionView: waitingCollectionView)
   }
   
+  // MARK: - 참여인원 버튼
   func participateButtonTapped(){
     participateButton.resetUnderline()
 
@@ -225,8 +251,13 @@ final class CheckParticipantsVC: NaviHelper {
     waitingCollectionView.isHidden = true
     participateCollectionView.isHidden = false
     refuseCollectionView.isHidden = true
+    
+ 
+    participateTypeButton(type: .accept,
+                          collectionView: participateCollectionView)
   }
   
+  // MARK: - 거절된 인원버튼
   func refusetButtonTapped(){
     refuseButton.resetUnderline()
 
@@ -236,6 +267,9 @@ final class CheckParticipantsVC: NaviHelper {
     waitingCollectionView.isHidden = true
     participateCollectionView.isHidden = true
     refuseCollectionView.isHidden = false
+    
+    participateTypeButton(type: .reject,
+                          collectionView: refuseCollectionView)
   }
 }
 
@@ -252,7 +286,7 @@ extension CheckParticipantsVC: UICollectionViewDelegate, UICollectionViewDataSou
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WaitCell.id,
                                                     for: indexPath) as! WaitCell
       cell.delegate = self
-      
+    
       if let content = applyUserData?.applyUserData.content {
         cell.model = content
       }
@@ -262,11 +296,22 @@ extension CheckParticipantsVC: UICollectionViewDelegate, UICollectionViewDataSou
     } else if collectionView.tag == 2{
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ParticipateCell.id,
                                                     for: indexPath) as! ParticipateCell
+      
+      if let content = applyUserData?.applyUserData.content {
+        cell.model = content
+      }
+      print(cell.model)
+
       return cell
 
     } else {
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RefusePersonCell.id,
                                                     for: indexPath) as! RefusePersonCell
+      if let content = applyUserData?.applyUserData.content {
+        cell.model = content
+      }
+      print(cell.model)
+
       return cell
     }
   }
@@ -289,9 +334,10 @@ extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
 
 // MARK: - bottomSheet
 extension CheckParticipantsVC: ParticipantsCellDelegate {
-  func refuseButtonTapped(in cell: WaitCell) {
+  func refuseButtonTapped(in cell: WaitCell, userId: Int) {
     let bottomVC = RefuseBottomSheet()
     bottomVC.delegate = self
+    bottomVC.userId = userId
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomVC.sheetPresentationController {
@@ -315,7 +361,7 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
   }
   
   // MARK: - 수락버튼
-  func acceptButtonTapped(in cell: WaitCell) {
+  func acceptButtonTapped(in cell: WaitCell, userId: Int) {
     let popupVC = PopupViewController(title: "이 신청자를 수락할까요?",
                                       desc: "수락 후,취소가 어려워요",
                                       leftButtonTitle: "아니요",
@@ -325,16 +371,32 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
     
     popupVC.popupView.rightButtonAction = { [weak self] in
       guard let self = self else { return }
-      print("수락탭")
-      popupVC.dismiss(animated: true)
-      self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+    
+      let personData = AcceptStudy(rejectedUserId: userId,
+                                   studyId: self.studyID)
+      self.participateManager.acceptApplyUser(personData: personData) {
+        popupVC.dismiss(animated: true)
+        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+      }
     }
   }
 }
 
 // MARK: - 거절(기타사유)로 할 경우 화면이동
 extension CheckParticipantsVC: RefuseBottomSheetDelegate {
-  func didTapRefuseButton(withReason reason: String, reasonNum: Int) {
+  func rejectPerson(_ reason: String, _ userId: Int){
+    let personData = RejectStudy(rejectReason: reason,
+                                 rejectedUserId: userId,
+                                 studyId: studyID)
+    participateManager.rejectApplyUser(personData: personData) {
+      self.showToast(message: "거절이 완료됐어요", alertCheck: true)
+      self.waitingCollectionView.reloadData()
+    }
+  }
+  
+  func didTapRefuseButton(withReason reason: String,
+                          reasonNum: Int,
+                          userId: Int) {
     if reasonNum == 3 {
       let refuseWriteVC = WriteRefuseReasonVC()
       refuseWriteVC.delegate = self
@@ -345,14 +407,13 @@ extension CheckParticipantsVC: RefuseBottomSheetDelegate {
         self.present(refuseWriteVC, animated: true, completion: nil)
       }
     } else {
-      showToast(message: "거절이 완료됐어요", alertCheck: true)
+      rejectPerson(reason, userId)
     }
   }
 }
 
 extension CheckParticipantsVC: WriteRefuseReasonVCDelegate {
-  func completeButtonTapped(reason: String) {
-    print(reason)
-    showToast(message: "거절이 완료됐어요", alertCheck: true)
+  func completeButtonTapped(reason: String, userId: Int) {
+    rejectPerson(reason, userId)
   }
 }

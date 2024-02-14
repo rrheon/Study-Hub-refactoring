@@ -10,11 +10,12 @@ import UIKit
 import SnapKit
 
 protocol RefuseBottomSheetDelegate: AnyObject {
-  func didTapRefuseButton(withReason reason: String, reasonNum: Int)
+  func didTapRefuseButton(withReason reason: String, reasonNum: Int, userId: Int)
 }
 
 final class RefuseBottomSheet: UIViewController {
   weak var delegate: RefuseBottomSheetDelegate?
+  var userId: Int = 0
   
   var refuseList = ["이 스터디의 목표와 맞지 않아요",
                     "팀원 조건과 맞지 않아요 (학과, 성별 등)",
@@ -165,7 +166,7 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
     self.dismiss(animated: true)
     
     let refuseReason = refuseList[selectedButtonTag]
-    delegate?.didTapRefuseButton(withReason: refuseReason, reasonNum: selectedButtonTag)
+    delegate?.didTapRefuseButton(withReason: refuseReason, reasonNum: selectedButtonTag, userId: userId)
   }
 }
 

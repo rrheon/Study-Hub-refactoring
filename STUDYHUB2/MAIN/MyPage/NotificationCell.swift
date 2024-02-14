@@ -29,15 +29,16 @@ final class NotificationCell: UICollectionViewCell {
     return label
   }()
   
-  private lazy var describeLabel: UILabel = {
-    let label = UILabel()
+  private lazy var describeLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
     label.text = "설명설명"
     label.textColor = .bg90
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     label.backgroundColor = .bg20
+    label.numberOfLines = 0
     return label
   }()
-  
+
   private let underlineView: UIView = {
     let view = UIView()
     view.backgroundColor = .bg30
@@ -86,7 +87,7 @@ final class NotificationCell: UICollectionViewCell {
     
     describeLabel.isHidden = true
     describeLabel.snp.makeConstraints {
-      $0.top.equalTo(createdDateLabel.snp.bottom).offset(20)
+      $0.top.equalTo(createdDateLabel.snp.bottom).offset(5)
       $0.leading.trailing.equalToSuperview()
     }
     

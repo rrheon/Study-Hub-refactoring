@@ -6,7 +6,7 @@ import SnapKit
 final class NotificationViewController: NaviHelper {
   
   let data = ["사과", "배", "수박"]
-  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
+  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
                     "f2","f3" ]
   var selectedCellIndexPath: IndexPath?
   

@@ -68,3 +68,16 @@ struct ApplyUserContent: Codable {
     case introduce, createdDate, inspection
   }
 }
+
+// MARK: - 스터디 참여 신청 수락
+struct AcceptStudy: Codable {
+  let rejectedUserId: Int
+  let studyId: Int
+}
+
+// MARK: - 스터디 참여 신청 것절
+struct RejectStudy: Codable {
+  let rejectReason: String
+  let rejectedUserId: Int
+  let studyId: Int
+}

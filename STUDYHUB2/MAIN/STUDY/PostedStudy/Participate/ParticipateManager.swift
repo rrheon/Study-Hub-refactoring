@@ -7,6 +7,23 @@
 
 import Foundation
 
+enum SettinInspection: CustomStringConvertible {
+  case accept
+  case reject
+  case standby
+  
+  var description: String {
+    switch self {
+    case .accept:
+      return "ACCEPT"
+    case .reject:
+      return "REJECT"
+    case .standby:
+      return "STANDBY"
+    }
+  }
+}
+
 final class ParticipateManager{
   
   static let shared = ParticipateManager()
@@ -51,12 +68,15 @@ final class ParticipateManager{
       }
     }
   }
-
-  func getApplyUserData(page: Int,
+  
+  // MARK: - 신청한 유저 정보 가져오기
+  func getApplyUserData(inspection: String,
+                        page: Int,
                         size: Int,
                         _ studyId: Int,
                         completion: @escaping (TotalApplyUserData) -> Void){
     commonNetworing.moyaNetworking(networkingChoice: .searchParticipateInfo(
+      inspection: inspection,
       page: page,
       size: size,
       studyId: studyId)) { result in
@@ -74,5 +94,33 @@ final class ParticipateManager{
           print(response.response)
         }
       }
+  }
+  
+  // MARK: - 스터디 참여 신청 수락
+  func acceptApplyUser(personData: AcceptStudy,
+                       completion: @escaping () -> Void){
+    commonNetworing.moyaNetworking(networkingChoice: .acceptParticipate(acceptPersonData: personData)) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
+        completion()
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
+  // MARK: - 스터디 참여 신청 거절
+  func rejectApplyUser(personData: RejectStudy,
+                       completion: @escaping () -> Void){
+    commonNetworing.moyaNetworking(networkingChoice: .rejectParticipate(rejectPersonData: personData)) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
+        completion()
+      case .failure(let response):
+        print(response.response)
+      }
+    }
   }
 }

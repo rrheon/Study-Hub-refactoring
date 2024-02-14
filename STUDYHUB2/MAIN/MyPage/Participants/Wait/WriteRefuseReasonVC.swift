@@ -2,11 +2,12 @@ import UIKit
 import SnapKit
 
 protocol WriteRefuseReasonVCDelegate: AnyObject {
-  func completeButtonTapped(reason: String)
+  func completeButtonTapped(reason: String, userId: Int)
 }
 
 final class WriteRefuseReasonVC: NaviHelper {
   weak var delegate: WriteRefuseReasonVCDelegate?
+  var userId: Int = 0
   
   private lazy var titleLabel: UILabel = {
     let label = createLabel(title: "해당 참여자를 거절하게 된 이유를 적어주세요 😢",
@@ -120,7 +121,7 @@ final class WriteRefuseReasonVC: NaviHelper {
   
   // MARK: - Button Action
   @objc private func completeButtonTapped() {
-    delegate?.completeButtonTapped(reason: reasonTextView.text)
+    delegate?.completeButtonTapped(reason: reasonTextView.text, userId: userId)
     navigationController?.popViewController(animated: true)
   }
 }

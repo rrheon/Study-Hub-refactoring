@@ -50,7 +50,9 @@ enum networkingAPI {
   // 스터디 참여 신청 관련
   case participateStudy(introduce: String, studyId: Int)
   case getMyParticipateList(page: Int, size: Int)
-  case searchParticipateInfo(page: Int, size: Int, studyId: Int)
+  case searchParticipateInfo(inspection: String, page: Int, size: Int, studyId: Int)
+  case acceptParticipate(acceptPersonData: AcceptStudy)
+  case rejectParticipate(rejectPersonData: RejectStudy)
   
   // 북마크 관련
   case changeBookMarkStatus(_ postId: Int)
@@ -132,8 +134,12 @@ extension networkingAPI: TargetType {
       return "/v1/study"
     case .getMyParticipateList(page: _, size: _):
       return "/v1/participated-study"
-    case .searchParticipateInfo(page: _, size: _, studyId: _):
-      return "/v1/study"
+    case .searchParticipateInfo(inspection: _, page: _, size: _, studyId: _):
+      return "/v2/study"
+    case .acceptParticipate(acceptPersonData: _):
+      return "/v1/study-accept"
+    case .rejectParticipate(rejectPersonData: _):
+      return "/v1/study-reject"
       
       // 북마크 관련
     case .changeBookMarkStatus(let postId):
@@ -157,7 +163,7 @@ extension networkingAPI: TargetType {
         .searchPostList(_hot: _, text: _,
                         page: _, size: _, titleAndMajor: _),
         .getMyParticipateList(page: _, size: _),
-        .searchParticipateInfo(page: _, size: _, studyId: _),
+        .searchParticipateInfo(inspection: _, page: _, size: _, studyId: _),
         .searchBookMarkList(page: _, size: _):
       return .get
       
@@ -167,7 +173,9 @@ extension networkingAPI: TargetType {
         .editUserPassword(_checkPassword: _, email: _, _password: _),
         .modifyComment(_commentId: _, _content: _),
         .modifyMyPost(_data: _),
-        .closePost(_):
+        .closePost(_),
+        .rejectParticipate(rejectPersonData: _),
+        .acceptParticipate(acceptPersonData: _):
       return .put
       
     case .deleteImage,
@@ -279,8 +287,9 @@ extension networkingAPI: TargetType {
       ]
       return .requestParameters(parameters: parmas, encoding: URLEncoding.queryString)
       
-    case .searchParticipateInfo(let page, let size, let studyId):
+    case .searchParticipateInfo(let inspection, let page, let size, let studyId):
       let params: [String: Any] = [
+        "inspection": inspection,
         "page": page,
         "size": size,
         "studyId": studyId
@@ -300,6 +309,12 @@ extension networkingAPI: TargetType {
       
     case .createMyPost(let data):
       return .requestJSONEncodable(data)
+      
+    case .acceptParticipate(let acceptData):
+      return .requestJSONEncodable(acceptData)
+      
+    case .rejectParticipate(let rejectData):
+      return .requestJSONEncodable(rejectData)
       
     case .deleteID,
         .searchSinglePost(_postId: _),
@@ -334,7 +349,7 @@ extension networkingAPI: TargetType {
                         size: _, titleAndMajor: _),
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
-        .searchParticipateInfo(page: _, size: _, studyId: _),
+        .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
         .editUserPassword(_checkPassword: _, email: _, _password: _):
       return ["Content-type": "application/json"]
@@ -352,7 +367,9 @@ extension networkingAPI: TargetType {
         .getMyParticipateList(page: _, size: _),
         .changeBookMarkStatus(_),
         .searchBookMarkList(page: _, size: _),
-        .createMyPost(_):
+        .createMyPost(_),
+        .rejectParticipate(rejectPersonData: _),
+        .acceptParticipate(acceptPersonData: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       

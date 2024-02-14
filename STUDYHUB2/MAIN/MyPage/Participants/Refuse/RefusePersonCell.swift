@@ -2,9 +2,16 @@
 import UIKit
 
 import SnapKit
+import Kingfisher
 
 final class RefusePersonCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
+  
+  var model: [ApplyUserContent]? {
+    didSet {
+      bind()
+    }
+  }
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -104,6 +111,33 @@ final class RefusePersonCell: UICollectionViewCell {
       $0.leading.equalTo(profileImageView)
       $0.trailing.equalToSuperview().offset(-10)
       $0.bottom.equalToSuperview().offset(-10)
+    }
+  }
+  
+  func bind(){
+    guard let model = model else { return }
+    model.map {
+      majorLabel.text = $0.major.convertMajor($0.major, isEnglish: false)
+      nickNameLabel.text = $0.nickname
+      dateLabel.text = "\($0.createdDate[0]). \($0.createdDate[1]). \($0.createdDate[2])"
+//      refuseReasonTextView.text = $0.
+      if let imageURL = URL(string: $0.imageURL ) {
+        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
+        
+        self.profileImageView.kf.setImage(with: imageURL,
+                                          options: [.processor(processor)]) { result in
+          switch result {
+          case .success(let value):
+            DispatchQueue.main.async {
+              self.profileImageView.image = value.image
+              self.profileImageView.layer.cornerRadius = 20
+              self.profileImageView.clipsToBounds = true
+            }
+          case .failure(let error):
+            print("Image download failed: \(error)")
+          }
+        }
+      }
     }
   }
 }
