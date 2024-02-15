@@ -9,32 +9,32 @@ import Foundation
 
 // MARK: - 내가 참여한 스터디 정보DTO
 struct TotalParticipateStudyData: Codable {
-    let participateStudyData: ParticipateStudyData
-    let totalCount: Int
+  let participateStudyData: ParticipateStudyData
+  let totalCount: Int
 }
 
 // MARK: - ParticipateStudyData
 struct ParticipateStudyData: Codable {
-    let content: [ParticipateContent]
-    let empty, first, last: Bool
-    let number, numberOfElements: Int
-    let pageable: Pageable
-    let size: Int
-    let sort: Sort
+  let content: [ParticipateContent]
+  let empty, first, last: Bool
+  let number, numberOfElements: Int
+  let pageable: Pageable
+  let size: Int
+  let sort: Sort
 }
 
 // MARK: - Content
 struct ParticipateContent: Codable {
-    let chatURL, content, inspection, major: String
-    let postID: Int
-    let title: String
-
-    enum CodingKeys: String, CodingKey {
-        case chatURL = "chatUrl"
-        case content, inspection, major
-        case postID = "postId"
-        case title
-    }
+  let chatURL, content, inspection, major: String
+  let postID: Int
+  let title: String
+  
+  enum CodingKeys: String, CodingKey {
+    case chatURL = "chatUrl"
+    case content, inspection, major
+    case postID = "postId"
+    case title
+  }
 }
 
 // MARK: - 스터디 신청자 정보 DTO
@@ -80,4 +80,34 @@ struct RejectStudy: Codable {
   let rejectReason: String
   let rejectedUserId: Int
   let studyId: Int
+}
+
+
+// MARK: - 내가 신청한 스터디 정보
+struct MyRequestList: Codable {
+    let requestStudyData: RequestStudyData
+    let totalCount: Int
+}
+
+// MARK: - RequestStudyData
+struct RequestStudyData: Codable {
+    let content: [RequestStudyContent]
+    let empty, first, last: Bool
+    let number, numberOfElements: Int
+    let pageable: Pageable
+    let size: Int
+    let sort: Sort
+}
+
+// MARK: - Content
+struct RequestStudyContent: Codable {
+  let inspection, introduce: String
+  let studyID: Int
+  let studyTitle: String
+  
+  enum CodingKeys: String, CodingKey {
+    case inspection, introduce
+    case studyID = "studyId"
+    case studyTitle
+  }
 }

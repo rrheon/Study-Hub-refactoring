@@ -49,7 +49,7 @@ final class ParticipateManager{
   // MARK: - 내가 참여한 스터디 목록조회
   func getMyParticipateList(_ page: Int,
                             _ size: Int,
-                            completion: @escaping () -> Void){
+                            completion: @escaping (TotalParticipateStudyData) -> Void){
     commonNetworing.moyaNetworking(networkingChoice: .getMyParticipateList(page: page,
                                                                            size: size)) { result in
       switch result {
@@ -58,11 +58,10 @@ final class ParticipateManager{
           
           let searchResult = try JSONDecoder().decode(TotalParticipateStudyData.self,
                                                       from: response.data)
-          print(searchResult)
+          completion(searchResult)
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-        completion()
       case .failure(let response):
         print(response.response)
       }

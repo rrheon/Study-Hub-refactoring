@@ -78,6 +78,9 @@
 		EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */; };
 		EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FC2B6D12990022302E /* InquiryViewController.swift */; };
 		EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */; };
+		EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */; };
+		EEDD81122B7DE3D70022302E /* MyReqeustCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */; };
+		EEDD81142B7DFCC30022302E /* MyRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD81132B7DFCC30022302E /* MyRequestManager.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
@@ -191,6 +194,9 @@
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
 		EEDD80FC2B6D12990022302E /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryDTO.swift; sourceTree = "<group>"; };
+		EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewController.swift; sourceTree = "<group>"; };
+		EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReqeustCell.swift; sourceTree = "<group>"; };
+		EEDD81132B7DFCC30022302E /* MyRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestManager.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
@@ -445,6 +451,16 @@
 			path = Wait;
 			sourceTree = "<group>";
 		};
+		EEDD81102B7DE2780022302E /* MyRequestList */ = {
+			isa = PBXGroup;
+			children = (
+				EEDD81132B7DFCC30022302E /* MyRequestManager.swift */,
+				EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */,
+				EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */,
+			);
+			path = MyRequestList;
+			sourceTree = "<group>";
+		};
 		EEFD5D222B5F67C300D1CE00 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
@@ -584,6 +600,7 @@
 				EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */,
 				EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */,
 				EE1E44172B18635600223436 /* MyParticipateStudy */,
+				EEDD81102B7DE2780022302E /* MyRequestList */,
 				EEB51E862B103C2300C23AB4 /* INFO */,
 				EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */,
 				EEB51E892B103C2300C23AB4 /* MyPost */,
@@ -747,6 +764,7 @@
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
+				EEDD81122B7DE3D70022302E /* MyReqeustCell.swift in Sources */,
 				EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */,
 				EE0A8B852B0A22F7001C3F41 /* PostDetailManager.swift in Sources */,
 				F873775B2AACD41D0055B041 /* BookmarkViewController.swift in Sources */,
@@ -776,6 +794,8 @@
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
+				EEDD81142B7DFCC30022302E /* MyRequestManager.swift in Sources */,
+				EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */,
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,

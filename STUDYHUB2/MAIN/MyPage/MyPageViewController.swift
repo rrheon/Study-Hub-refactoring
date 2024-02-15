@@ -128,23 +128,23 @@ final class MyPageViewController: NaviHelper {
     return joinstudyButton
   }()
   
-  // 북마크
-  private lazy var bookmarkCountLabel = createLabel(
+  // 신청 내역
+  private lazy var requestCountLabel = createLabel(
     title: "\(myPageUserData?.bookmarkCount ?? 0)",
     textColor: .black,
     fontType: "Pretendard-Bold",
     fontSize: 18)
   
-  private lazy var bookmarkLabel = createLabel(title: "신청내역",
+  private lazy var requestLabel = createLabel(title: "신청내역",
                                                textColor: .bg80,
                                                fontType: "Pretendard",
                                                fontSize: 14)
   
-  private lazy var bookmarkButton: UIButton = {
+  private lazy var requestListButton: UIButton = {
     // Create a button for "북마크"
     let bookmarkButton = UIButton()
     bookmarkButton.addAction(UIAction { _ in
-      self.bookmarkpageButtonTapped()
+      self.myRequestPageButtonTapped()
     }, for: .touchUpInside)
     
     return bookmarkButton
@@ -207,9 +207,9 @@ final class MyPageViewController: NaviHelper {
       joinstudyButton,
       joinstudyCountLabel,
       joinstudyLabel,
-      bookmarkButton,
-      bookmarkCountLabel,
-      bookmarkLabel,
+      requestListButton,
+      requestCountLabel,
+      requestLabel,
       boxesDividerLine,
       notificationButton,
       askButton,
@@ -237,7 +237,7 @@ final class MyPageViewController: NaviHelper {
       
       writtenButton.isEnabled = false
       joinstudyButton.isEnabled = false
-      bookmarkButton.isEnabled = false
+      requestListButton.isEnabled = false
     }else {
       profileImageView.snp.makeConstraints {
         $0.top.equalToSuperview().offset(30)
@@ -261,7 +261,7 @@ final class MyPageViewController: NaviHelper {
     }
     
     // 작성한 글 , 참여한 스터디, 북마크
-    let buttons = [writtenButton, joinstudyButton, bookmarkButton]
+    let buttons = [writtenButton, joinstudyButton, requestListButton]
     for button in buttons {
       button.backgroundColor = .bg20
       button.layer.cornerRadius = 5
@@ -306,21 +306,21 @@ final class MyPageViewController: NaviHelper {
     }
     
     // 북마크
-    bookmarkButton.snp.makeConstraints {
+    requestListButton.snp.makeConstraints {
       $0.leading.equalTo(joinstudyButton.snp.trailing).offset(15)
       $0.top.equalTo(writtenButton)
       $0.width.equalTo(105)
       $0.height.equalTo(87)
     }
     
-    bookmarkCountLabel.snp.makeConstraints {
-      $0.top.equalTo(bookmarkButton.snp.top).offset(20)
-      $0.centerX.equalTo(bookmarkButton)
+    requestCountLabel.snp.makeConstraints {
+      $0.top.equalTo(requestListButton.snp.top).offset(20)
+      $0.centerX.equalTo(requestListButton)
     }
     
-    bookmarkLabel.snp.makeConstraints {
-      $0.top.equalTo(bookmarkCountLabel.snp.bottom).offset(10)
-      $0.centerX.equalTo(bookmarkButton)
+    requestLabel.snp.makeConstraints {
+      $0.top.equalTo(requestCountLabel.snp.bottom).offset(10)
+      $0.centerX.equalTo(requestListButton)
     }
     
     boxesDividerLine.snp.makeConstraints {
@@ -367,7 +367,7 @@ final class MyPageViewController: NaviHelper {
       image: alertBellImg,
       style: .plain,
       target: self,
-      action: #selector(bookmarkpageButtonTapped))
+      action: #selector(bookMarkPageButtonTapped))
     alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
     navigationItem.leftBarButtonItem = myPage
@@ -416,15 +416,21 @@ final class MyPageViewController: NaviHelper {
   // MARK: - 참여한 스터디 버튼 탭
   func joinstudyButtonTapped(){
     let myParticipateVC = MyParticipateStudyVC()
-  
+    myParticipateVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(myParticipateVC, animated: true)
   }
   
   // MARK: - 북마크 버튼 탭
-  @objc func bookmarkpageButtonTapped() {
-    let bookmarkVC = BookmarkViewController()
-    bookmarkVC.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(bookmarkVC, animated: true)
+  @objc func bookMarkPageButtonTapped() {
+    let bookMarkVC = BookmarkViewController()
+    bookMarkVC.hidesBottomBarWhenPushed = true
+    self.navigationController?.pushViewController(bookMarkVC, animated: true)
+  }
+  
+  @objc func myRequestPageButtonTapped() {
+    let myRequestVC = MyRequestListViewController()
+    myRequestVC.hidesBottomBarWhenPushed = true
+    self.navigationController?.pushViewController(myRequestVC, animated: true)
   }
   
   // MARK: - 로그인화면 or 상세페이지 이동
@@ -450,12 +456,13 @@ final class MyPageViewController: NaviHelper {
   
   // MARK: - updateVC
   func updateVC(){
+    print(myPageUserData)
     self.nickNameLabel.text = self.myPageUserData?.nickname
     self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
     
     self.writtenCountLabel.text = "\(self.myPageUserData?.postCount ?? 0)"
     self.joinstudyCountLabel.text = "\(self.myPageUserData?.participateCount ?? 0)"
-    self.bookmarkCountLabel.text = "\(self.myPageUserData?.bookmarkCount ?? 0)"
+    self.requestCountLabel.text = "\(self.myPageUserData?.bookmarkCount ?? 0)"
 
     if let imageURL = URL(string: self.myPageUserData?.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))

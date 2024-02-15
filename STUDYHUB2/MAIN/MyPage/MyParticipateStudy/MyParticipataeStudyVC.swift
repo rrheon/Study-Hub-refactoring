@@ -12,7 +12,9 @@ import SnapKit
 final class MyParticipateStudyVC: NaviHelper {
   let participateManager = ParticipateManager.shared
   
-  var countPostNumber = 2 {
+  var participateInfo: TotalParticipateStudyData?
+  
+  var countPostNumber = 0 {
     didSet {
       totalPostCountLabel.text = "전체 \(countPostNumber)"
     }
@@ -20,8 +22,9 @@ final class MyParticipateStudyVC: NaviHelper {
   
   private lazy var totalPostCountLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     label.text = "전체 0"
+    label.textColor = .bg80
     return label
   }()
   
@@ -29,7 +32,7 @@ final class MyParticipateStudyVC: NaviHelper {
     let button = UIButton()
     button.setTitle("전체삭제", for: .normal)
     button.setTitleColor(UIColor.bg70, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 14)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addAction(UIAction { _ in
       print("tap button")
       self.confirmDeleteAll()
@@ -88,11 +91,14 @@ final class MyParticipateStudyVC: NaviHelper {
 //      self.makeUI()
 //    }
     
-    setupLayout()
-    makeUI()
+
     
-    participateManager.getMyParticipateList(0, 5) {
-      print("조회완료")
+    participateManager.getMyParticipateList(0, 5) { result in
+      print(result)
+      self.participateInfo = result
+      self.countPostNumber = result.totalCount
+      self.setupLayout()
+      self.makeUI()
     }
   }
   
@@ -120,6 +126,9 @@ final class MyParticipateStudyVC: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
+    totalPostCountLabel.changeColor(label: totalPostCountLabel,
+                                    wantToChange: "\(countPostNumber)",
+                                    color: .black)
     totalPostCountLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.leading.equalToSuperview().offset(20)
@@ -127,7 +136,7 @@ final class MyParticipateStudyVC: NaviHelper {
     
     deleteAllButton.snp.makeConstraints { make in
       make.top.equalTo(totalPostCountLabel)
-      make.trailing.equalToSuperview().offset(-10)
+      make.trailing.equalToSuperview().offset(-20)
       make.centerY.equalTo(totalPostCountLabel)
     }
     
@@ -158,9 +167,7 @@ final class MyParticipateStudyVC: NaviHelper {
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
       }
-    
     }
-    
   }
   
   private func registerCell() {
@@ -182,7 +189,7 @@ final class MyParticipateStudyVC: NaviHelper {
   
   func confirmDeleteAll(){
       let popupVC = PopupViewController(title: "스터디를 모두 삭제할까요?",
-                                        desc: "삭제하면 채팅방을 찾을 수 없으며, 미수락된 스터디는 신청이 취소돼요")
+                                        desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
      
       popupVC.modalPresentationStyle = .overFullScreen
       self.present(popupVC, animated: false)
@@ -193,7 +200,7 @@ final class MyParticipateStudyVC: NaviHelper {
 extension MyParticipateStudyVC: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return 2
+    return countPostNumber
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -201,6 +208,8 @@ extension MyParticipateStudyVC: UICollectionViewDelegate, UICollectionViewDataSo
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyParticipateCell.id,
                                                   for: indexPath) as! MyParticipateCell
     cell.delegate = self
+    cell.model = participateInfo?.participateStudyData.content[indexPath.row]
+    cell.contentView.isUserInteractionEnabled = false
     return cell
   }
 }
@@ -218,7 +227,7 @@ extension MyParticipateStudyVC: UICollectionViewDelegateFlowLayout {
 extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
-                                      desc: "삭제하면 신청이 취소돼요")
+                                      desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
 
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
