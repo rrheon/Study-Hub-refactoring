@@ -15,7 +15,8 @@ final class BookmarkManager {
   // MARK: - 북마크 버튼 눌렀을 때
   func bookmarkTapped(_ postId: Int,
                       completion: @escaping () -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .changeBookMarkStatus(postId)) { result in
+    commonNetworking.moyaNetworking(networkingChoice: .changeBookMarkStatus(postId) ,
+                                    needCheckToken: true) { result in
       switch result {
       case .success(let response):
         print(response.response)
@@ -30,7 +31,8 @@ final class BookmarkManager {
   func getBookmarkList(_ page: Int,
                        _ size: Int,
                        completion: @escaping (BookmarkDatas) -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .searchBookMarkList(page: 0, size: 10)) { result in
+    commonNetworking.moyaNetworking(networkingChoice: .searchBookMarkList(page: 0, size: 10),
+                                    needCheckToken: true) { result in
       switch result {
       case .success(let response):
         do {

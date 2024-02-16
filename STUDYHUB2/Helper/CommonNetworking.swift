@@ -21,6 +21,7 @@ final class CommonNetworking {
   
     if needCheckToken {
       checkingAccessToken { checkingToken in
+        print("토큰 체크:\(checkingToken)")
         switch checkingToken {
         case true:
           let provider = MoyaProvider<networkingAPI>()
@@ -44,8 +45,10 @@ final class CommonNetworking {
     loginManager.refreshAccessToken { result in
       switch result {
       case true:
+        print("네트워킹 ㄱㄱ")
         completion(true)
       case false:
+        print("로그인만료")
         let popupVC = PopupViewController(
           title: "재로그인이 필요해요",
           desc: "보안을 위해 자동 로그아웃됐어요.\n다시 로그인해주세요.",

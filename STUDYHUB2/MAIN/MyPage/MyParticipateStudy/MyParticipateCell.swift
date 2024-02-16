@@ -11,6 +11,7 @@ import SnapKit
 
 protocol MyParticipateCellDelegate: AnyObject {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int)
+  func moveToChatUrl(chatURL: NSURL)
 }
 
 final class MyParticipateCell: UICollectionViewCell {
@@ -22,6 +23,8 @@ final class MyParticipateCell: UICollectionViewCell {
       bind()
     }
   }
+  
+  var chatURL: String = ""
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
@@ -150,6 +153,8 @@ final class MyParticipateCell: UICollectionViewCell {
   
   func moveToChatButtonTapped(){
     print("@")
+    guard let chatURL = NSURL(string: chatURL) else { return }
+    self.delegate?.moveToChatUrl(chatURL: chatURL)
   }
   
   func bind(){
@@ -158,6 +163,7 @@ final class MyParticipateCell: UICollectionViewCell {
       majorLabel.text = $0.major
       titleLabel.text = $0.title
       infoLabel.text = $0.content
+      chatURL = $0.chatURL
     }
   }
 }

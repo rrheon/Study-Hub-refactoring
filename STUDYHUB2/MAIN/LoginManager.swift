@@ -31,7 +31,8 @@ class LoginManager {
             
             let saveResult = self.tokenManager.saveTokens(accessToken: refreshResult.accessToken,
                                                           refreshToken: refreshResult.refreshToken)
-            completion(saveResult)
+            print("saveResult:\(saveResult)")
+            completion(true)
           }
         } catch {
           print("Failed to decode JSON: \(error)")

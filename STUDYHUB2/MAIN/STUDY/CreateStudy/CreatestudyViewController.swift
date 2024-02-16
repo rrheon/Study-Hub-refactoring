@@ -706,7 +706,7 @@ final class CreateStudyViewController: NaviHelper {
     totalSelectMajorStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 70, right: 20)
 
     selectedMajor = department
-
+    print(selectedMajor)
     guard let labelText = selectedMajor else { return }
 
     selectedMajorLabel.text = "  \(labelText)"
@@ -715,8 +715,6 @@ final class CreateStudyViewController: NaviHelper {
     selectedMajorLabel.backgroundColor = .bg30
     selectedMajorLabel.textAlignment = .left
     selectedMajorLabel.adjustsFontSizeToFitWidth = true
-
-    selectedMajor = selectedMajorLabel.text ?? ""
 
     scrollView.addSubview(selectedMajorLabel)
     scrollView.addSubview(cancelButton)
@@ -898,6 +896,7 @@ final class CreateStudyViewController: NaviHelper {
       loginManager.refreshAccessToken { result in
         switch result {
         case true:
+          print(studyData)
           self.postManager.createPost(createPostDatas: studyData) { postId in
             self.navigationController?.popViewController(animated: false)
             

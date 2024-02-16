@@ -35,7 +35,8 @@ final class ParticipateManager{
                         studyId: Int,
                         completion: @escaping () -> Void){
     commonNetworing.moyaNetworking(networkingChoice: .participateStudy(introduce: introduce,
-                                                                       studyId: studyId)) { result in
+                                                                       studyId: studyId),
+                                   needCheckToken: true) { result in
       switch result {
       case .success(let response):
         print(response.response)
@@ -51,7 +52,8 @@ final class ParticipateManager{
                             _ size: Int,
                             completion: @escaping (TotalParticipateStudyData) -> Void){
     commonNetworing.moyaNetworking(networkingChoice: .getMyParticipateList(page: page,
-                                                                           size: size)) { result in
+                                                                           size: size),
+                                   needCheckToken: true) { result in
       switch result {
       case .success(let response):
         do {
@@ -78,7 +80,7 @@ final class ParticipateManager{
       inspection: inspection,
       page: page,
       size: size,
-      studyId: studyId)) { result in
+      studyId: studyId),needCheckToken: true) { result in
         switch result {
         case .success(let response):
           do {
@@ -98,7 +100,7 @@ final class ParticipateManager{
   // MARK: - 스터디 참여 신청 수락
   func acceptApplyUser(personData: AcceptStudy,
                        completion: @escaping () -> Void){
-    commonNetworing.moyaNetworking(networkingChoice: .acceptParticipate(acceptPersonData: personData)) { result in
+    commonNetworing.moyaNetworking(networkingChoice: .acceptParticipate(acceptPersonData: personData),needCheckToken: true) { result in
       switch result {
       case .success(let response):
         print(response.response)
@@ -112,7 +114,7 @@ final class ParticipateManager{
   // MARK: - 스터디 참여 신청 거절
   func rejectApplyUser(personData: RejectStudy,
                        completion: @escaping () -> Void){
-    commonNetworing.moyaNetworking(networkingChoice: .rejectParticipate(rejectPersonData: personData)) { result in
+    commonNetworing.moyaNetworking(networkingChoice: .rejectParticipate(rejectPersonData: personData),needCheckToken: true) { result in
       switch result {
       case .success(let response):
         print(response.response)

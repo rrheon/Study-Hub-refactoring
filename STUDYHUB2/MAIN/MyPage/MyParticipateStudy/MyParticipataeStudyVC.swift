@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 import SnapKit
 
@@ -225,6 +226,12 @@ extension MyParticipateStudyVC: UICollectionViewDelegateFlowLayout {
 
 
 extension MyParticipateStudyVC: MyParticipateCellDelegate {
+  func moveToChatUrl(chatURL: NSURL) {
+    let chatLinkSafariView: SFSafariViewController = SFSafariViewController(url: chatURL as URL)
+    self.present(chatLinkSafariView, animated: true)
+  
+  }
+  
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")

@@ -14,7 +14,7 @@ final class MyRequestListViewController: NaviHelper {
   let myRequestListManger = MyRequestManager.shared
   
   var requestStudyList: [RequestStudyContent]? = []
- 
+  
   var countPostNumber = 2 {
     didSet {
       totalPostCountLabel.text = "전체 \(countPostNumber)"
@@ -65,12 +65,10 @@ final class MyRequestListViewController: NaviHelper {
     
     navigationItemSetting()
     
-    
-    registerCell()
-    
     filterRequestList {
       self.countPostNumber = self.requestStudyList?.count ?? 0
-
+      
+      self.registerCell()
       self.setupLayout()
       self.makeUI()
     }
@@ -80,14 +78,14 @@ final class MyRequestListViewController: NaviHelper {
     myRequestListManger.getMyRequestStudyList { [weak self] result in
       let filteredList = result.requestStudyData.content.filter { $0.inspection != "ACCEPT" }
       self?.requestStudyList?.append(contentsOf: filteredList)
-          
+      
       completion()
     }
   }
   
   // MARK: - setupLayout
   func setupLayout(){
-
+    
     if countPostNumber > 0 {
       [
         totalPostCountLabel,
@@ -116,7 +114,7 @@ final class MyRequestListViewController: NaviHelper {
     }
     
     myStudyRequestCollectionView.snp.makeConstraints {
-      $0.top.equalTo(totalPostCountLabel.snp.bottom).offset(10)
+      $0.top.equalTo(totalPostCountLabel.snp.bottom).offset(20)
       $0.leading.equalTo(totalPostCountLabel)
       $0.trailing.equalToSuperview().offset(-20)
       $0.bottom.equalToSuperview()
@@ -135,9 +133,9 @@ final class MyRequestListViewController: NaviHelper {
   private func registerCell() {
     myStudyRequestCollectionView.delegate = self
     myStudyRequestCollectionView.dataSource = self
-
+    
     myStudyRequestCollectionView.register(MyRequestCell.self,
-                                  forCellWithReuseIdentifier: MyRequestCell.id)
+                                          forCellWithReuseIdentifier: MyRequestCell.id)
   }
 }
 
@@ -147,14 +145,18 @@ extension MyRequestListViewController: UICollectionViewDelegate, UICollectionVie
                       numberOfItemsInSection section: Int) -> Int {
     return countPostNumber
   }
-
+  
   func collectionView(_ collectionView: UICollectionView,
                       cellForItemAt indexPath: IndexPath)  -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyRequestCell.id,
                                                   for: indexPath) as! MyRequestCell
     cell.delegate = self
+    print(requestStudyList)
     cell.model = requestStudyList?[indexPath.row]
     cell.contentView.isUserInteractionEnabled = false
+    
+    myStudyRequestCollectionView.collectionViewLayout.invalidateLayout()
+
     return cell
   }
 }
@@ -164,16 +166,24 @@ extension MyRequestListViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: 350, height: 197)
+    let model = requestStudyList?[indexPath.row]
+    let cellHeight = model?.inspection == "REJECT" ? 239 : 197
+    return CGSize(width: 350, height: cellHeight)
   }
 }
 
 
 extension MyRequestListViewController: MyRequestCellDelegate {
+  func moveToCheckRejectReason(studyId: Int) {
+    myRequestListManger.getMyRejectReason(studyId: studyId) {
+      print("1")
+    }
+  }
+  
   func deleteButtonTapped(in cell: MyRequestCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-
+    
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }

@@ -15,7 +15,8 @@ final class MyRequestManager {
   
   func getMyRequestStudyList(completion: @escaping (MyRequestList) -> Void){
     commonNetwork.moyaNetworking(networkingChoice: .getMyReqeustList(page: 0,
-                                                                     size: 5)) { result in
+                                                                     size: 5)
+                                 ,needCheckToken: true) { result in
       switch result {
       case .success(let response):
         do {
@@ -28,6 +29,20 @@ final class MyRequestManager {
           print(response.response)
           print("Failed to decode JSON: \(error)")
         }
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
+  func getMyRejectReason(studyId: Int,
+                         completion: @escaping () -> Void){
+    commonNetwork.moyaNetworking(networkingChoice: .getRejectReason(studyId),
+                                 needCheckToken: true) { result in
+      switch result{
+      case .success(let response):
+        print(response.response)
+        completion()
       case .failure(let response):
         print(response.response)
       }

@@ -130,7 +130,7 @@ final class MyPageViewController: NaviHelper {
   
   // 신청 내역
   private lazy var requestCountLabel = createLabel(
-    title: "\(myPageUserData?.bookmarkCount ?? 0)",
+    title: "\(myPageUserData?.applyCount ?? 0)",
     textColor: .black,
     fontType: "Pretendard-Bold",
     fontSize: 18)
@@ -189,6 +189,7 @@ final class MyPageViewController: NaviHelper {
       ].forEach {
         view.addSubview($0)
       }
+      profileImageView.isHidden = true
     } else {
       [
         profileImageView,
@@ -197,6 +198,7 @@ final class MyPageViewController: NaviHelper {
       ].forEach {
         view.addSubview($0)
       }
+      profileImageView.isHidden = false
     }
    
     [
@@ -460,9 +462,11 @@ final class MyPageViewController: NaviHelper {
     self.nickNameLabel.text = self.myPageUserData?.nickname
     self.majorLabel.text = self.convertMajor(self.myPageUserData?.major ?? "", isEnglish: false)
     
+    guard let joinCount = self.myPageUserData?.participateCount,
+          let applyCount = self.myPageUserData?.applyCount else { return }
     self.writtenCountLabel.text = "\(self.myPageUserData?.postCount ?? 0)"
-    self.joinstudyCountLabel.text = "\(self.myPageUserData?.participateCount ?? 0)"
-    self.requestCountLabel.text = "\(self.myPageUserData?.bookmarkCount ?? 0)"
+    self.joinstudyCountLabel.text = "\(joinCount)"
+    self.requestCountLabel.text = "\(applyCount - joinCount)"
 
     if let imageURL = URL(string: self.myPageUserData?.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))

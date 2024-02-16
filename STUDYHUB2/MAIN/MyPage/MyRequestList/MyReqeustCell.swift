@@ -5,6 +5,7 @@ import SnapKit
 
 protocol MyRequestCellDelegate: AnyObject {
   func deleteButtonTapped(in cell: MyRequestCell, postID: Int)
+  func moveToCheckRejectReason(studyId: Int)
 }
 
 final class MyRequestCell: UICollectionViewCell {
@@ -52,6 +53,7 @@ final class MyRequestCell: UICollectionViewCell {
     label.textColor = .bg80
     label.backgroundColor = .bg20
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
+    label.setLineSpacing(spacing: 10)
     return label
   }()
 
@@ -61,8 +63,11 @@ final class MyRequestCell: UICollectionViewCell {
     button.setTitleColor(UIColor.bg80, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.titleLabel?.textAlignment = .center
+    button.layer.borderWidth = 1
+    button.layer.cornerRadius = 5
+    button.layer.borderColor = UIColor.bg50.cgColor
     button.addAction(UIAction { _ in
-      self.moveToChatButtonTapped()
+      self.checkRejectReason()
     }, for: .touchUpInside)
     return button
   }()
@@ -95,6 +100,7 @@ final class MyRequestCell: UICollectionViewCell {
   }
   
   private func configure() {
+    print("2")
     requestLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(20)
@@ -111,24 +117,20 @@ final class MyRequestCell: UICollectionViewCell {
     }
     
     infoLabel.numberOfLines = 0
-    infoLabel.changeColor(label: infoLabel,
-                          wantToChange: "신청 내용",
-                          color: .bg60,
-                          font: UIFont(name: "Pretendard-SemiBold",
-                                                    size: 12))
     infoLabel.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(15)
       $0.leading.equalTo(requestLabel.snp.leading)
       $0.trailing.equalToSuperview().offset(-20)
     }
     
-    if requestLabel.text == "거절" {
-      checkRejectReasonButton.snp.makeConstraints {
-        $0.top.equalTo(infoLabel.snp.bottom)
-        $0.height.equalTo(42)
-      }
+    checkRejectReasonButton.isHidden = true
+    checkRejectReasonButton.snp.makeConstraints {
+      $0.top.equalTo(infoLabel.snp.bottom).offset(20)
+      $0.height.equalTo(42)
+      $0.leading.equalTo(requestLabel)
+      $0.trailing.equalToSuperview().offset(-20)
     }
-
+    
     backgroundColor = .white
     
     self.layer.borderWidth = 0.1
@@ -138,19 +140,30 @@ final class MyRequestCell: UICollectionViewCell {
   
   func deleteButtonTapped(){
     self.delegate?.deleteButtonTapped(in: self, postID: 0)
-    print("1")
   }
   
-  func moveToChatButtonTapped(){
-    print("@")
+  func checkRejectReason(){
+    self.delegate?.moveToCheckRejectReason(studyId: self.model?.studyID ?? 0)
   }
   
   func bind(){
     guard let model = model else { return }
     
     requestLabel.text = model.inspection == "STANDBY" ? "수락 대기 중" : "거절"
+    
+    if requestLabel.text == "거절" {
+      checkRejectReasonButton.isHidden = false
+      requestLabel.backgroundColor = .bg30
+      requestLabel.textColor = .bg80
+    }
+  
     titleLabel.text = model.studyTitle
-    infoLabel.text = "신청내용\n\(model.introduce)"
+    infoLabel.text = "신청 내용\n\(model.introduce)"
+    infoLabel.changeColor(label: infoLabel,
+                          wantToChange: "신청 내용",
+                          color: .bg60,
+                          font: UIFont(name: "Pretendard-SemiBold",
+                                                    size: 12))
   }
 }
 

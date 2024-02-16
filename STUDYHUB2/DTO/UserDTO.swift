@@ -30,13 +30,13 @@ struct UserData: Codable {
 
 // MARK: - 내정보
 struct UserDetailData: Codable {
-  var bookmarkCount: Int?
+  var applyCount: Int?
   var email, gender, imageURL, major: String?
   var nickname: String?
   var participateCount, postCount: Int?
   
   enum CodingKeys: String, CodingKey {
-    case bookmarkCount, email, gender
+    case applyCount, email, gender
     case imageURL = "imageUrl"
     case major, nickname, participateCount, postCount
   }
