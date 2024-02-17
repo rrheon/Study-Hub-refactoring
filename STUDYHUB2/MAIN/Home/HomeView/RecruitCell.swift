@@ -25,7 +25,9 @@ final class RecruitPostCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
+                                    userId: self.model?.userData.userID ?? 0)
+      self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -161,10 +163,20 @@ final class RecruitPostCell: UICollectionViewCell {
   }
 
   
+  private func bookmarkTapped(){
+    
+    checkBookmarked = !(checkBookmarked ?? false)
+    print(checkBookmarked)
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+  }
+  
   private func bind() {
     guard let data = model else { return }
     
     var studyPersonCount = data.studyPerson - data.remainingSeat
+    
+    checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     
     majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)

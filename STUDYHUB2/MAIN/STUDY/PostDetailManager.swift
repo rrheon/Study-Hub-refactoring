@@ -23,7 +23,8 @@ final class PostDetailInfoManager {
   }
   
   func searchSinglePostData(postId: Int, completion: @escaping () -> Void){
-    commonNetwork.moyaNetworking(networkingChoice: .searchSinglePost(_postId: postId)) { result in
+    commonNetwork.moyaNetworking(networkingChoice: .searchSinglePost(_postId: postId),
+                                 needCheckToken: true) { result in
       switch result {
       case .success(let response):
         do {

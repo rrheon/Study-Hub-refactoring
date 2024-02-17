@@ -89,7 +89,6 @@ final class StudyViewController: NaviHelper {
     
     setupCollectionView()
    
-    fetchBookmarkList {
       self.postDataManager.getRecentPostDatas(hotType: "false") {
         self.recentDatas = self.postDataManager.getRecentPostDatas()
         DispatchQueue.main.async {
@@ -101,7 +100,7 @@ final class StudyViewController: NaviHelper {
         }
       }
     }
-  }
+  
   
   // MARK: - setupLayout
   func setupLayout(){
@@ -378,11 +377,10 @@ extension StudyViewController: AfterCreatePost {
 
 // MARK: - 북마크 관련
 extension StudyViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int) {
+  func bookmarkTapped(postId: Int, userId: Int) {
     
-    self.bookmarkButtonTapped(postId) {
+    self.bookmarkButtonTapped(postId,userId) { 
       self.resultCollectionView.reloadData()
-      
     }
   }
 }

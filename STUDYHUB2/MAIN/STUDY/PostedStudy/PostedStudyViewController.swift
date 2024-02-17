@@ -1039,16 +1039,16 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 북마크 버튼 탭
   func bookmarkButtonTappedAtPostedVC(){
     guard let postId = postedData?.postID else { return }
-    bookmarkButtonTapped(postId) {
+    bookmarkButtonTapped(postId, 1) { 
       self.bookmarkStatus(postId: postId)
     }
   }
   
   // MARK: - 북마크 이미지 확인
   func bookmarkStatus(postId: Int){
-    fetchBookmarkList {
-      self.buttonImage = self.bookmarkList.contains(postId)
-    }
+//    fetchBookmarkList {
+//      self.buttonImage = self.bookmarkList.contains(postId)
+//    }
   }
 }
 

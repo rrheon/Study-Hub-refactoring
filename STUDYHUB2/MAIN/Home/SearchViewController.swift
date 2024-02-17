@@ -39,7 +39,7 @@ final class SearchViewController: NaviHelper {
   // MARK: - 서치바에서 검색할 때
   private lazy var allButton: UIButton = {
     let button = UIButton()
-    button.setTitle("전체", for: .normal)
+    button.setTitle("제목", for: .normal)
     button.setTitleColor(.white, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-Medium",
                                      size: 14)
@@ -117,10 +117,10 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
-    fetchBookmarkList {
+    
       self.setUpLayout()
       self.makeUI()
-    }
+    
   }
   
   func makeUI() {
@@ -468,8 +468,8 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 북마크 관련
 extension SearchViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int) {
-    self.bookmarkButtonTapped(postId) {
+  func bookmarkTapped(postId: Int, userId: Int) {
+    self.bookmarkButtonTapped(postId, userId) { 
       self.resultCollectionView.reloadData()
     }
   }

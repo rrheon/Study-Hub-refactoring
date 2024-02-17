@@ -166,7 +166,7 @@ final class BookmarkViewController: NaviHelper {
     
     popupVC.popupView.rightButtonAction = {
       self.bookmarkDatas?.getBookmarkedPostsData.content.map({ data in
-        self.bookmarkButtonTapped(data.postID) {
+        self.bookmarkButtonTapped(data.postID, 1) { 
           self.getBookmarkList {
             self.dismiss(animated: true)
             self.bookMarkCollectionView.reloadData()
@@ -227,8 +227,8 @@ extension BookmarkViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 북마크 탭
 extension BookmarkViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int) {
-    bookmarkButtonTapped(postId) {
+  func bookmarkTapped(postId: Int, userId: Int) {
+    bookmarkButtonTapped(postId, userId) {
       self.getBookmarkList {
         self.bookMarkCollectionView.reloadData()
         self.countNumber = self.bookmarkDatas?.totalCount ?? 0

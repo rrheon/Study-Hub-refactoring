@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 protocol BookMarkDelegate: AnyObject {
-  func bookmarkTapped(postId: Int)
+  func bookmarkTapped(postId: Int, userId: Int)
 }
 
 final class BookMarkCell: UICollectionViewCell {
@@ -32,7 +32,7 @@ final class BookMarkCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0, userId: 0)
     }, for: .touchUpInside)
     return button
   }()

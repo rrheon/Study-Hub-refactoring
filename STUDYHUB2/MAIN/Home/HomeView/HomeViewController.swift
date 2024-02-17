@@ -155,16 +155,10 @@ final class HomeViewController: NaviHelper {
   func settingUI(){
     ueserInfoManager.getUserInfo { userInfo in
       if userInfo?.nickname != nil {
-        self.bookmarkManager.getBookmarkList(0, 10) { result in
-          result.getBookmarkedPostsData.content.map { result in
-            self.bookmarkList.append(result.postID)
-          }
           self.fetchData {
             print("로그인")
             self.setUpLayout()
             self.makeUI()
-          }
-          print(result.totalCount)
         }
       }else {
         self.fetchData {
@@ -330,10 +324,10 @@ final class HomeViewController: NaviHelper {
   // MARK: - collectionview 데이터 불러오기
   func fetchData(completion: @escaping () -> Void) {
     DispatchQueue.global().async {
-      self.postDataManager.getNewPostData {
+      self.postDataManager.getNewPostData(true) {
         self.newPostDatas = self.postDataManager.getNewPostDatas()
         
-        self.postDataManager.getDeadLinePostData{
+        self.postDataManager.getDeadLinePostData(true){
           self.deadlinePostDatas = self.postDataManager.getDeadLinePostDatas()
           DispatchQueue.main.async {
             self.recrutingCollectionView.reloadData()
@@ -412,12 +406,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
       if let cell = cell as? RecruitPostCell {
         let content = newPostDatas?.postDataByInquiries.content[indexPath.row]
         
-        bookmarkList.map { bookmarkPostId in
-          if content?.postID == bookmarkPostId {
-            cell.checkBookmarked = true
-          }
-        }
-        
         cell.model = content
         cell.delegate = self
       }
@@ -428,20 +416,14 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                                                     for: indexPath)
       if let cell = cell as? DeadLineCell {
         let content = deadlinePostDatas?.postDataByInquiries.content[indexPath.row]
-        
-        bookmarkList.map { bookmarkPostId in
-          if content?.postID == bookmarkPostId {
-            cell.checkBookmared = true
-          }
-        }
-        
         cell.model = content
         cell.delegate = self
       }
       return cell
     }
   }
-
+// 셀을 클릭 -> 북마크 저장 삭제 -> 북마크 여부 조회 -> 결과에 따라 변경
+// 셀을 슬라이드하면 데이터가 리로드되서 북마크 터치한 결과가 반영이 안된다.
 }
 
 // 셀의 각각의 크기
@@ -461,10 +443,11 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 북마크 관련
 extension HomeViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int) {
-    bookmarkButtonTapped(postId) {
-      self.recrutingCollectionView.reloadData()
-      self.deadLineCollectionView.reloadData()
+  func bookmarkTapped(postId: Int, userId: Int) {
+    bookmarkButtonTapped(postId, userId) { 
+      self.fetchData {
+        print("rr")
+      }
     }
   }
 }

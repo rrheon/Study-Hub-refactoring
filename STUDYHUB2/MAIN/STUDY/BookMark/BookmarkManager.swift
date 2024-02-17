@@ -19,7 +19,6 @@ final class BookmarkManager {
                                     needCheckToken: true) { result in
       switch result {
       case .success(let response):
-        print(response.response)
         completion()
       case .failure(let response):
         print(response.response)
@@ -42,6 +41,28 @@ final class BookmarkManager {
         } catch {
           print("Failed to decode JSON: \(error)")
         }
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
+  func searchSingleBookmark(postId: Int,
+                            userId: Int,
+                            completion: @escaping (CheckSingleBookmark) -> Void){
+    commonNetworking.moyaNetworking(networkingChoice: .searchSingleBookMark(postId,
+                                                                            userId)) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
+        do {
+          let searchResult = try JSONDecoder().decode(CheckSingleBookmark.self,
+                                                      from: response.data)
+          completion(searchResult)
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+        
       case .failure(let response):
         print(response.response)
       }

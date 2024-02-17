@@ -11,7 +11,7 @@ final class DeadLineCell: UICollectionViewCell {
   var model: Content? { didSet { bind() } }
   var buttonAction: (() -> Void) = {}
   
-  var checkBookmared: Bool?
+  var checkBookmarked: Bool?
 
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -32,7 +32,9 @@ final class DeadLineCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
+                                    userId: self.model?.userData.userID ?? 0)
+      self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -128,14 +130,23 @@ final class DeadLineCell: UICollectionViewCell {
     super.prepareForReuse()
     
     bookMarkButton.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
-    checkBookmared = false
+    checkBookmarked = false
   }
-
+  
+  private func bookmarkTapped(){
+    
+    checkBookmarked = !(checkBookmarked ?? false)
+    print(checkBookmarked)
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+  }
+  
   private func bind() {
     guard let data = model else { return }
   
     var studyPersonCount = data.studyPerson - data.remainingSeat
-    let bookmarkImage =  checkBookmared ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    checkBookmarked = data.bookmarked
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
 
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     

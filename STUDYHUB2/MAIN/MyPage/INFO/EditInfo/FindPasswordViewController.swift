@@ -13,7 +13,7 @@ import Moya
 final class FindPasswordViewController: NaviHelper {
   let editUserInfoManager = EditUserInfoManager.shared
   
-  var previousVC: EditPasswordViewController?
+  var previousVC: UIViewController?
   var userEmail: String? {
     didSet {
       emailLabel.text = "전송된 이메일 \(userEmail ?? "없음")"

@@ -37,4 +37,9 @@ struct BookmarkContent: Codable {
     case studyID = "studyId"
     case title
   }
+
+}
+
+struct CheckSingleBookmark: Codable {
+  let bookmarked: Bool
 }

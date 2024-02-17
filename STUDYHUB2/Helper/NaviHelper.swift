@@ -126,26 +126,20 @@ class NaviHelper: UIViewController {
   }
   
   // MARK: - 북마크 리스트 가져오기
-  func fetchBookmarkList(completion: @escaping () -> Void){
-    self.bookmarkManager.getBookmarkList(0, 10) { result in
-      var fetchBookmarkList: [Int] = []
-      result.getBookmarkedPostsData.content.map { result in
-        fetchBookmarkList.append(result.postID)
-      }
+  func fetchBookmarkList(_ postId: Int,
+                         _ userId: Int,
+                         completion: @escaping () -> Void){
+    bookmarkManager.searchSingleBookmark(postId: postId,
+                                         userId: userId) { reulst in
       
-      DispatchQueue.main.async {
-        self.bookmarkList = fetchBookmarkList
-        completion()
-      }
     }
   }
   
   func bookmarkButtonTapped(_ postId: Int,
+                            _ userId: Int,
                             completion: @escaping () -> Void){
     bookmarkManager.bookmarkTapped(postId) {
-      self.fetchBookmarkList {
-        completion()
-      }
+      completion()
     }
   }
 }

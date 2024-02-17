@@ -75,7 +75,8 @@ final class PostDataManager {
     }
   }
   
-  func getNewPostData(completion: @escaping() -> Void){
+  func getNewPostData(_ token: Bool ,
+                      completion: @escaping() -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "false"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "5"),
@@ -85,7 +86,7 @@ final class PostDataManager {
                                apiVesrion: "v2",
                                urlPath: "/study-posts",
                                queryItems: queryItems,
-                               tokenNeed: false,
+                               tokenNeed: token,
                                createPostData: nil) { (result: Result<PostDataContent,
                                                           NetworkError>) in
       switch result {
@@ -109,7 +110,8 @@ final class PostDataManager {
     }
   }
   
-  func getDeadLinePostData(completion: @escaping() -> Void){
+  func getDeadLinePostData(_ token: Bool,
+                           completion: @escaping() -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "true"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "4"),
@@ -118,7 +120,7 @@ final class PostDataManager {
                                apiVesrion: "v2",
                                urlPath: "/study-posts",
                                queryItems: queryItems,
-                               tokenNeed: false,
+                               tokenNeed: token,
                                createPostData: nil) { (result: Result<PostDataContent,
                                                           NetworkError>) in
       switch result {
@@ -155,7 +157,7 @@ final class PostDataManager {
                                apiVesrion: "v2",
                                urlPath: "/study-posts",
                                queryItems: queryItems,
-                               tokenNeed: false,
+                               tokenNeed: true,
                                createPostData: nil) { [weak self] (result: Result<PostDataContent, NetworkError>) in
       switch result {
       case .success(let postData):

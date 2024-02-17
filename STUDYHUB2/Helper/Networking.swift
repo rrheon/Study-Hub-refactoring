@@ -58,6 +58,7 @@ enum networkingAPI {
   
   // 북마크 관련
   case changeBookMarkStatus(_ postId: Int)
+  case searchSingleBookMark(_ postId: Int, _ userId: Int)
   case searchBookMarkList(page: Int, size: Int)
   
   // 문의하기
@@ -150,6 +151,8 @@ extension networkingAPI: TargetType {
       // 북마크 관련
     case .changeBookMarkStatus(let postId):
       return "/v1/bookmark/\(postId)"
+    case .searchSingleBookMark(let postId, _):
+      return "/v1/bookmark/\(postId)"
     case .searchBookMarkList(page: _, size: _):
       return "/v1/study-posts/bookmarked"
       
@@ -172,7 +175,8 @@ extension networkingAPI: TargetType {
         .searchParticipateInfo(inspection: _, page: _, size: _, studyId: _),
         .searchBookMarkList(page: _, size: _),
         .getMyReqeustList(page: _, size: _),
-        .getRejectReason(_):
+        .getRejectReason(_),
+        .searchSingleBookMark(_, _):
       return .get
       
     case .storeImage(_image: _),
@@ -335,6 +339,10 @@ extension networkingAPI: TargetType {
       let params: [String: Any] = ["studyId": studyId]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .searchSingleBookMark(let userId):
+      let params: [String: Any] = ["userId": userId]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -390,7 +398,8 @@ extension networkingAPI: TargetType {
         .rejectParticipate(rejectPersonData: _),
         .acceptParticipate(acceptPersonData: _),
         .getMyReqeustList(page: _, size: _),
-        .getRejectReason(_):
+        .getRejectReason(_),
+        .searchSingleBookMark(_, _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       
