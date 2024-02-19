@@ -59,6 +59,7 @@
 		EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F292AD8B9FA00190E7A /* String+.swift */; };
 		EE271F2C2AD9250F00190E7A /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F2B2AD9250F00190E7A /* UIView+.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
+		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
 		EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93562B2B6B874900D662CC /* BookmarkManager.swift */; };
@@ -169,6 +170,7 @@
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRejectReasonViewController.swift; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		EE93562B2B6B874900D662CC /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				EEDD81132B7DFCC30022302E /* MyRequestManager.swift */,
 				EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */,
 				EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */,
+				EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */,
 			);
 			path = MyRequestList;
 			sourceTree = "<group>";
@@ -785,6 +788,7 @@
 				EE07ADBF2AF0BB360096890F /* NaviHelper.swift in Sources */,
 				F86E03212A8BFC8000164976 /* DetailsViewController.swift in Sources */,
 				EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */,
+				EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */,
 				EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */,
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */,

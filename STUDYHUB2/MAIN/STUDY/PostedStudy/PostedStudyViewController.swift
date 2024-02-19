@@ -1099,9 +1099,11 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
     if let cell = collectionView.cellForItem(at: indexPath) as? SimilarPostCell {
       let postedVC = PostedStudyViewController()
       
-      detailPostDataManager.searchSinglePostData(postId: cell.postID ?? 0) {
-        let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
+      loginManager.refreshAccessToken { loginStatus in
+        self.detailPostDataManager.searchSinglePostData(postId: cell.postID ?? 0, loginStatus: loginStatus) {
+          let cellData = self.detailPostDataManager.getPostDetailData()
+          postedVC.postedData = cellData
+        }
       }
    
       self.navigationController?.pushViewController(postedVC, animated: true)

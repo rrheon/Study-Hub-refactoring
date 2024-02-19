@@ -176,6 +176,9 @@ extension MyRequestListViewController: MyRequestCellDelegate {
   func moveToCheckRejectReason(studyId: Int) {
     myRequestListManger.getMyRejectReason(studyId: studyId) { rejectReason in
       print(rejectReason)
+      let checkRejectReasonVC = DetailRejectReasonViewController()
+      checkRejectReasonVC.rejectData = rejectReason
+      self.navigationController?.pushViewController(checkRejectReasonVC, animated: true)
     }
   }
   

@@ -293,9 +293,13 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
     let postedVC = PostedStudyViewController(postID: postID)
     postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
-    detailPostDataManager.searchSinglePostData(postId: postID) {
-      let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedData = cellData
+    
+    loginManager.refreshAccessToken { loginStatus in
+      self.detailPostDataManager.searchSinglePostData(postId: postID,
+                                                 loginStatus: loginStatus) {
+        let cellData = self.detailPostDataManager.getPostDetailData()
+        postedVC.postedData = cellData
+      }
     }
 
     self.navigationController?.pushViewController(postedVC, animated: true)

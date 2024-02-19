@@ -4,7 +4,6 @@ import UIKit
 import SnapKit
 
 final class HomeViewController: NaviHelper {
-  let loginManager = LoginManager.shared
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   let ueserInfoManager = UserInfoManager.shared
@@ -393,10 +392,14 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     postedVC.previousHomeVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
-    detailPostDataManager.searchSinglePostData(postId: postID ?? 0) {
-      let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedData = cellData
+    loginManager.refreshAccessToken { loginStatus in
+      self.detailPostDataManager.searchSinglePostData(postId: postID ?? 0,
+                                                 loginStatus: loginStatus) {
+        let cellData = self.detailPostDataManager.getPostDetailData()
+        postedVC.postedData = cellData
+      }
     }
+
     self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
@@ -462,7 +465,7 @@ extension HomeViewController: BookMarkDelegate {
 }
 
 extension HomeViewController: CheckLoginDelegate {
-  func checkLoginPopup() {
-    checkLoginStatus()
+  func checkLoginPopup(checkUser: Bool) {
+    checkLoginStatus(checkUser: checkUser)
   }
 }

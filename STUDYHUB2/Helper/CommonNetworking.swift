@@ -11,12 +11,13 @@ import Moya
 import UIKit
 
 protocol CheckLoginDelegate: AnyObject {
-  func checkLoginPopup()
+  func checkLoginPopup(checkUser: Bool)
 }
 
 final class CommonNetworking {
   static let shared = CommonNetworking()
   let loginManager = LoginManager.shared
+  let tokenManager = TokenManager.shared
   
   weak var delegate: CheckLoginDelegate?
   
@@ -47,15 +48,19 @@ final class CommonNetworking {
   
   func checkingAccessToken(presentVC: UIViewController? = nil,
                            completion: @escaping (Bool) -> Void){
-    loginManager.refreshAccessToken { result in
-      switch result {
-      case true:
-        print("네트워킹 ㄱㄱ")
-        completion(true)
-      case false:
-        print("로그인만료")
-        self.delegate?.checkLoginPopup()
+  
+    let checkLogin = tokenManager.loadAccessToken() == nil ? false : true
+    if checkLogin {
+      loginManager.refreshAccessToken { result in
+        switch result {
+        case true:
+          completion(true)
+        case false:
+          self.delegate?.checkLoginPopup(checkUser: checkLogin)
+        }
       }
+    } else {
+      self.delegate?.checkLoginPopup(checkUser: checkLogin)
     }
   }
 }

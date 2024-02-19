@@ -8,7 +8,6 @@ protocol AfterCreatePost: AnyObject {
 
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
 final class CreateStudyViewController: NaviHelper {
-  let loginManager = LoginManager.shared
   let tokenManager = TokenManager.shared
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
@@ -1024,7 +1023,7 @@ final class CreateStudyViewController: NaviHelper {
       NSAttributedString.Key.foregroundColor: UIColor.white
     ]
     
-    postInfoManager.searchSinglePostData(postId: postID) {
+    postInfoManager.searchSinglePostData(postId: postID, loginStatus: false) {
       
       let modifyData = self.postInfoManager.getPostDetailData()
       

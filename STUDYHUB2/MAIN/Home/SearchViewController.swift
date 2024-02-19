@@ -6,7 +6,6 @@ import Moya
 
 final class SearchViewController: NaviHelper {
   // MARK: - 화면구성, tapbar도 같이 나오게 수정해야함
-  let loginManager = LoginManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   let postDataManager = PostDataManager.shared
   
@@ -430,9 +429,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     postedVC.previousSearchVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
-    detailPostDataManager.searchSinglePostData(postId: postID) {
-      let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedData = cellData
+    
+    loginManager.refreshAccessToken { loginStatus in
+      self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) {
+        let cellData = self.detailPostDataManager.getPostDetailData()
+        postedVC.postedData = cellData
+      }
     }
   
     self.navigationController?.pushViewController(postedVC, animated: true)

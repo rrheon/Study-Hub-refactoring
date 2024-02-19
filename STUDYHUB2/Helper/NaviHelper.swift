@@ -9,7 +9,8 @@ import UIKit
 
 class NaviHelper: UIViewController {
   let bookmarkManager = BookmarkManager.shared
-
+  let loginManager = LoginManager.shared
+  
   private let postID: Int?
   
   let majorSet = ["공연예술과", "IBE전공", "건설환경공학", "건축공학",
@@ -143,11 +144,22 @@ class NaviHelper: UIViewController {
     }
   }
   
-  func checkLoginStatus(){
+  func checkLoginStatus(checkUser: Bool){
+    var title, desc, leftButtonTitle: String
+    if checkUser {
+      title = "재로그인이 필요해요"
+      desc = "보안을 위해 자동 로그아웃됐어요.\n다시 로그인해주세요."
+      leftButtonTitle = "나중에"
+    } else {
+      title = "로그인이 필요해요"
+      desc = "계속하시려면 로그인을 해주세요!"
+      leftButtonTitle = "취소"
+    }
+    
     let popupVC = PopupViewController(
-      title: "재로그인이 필요해요",
-      desc: "보안을 위해 자동 로그아웃됐어요.\n다시 로그인해주세요.",
-      leftButtonTitle: "나중에",
+      title: title,
+      desc: desc,
+      leftButtonTitle: leftButtonTitle,
       rightButtonTilte: "로그인")
     
     popupVC.popupView.rightButtonAction = {
@@ -156,7 +168,6 @@ class NaviHelper: UIViewController {
       }
     }
 
-    
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }

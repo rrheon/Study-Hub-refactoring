@@ -4,7 +4,6 @@ import SnapKit
 
 // searchResultCell이랑 같은 형식 , collectionview랑 추가버튼 같이 뜨게 수정해야함
 final class StudyViewController: NaviHelper {
-  let loginManager = LoginManager.shared
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   var recentDatas: PostDataContent?
@@ -309,9 +308,11 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     postedVC.hidesBottomBarWhenPushed = true
     postedVC.previousStudyVC = self
     
-    detailPostDataManager.searchSinglePostData(postId: postId) {
-      let cellData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedData = cellData
+    loginManager.refreshAccessToken { loginStatus in
+      self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) {
+        let cellData = self.detailPostDataManager.getPostDetailData()
+        postedVC.postedData = cellData
+      }
     }
 
     self.navigationController?.pushViewController(postedVC, animated: true)
@@ -361,7 +362,7 @@ extension StudyViewController {
 extension StudyViewController: AfterCreatePost {
   func afterCreatePost(postId: Int) {
     let postedVC = PostedStudyViewController()
-    detailPostDataManager.searchSinglePostData(postId: postId) {
+    detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {
       let postData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = postData
     }
