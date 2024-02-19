@@ -13,9 +13,10 @@ final class MyRequestManager {
   
   let commonNetwork = CommonNetworking.shared
   
+  // MARK: - 요청내역 가져오기
   func getMyRequestStudyList(completion: @escaping (MyRequestList) -> Void){
     commonNetwork.moyaNetworking(networkingChoice: .getMyReqeustList(page: 0,
-                                                                     size: 5)
+                                                                     size: 10)
                                  ,needCheckToken: true) { result in
       switch result {
       case .success(let response):
@@ -35,6 +36,7 @@ final class MyRequestManager {
     }
   }
   
+  // MARK: - 거절이유 가져오기
   func getMyRejectReason(studyId: Int,
                          completion: @escaping (RejectReason) -> Void){
     commonNetwork.moyaNetworking(networkingChoice: .getRejectReason(studyId),
@@ -49,6 +51,19 @@ final class MyRequestManager {
           print(response.response)
           print("Failed to decode JSON: \(error)")
         }
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
+  // MARK: - 신청한 스터디삭제
+  func deleteRequestStudy(studyId: Int,
+                          comletion: @escaping () -> Void) {
+    commonNetwork.moyaNetworking(networkingChoice: .deleteMyRequest(studyId: studyId)) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
       case .failure(let response):
         print(response.response)
       }

@@ -51,6 +51,7 @@ enum networkingAPI {
   case participateStudy(introduce: String, studyId: Int)
   case getMyParticipateList(page: Int, size: Int)
   case getMyReqeustList(page: Int, size: Int)
+  case deleteMyRequest(studyId:Int)
   case searchParticipateInfo(inspection: String, page: Int, size: Int, studyId: Int)
   case acceptParticipate(acceptPersonData: AcceptStudy)
   case rejectParticipate(rejectPersonData: RejectStudy)
@@ -145,6 +146,8 @@ extension networkingAPI: TargetType {
       return "/v1/study-reject"
     case .getMyReqeustList(page: _, size: _):
       return "/v1/study-request"
+    case .deleteMyRequest(let studyId):
+      return "/v1/study/\(studyId)"
     case .getRejectReason(_):
       return "/v1/reject"
       
@@ -193,7 +196,8 @@ extension networkingAPI: TargetType {
     case .deleteImage,
         .deleteID,
         .deleteComment(_commentId: _),
-        .deleteMyPost(_postId: _):
+        .deleteMyPost(_postId: _),
+        .deleteMyRequest(studyId: _):
       return .delete
       
     case .verifyPassword(_password: _),
@@ -349,7 +353,8 @@ extension networkingAPI: TargetType {
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
         .closePost(_),
-        .changeBookMarkStatus(_):
+        .changeBookMarkStatus(_),
+        .deleteMyRequest(studyId: _):
       return .requestPlain
       
     }
@@ -372,8 +377,6 @@ extension networkingAPI: TargetType {
         .sendEmailCode(_email: _),
         .getCommentList(_postId: _, _page: _, _size: _),
         .recommendSearch(_keyword: _),
-        .searchPostList(_hot: _, text: _, page: _,
-                        size: _, titleAndMajor: _),
         .refreshAccessToken(_refreshToken: _),
         .createNewAccount(accountData: _),
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
@@ -399,7 +402,9 @@ extension networkingAPI: TargetType {
         .acceptParticipate(acceptPersonData: _),
         .getMyReqeustList(page: _, size: _),
         .getRejectReason(_),
-        .searchSingleBookMark(_, _):
+        .searchSingleBookMark(_, _),
+        .searchPostList(_hot: _, text: _, page: _,
+                        size: _, titleAndMajor: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       
@@ -410,7 +415,8 @@ extension networkingAPI: TargetType {
         .deleteID ,
         .verifyPassword(_),
         .deleteComment(_commentId: _),
-        .deleteMyPost(_postId: _):
+        .deleteMyPost(_postId: _),
+        .deleteMyRequest(studyId: _):
       return [ "Authorization": "\(accessToken)"]
       
     default:

@@ -441,7 +441,7 @@ final class PostedStudyViewController: NaviHelper {
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItemSetting()
-    
+        
     DispatchQueue.main.async {
       self.getMyPostID {
         self.navigationItemSetting()
@@ -1221,7 +1221,7 @@ extension PostedStudyViewController: PopupViewDelegate {
   func afterDeletePost(completion: @escaping () -> Void) {
     navigationController?.popViewController(animated: true)
     if (previousHomeVC != nil) {
-      previousHomeVC?.fetchData {
+      previousHomeVC?.fetchData(loginStatus: true) {
         print("삭제 후 리로드")
       }
     }else {
@@ -1229,5 +1229,11 @@ extension PostedStudyViewController: PopupViewDelegate {
         print("삭제 후 마이페이")
       }
     }
+  }
+}
+
+extension PostedStudyViewController: CheckLoginDelegate {
+  func checkLoginPopup(checkUser: Bool) {
+    checkLoginStatus(checkUser: checkUser)
   }
 }

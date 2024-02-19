@@ -15,7 +15,7 @@ final class MyRequestListViewController: NaviHelper {
   
   var requestStudyList: [RequestStudyContent]? = []
   
-  var countPostNumber = 2 {
+  var countPostNumber = 0 {
     didSet {
       totalPostCountLabel.text = "전체 \(countPostNumber)"
     }
@@ -32,7 +32,7 @@ final class MyRequestListViewController: NaviHelper {
   // MARK: - 작성한 글 없을 때
   private lazy var emptyImage: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(named: "MyParticipateEmptyImage")
+    imageView.image = UIImage(named: "ApplyEmptyImg")
     return imageView
   }()
   
@@ -40,6 +40,8 @@ final class MyRequestListViewController: NaviHelper {
     let label = UILabel()
     label.text = "참여한 스터디가 없어요\n나와 맞는 스터디를 찾아 보세요!"
     label.numberOfLines = 0
+    label.textAlignment = .center
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     label.textColor = .bg70
     return label
   }()
@@ -65,7 +67,7 @@ final class MyRequestListViewController: NaviHelper {
     
     navigationItemSetting()
     
-    filterRequestList {
+    getRequestList {
       self.countPostNumber = self.requestStudyList?.count ?? 0
       
       self.registerCell()
@@ -74,7 +76,7 @@ final class MyRequestListViewController: NaviHelper {
     }
   }
   
-  func filterRequestList(completion: @escaping () -> Void) {
+  func getRequestList(completion: @escaping () -> Void) {
     myRequestListManger.getMyRequestStudyList { [weak self] result in
       self?.requestStudyList?.append(contentsOf: result.requestStudyData.content)
       
@@ -94,6 +96,7 @@ final class MyRequestListViewController: NaviHelper {
       }
     } else {
       [
+        totalPostCountLabel,
         emptyImage,
         emptyLabel
       ].forEach {
@@ -112,11 +115,28 @@ final class MyRequestListViewController: NaviHelper {
       $0.leading.equalToSuperview().offset(20)
     }
     
-    myStudyRequestCollectionView.snp.makeConstraints {
-      $0.top.equalTo(totalPostCountLabel.snp.bottom).offset(20)
-      $0.leading.equalTo(totalPostCountLabel)
-      $0.trailing.equalToSuperview().offset(-20)
-      $0.bottom.equalToSuperview()
+    if countPostNumber > 0 {
+      myStudyRequestCollectionView.snp.makeConstraints {
+        $0.top.equalTo(totalPostCountLabel.snp.bottom).offset(20)
+        $0.leading.equalTo(totalPostCountLabel)
+        $0.trailing.equalToSuperview().offset(-20)
+        $0.bottom.equalToSuperview()
+      }
+    } else {
+      emptyImage.snp.makeConstraints {
+        $0.centerX.centerY.equalToSuperview()
+      }
+      
+      emptyLabel.changeColor(label: emptyLabel,
+                             wantToChange: "지금 스터디에 참여해보세요!",
+                             color: .bg60,
+                             font: UIFont(name: "Pretendard-Medium",
+                                          size: 16),
+                             lineSpacing: 5)
+      emptyLabel.snp.makeConstraints {
+        $0.top.equalTo(emptyImage.snp.bottom).offset(10)
+        $0.centerX.equalToSuperview()
+      }
     }
   }
   
@@ -184,9 +204,22 @@ extension MyRequestListViewController: MyRequestCellDelegate {
   
   func deleteButtonTapped(in cell: MyRequestCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
-                                      desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
+                                      desc: "")
     
     popupVC.modalPresentationStyle = .overFullScreen
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
+
+      self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
+        self.showToast(message: "삭제가 완료됐어요.",
+                  imageCheck: true,
+                  alertCheck: true)
+      }
+      self.getRequestList {
+        self.myStudyRequestCollectionView.reloadData()
+      }
+  
+    }
     self.present(popupVC, animated: false)
   }
 }

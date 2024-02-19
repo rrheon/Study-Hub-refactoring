@@ -87,7 +87,7 @@ final class StudyViewController: NaviHelper {
     redesignNavigationbar()
     
     setupCollectionView()
-    
+        
     self.postDataManager.getRecentPostDatas(hotType: "false") {
       self.recentDatas = self.postDataManager.getRecentPostDatas()
       DispatchQueue.main.async {
@@ -376,8 +376,14 @@ extension StudyViewController: AfterCreatePost {
 extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
     
-    self.bookmarkButtonTapped(postId,userId) { 
+    self.bookmarkButtonTapped(postId,userId) {
 //      self.resultCollectionView.reloadData()
     }
+  }
+}
+
+extension StudyViewController: CheckLoginDelegate {
+  func checkLoginPopup(checkUser: Bool) {
+    checkLoginStatus(checkUser: checkUser)
   }
 }

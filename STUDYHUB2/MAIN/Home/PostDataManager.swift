@@ -16,6 +16,7 @@ final class PostDataManager {
   private init() {}
   
   let networkingShared = Networking.networkinhShared
+  let commonNetworking = CommonNetworking.shared
   
   // MARK: - new 모집 중인 스터디
   private var newPostDatas: PostDataContent?
@@ -28,43 +29,45 @@ final class PostDataManager {
       return nil
     }
   }
-
+  
   func getPostData(hot: String,
                    text: String? = nil,
                    page: Int,
                    size: Int,
                    titleAndMajor: String,
+                   loginStatus: Bool,
                    completion: @escaping (PostDataContent) -> Void) {
     fectchPostData(hot: hot,
                    text: text,
                    page: page,
                    size: size,
-                   titleAndMajor: titleAndMajor) {
+                   titleAndMajor: titleAndMajor,
+                   loginSatus: loginStatus) {
       guard let data = self.newPostDatas else { return }
-   
+      
       completion(data)
     }
   }
   
   private func fectchPostData(hot: String,
-                   text: String? = nil,
-                   page: Int,
-                   size: Int,
-                   titleAndMajor: String,
-                   completion: @escaping () -> Void){
+                              text: String? = nil,
+                              page: Int,
+                              size: Int,
+                              titleAndMajor: String,
+                              loginSatus: Bool,
+                              completion: @escaping () -> Void){
     
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.searchPostList(_hot: hot,
-                                     text: text ?? "",
-                                     page: page,
-                                     size: size,
-                                     titleAndMajor: titleAndMajor)) { result in
+    commonNetworking.moyaNetworking(networkingChoice: .searchPostList(_hot: hot,
+                                                                      text: text ?? "",
+                                                                      page: page,
+                                                                      size: size,
+                                                                      titleAndMajor: titleAndMajor),
+                                    needCheckToken: loginSatus) { result in
       switch result {
       case.success(let response):
         do {
           let searchResult = try JSONDecoder().decode(PostDataContent.self, from: response.data)
           self.newPostDatas = searchResult
-          print("2")
         } catch {
           print("Failed to decode JSON: \(error)")
         }
@@ -74,6 +77,7 @@ final class PostDataManager {
       completion()
     }
   }
+  
   
   func getNewPostData(_ token: Bool ,
                       completion: @escaping() -> Void){
@@ -88,7 +92,7 @@ final class PostDataManager {
                                queryItems: queryItems,
                                tokenNeed: token,
                                createPostData: nil) { (result: Result<PostDataContent,
-                                                          NetworkError>) in
+                                                       NetworkError>) in
       switch result {
       case .success(let postData):
         self.newPostDatas = postData
@@ -122,7 +126,7 @@ final class PostDataManager {
                                queryItems: queryItems,
                                tokenNeed: token,
                                createPostData: nil) { (result: Result<PostDataContent,
-                                                          NetworkError>) in
+                                                       NetworkError>) in
       switch result {
       case .success(let postData):
         self.newPostDatas = postData
@@ -164,11 +168,11 @@ final class PostDataManager {
         print(postData)
         self?.newPostDatas = postData
         completion()
-
+        
       case .failure(let error):
         print("에러:", error)
       }
     }
   }
-
+  
 }

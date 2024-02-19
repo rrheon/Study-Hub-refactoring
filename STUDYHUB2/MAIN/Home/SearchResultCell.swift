@@ -304,7 +304,7 @@ final class SearchResultCell: UICollectionViewCell {
   private func bind() {
     //    titleLabel.text = model
     guard let data = model else { return }
-
+    
     checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
@@ -344,7 +344,6 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   func closePostUI(){
-    print(model?.close)
     if model?.close == true {
       majorLabel.textColor = .bg70
       majorLabel.backgroundColor = .bg30

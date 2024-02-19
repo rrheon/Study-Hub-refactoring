@@ -85,7 +85,7 @@ final class CommentViewController: NaviHelper {
     
     navigationItemSetting()
     redesignNavigationbar()
-    
+        
     getCommentList {
       print(self.commentData)
       self.setupLayout()
@@ -352,5 +352,11 @@ extension CommentViewController: BottomSheetDelegate {
   func secondButtonTapped(postID: Int?) {
     commentButton.setTitle("수정", for: .normal)
     commentId = postID
+  }
+}
+
+extension CommentViewController: CheckLoginDelegate {
+  func checkLoginPopup(checkUser: Bool) {
+    checkLoginStatus(checkUser: checkUser)
   }
 }

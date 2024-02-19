@@ -117,8 +117,8 @@ final class SearchViewController: NaviHelper {
     redesignSearchBar()
     
     
-      self.setUpLayout()
-      self.makeUI()
+    self.setUpLayout()
+    self.makeUI()
     
   }
   
@@ -393,15 +393,18 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   // UITableViewDelegate 함수 (선택)
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let keyword =  recommendData?.recommendList[indexPath.row] else { return }
-    postDataManager.getPostData(hot: "false",
-                                text: keyword,
-                                page: 0,
-                                size: 5,
-                                titleAndMajor: "false") { result in
-      self.searchResultData = result
-      self.updateUI()
+    loginManager.refreshAccessToken { result in
+      self.postDataManager.getPostData(hot: "false",
+                                  text: keyword,
+                                  page: 0,
+                                  size: 5,
+                                  titleAndMajor: "true",
+                                       loginStatus: result) { result in
+        self.searchResultData = result
+        self.updateUI()
+        self.searchBar.text = keyword
+      }
     }
-    searchBar.text = keyword
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -447,7 +450,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                                   for: indexPath) as! SearchResultCell
     cell.delegate = self
     let content = searchResultData?.postDataByInquiries.content[indexPath.row]
-
     cell.model = content
 
     return cell
@@ -466,8 +468,14 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - 북마크 관련
 extension SearchViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
-    self.bookmarkButtonTapped(postId, userId) { 
+    self.bookmarkButtonTapped(postId, userId) {
 
     }
+  }
+}
+
+extension SearchViewController: CheckLoginDelegate {
+  func checkLoginPopup(checkUser: Bool) {
+    checkLoginStatus(checkUser: checkUser)
   }
 }

@@ -31,7 +31,6 @@ class LoginManager {
             
             let saveResult = self.tokenManager.saveTokens(accessToken: refreshResult.accessToken,
                                                           refreshToken: refreshResult.refreshToken)
-            print("saveResult:\(saveResult)")
             completion(true)
           }
         } catch {
