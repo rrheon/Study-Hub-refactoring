@@ -111,3 +111,8 @@ struct RequestStudyContent: Codable {
     case studyTitle
   }
 }
+
+// MARK: - 스터디 거절 사유
+struct RejectReason: Codable {
+  let reason, studyTitle: String
+}

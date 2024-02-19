@@ -143,6 +143,7 @@ final class MyRequestCell: UICollectionViewCell {
   }
   
   func checkRejectReason(){
+    print(self.model?.studyID)
     self.delegate?.moveToCheckRejectReason(studyId: self.model?.studyID ?? 0)
   }
   

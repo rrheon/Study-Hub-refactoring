@@ -19,9 +19,14 @@ final class PostedStudyViewController: NaviHelper {
   let userDataManager = UserInfoManager.shared
   
   var commentId: Int?
+  var bookmarked: Bool?
+  
   // 이전페이지의 종류가 스터디VC , 검색결과 VC도 있음
   var previousHomeVC: HomeViewController?
   var previousMyPostVC: MyPostViewController?
+  var previousStudyVC: StudyViewController?
+  var previousSearchVC: SearchViewController?
+  
   var myPostIDList: [Int] = []
   var userData: UserDetailData?
   
@@ -31,7 +36,6 @@ final class PostedStudyViewController: NaviHelper {
       self.getCommentList {
         DispatchQueue.main.async {
           self.redrawUI()
-          self.bookmarkStatus(postId: self.postedData?.postID ?? 0)
 
           self.setUpLayout()
           self.makeUI()
@@ -424,6 +428,15 @@ final class PostedStudyViewController: NaviHelper {
   
   private lazy var scrollView: UIScrollView = UIScrollView()
   
+  // MARK: - 뒤로 이동
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    if self.isMovingFromParent {
+      previousHomeVC?.reloadHomeVCCells()
+    }
+  }
+
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -748,6 +761,10 @@ final class PostedStudyViewController: NaviHelper {
       self.postedDateLabel.text = "\(postDate[0]). \(postDate[1]). \(postDate[2])"
     }
     
+    bookmarked = postedData?.bookmarked
+    let bookmarkImage = bookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookmarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    
     let major = self.convertMajor(self.postedData?.major ?? "",
                                  isEnglish: false)
     self.postedMajorLabel.text = "   \(major)   "
@@ -1039,16 +1056,18 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 북마크 버튼 탭
   func bookmarkButtonTappedAtPostedVC(){
     guard let postId = postedData?.postID else { return }
-    bookmarkButtonTapped(postId, 1) { 
-      self.bookmarkStatus(postId: postId)
+    bookmarkButtonTapped(postId, 1) {
+      // 북마크 버튼 누르고 상태 업데이트 필요 -> searchsinglepost로 데이터 받아서 리로드 해야할듯
+      self.bookmarkStatus()
     }
   }
   
   // MARK: - 북마크 이미지 확인
-  func bookmarkStatus(postId: Int){
-//    fetchBookmarkList {
-//      self.buttonImage = self.bookmarkList.contains(postId)
-//    }
+  func bookmarkStatus(){
+    print(postedData?.postID)
+    bookmarked?.toggle()
+    let bookmarkImage =  bookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookmarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
   }
 }
 

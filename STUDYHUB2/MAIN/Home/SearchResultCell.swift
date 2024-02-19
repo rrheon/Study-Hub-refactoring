@@ -28,6 +28,7 @@ final class SearchResultCell: UICollectionViewCell {
     button.addAction(UIAction { _ in
       self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
                                     userId: self.model?.userData.userID ?? 0)
+      self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -293,11 +294,18 @@ final class SearchResultCell: UICollectionViewCell {
       return "무관"
     }
   }
+  private func bookmarkTapped(){
+    
+    checkBookmarked = !(checkBookmarked ?? false)
+    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+  }
   
   private func bind() {
     //    titleLabel.text = model
     guard let data = model else { return }
-    
+
+    checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     

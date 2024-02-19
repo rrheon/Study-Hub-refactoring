@@ -30,7 +30,7 @@ final class BookmarkManager {
   func getBookmarkList(_ page: Int,
                        _ size: Int,
                        completion: @escaping (BookmarkDatas) -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .searchBookMarkList(page: 0, size: 10),
+    commonNetworking.moyaNetworking(networkingChoice: .searchBookMarkList(page: 0, size: size),
                                     needCheckToken: true) { result in
       switch result {
       case .success(let response):

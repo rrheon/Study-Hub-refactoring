@@ -10,6 +10,8 @@ final class BookmarkViewController: NaviHelper {
   var bookmarkDatas: BookmarkDatas?
   
   // MARK: - 화면 구성
+  var defaultRequestNum = 100
+  
   var countNumber: Int = 0 {
     didSet {
       totalCountLabel.text = "전체 \(countNumber)"
@@ -69,7 +71,7 @@ final class BookmarkViewController: NaviHelper {
     
     registerCell()
     
-    getBookmarkList {
+    getBookmarkList(requestNum: defaultRequestNum) {
       self.countNumber = self.bookmarkDatas?.totalCount ?? 0
       self.setupLayout()
       self.makeUI()
@@ -167,7 +169,7 @@ final class BookmarkViewController: NaviHelper {
     popupVC.popupView.rightButtonAction = {
       self.bookmarkDatas?.getBookmarkedPostsData.content.map({ data in
         self.bookmarkButtonTapped(data.postID, 1) { 
-          self.getBookmarkList {
+          self.getBookmarkList(requestNum: self.defaultRequestNum) {
             self.dismiss(animated: true)
             self.bookMarkCollectionView.reloadData()
             self.countNumber = self.bookmarkDatas?.totalCount ?? 0
@@ -177,10 +179,12 @@ final class BookmarkViewController: NaviHelper {
     }
   }
   
-  // MARK: - 북마크 리스트 조회
-  func getBookmarkList(completion: @escaping () -> Void){
-    bookmarkManager.getBookmarkList(0, 10) { result in
+  // MARK: - 북마크 리스트 조회, 스크롤 말고 애초에 다 가져오자
+  func getBookmarkList(requestNum: Int,
+                       completion: @escaping () -> Void){
+    bookmarkManager.getBookmarkList(0, requestNum) { result in
       self.bookmarkDatas = result
+
       completion()
     }
   }
@@ -229,7 +233,7 @@ extension BookmarkViewController: UICollectionViewDelegateFlowLayout {
 extension BookmarkViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
     bookmarkButtonTapped(postId, userId) {
-      self.getBookmarkList {
+      self.getBookmarkList(requestNum: self.defaultRequestNum) {
         self.bookMarkCollectionView.reloadData()
         self.countNumber = self.bookmarkDatas?.totalCount ?? 0
       }

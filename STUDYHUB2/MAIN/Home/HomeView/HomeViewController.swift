@@ -140,6 +140,9 @@ final class HomeViewController: NaviHelper {
     super.viewDidLoad()
     view.backgroundColor = .white
     
+    let test = CommonNetworking.shared
+    test.delegate = self
+    
     navigationItemSetting()
     redesignNavigationbar()
     
@@ -424,6 +427,12 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   }
 // 셀을 클릭 -> 북마크 저장 삭제 -> 북마크 여부 조회 -> 결과에 따라 변경
 // 셀을 슬라이드하면 데이터가 리로드되서 북마크 터치한 결과가 반영이 안된다.
+  func reloadHomeVCCells(){
+    fetchData {
+      self.recrutingCollectionView.reloadData()
+      self.deadLineCollectionView.reloadData()
+    }
+  }
 }
 
 // 셀의 각각의 크기
@@ -449,5 +458,11 @@ extension HomeViewController: BookMarkDelegate {
         print("rr")
       }
     }
+  }
+}
+
+extension HomeViewController: CheckLoginDelegate {
+  func checkLoginPopup() {
+    checkLoginStatus()
   }
 }

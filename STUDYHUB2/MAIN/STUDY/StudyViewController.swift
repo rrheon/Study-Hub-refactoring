@@ -76,7 +76,7 @@ final class StudyViewController: NaviHelper {
   
   // 네트워킹 불러올 때
   private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -88,18 +88,18 @@ final class StudyViewController: NaviHelper {
     redesignNavigationbar()
     
     setupCollectionView()
-   
-      self.postDataManager.getRecentPostDatas(hotType: "false") {
-        self.recentDatas = self.postDataManager.getRecentPostDatas()
-        DispatchQueue.main.async {
-          self.activityIndicator.stopAnimating()
-          self.activityIndicator.removeFromSuperview()
-          
-          self.setupLayout()
-          self.makeUI()
-        }
+    
+    self.postDataManager.getRecentPostDatas(hotType: "false") {
+      self.recentDatas = self.postDataManager.getRecentPostDatas()
+      DispatchQueue.main.async {
+        self.activityIndicator.stopAnimating()
+        self.activityIndicator.removeFromSuperview()
+        
+        self.setupLayout()
+        self.makeUI()
       }
     }
+  }
   
   
   // MARK: - setupLayout
@@ -307,7 +307,8 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     print(postId)
     let postedVC = PostedStudyViewController(postID: postId)
     postedVC.hidesBottomBarWhenPushed = true
-
+    postedVC.previousStudyVC = self
+    
     detailPostDataManager.searchSinglePostData(postId: postId) {
       let cellData = self.detailPostDataManager.getPostDetailData()
       postedVC.postedData = cellData
@@ -324,11 +325,6 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     if let cell = cell as? SearchResultCell {
       let content = recentDatas?.postDataByInquiries.content[indexPath.row]
       
-      bookmarkList.map { bookmarkPostId in
-        if content?.postID == bookmarkPostId {
-          cell.checkBookmarked = true
-        }
-      }
       cell.model = content
       cell.delegate = self
     }
@@ -380,7 +376,7 @@ extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
     
     self.bookmarkButtonTapped(postId,userId) { 
-      self.resultCollectionView.reloadData()
+//      self.resultCollectionView.reloadData()
     }
   }
 }

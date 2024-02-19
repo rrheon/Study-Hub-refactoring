@@ -10,10 +10,15 @@ import Foundation
 import Moya
 import UIKit
 
+protocol CheckLoginDelegate: AnyObject {
+  func checkLoginPopup()
+}
 
 final class CommonNetworking {
   static let shared = CommonNetworking()
   let loginManager = LoginManager.shared
+  
+  weak var delegate: CheckLoginDelegate?
   
   func moyaNetworking(networkingChoice: networkingAPI,
                       needCheckToken: Bool = false,
@@ -49,14 +54,7 @@ final class CommonNetworking {
         completion(true)
       case false:
         print("로그인만료")
-        let popupVC = PopupViewController(
-          title: "재로그인이 필요해요",
-          desc: "보안을 위해 자동 로그아웃됐어요.\n다시 로그인해주세요.",
-          leftButtonTitle: "나중에",
-          rightButtonTilte: "로그인")
-        
-        popupVC.modalPresentationStyle = .overFullScreen
-        presentVC?.present(popupVC, animated: false)
+        self.delegate?.checkLoginPopup()
       }
     }
   }

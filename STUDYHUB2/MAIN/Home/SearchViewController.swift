@@ -427,6 +427,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = searchResultData?.postDataByInquiries.content[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
+    postedVC.previousSearchVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
     detailPostDataManager.searchSinglePostData(postId: postID) {
@@ -444,12 +445,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                                                   for: indexPath) as! SearchResultCell
     cell.delegate = self
     let content = searchResultData?.postDataByInquiries.content[indexPath.row]
-
-    bookmarkList.map { bookmarkPostId in
-      if content?.postID == bookmarkPostId {
-        cell.checkBookmarked = true
-      }
-    }
 
     cell.model = content
 
@@ -470,7 +465,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 extension SearchViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
     self.bookmarkButtonTapped(postId, userId) { 
-      self.resultCollectionView.reloadData()
+
     }
   }
 }

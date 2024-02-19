@@ -142,4 +142,22 @@ class NaviHelper: UIViewController {
       completion()
     }
   }
+  
+  func checkLoginStatus(){
+    let popupVC = PopupViewController(
+      title: "재로그인이 필요해요",
+      desc: "보안을 위해 자동 로그아웃됐어요.\n다시 로그인해주세요.",
+      leftButtonTitle: "나중에",
+      rightButtonTilte: "로그인")
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true) {
+        self.dismiss(animated: true)
+      }
+    }
+
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.present(popupVC, animated: false)
+  }
 }

@@ -11,7 +11,7 @@ import SnapKit
 
 final class MyRequestListViewController: NaviHelper {
   
-  let myRequestListManger = MyRequestManager.shared
+  var myRequestListManger = MyRequestManager.shared
   
   var requestStudyList: [RequestStudyContent]? = []
   
@@ -76,8 +76,7 @@ final class MyRequestListViewController: NaviHelper {
   
   func filterRequestList(completion: @escaping () -> Void) {
     myRequestListManger.getMyRequestStudyList { [weak self] result in
-      let filteredList = result.requestStudyData.content.filter { $0.inspection != "ACCEPT" }
-      self?.requestStudyList?.append(contentsOf: filteredList)
+      self?.requestStudyList?.append(contentsOf: result.requestStudyData.content)
       
       completion()
     }
@@ -175,8 +174,8 @@ extension MyRequestListViewController: UICollectionViewDelegateFlowLayout {
 
 extension MyRequestListViewController: MyRequestCellDelegate {
   func moveToCheckRejectReason(studyId: Int) {
-    myRequestListManger.getMyRejectReason(studyId: studyId) {
-      print("1")
+    myRequestListManger.getMyRejectReason(studyId: studyId) { rejectReason in
+      print(rejectReason)
     }
   }
   
