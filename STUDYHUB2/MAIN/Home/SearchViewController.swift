@@ -111,6 +111,9 @@ final class SearchViewController: NaviHelper {
     super.viewDidLoad()
     view.backgroundColor = .white
     
+    let test = CommonNetworking.shared
+    test.delegate = self
+    
     navigationItemSetting()
     redesignNavigationbar()
     
@@ -476,6 +479,10 @@ extension SearchViewController: BookMarkDelegate {
 
 extension SearchViewController: CheckLoginDelegate {
   func checkLoginPopup(checkUser: Bool) {
+    searchBar.text = nil
+    searchBar.resignFirstResponder()
+    
     checkLoginStatus(checkUser: checkUser)
   }
+  
 }

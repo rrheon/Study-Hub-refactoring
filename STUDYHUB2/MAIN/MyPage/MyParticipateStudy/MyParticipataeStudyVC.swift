@@ -236,6 +236,7 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
 
+    
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }

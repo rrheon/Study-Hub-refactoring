@@ -72,7 +72,6 @@ final class BookmarkViewController: NaviHelper {
     registerCell()
     
     getBookmarkList(requestNum: defaultRequestNum) {
-      self.countNumber = self.bookmarkDatas?.totalCount ?? 0
       self.setupLayout()
       self.makeUI()
     }
@@ -167,15 +166,12 @@ final class BookmarkViewController: NaviHelper {
     self.present(popupVC, animated: false)
     
     popupVC.popupView.rightButtonAction = {
-      self.bookmarkDatas?.getBookmarkedPostsData.content.map({ data in
-        self.bookmarkButtonTapped(data.postID, 1) { 
-          self.getBookmarkList(requestNum: self.defaultRequestNum) {
-            self.dismiss(animated: true)
-            self.bookMarkCollectionView.reloadData()
-            self.countNumber = self.bookmarkDatas?.totalCount ?? 0
-          }
+      self.bookmarkManager.deleteAllBookmark {
+        self.dismiss(animated: true)
+        self.getBookmarkList(requestNum: self.defaultRequestNum) {
+          self.bookMarkCollectionView.reloadData()
         }
-      })
+      }
     }
   }
   
@@ -184,7 +180,8 @@ final class BookmarkViewController: NaviHelper {
                        completion: @escaping () -> Void){
     bookmarkManager.getBookmarkList(0, requestNum) { result in
       self.bookmarkDatas = result
-
+      self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+      
       completion()
     }
   }

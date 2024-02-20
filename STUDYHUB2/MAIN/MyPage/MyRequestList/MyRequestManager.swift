@@ -64,6 +64,7 @@ final class MyRequestManager {
       switch result {
       case .success(let response):
         print(response.response)
+        comletion()
       case .failure(let response):
         print(response.response)
       }

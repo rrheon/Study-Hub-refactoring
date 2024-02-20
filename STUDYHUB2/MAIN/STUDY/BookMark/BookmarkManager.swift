@@ -68,6 +68,19 @@ final class BookmarkManager {
       }
     }
   }
+  
+  func deleteAllBookmark(completion: @escaping () -> Void){
+    commonNetworking.moyaNetworking(networkingChoice: .deleteAllBookMark) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
+        completion()
+        
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
 }
 
 

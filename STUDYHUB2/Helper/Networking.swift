@@ -61,6 +61,7 @@ enum networkingAPI {
   case changeBookMarkStatus(_ postId: Int)
   case searchSingleBookMark(_ postId: Int, _ userId: Int)
   case searchBookMarkList(page: Int, size: Int)
+  case deleteAllBookMark
   
   // 문의하기
   case inquiryQuestion(content: String, title: String, toEmail: String)
@@ -158,6 +159,9 @@ extension networkingAPI: TargetType {
       return "/v1/bookmark/\(postId)"
     case .searchBookMarkList(page: _, size: _):
       return "/v1/study-posts/bookmarked"
+    case .deleteAllBookMark:
+      return "/v1/bookmark"
+      
       
       // 문의하기
     case .inquiryQuestion(content: _, title: _, toEmail: _):
@@ -197,7 +201,8 @@ extension networkingAPI: TargetType {
         .deleteID,
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
-        .deleteMyRequest(studyId: _):
+        .deleteMyRequest(studyId: _),
+        .deleteAllBookMark:
       return .delete
       
     case .verifyPassword(_password: _),
@@ -354,7 +359,8 @@ extension networkingAPI: TargetType {
         .deleteMyPost(_postId: _),
         .closePost(_),
         .changeBookMarkStatus(_),
-        .deleteMyRequest(studyId: _):
+        .deleteMyRequest(studyId: _),
+        .deleteAllBookMark:
       return .requestPlain
       
     }
@@ -416,7 +422,8 @@ extension networkingAPI: TargetType {
         .verifyPassword(_),
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
-        .deleteMyRequest(studyId: _):
+        .deleteMyRequest(studyId: _),
+        .deleteAllBookMark:
       return [ "Authorization": "\(accessToken)"]
       
     default:

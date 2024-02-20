@@ -67,9 +67,7 @@ final class MyRequestListViewController: NaviHelper {
     
     navigationItemSetting()
     
-    getRequestList {
-      self.countPostNumber = self.requestStudyList?.count ?? 0
-      
+    getRequestList {      
       self.registerCell()
       self.setupLayout()
       self.makeUI()
@@ -78,7 +76,9 @@ final class MyRequestListViewController: NaviHelper {
   
   func getRequestList(completion: @escaping () -> Void) {
     myRequestListManger.getMyRequestStudyList { [weak self] result in
+      self?.requestStudyList = []
       self?.requestStudyList?.append(contentsOf: result.requestStudyData.content)
+      self?.countPostNumber = self?.requestStudyList?.count ?? 0
       
       completion()
     }
@@ -170,7 +170,6 @@ extension MyRequestListViewController: UICollectionViewDelegate, UICollectionVie
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyRequestCell.id,
                                                   for: indexPath) as! MyRequestCell
     cell.delegate = self
-    print(requestStudyList)
     cell.model = requestStudyList?[indexPath.row]
     cell.contentView.isUserInteractionEnabled = false
     
@@ -211,15 +210,15 @@ extension MyRequestListViewController: MyRequestCellDelegate {
       self.dismiss(animated: true)
 
       self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
+        self.getRequestList {
+          self.myStudyRequestCollectionView.reloadData()
+        }
         self.showToast(message: "삭제가 완료됐어요.",
                   imageCheck: true,
                   alertCheck: true)
       }
-      self.getRequestList {
-        self.myStudyRequestCollectionView.reloadData()
-      }
-  
     }
+    
     self.present(popupVC, animated: false)
   }
 }

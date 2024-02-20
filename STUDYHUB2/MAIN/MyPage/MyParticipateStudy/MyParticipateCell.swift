@@ -147,7 +147,8 @@ final class MyParticipateCell: UICollectionViewCell {
   }
   
   func deleteButtonTapped(){
-    self.delegate?.deleteButtonTapped(in: self, postID: 0)
+    guard var postId = model?.map({ $0.postID }) else { return}
+    self.delegate?.deleteButtonTapped(in: self, postID: postId)
     print("1")
   }
   
