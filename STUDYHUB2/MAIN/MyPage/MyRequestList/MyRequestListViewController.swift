@@ -123,20 +123,7 @@ final class MyRequestListViewController: NaviHelper {
         $0.bottom.equalToSuperview()
       }
     } else {
-      emptyImage.snp.makeConstraints {
-        $0.centerX.centerY.equalToSuperview()
-      }
-      
-      emptyLabel.changeColor(label: emptyLabel,
-                             wantToChange: "지금 스터디에 참여해보세요!",
-                             color: .bg60,
-                             font: UIFont(name: "Pretendard-Medium",
-                                          size: 16),
-                             lineSpacing: 5)
-      emptyLabel.snp.makeConstraints {
-        $0.top.equalTo(emptyImage.snp.bottom).offset(10)
-        $0.centerX.equalToSuperview()
-      }
+      noDataUI()
     }
   }
   
@@ -155,6 +142,25 @@ final class MyRequestListViewController: NaviHelper {
     
     myStudyRequestCollectionView.register(MyRequestCell.self,
                                           forCellWithReuseIdentifier: MyRequestCell.id)
+  }
+  
+  func noDataUI(){
+    view.addSubview(emptyImage)
+    emptyImage.snp.makeConstraints {
+      $0.centerX.centerY.equalToSuperview()
+    }
+    
+    view.addSubview(emptyLabel)
+    emptyLabel.changeColor(label: emptyLabel,
+                           wantToChange: "지금 스터디에 참여해보세요!",
+                           color: .bg60,
+                           font: UIFont(name: "Pretendard-Medium",
+                                        size: 16),
+                           lineSpacing: 5)
+    emptyLabel.snp.makeConstraints {
+      $0.top.equalTo(emptyImage.snp.bottom).offset(10)
+      $0.centerX.equalToSuperview()
+    }
   }
 }
 
@@ -212,6 +218,11 @@ extension MyRequestListViewController: MyRequestCellDelegate {
       self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
         self.getRequestList {
           self.myStudyRequestCollectionView.reloadData()
+
+          if self.countPostNumber == 0 {
+            self.myStudyRequestCollectionView.isHidden = true
+            self.noDataUI()
+          }
         }
         self.showToast(message: "삭제가 완료됐어요.",
                   imageCheck: true,

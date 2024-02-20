@@ -131,21 +131,8 @@ final class BookmarkViewController: NaviHelper {
         make.leading.trailing.bottom.equalTo(view)
       }
     } else {
-      emptyMainImageView.snp.makeConstraints { make in
-        make.centerX.equalToSuperview()
-        make.centerY.equalToSuperview().offset(-50)
-      }
-      
-      emptyMainLabel.numberOfLines = 2
-      emptyMainLabel.textAlignment = .center
-      emptyMainLabel.changeColor(label: emptyMainLabel,
-                                 wantToChange: "관심있는 스터디를 저장해 보세요!", color: .bg60)
-      emptyMainLabel.snp.makeConstraints { make in
-        make.top.equalTo(emptyMainImageView.snp.bottom)
-        make.centerX.equalTo(emptyMainImageView)
-      }
+      noDataUI()
     }
-    
   }
   
   private func registerCell() {
@@ -154,6 +141,25 @@ final class BookmarkViewController: NaviHelper {
     
     bookMarkCollectionView.register(BookMarkCell.self,
                                     forCellWithReuseIdentifier: BookMarkCell.id)
+  }
+  
+  func noDataUI(){
+    view.addSubview(emptyMainImageView)
+    
+    emptyMainImageView.snp.makeConstraints { make in
+      make.centerX.equalToSuperview()
+      make.centerY.equalToSuperview().offset(-50)
+    }
+    
+    view.addSubview(emptyMainLabel)
+    emptyMainLabel.numberOfLines = 2
+    emptyMainLabel.textAlignment = .center
+    emptyMainLabel.changeColor(label: emptyMainLabel,
+                               wantToChange: "관심있는 스터디를 저장해 보세요!", color: .bg60)
+    emptyMainLabel.snp.makeConstraints { make in
+      make.top.equalTo(emptyMainImageView.snp.bottom)
+      make.centerX.equalTo(emptyMainImageView)
+    }
   }
   
   // MARK: - 북마크 전체 삭제
@@ -172,6 +178,8 @@ final class BookmarkViewController: NaviHelper {
           self.bookMarkCollectionView.reloadData()
         }
       }
+      self.bookMarkCollectionView.isHidden = true
+      self.noDataUI()
     }
   }
   
