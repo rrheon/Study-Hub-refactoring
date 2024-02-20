@@ -17,18 +17,21 @@ final class SimilarPostCell: UICollectionViewCell {
   var model: RelatedPost? { didSet { bind() } }
   var postID: Int?
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.text = " 세무회계학과 "
+  private lazy var majorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+    label.text = "세무회계학과"
     label.textColor = .o50
     label.backgroundColor = .o10
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.layer.cornerRadius = 5
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+    label.clipsToBounds = true
     return label
   }()
   
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard", size: 16)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    label.textColor = .black
     return label
   }()
   
@@ -39,8 +42,8 @@ final class SimilarPostCell: UICollectionViewCell {
   }
   private lazy var remainMemeber: UILabel = {
     let label = UILabel()
-    label.textColor = .lightGray
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.textColor = .bg80
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -52,21 +55,22 @@ final class SimilarPostCell: UICollectionViewCell {
     return imageView
   }()
   
-  private lazy var writerMajorLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .lightGray
+  private lazy var writerMajorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
+    label.textColor = .bg80
     label.backgroundColor = .bg30
     label.layer.cornerRadius = 10
     label.text = "정보통신공학과"
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
+    label.clipsToBounds = true
     return label
   }()
    
   private lazy var nickNameLabel: UILabel = {
     let label = UILabel()
-    label.textColor = .lightGray
+    label.textColor = .bg80
     label.text = "비어있음"
-    label.font = UIFont(name: "Pretendard", size: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
  
@@ -100,7 +104,7 @@ final class SimilarPostCell: UICollectionViewCell {
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(15)
-      make.leading.equalToSuperview().offset(15)
+      make.leading.equalToSuperview().offset(20)
       make.height.equalTo(24)
     }
     
@@ -120,13 +124,13 @@ final class SimilarPostCell: UICollectionViewCell {
     }
     
     writerMajorLabel.snp.makeConstraints { make in
-      make.top.equalTo(profileImageView.snp.top)
+      make.top.equalTo(profileImageView.snp.top).offset(-5)
       make.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
     nickNameLabel.snp.makeConstraints { make in
-      make.top.equalTo(writerMajorLabel.snp.bottom).offset(10)
-      make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+      make.top.equalTo(writerMajorLabel.snp.bottom).offset(5)
+      make.leading.equalTo(profileImageView.snp.trailing).offset(20)
     }
     
     backgroundColor = .white
@@ -141,10 +145,10 @@ final class SimilarPostCell: UICollectionViewCell {
     
     guard let writerMajor = model?.userData.major.convertMajor(model?.userData.major ?? "없음",
                                                                isEnglish: false) else { return }
-    majorLabel.text = " \(major) "
+    majorLabel.text = "\(major)"
     titleLabel.text = model?.title
     remainMemberNum = model?.remainingSeat ?? 0
-    writerMajorLabel.text = " \(writerMajor) "
+    writerMajorLabel.text = "\(writerMajor)"
     nickNameLabel.text = model?.userData.nickname
     postID = model?.postID
     

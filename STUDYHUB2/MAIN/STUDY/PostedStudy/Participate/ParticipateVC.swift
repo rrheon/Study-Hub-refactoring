@@ -64,6 +64,11 @@ final class ParticipateVC: NaviHelper {
     return button
   }()
   
+  override func viewWillDisappear(_ animated: Bool) {
+    print("1")
+    
+  }
+  
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -26,7 +26,7 @@ final class PopupView: UIView {
   
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard", size: 16)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     label.numberOfLines = 0
     label.textAlignment = .center
     return label
@@ -34,7 +34,7 @@ final class PopupView: UIView {
   
   private let descLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.font = UIFont(name: "Pretendard-Medimu", size: 14)
     label.numberOfLines = 0
     label.textAlignment = .center
     label.textColor = .bg80
@@ -46,6 +46,7 @@ final class PopupView: UIView {
     let button = UIButton()
     button.setTitleColor(.bg80, for: .normal)
     button.backgroundColor = .bg40
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
     button.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button
@@ -55,6 +56,7 @@ final class PopupView: UIView {
     let button = UIButton()
     button.backgroundColor = .o50
     button.setTitleColor(.white, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
     button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button
@@ -65,6 +67,7 @@ final class PopupView: UIView {
     button.backgroundColor = .o50
     button.setTitleColor(.white, for: .normal)
     button.setTitle("종료", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
     button.addTarget(self, action: #selector(endButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button

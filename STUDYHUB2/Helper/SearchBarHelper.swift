@@ -12,7 +12,7 @@ extension UISearchBar {
     let bar = UISearchBar()
   
     bar.placeholder = placeholder
-    bar.searchTextField.font = UIFont(name: "Pretendard", size: 20)
+    bar.searchTextField.font = UIFont(name: "Pretendard-Medium", size: 20)
     
     if let searchBarTextField = bar.value(forKey: "searchField") as? UITextField {
       searchBarTextField.font = UIFont.systemFont(ofSize: 14)

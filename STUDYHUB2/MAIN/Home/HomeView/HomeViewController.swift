@@ -182,8 +182,9 @@ final class HomeViewController: NaviHelper {
     for view in newStudyDataView {
       newStudyTopStackView.addArrangedSubview(view)
     }
-    
-    let newStudyTotalDataView = [newStudyTopStackView, recrutingCollectionView]
+
+    let spaceView = UIView()
+    let newStudyTotalDataView = [newStudyTopStackView, spaceView, recrutingCollectionView]
     for view in newStudyTotalDataView {
       newStudyTotalStackView.addArrangedSubview(view)
     }
@@ -220,6 +221,9 @@ final class HomeViewController: NaviHelper {
     }
     
     searchBar.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    searchBar.snp.makeConstraints {
+      $0.height.equalTo(50)
+    }
     
     newStudyTotalStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 0, right: 20)
     newStudyTotalStackView.isLayoutMarginsRelativeArrangement = true
@@ -447,7 +451,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     if collectionView.tag == 1 {
       return CGSize(width: 250, height: collectionView.frame.height)
     } else if collectionView.tag == 2 {
-      return CGSize(width: 335, height: 100)
+      return CGSize(width: 335, height: 84)
     } else {
       return CGSize(width: 335, height: collectionView.frame.height)
     }

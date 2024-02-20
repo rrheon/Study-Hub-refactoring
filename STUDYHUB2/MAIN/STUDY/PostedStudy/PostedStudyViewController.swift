@@ -35,6 +35,7 @@ final class PostedStudyViewController: NaviHelper {
     didSet {
       self.getCommentList {
         DispatchQueue.main.async {
+          print(self.postedData)
           self.redrawUI()
 
           self.setUpLayout()
@@ -44,7 +45,7 @@ final class PostedStudyViewController: NaviHelper {
     }
   }
   
-  var commentData: GetCommentList? {
+  var commentData: [CommentConetent]? {
     didSet {
       DispatchQueue.main.async {
         self.commentTableView.reloadData()
@@ -54,21 +55,27 @@ final class PostedStudyViewController: NaviHelper {
   
   var memberNumberCount: Int = 0 {
     didSet {
-      memeberNumberCountLabel.text = "\(memberNumberCount)/30명"
+      var possibleNum = memberNumberCount - (postedData?.remainingSeat ?? 0)
+      memeberNumberCountLabel.text = "\(possibleNum) /\(memberNumberCount)명"
       memeberNumberCountLabel.changeColor(label: memeberNumberCountLabel,
-                                          wantToChange: "\(memberNumberCount)",
+                                          wantToChange: "\(possibleNum)",
                                           color: .changeInfo)
     }
   }
   
   var fineCount: Int = 0 {
     didSet{
-      fineCountLabel.text = "\(fineCount)원"
-      fineCountLabel.changeColor(label: fineCountLabel,
-                                 wantToChange: "\(fineCount)",
-                                 color: .changeInfo)
-      
-      fineAmountLabel.text = "결석비 \(fineCount)원"
+      if fineCount == 0 {
+        fineAmountLabel.text = "없어요"
+        fineCountLabel.text = "없어요"
+      }else {
+        fineCountLabel.text = "\(fineCount)원"
+        fineCountLabel.changeColor(label: fineCountLabel,
+                                   wantToChange: "\(fineCount)",
+                                   color: .changeInfo)
+        
+        fineAmountLabel.text = "\(postedData?.penaltyWay ?? "") \(fineCount)원"
+      }
     }
   }
   
@@ -80,29 +87,35 @@ final class PostedStudyViewController: NaviHelper {
   
   // 작성일, 관련학과, 제목
   private lazy var postedDateLabel = createLabel(title: "2023-10-31",
-                                                 textColor: .lightGray,
-                                                 fontType: "Pretendard",
+                                                 textColor: .g70,
+                                                 fontType: "Pretendard-Medium",
                                                  fontSize: 12)
   
-  private lazy var postedMajorLabel = createLabel(title: " 세무회계학과 ",
-                                                  textColor: .postedMajor,
-                                                  fontType: "Pretendard",
-                                                  fontSize: 14)
+  private lazy var postedMajorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
+    label.text = "세무회계학과"
+    label.textColor = .o30
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    label.backgroundColor = .o60
+    label.layer.cornerRadius = 5
+    label.clipsToBounds = true
+    return label
+  }()
   
   private lazy var postedMajorStackView = createStackView(axis: .horizontal,
                                                           spacing: 10)
   
   private lazy var postedTitleLabel = createLabel(title: "전산세무 같이 준비해요",
                                                   textColor: .white,
-                                                  fontType: "Pretendard",
+                                                  fontType: "Pretendard-Bold",
                                                   fontSize: 20)
   
   private lazy var postedInfoStackView = createStackView(axis: .vertical, spacing: 10)
   
   // 팀원수 관련
-  private lazy var memeberNumberLabel = createLabel(title: "인원수",
-                                                    textColor: .lightGray,
-                                                    fontType: "Pretendard",
+  private lazy var memeberNumberLabel = createLabel(title: "팀원수",
+                                                    textColor: .g60,
+                                                    fontType: "Pretendard-SemiBold",
                                                     fontSize: 12)
   private lazy var memberImageView: UIImageView = {
     let imageView = UIImageView()
@@ -111,16 +124,18 @@ final class PostedStudyViewController: NaviHelper {
   }()
   
   private lazy var memeberNumberCountLabel = createLabel(title: "1" + "/30명",
-                                                         textColor: .lightGray,
-                                                         fontType: "Pretendard",
+                                                         textColor: .white,
+                                                         fontType: "Pretendard-SemiBold",
                                                          fontSize: 16)
+  
   private lazy var memberNumberStackView = createStackView(axis: .vertical,
                                                            spacing: 8)
   // 벌금 관련
   private lazy var fineLabel = createLabel(title: "벌금",
-                                           textColor: .lightGray,
-                                           fontType: "Pretendard",
+                                           textColor: .g60,
+                                           fontType: "Pretendard-SemiBold",
                                            fontSize: 12)
+  
   private lazy var fineImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "MoneyImage")
@@ -129,16 +144,18 @@ final class PostedStudyViewController: NaviHelper {
   }()
   
   private lazy var fineCountLabel = createLabel(title: "1000"+"원",
-                                                textColor: .lightGray,
-                                                fontType: "Pretendard",
+                                                textColor: .white,
+                                                fontType: "Pretendard-SemiBold",
                                                 fontSize: 16)
+  
   private lazy var fineStackView = createStackView(axis: .vertical,
                                                    spacing: 8)
   // 성별 관련
   private lazy var genderLabel = createLabel(title: "성별",
-                                             textColor: .lightGray,
-                                             fontType: "Pretendard",
+                                             textColor: .g60,
+                                             fontType: "Pretendard-SemiBold",
                                              fontSize: 12)
+  
   private lazy var genderImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "GenderImage")
@@ -148,8 +165,9 @@ final class PostedStudyViewController: NaviHelper {
   
   private lazy var fixedGenderLabel = createLabel(title: "여자",
                                                   textColor: .white,
-                                                  fontType: "Pretendard",
+                                                  fontType: "Pretendard-SemiBold",
                                                   fontSize: 16)
+  
   private lazy var genderStackView = createStackView(axis: .vertical,
                                                      spacing: 8)
   
@@ -168,57 +186,69 @@ final class PostedStudyViewController: NaviHelper {
   
   // 소개, 소개내용 , 회색구분선
   private lazy var aboutStudyLabel = createLabel(title: "소개",
-                                                 textColor: .black,
-                                                 fontType: "Pretendard",
+                                                 textColor: .bg90,
+                                                 fontType: "Pretendard-SemiBold",
                                                  fontSize: 14)
+  
   private lazy var aboutStudyDeatilLabel = createLabel(
     title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
-    textColor: .lightGray,
-    fontType: "Pretendard",
-    fontSize: 15)
+    textColor: .bg80,
+    fontType: "Pretendard-Medium",
+    fontSize: 14)
   
   private lazy var aboutStudyStackView = createStackView(axis: .vertical,
                                                          spacing: 10)
   
-  
   // 기간,벌금,대면여부, 관련학과
   private lazy var periodTitleLabel = createLabel(title: "기간",
-                                                  textColor: .black,
-                                                  fontType: "Pretendard",
+                                                  textColor: .bg90,
+                                                  fontType: "Pretendard-SemiBold",
                                                   fontSize: 14)
+  
   private lazy var periodLabel = createLabel(title: "2023.9.12 ~ 2023.12.30",
-                                             textColor: .lightGray,
-                                             fontType: "Pretendard",
+                                             textColor: .bg80,
+                                             fontType: "Pretendard-Medium",
                                              fontSize: 14)
   
   private lazy var fineTitleLabel = createLabel(title: "벌금",
-                                                textColor: .black,
-                                                fontType: "Pretendard",
+                                                textColor: .bg90,
+                                                fontType: "Pretendard-SemiBold",
                                                 fontSize: 14)
+  
   private lazy var fineAmountLabel = createLabel(title: "결석비  " + "1000원",
-                                                 textColor: .lightGray,
-                                                 fontType: "Pretendard",
+                                                 textColor: .bg80,
+                                                 fontType: "Pretendard-Medium",
                                                  fontSize: 14)
   
   private lazy var meetTitleLabel = createLabel(title: "대면여부",
-                                                textColor: .black,
-                                                fontType: "Pretendard",
+                                                textColor: .bg90,
+                                                fontType: "Pretendard-SemiBold",
                                                 fontSize: 14)
+  
   private lazy var meetLabel = createLabel(title: "혼합",
-                                           textColor: .lightGray,
-                                           fontType: "Pretendard",
+                                           textColor: .bg80,
+                                           fontType: "Pretendard-Medium",
                                            fontSize: 14)
   
   private lazy var majorTitleLabel = createLabel(title: "관련학과",
-                                                 textColor: .black,
-                                                 fontType: "Pretendard",
+                                                 textColor: .bg90,
+                                                 fontType: "Pretendard-SemiBold",
                                                  fontSize: 14)
-  private lazy var majorLabel = createLabel(title: " 세무회계학과 ",
-                                            textColor: .lightGray,
-                                            fontType: "Pretendard",
-                                            fontSize: 14)
+  
+  private lazy var majorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
+    label.text = "세무회계학과"
+    label.textColor = .bg80
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
+    label.backgroundColor = .bg30
+    label.layer.cornerRadius = 10
+    label.clipsToBounds = true
+    return label
+  }()
+  
   private lazy var majorStackView = createStackView(axis: .horizontal,
                                                     spacing: 10)
+  
   private lazy var detailInfoStackView = createStackView(axis: .vertical,
                                                          spacing: 10)
   private lazy var spaceView6 = UIView()
@@ -262,24 +292,26 @@ final class PostedStudyViewController: NaviHelper {
   private lazy var writerLabel = createLabel(title: "작성자",
                                              textColor: .black,
                                              fontType: "Pretendard-SemiBold",
-                                             fontSize: 18)
+                                             fontSize: 16)
   
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "ProfileAvatar")
+    imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
     return imageView
   }()
   
   private lazy var writerMajorLabel = createLabel(title: "세무회계학과",
-                                                  textColor: .gray,
-                                                  fontType: "Pretendard",
+                                                  textColor: .bg80,
+                                                  fontType: "Pretendard-Medium",
                                                   fontSize: 14)
   
   private lazy var nickNameLabel = createLabel(title: "비어있음",
                                                textColor: .black,
-                                               fontType: "Pretendard",
+                                               fontType: "Pretendard-Medium",
                                                fontSize: 16)
   // 학과, 닉네임 스택
+  
   private lazy var writerInfoStackView = createStackView(axis: .vertical,
                                                          spacing: 10)
   // 학과 닉네임 이미지 스택
@@ -463,7 +495,8 @@ final class PostedStudyViewController: NaviHelper {
       postedMajorStackView.addArrangedSubview(view)
     }
     
-    let postedInfoData = [postedDateLabel, postedMajorStackView, postedTitleLabel]
+    var spaceViewUnderTitle = UIView()
+    let postedInfoData = [postedDateLabel, postedMajorStackView, postedTitleLabel,spaceViewUnderTitle]
     for view in postedInfoData {
       postedInfoStackView.addArrangedSubview(view)
     }
@@ -543,7 +576,11 @@ final class PostedStudyViewController: NaviHelper {
     }
     
     // 작성자 정보
-    let writerData = [writerMajorLabel, nickNameLabel]
+    
+    var spaceViewTopUsermajorLabel = UIView()
+    var spaceViewUnderNicknameLabel = UIView()
+    let writerData = [spaceViewTopUsermajorLabel, writerMajorLabel,
+                      nickNameLabel, spaceViewUnderNicknameLabel]
     for view in writerData {
       writerInfoStackView.addArrangedSubview(view)
     }
@@ -673,7 +710,7 @@ final class PostedStudyViewController: NaviHelper {
     totalWriterInfoStackView.isLayoutMarginsRelativeArrangement = true
     
     spaceView1.snp.makeConstraints { make in
-      make.width.equalTo(200)
+      make.width.equalTo(180)
     }
     
     moveToCommentViewButton.snp.makeConstraints {
@@ -765,14 +802,12 @@ final class PostedStudyViewController: NaviHelper {
     let bookmarkImage = bookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookmarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
-    let major = self.convertMajor(self.postedData?.major ?? "",
-                                 isEnglish: false)
-    self.postedMajorLabel.text = "   \(major)   "
+    let major = self.convertMajor(self.postedData?.major ?? "", isEnglish: false)
+    self.postedMajorLabel.text = "\(major)"
     self.postedTitleLabel.text = self.postedData?.title
     self.memberNumberCount = self.postedData?.remainingSeat ?? 0
     self.fineCount = self.postedData?.penalty ?? 0
     
-   
     self.gender = self.convertGender(gender: self.postedData?.filteredGender ?? "무관")
     
     self.aboutStudyDeatilLabel.text = self.postedData?.content
@@ -785,7 +820,7 @@ final class PostedStudyViewController: NaviHelper {
     
     let convertedMajor = self.convertMajor(self.postedData?.major ?? "",
                                            isEnglish: false)
-    self.majorLabel.text = "      \(convertedMajor)      "
+    self.majorLabel.text = "\(convertedMajor)"
     
     self.writerMajorLabel.text = self.convertMajor(self.postedData?.postedUser.major ?? "",
                                                    isEnglish: false)
@@ -800,7 +835,7 @@ final class PostedStudyViewController: NaviHelper {
         case .success(let value):
           DispatchQueue.main.async {
             self.profileImageView.image = value.image
-            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.layer.cornerRadius = 25
             self.profileImageView.clipsToBounds = true
           }
         case .failure(let error):
@@ -873,14 +908,13 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 댓글 리스트 가져오기
   func getCommentList(completion: @escaping () -> Void){
     guard let postId = postedData?.postID else { return }
-    detailPostDataManager.getCommentList(postId: postId,
-                                         page: 0,
-                                         size: 8) {
-      self.commentData = self.detailPostDataManager.getCommentList()
-      self.countComment = self.commentData?.content.count ?? 0
+    detailPostDataManager.getCommentPreview(postId: postId) { commentListResult in
+      self.commentData = commentListResult
+      self.countComment = commentListResult.count
       
       completion()
     }
+
   }
   
   // MARK: - 댓글페이지로 이동
@@ -895,7 +929,7 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 테이블뷰 사이즈 동적으로 조정
   func tableViewResizing(){
-    let tableViewHeight = 86 * (self.commentData?.content.count ?? 0)
+    let tableViewHeight = 86 * (self.commentData?.count ?? 0)
     self.commentTableView.snp.updateConstraints {
       $0.height.equalTo(tableViewHeight)
     }
@@ -1064,7 +1098,6 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 북마크 이미지 확인
   func bookmarkStatus(){
-    print(postedData?.postID)
     bookmarked?.toggle()
     let bookmarkImage =  bookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookmarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
@@ -1076,7 +1109,7 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-      return postedData?.relatedPost.count ?? 0
+      return 3
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -1125,7 +1158,7 @@ extension PostedStudyViewController: UICollectionViewDelegateFlowLayout {
 extension PostedStudyViewController: UITableViewDelegate, UITableViewDataSource  {
   func tableView(_ tableView: UITableView,
                  numberOfRowsInSection section: Int) -> Int {
-    return commentData?.content.count ?? 0
+    return commentData?.count ?? 0
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1133,7 +1166,7 @@ extension PostedStudyViewController: UITableViewDelegate, UITableViewDataSource 
                                                     for: indexPath) as! CommentCell
     
     cell.delegate = self
-    cell.model = commentData?.content[indexPath.row]
+    cell.model = commentData?[indexPath.row]
     cell.selectionStyle = .none
     cell.contentView.isUserInteractionEnabled = false
     

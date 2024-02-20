@@ -34,6 +34,7 @@ enum networkingAPI {
   case writeComment(_content: String, _postId: Int)
   case deleteComment(_commentId: Int)
   case modifyComment(_commentId: Int, _content: String)
+  case getPreviewCommentList(_postid: Int)
   
   // 게시글관련
   case getMyPostList(_page: Int, _size: Int)
@@ -115,6 +116,8 @@ extension networkingAPI: TargetType {
       return "/v1/comments/\(commentId)"
     case .modifyComment(let commentId, let content):
       return "/v1/comments"
+    case .getPreviewCommentList(let postId):
+      return "/v1/comments/\(postId)/preview"
       
       // 게시글 관련
     case .getMyPostList(_page: _, _size: _):
@@ -183,7 +186,8 @@ extension networkingAPI: TargetType {
         .searchBookMarkList(page: _, size: _),
         .getMyReqeustList(page: _, size: _),
         .getRejectReason(_),
-        .searchSingleBookMark(_, _):
+        .searchSingleBookMark(_, _),
+        .getPreviewCommentList(_postid: _):
       return .get
       
     case .storeImage(_image: _),
@@ -360,7 +364,8 @@ extension networkingAPI: TargetType {
         .closePost(_),
         .changeBookMarkStatus(_),
         .deleteMyRequest(studyId: _),
-        .deleteAllBookMark:
+        .deleteAllBookMark,
+        .getPreviewCommentList(_postid: _):
       return .requestPlain
       
     }
@@ -387,7 +392,8 @@ extension networkingAPI: TargetType {
         .createNewAccount(accountData: _),
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
-        .editUserPassword(_checkPassword: _, email: _, _password: _):
+        .editUserPassword(_checkPassword: _, email: _, _password: _),
+        .getPreviewCommentList(_postid: _):
       return ["Content-type": "application/json"]
       
     case .verifyEmail(_code: _, _email: _):

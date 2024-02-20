@@ -12,12 +12,14 @@ final class RecruitPostCell: UICollectionViewCell {
   var model: Content? { didSet { bind() } }
   var checkBookmarked: Bool?
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
+  private lazy var majorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8))
     label.text = " 세무회계학과 "
     label.textColor = .o50
     label.backgroundColor = .o10
     label.layer.cornerRadius = 5
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+    label.clipsToBounds = true
     return label
   }()
   
@@ -34,7 +36,7 @@ final class RecruitPostCell: UICollectionViewCell {
   
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard", size: 14)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     label.textColor = .black
     return label
   }()
@@ -52,6 +54,7 @@ final class RecruitPostCell: UICollectionViewCell {
     let label = UILabel()
     label.textColor = .bg90
     label.text = "/14"
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -61,16 +64,18 @@ final class RecruitPostCell: UICollectionViewCell {
     let label = UILabel()
     label.textColor = .bg90
     label.text = "900원"
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
-  private lazy var remainMemeber: UILabel = {
-    let label = UILabel()
+  private lazy var remainMemeber: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 3, left: 2, bottom: 3, right: 2))
     label.textColor = .bg80
     label.text = " 잔여 14자리 "
     label.layer.borderColor = UIColor.bg60.cgColor
-    label.layer.borderWidth = 0.5
+    label.layer.borderWidth = 1
     label.layer.cornerRadius = 5
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
   
@@ -107,7 +112,7 @@ final class RecruitPostCell: UICollectionViewCell {
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
-      make.leading.equalToSuperview().offset(10)
+      make.leading.equalToSuperview().offset(20)
     }
     
     bookMarkButton.snp.makeConstraints { make in
@@ -121,12 +126,12 @@ final class RecruitPostCell: UICollectionViewCell {
     }
     
     profileImageView.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(20)
+      make.top.equalTo(titleLabel.snp.bottom).offset(30)
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
     countMemeberLabel.snp.makeConstraints { make in
-      make.leading.equalTo(profileImageView.snp.trailing)
+      make.leading.equalTo(profileImageView.snp.trailing).offset(5)
       make.centerY.equalTo(profileImageView)
     }
     
@@ -136,12 +141,12 @@ final class RecruitPostCell: UICollectionViewCell {
     }
     
     fineCountLabel.snp.makeConstraints { make in
-      make.leading.equalTo(fineImageView.snp.trailing)
+      make.leading.equalTo(fineImageView.snp.trailing).offset(5)
       make.centerY.equalTo(fineImageView)
     }
     
     remainMemeber.snp.makeConstraints { make in
-      make.top.equalTo(profileImageView.snp.bottom).offset(20)
+      make.top.equalTo(profileImageView.snp.bottom).offset(15)
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
@@ -164,16 +169,13 @@ final class RecruitPostCell: UICollectionViewCell {
 
   
   private func bookmarkTapped(){
-    
     checkBookmarked = !(checkBookmarked ?? false)
-    print(checkBookmarked)
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
   }
   
   private func bind() {
     guard let data = model else { return }
-    
     var studyPersonCount = data.studyPerson - data.remainingSeat
     
     checkBookmarked = data.bookmarked
@@ -182,7 +184,7 @@ final class RecruitPostCell: UICollectionViewCell {
     majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
     titleLabel.text = data.title
     remainMemeber.text = "  잔여 \(data.remainingSeat)자리  "
-    countMemeberLabel.text = "\(studyPersonCount) / \(data.studyPerson)"
+    countMemeberLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
     fineCountLabel.text = "\(data.penalty) 원"
     
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)

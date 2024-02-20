@@ -35,9 +35,9 @@ final class PostDetailInfoManager {
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-//        let res = String(data: response.data, encoding: .utf8) ?? "No data"
-//        print(res)
-//        print(response)
+        //        let res = String(data: response.data, encoding: .utf8) ?? "No data"
+        //        print(res)
+        //        print(response)
         
         completion()
       case .failure(let response):
@@ -73,6 +73,27 @@ final class PostDetailInfoManager {
       }
     }
   }
+  
+  func getCommentPreview(postId: Int,
+                         completion: @escaping ([CommentConetent]) -> Void){
+    commonNetwork.moyaNetworking(networkingChoice: .getPreviewCommentList(_postid: postId)) { result in
+      switch result {
+      case .success(let response):
+
+        do {
+          let commentContent = try JSONDecoder().decode([CommentConetent].self, from: response.data)
+          completion(commentContent)
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+        
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
+  
 }
+
 
 

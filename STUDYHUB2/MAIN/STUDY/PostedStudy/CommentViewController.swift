@@ -252,7 +252,7 @@ final class CommentViewController: NaviHelper {
   func getCommentList(completion: @escaping () -> Void){
     detailPostDataManager.getCommentList(postId: postId,
                                          page: 0,
-                                         size: 8) {
+                                         size: 100) {
       
       self.commentData = self.detailPostDataManager.getCommentList()
       self.countComment = self.commentData?.content.count ?? 0

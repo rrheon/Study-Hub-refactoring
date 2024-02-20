@@ -32,8 +32,10 @@ class TabBarController: UITabBarController {
     
     self.tabBar.tintColor = .o50
     
-    self.tabBar.layer.borderColor = UIColor.lightGray.cgColor
+    self.tabBar.layer.borderColor = UIColor.white.cgColor
     self.tabBar.layer.borderWidth = 0.5
+    
+    self.tabBar.backgroundColor = .white
   
   }
 }

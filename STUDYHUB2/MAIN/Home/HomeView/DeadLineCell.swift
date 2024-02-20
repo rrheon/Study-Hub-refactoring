@@ -15,8 +15,7 @@ final class DeadLineCell: UICollectionViewCell {
 
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(named: "ProfileAvatar")
-    imageView.layer.cornerRadius = 48
+    imageView.image = UIImage(named: "ProfileAvatar_change")
     imageView.clipsToBounds = true
     
     return imageView
@@ -25,6 +24,7 @@ final class DeadLineCell: UICollectionViewCell {
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
     label.text = "컴활 1급 같이하실 분"
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
   }()
   
@@ -50,6 +50,7 @@ final class DeadLineCell: UICollectionViewCell {
     label.text = "29/30명"
     label.textColor = .bg90
     label.changeColor(label: label, wantToChange: "29", color: .changeInfo)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -57,6 +58,7 @@ final class DeadLineCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "1자리 남았어요!"
     label.textColor = .o50
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
 
@@ -94,16 +96,17 @@ final class DeadLineCell: UICollectionViewCell {
     }
    
     titleLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
+      make.top.equalToSuperview().offset(18)
       make.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
     countImageView.snp.makeConstraints { make in
-      make.top.equalTo(titleLabel.snp.bottom).offset(20)
+      make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
     countLabel.snp.makeConstraints { make in
+      make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.centerY.equalTo(countImageView)
       make.leading.equalTo(countImageView.snp.trailing)
     }
@@ -114,8 +117,8 @@ final class DeadLineCell: UICollectionViewCell {
     }
     
     remainLabel.snp.makeConstraints { make in
-      make.top.equalTo(bookMarkButton.snp.bottom).offset(20)
-      make.trailing.equalToSuperview().offset(-40)
+      make.top.equalTo(bookMarkButton.snp.bottom).offset(10)
+      make.leading.equalTo(countLabel.snp.trailing).offset(50)
     }
     
     backgroundColor = .white
@@ -134,9 +137,7 @@ final class DeadLineCell: UICollectionViewCell {
   }
   
   private func bookmarkTapped(){
-    
     checkBookmarked = !(checkBookmarked ?? false)
-    print(checkBookmarked)
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
   }
@@ -152,7 +153,7 @@ final class DeadLineCell: UICollectionViewCell {
     
     titleLabel.text = data.title
     
-    countLabel.text = "\(studyPersonCount) / \(data.studyPerson)"
+    countLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
     countLabel.changeColor(label: countLabel,
                            wantToChange: "\(studyPersonCount)",
                            color: .o50)
