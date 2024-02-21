@@ -40,7 +40,7 @@ final class PostManager {
                                     needCheckToken: true) { result in
       switch result {
       case .success(let postResponse):
-        
+        print(postResponse.response)
         let strData = String(data: postResponse.data, encoding: .utf8)
         print("Response body: \(strData ?? "")")
         completion()

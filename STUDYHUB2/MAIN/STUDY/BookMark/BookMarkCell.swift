@@ -12,13 +12,18 @@ protocol BookMarkDelegate: AnyObject {
   func bookmarkTapped(postId: Int, userId: Int)
 }
 
+protocol ParticipatePostDelegate: AnyObject {
+  func participateButtonTapped(studyId: Int, postId: Int)
+}
+
 final class BookMarkCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
   weak var delegate: BookMarkDelegate?
+  weak var postDelegate: ParticipatePostDelegate?
   
-  var model: BookmarkContent? { didSet { bind() } }
+  var model: BookmarkContent? { didSet { bind()} }
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
@@ -71,6 +76,10 @@ final class BookMarkCell: UICollectionViewCell {
     button.layer.borderWidth = 1
     button.layer.borderColor = UIColor.o40.cgColor
     button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    button.addAction(UIAction { _ in
+      self.postDelegate?.participateButtonTapped(studyId: self.model?.studyID ?? 0,
+                                                 postId: self.model?.postID ?? 0)
+    }, for: .touchUpInside)
     return button
   }()
   

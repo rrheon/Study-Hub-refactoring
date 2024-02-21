@@ -188,6 +188,11 @@ final class CheckParticipantsVC: NaviHelper {
       $0.height.equalTo(waitingCollectionView.snp.height)
     }
     
+    if self.applyUserData?.applyUserData.content.count == 0 {
+      noParticipateLabel.isHidden = false
+      noParticipateImageView.isHidden = false
+    }
+    
     noParticipateImageView.snp.makeConstraints {
       $0.centerX.equalToSuperview()
       $0.centerY.equalToSuperview().offset(-60)

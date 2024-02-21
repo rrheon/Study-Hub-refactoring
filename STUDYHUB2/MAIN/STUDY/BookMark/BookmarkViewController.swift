@@ -206,8 +206,15 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
-    self.navigationController?.pushViewController(postedVC, animated: true)
+    
+    detailPostDataManager.searchSinglePostData(postId: postID,
+                                               loginStatus: true) {
+      let postData = self.detailPostDataManager.getPostDetailData()
+      
+      let postedVC = PostedStudyViewController(postID: postID)
+      postedVC.postedData = postData
+      self.navigationController?.pushViewController(postedVC, animated: true)
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -219,6 +226,7 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
     if let cell = cell as? BookMarkCell {
       cell.model = bookmarkCellData
       cell.delegate = self
+      cell.postDelegate = self
     }
   
     return cell
@@ -243,5 +251,14 @@ extension BookmarkViewController: BookMarkDelegate {
         self.countNumber = self.bookmarkDatas?.totalCount ?? 0
       }
     }
+  }
+}
+
+extension BookmarkViewController: ParticipatePostDelegate{
+  func participateButtonTapped(studyId: Int, postId: Int) {
+    let participateVC = ParticipateVC()
+    participateVC.studyId = studyId
+    participateVC.postId = postId
+    self.navigationController?.pushViewController(participateVC, animated: true)
   }
 }

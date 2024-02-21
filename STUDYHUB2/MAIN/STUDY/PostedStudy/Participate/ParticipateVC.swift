@@ -12,9 +12,14 @@ import SnapKit
 final class ParticipateVC: NaviHelper {
   
   let participateManager = ParticipateManager.shared
+  let postDeatilManager = PostDetailInfoManager.shared
+  let userDataManager = UserInfoManager.shared
   
   var beforeVC: PostedStudyViewController?
+  var postData: PostDetailData? = nil
+  
   var studyId: Int = 0
+  var postId: Int = 0
   
   // MARK: - UI세팅
   private lazy var titleLabel = createLabel(
@@ -81,6 +86,11 @@ final class ParticipateVC: NaviHelper {
     makeUI()
     
     changeTitleLabelColor()
+    
+    postDeatilManager.searchSinglePostData(postId: postId,
+                                           loginStatus: true) {
+      self.postData = self.postDeatilManager.getPostDetailData()
+    }
   }
   
   // MARK: - setupLayout
@@ -154,14 +164,28 @@ final class ParticipateVC: NaviHelper {
   // MARK: - 완료버튼 tapped
   func completeButtonTapped(){
     guard let text = reasonTextView.text else { return }
+
     if text.count < 10 {
       showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
     } else {
-      participateManager.participateStudy(introduce: text,
-                                          studyId: studyId) {
-        self.navigationController?.popViewController(animated: true)
-        self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
-        self.beforeVC?.redrawUI()
+      userDataManager.getUserInfo { userData in
+        let postedGender = self.postData?.filteredGender
+        if userData?.gender == postedGender || postedGender == "MIX" {
+          self.participateManager.participateStudy(introduce: text,
+                                                   studyId: self.studyId) {
+            
+            DispatchQueue.main.async {
+              self.navigationController?.popViewController(animated: true)
+              self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+              self.beforeVC?.redrawUI()
+            }
+          }
+        } else {
+          DispatchQueue.main.async {
+            self.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요.", alertCheck: false)
+            return
+          }
+        }
       }
     }
   }

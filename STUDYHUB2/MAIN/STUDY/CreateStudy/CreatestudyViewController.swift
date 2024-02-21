@@ -1062,14 +1062,14 @@ final class CreateStudyViewController: NaviHelper {
             self.meetButtonTapped(self.untactButton)
           }
           
-          if $0.penaltyWay == nil {
+          if $0.penalty == 0 {
             self.noFineButtonTapped(self.noFineButton)
           } else {
             self.haveFineButtonTapped(self.haveFineButton)
+            self.fineTypesTextField.text = $0.penaltyWay
+            self.fineAmountTextField.text = String($0.penalty)
           }
-          
-          self.fineAmountTextField.text = String($0.penalty)
-          
+                    
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
           
           let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
