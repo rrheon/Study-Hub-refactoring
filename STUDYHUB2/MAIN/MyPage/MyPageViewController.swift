@@ -247,12 +247,12 @@ final class MyPageViewController: NaviHelper {
       }
       
       majorLabel.snp.makeConstraints {
-        $0.top.equalTo(profileImageView)
+        $0.top.equalTo(profileImageView).offset(5)
         $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
       }
       
       nickNameLabel.snp.makeConstraints {
-        $0.top.equalTo(majorLabel.snp.bottom).offset(10)
+        $0.top.equalTo(majorLabel.snp.bottom).offset(5)
         $0.leading.equalTo(majorLabel)
       }
     }
@@ -478,7 +478,7 @@ final class MyPageViewController: NaviHelper {
         case .success(let value):
           DispatchQueue.main.async {
             self.profileImageView.image = value.image
-            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.layer.cornerRadius = 25
             self.profileImageView.clipsToBounds = true
           }
         case .failure(let error):

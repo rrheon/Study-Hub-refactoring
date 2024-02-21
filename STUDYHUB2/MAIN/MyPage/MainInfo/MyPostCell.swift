@@ -27,9 +27,10 @@ final class MyPostCell: UICollectionViewCell {
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = " 세무회계학과 "
+    label.text = "세무회계학과"
     label.textColor = .o50
     label.layer.cornerRadius = 5
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
     return label
   }()
   
@@ -44,7 +45,7 @@ final class MyPostCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "단기 스터디원 구해요!"
     label.textColor = .black
-    label.font = UIFont.boldSystemFont(ofSize: 16)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
   }()
   
@@ -52,7 +53,7 @@ final class MyPostCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "내용내용내용"
     label.textColor = .bg80
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -65,7 +66,7 @@ final class MyPostCell: UICollectionViewCell {
   private lazy var remainLabel: UILabel = {
     let label = UILabel()
     label.textColor = .bg70
-    label.font = UIFont.boldSystemFont(ofSize: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
 
@@ -82,6 +83,7 @@ final class MyPostCell: UICollectionViewCell {
     let button = UIButton()
     button.setTitle("마감", for: .normal)
     button.titleLabel?.textAlignment = .center
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     return button
   }()
@@ -92,6 +94,7 @@ final class MyPostCell: UICollectionViewCell {
     let button = UIButton()
     button.setTitle("참여자", for: .normal)
     button.setTitleColor(.bg80, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     button.titleLabel?.textAlignment = .center
     button.addAction(UIAction { _ in
       self.acceptButtonTapped()
@@ -142,8 +145,8 @@ final class MyPostCell: UICollectionViewCell {
   // MARK: - configure
   private func configure() {
     majorLabel.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
-      make.leading.equalToSuperview().offset(10)
+      make.top.equalToSuperview().offset(22)
+      make.leading.equalToSuperview().offset(20)
     }
     
     menuButton.snp.makeConstraints { make in
@@ -152,24 +155,24 @@ final class MyPostCell: UICollectionViewCell {
     }
     
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(majorLabel.snp.bottom).offset(20)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.top.equalTo(majorLabel.snp.bottom).offset(10)
+      make.leading.equalTo(majorLabel.snp.leading)
     }
     
     infoLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(10)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.leading.equalTo(majorLabel.snp.leading)
       make.trailing.equalToSuperview().offset(-10)
     }
     
     remainLabel.snp.makeConstraints { make in
       make.top.equalTo(infoLabel.snp.bottom).offset(10)
-      make.leading.equalTo(majorLabel.snp.leading).offset(5)
+      make.leading.equalTo(majorLabel.snp.leading)
     }
     
     seperateLine.backgroundColor = .bg30
     seperateLine.snp.makeConstraints { make in
-      make.top.equalTo(remainLabel.snp.bottom).offset(10)
+      make.top.equalTo(remainLabel.snp.bottom).offset(20)
       make.leading.trailing.equalToSuperview()
       make.height.equalTo(1)
     }
@@ -183,8 +186,8 @@ final class MyPostCell: UICollectionViewCell {
     buttonStackView.alignment = .center
     buttonStackView.distribution = .equalCentering
     buttonStackView.snp.makeConstraints { make in
-      make.top.equalTo(seperateLine.snp.bottom)
-      make.leading.equalTo(remainLabel.snp.trailing)
+      make.top.equalTo(seperateLine.snp.bottom).offset(5)
+      make.leading.equalToSuperview().offset(70)
       make.trailing.equalTo(menuButton.snp.leading).offset(-30)
     }
   

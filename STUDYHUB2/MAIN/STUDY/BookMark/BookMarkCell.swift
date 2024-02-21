@@ -22,9 +22,10 @@ final class BookMarkCell: UICollectionViewCell {
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = " 세무회계학과 "
+    label.text = "세무회계학과"
     label.textColor = .o50
     label.layer.cornerRadius = 5
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
     return label
   }()
   
@@ -41,7 +42,7 @@ final class BookMarkCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "단기 스터디원 구해요!"
     label.textColor = .black
-    label.font = UIFont.boldSystemFont(ofSize: 16)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
   }()
   
@@ -49,7 +50,7 @@ final class BookMarkCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "내용내용내용"
     label.textColor = .bg80
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -58,7 +59,7 @@ final class BookMarkCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "잔여 \(remainCount)자리"
     label.textColor = .bg70
-    label.font = UIFont.boldSystemFont(ofSize: 12)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
   
@@ -69,6 +70,7 @@ final class BookMarkCell: UICollectionViewCell {
     button.layer.cornerRadius = 5
     button.layer.borderWidth = 1
     button.layer.borderColor = UIColor.o40.cgColor
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return button
   }()
   
@@ -104,12 +106,12 @@ final class BookMarkCell: UICollectionViewCell {
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
-      make.leading.equalToSuperview().offset(10)
+      make.leading.equalToSuperview().offset(20)
     }
     
     bookMarkButton.snp.makeConstraints { make in
       make.centerY.equalTo(majorLabel)
-      make.trailing.equalToSuperview().offset(-10)
+      make.trailing.equalToSuperview().offset(-20)
     }
     
     titleLabel.snp.makeConstraints { make in
@@ -128,7 +130,7 @@ final class BookMarkCell: UICollectionViewCell {
     }
     
     enterButton.snp.makeConstraints { make in
-      make.top.equalTo(remainLabel.snp.bottom).offset(20)
+      make.top.equalTo(remainLabel.snp.bottom).offset(30)
       make.leading.equalTo(majorLabel.snp.leading)
       make.trailing.equalTo(bookMarkButton.snp.trailing)
       make.height.equalTo(47)
@@ -147,6 +149,13 @@ final class BookMarkCell: UICollectionViewCell {
     titleLabel.text =  model?.title
     infoLabel.text = model?.content
     remainLabel.text = "잔여 \(model?.remainingSeat ?? 0)자리"
+   
+    if model?.close == true {
+      enterButton.setTitle("마감되었어요", for: .normal)
+      enterButton.layer.borderColor = UIColor.bg40.cgColor
+      enterButton.titleLabel?.textColor = .bg60
+      enterButton.isEnabled = true
+    }
   }
   
 }

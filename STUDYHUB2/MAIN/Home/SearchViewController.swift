@@ -91,7 +91,7 @@ final class SearchViewController: NaviHelper {
   private lazy var resultCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
-    flowLayout.minimumLineSpacing = 10
+    flowLayout.minimumLineSpacing = 20
     
     let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     view.backgroundColor = .white
@@ -334,7 +334,7 @@ final class SearchViewController: NaviHelper {
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(allButton.snp.bottom).offset(10)
+      make.top.equalTo(allButton.snp.bottom).offset(20)
       make.leading.trailing.equalTo(view)
       make.bottom.equalTo(view.safeAreaLayoutGuide)
     }

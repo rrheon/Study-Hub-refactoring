@@ -9,7 +9,6 @@ final class MyInformViewController: NaviHelper {
   
   var major: String? {
     didSet {
-      print("변경된 학과\(major)")
       userMajorLabel.text = major
     }
   }
@@ -25,7 +24,7 @@ final class MyInformViewController: NaviHelper {
       if let imageURL = URL(string: profileImage ?? "") {
         let processor = ResizingImageProcessor(referenceSize: CGSize(width: 56, height: 56))
         self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)])
-        self.profileImageView.layer.cornerRadius = 20
+        self.profileImageView.layer.cornerRadius = 35
         self.profileImageView.clipsToBounds = true
       }
     }

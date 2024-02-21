@@ -13,12 +13,13 @@ final class SearchResultCell: UICollectionViewCell {
   
   var checkBookmarked: Bool?
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.text = " 세무회계학과 "
+  private lazy var majorLabel: BasePaddingLabel = {
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+    label.text = "세무회계학과"
     label.textColor = .o50
     label.backgroundColor = .o10
     label.layer.cornerRadius = 5
+    label.clipsToBounds = true
     return label
   }()
   
@@ -37,7 +38,7 @@ final class SearchResultCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "단기 스터디원 구해요!"
     label.textColor = .black
-    label.font = UIFont.boldSystemFont(ofSize: 16)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
   }()
   
@@ -45,6 +46,7 @@ final class SearchResultCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "9월 10일 ~ 10월 10일"
     label.textColor = .bg80
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
   
@@ -52,7 +54,7 @@ final class SearchResultCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "1자리 남았어요"
     label.textColor = .o50
-    label.font = UIFont.boldSystemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     return label
   }()
   
@@ -61,14 +63,7 @@ final class SearchResultCell: UICollectionViewCell {
     imageView.image = UIImage(named: "MemberNumberImage")
     return imageView
   }()
-  
-  private lazy var memberCountLabel: UILabel = {
-    let label = UILabel()
-    label.text = "10/20명"
-    label.changeColor(label: label, wantToChange: "10", color: .changeInfo)
-    return label
-  }()
-  
+
   private lazy var memberStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .vertical
@@ -85,6 +80,8 @@ final class SearchResultCell: UICollectionViewCell {
   private lazy var fineLabel: UILabel = {
     let label = UILabel()
     label.text = "400원"
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
+    label.textColor = .bg90
     return label
   }()
   
@@ -104,6 +101,8 @@ final class SearchResultCell: UICollectionViewCell {
   private lazy var genderLabel: UILabel = {
     let label = UILabel()
     label.text = "무관"
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
+    label.textColor = .bg90
     return label
   }()
   
@@ -133,8 +132,8 @@ final class SearchResultCell: UICollectionViewCell {
   private lazy var nickNameLabel: UILabel = {
     let label = UILabel()
     label.text = "학생"
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     label.textColor = .bg90
-    label.font = UIFont.systemFont(ofSize: 14)
     return label
   }()
   
@@ -142,7 +141,7 @@ final class SearchResultCell: UICollectionViewCell {
     let label = UILabel()
     label.text = "2023.9.1"
     label.textColor = .bg70
-    label.font = UIFont.systemFont(ofSize: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
   
@@ -198,10 +197,11 @@ final class SearchResultCell: UICollectionViewCell {
     }
     
     genderStackView.alignment = .center
-    genderStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+    genderStackView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 11, right: 0)
     genderStackView.isLayoutMarginsRelativeArrangement = true
     
-    let genderData = [genderImage, genderLabel]
+    let genderSpace = UIView()
+    let genderData = [genderSpace,genderImage, genderLabel]
     for data in genderData {
       genderStackView.addArrangedSubview(data)
     }
@@ -269,13 +269,13 @@ final class SearchResultCell: UICollectionViewCell {
     }
     
     nickNameLabel.snp.makeConstraints { make in
-      make.leading.equalTo(profileImageView.snp.trailing).offset(20)
+      make.leading.equalTo(profileImageView.snp.trailing).offset(10)
       make.top.equalTo(profileImageView.snp.top)
     }
     
     postedDate.snp.makeConstraints { make in
-      make.leading.equalTo(profileImageView.snp.trailing).offset(20)
-      make.top.equalTo(nickNameLabel.snp.bottom)
+      make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+      make.top.equalTo(nickNameLabel.snp.bottom).offset(5)
     }
     
     backgroundColor = .white
@@ -315,14 +315,22 @@ final class SearchResultCell: UICollectionViewCell {
     periodLabel.text = "\(data.studyStartDate[1])월 \(data.studyStartDate[2])일 ~\(data.studyEndDate[1])월 \(data.studyEndDate[2])일 "
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요"
-    countMemeberLabel.text = "\(countMember) / \(data.studyPerson)"
+    countMemeberLabel.text = "\(countMember) /\(data.studyPerson)명"
     countMemeberLabel.changeColor(label: countMemeberLabel,
                                   wantToChange: "\(countMember)",
                                   color: .o50)
-    
-    fineLabel.text = "\(data.penalty)원"
+    let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty)원"
+    fineLabel.text = "\(fineText)"
     
     genderLabel.text = convertGender(gender: data.filteredGender)
+    
+    if genderLabel.text == "남자" {
+      genderImage.image = UIImage(named: "MenGenderImage")
+    } else if genderLabel.text == "여자" {
+      genderImage.image = UIImage(named: "GenderImage")
+    } else {
+      genderImage.image = UIImage(named: "GenderMixImg")
+    }
     
     nickNameLabel.text = data.userData.nickname
     postedDate.text = "\(data.createdDate[0]).\(data.createdDate[1]).\(data.createdDate[2])"
@@ -354,7 +362,7 @@ final class SearchResultCell: UICollectionViewCell {
       remainLabel.text = "마감됐어요"
       remainLabel.textColor = .bg70
       
-      memberCountLabel.textColor = .bg70
+      countMemeberLabel.textColor = .bg70
       fineLabel.textColor = .bg70
       genderLabel.textColor = .bg70
       

@@ -92,6 +92,17 @@ final class CheckParticipantsVC: NaviHelper {
     return view
   }()
   
+  // MARK: - 참여자 없을 때
+  private lazy var noParticipateImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(named: "EmptyWaitIamge")
+    return imageView
+  }()
+
+  private lazy var noParticipateLabel = createLabel(title: "참여 중인 팀원이 없어요",
+                                                    textColor: .bg60,
+                                                    fontType: "Pretendard-SemiBold",
+                                                    fontSize: 16)
   
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
@@ -126,14 +137,22 @@ final class CheckParticipantsVC: NaviHelper {
     ].forEach {
       topItemStackView.addArrangedSubview($0)
     }
-    
-    scrollView.addSubview(waitingCollectionView)
-    scrollView.addSubview(participateCollectionView)
-    scrollView.addSubview(refuseCollectionView)
-    
+  
+    [
+      waitingCollectionView,
+      participateCollectionView,
+      refuseCollectionView,
+      noParticipateImageView,
+      noParticipateLabel
+    ].forEach {
+      scrollView.addSubview($0)
+    }
+
     participateCollectionView.isHidden = true
     refuseCollectionView.isHidden = true
-
+    noParticipateImageView.isHidden = true
+    noParticipateLabel.isHidden = true
+    
     [
       topItemStackView,
       scrollView
@@ -167,6 +186,16 @@ final class CheckParticipantsVC: NaviHelper {
       $0.top.equalTo(waitingCollectionView.snp.top)
       $0.width.equalTo(waitingCollectionView.snp.width)
       $0.height.equalTo(waitingCollectionView.snp.height)
+    }
+    
+    noParticipateImageView.snp.makeConstraints {
+      $0.centerX.equalToSuperview()
+      $0.centerY.equalToSuperview().offset(-60)
+    }
+    
+    noParticipateLabel.snp.makeConstraints {
+      $0.top.equalTo(noParticipateImageView.snp.bottom).offset(40)
+      $0.centerX.equalToSuperview()
     }
     
     scrollView.snp.makeConstraints {
@@ -209,7 +238,7 @@ final class CheckParticipantsVC: NaviHelper {
                           completion: @escaping () -> Void){
     participateManager.getApplyUserData(inspection: type,
                                         page: 0,
-                                        size :5,
+                                        size : 5,
                                         studyID) { result in
       self.applyUserData = result
     
@@ -217,12 +246,24 @@ final class CheckParticipantsVC: NaviHelper {
     }
   }
   
-  func participateTypeButton(type: SettinInspection, collectionView: UICollectionView){
+  func participateTypeButton(type: SettinInspection,
+                             collectionView: UICollectionView){
     setting = type
     settingValue = setting.description
     
     getParticipateInfo(type: settingValue) { [weak self] in
-      collectionView.reloadData()
+      if self?.applyUserData?.applyUserData.content.count == 0 {
+        collectionView.isHidden = true
+        
+        self?.noParticipateLabel.isHidden = false
+        self?.noParticipateImageView.isHidden = false
+      } else {
+        self?.noParticipateLabel.isHidden = true
+        self?.noParticipateImageView.isHidden = true
+        
+        collectionView.isHidden = false
+        collectionView.reloadData()
+      }
     }
   }
   

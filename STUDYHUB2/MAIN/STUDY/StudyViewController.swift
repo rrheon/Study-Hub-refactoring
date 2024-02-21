@@ -47,7 +47,7 @@ final class StudyViewController: NaviHelper {
   private lazy var resultCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
-    flowLayout.minimumLineSpacing = 10
+    flowLayout.minimumLineSpacing = 20
     
     let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     view.backgroundColor = .white
@@ -218,7 +218,9 @@ final class StudyViewController: NaviHelper {
   }
   
   @objc func searchButtonTapped() {
-    print("아직")
+    let searchVC = SearchViewController()
+    searchVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(searchVC, animated: true)
   }
   
   @objc func addButtonTapped() {

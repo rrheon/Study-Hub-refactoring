@@ -185,7 +185,9 @@ final class RecruitPostCell: UICollectionViewCell {
     titleLabel.text = data.title
     remainMemeber.text = "  잔여 \(data.remainingSeat)자리  "
     countMemeberLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
-    fineCountLabel.text = "\(data.penalty) 원"
+    
+    let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty) 원"
+    fineCountLabel.text = "\(fineText)"
     
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
 

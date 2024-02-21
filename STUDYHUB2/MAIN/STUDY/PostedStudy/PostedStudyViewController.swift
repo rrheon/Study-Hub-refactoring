@@ -294,6 +294,8 @@ final class PostedStudyViewController: NaviHelper {
                                              fontType: "Pretendard-SemiBold",
                                              fontSize: 16)
   
+  private lazy var profileImageStackView = createStackView(axis: .vertical,
+                                                           spacing: 10)
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "ProfileAvatar")
@@ -313,7 +315,7 @@ final class PostedStudyViewController: NaviHelper {
   // 학과, 닉네임 스택
   
   private lazy var writerInfoStackView = createStackView(axis: .vertical,
-                                                         spacing: 10)
+                                                         spacing: 5)
   // 학과 닉네임 이미지 스택
   private lazy var writerInfoWithImageStackView = createStackView(axis: .horizontal,
                                                                   spacing: 10)
@@ -577,13 +579,14 @@ final class PostedStudyViewController: NaviHelper {
     
     // 작성자 정보
     
-    var spaceViewTopUsermajorLabel = UIView()
-    var spaceViewUnderNicknameLabel = UIView()
+    let spaceViewTopUsermajorLabel = UIView()
+    let spaceViewUnderNicknameLabel = UIView()
     let writerData = [spaceViewTopUsermajorLabel, writerMajorLabel,
                       nickNameLabel, spaceViewUnderNicknameLabel]
     for view in writerData {
       writerInfoStackView.addArrangedSubview(view)
     }
+    
     
     let writerDataWithImage = [profileImageView, writerInfoStackView, spaceView1]
     for view in writerDataWithImage {
@@ -810,6 +813,15 @@ final class PostedStudyViewController: NaviHelper {
     
     self.gender = self.convertGender(gender: self.postedData?.filteredGender ?? "무관")
     
+    if gender == "남자" {
+      genderImageView.image = UIImage(named: "MenGenderImage")
+    } else if gender == "여자" {
+      genderImageView.image = UIImage(named: "GenderImage")
+    } else {
+      genderImageView.image = UIImage(named: "GenderMixImg")
+    }
+    
+    
     self.aboutStudyDeatilLabel.text = self.postedData?.content
     
     guard let startDate = self.postedData?.studyStartDate,
@@ -846,6 +858,12 @@ final class PostedStudyViewController: NaviHelper {
     
     if postedData?.apply == true {
       participateButton.setTitle("수락 대기 중", for: .normal)
+      participateButton.backgroundColor = .o30
+      participateButton.isEnabled = false
+    }
+    
+    if postedData?.close == true {
+      participateButton.setTitle("마감 됐어요.", for: .normal)
       participateButton.backgroundColor = .o30
       participateButton.isEnabled = false
     }
