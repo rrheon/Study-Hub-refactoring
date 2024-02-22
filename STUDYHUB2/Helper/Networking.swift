@@ -66,6 +66,7 @@ enum networkingAPI {
   
   // 문의하기
   case inquiryQuestion(content: String, title: String, toEmail: String)
+  case getNotice(page: Int, size: Int)
 }
 
 extension networkingAPI: TargetType {
@@ -169,6 +170,8 @@ extension networkingAPI: TargetType {
       // 문의하기
     case .inquiryQuestion(content: _, title: _, toEmail: _):
       return "/v1/email/question"
+    case .getNotice(page: _, size: _):
+      return "/v1/announce"
     }
   }
   
@@ -187,7 +190,8 @@ extension networkingAPI: TargetType {
         .getMyReqeustList(page: _, size: _),
         .getRejectReason(_),
         .searchSingleBookMark(_, _),
-        .getPreviewCommentList(_postid: _):
+        .getPreviewCommentList(_postid: _),
+        .getNotice(page: _, size: _):
       return .get
       
     case .storeImage(_image: _),
@@ -356,6 +360,10 @@ extension networkingAPI: TargetType {
       let params: [String: Any] = ["userId": userId]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .getNotice(let page, let size):
+      let params: [String: Any] = ["page": page, "size": size]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     case .deleteID,
         .searchSinglePost(_postId: _),
         .deleteImage,
@@ -393,7 +401,8 @@ extension networkingAPI: TargetType {
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
         .editUserPassword(_checkPassword: _, email: _, _password: _),
-        .getPreviewCommentList(_postid: _):
+        .getPreviewCommentList(_postid: _),
+        .getNotice(page: _, size: _):
       return ["Content-type": "application/json"]
       
     case .verifyEmail(_code: _, _email: _):

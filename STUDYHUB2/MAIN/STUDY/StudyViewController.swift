@@ -9,7 +9,7 @@ final class StudyViewController: NaviHelper {
   var recentDatas: PostDataContent?
   var totalDatas: [Content]? = []
   
-  var pageCount: Int = 0
+  var pageCount: Int = 1
   var isInfiniteScroll = true
   
   private lazy var recentButton: UIButton = {
@@ -29,6 +29,7 @@ final class StudyViewController: NaviHelper {
     button.setTitle("   인기   ", for: .normal)
     button.setTitleColor(.bg90, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
+    button.backgroundColor = .bg30
     button.layer.cornerRadius = 15
     button.addTarget(self, action: #selector(popularButtonTapped), for: .touchUpInside)
     
@@ -235,6 +236,7 @@ final class StudyViewController: NaviHelper {
     navigationController?.pushViewController(searchVC, animated: true)
   }
   
+  // MARK: - 게시글 작성 버튼 탭
   @objc func addButtonTapped() {
     let createStudyVC = CreateStudyViewController()
     createStudyVC.hidesBottomBarWhenPushed = true
@@ -242,6 +244,7 @@ final class StudyViewController: NaviHelper {
     navigationController?.pushViewController(createStudyVC, animated: true)
   }
   
+  // MARK: - 최신버튼 탭
   @objc func recentButtonTapped(){
     activityIndicator.startAnimating()
     
@@ -261,6 +264,7 @@ final class StudyViewController: NaviHelper {
     recentButton.backgroundColor = .black
   }
   
+  // MARK: - 인기버튼 탭
   @objc func popularButtonTapped(){
     postDataManager.getRecentPostDatas(hotType: "true") {
       self.recentDatas = self.postDataManager.getRecentPostDatas()

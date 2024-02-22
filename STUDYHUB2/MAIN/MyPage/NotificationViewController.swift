@@ -2,12 +2,15 @@
 import UIKit
 
 import SnapKit
+import Moya
 
 final class NotificationViewController: NaviHelper {
   
-  let data = ["사과", "배", "수박"]
-  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
-                    "f2","f3" ]
+//  let data = ["사과", "배", "수박"]
+//  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
+//                    "f2","f3" ]
+  
+  var noticeDatas: [NoticeContent]? = []
   var selectedCellIndexPath: IndexPath?
   
   private lazy var notificationCollectionView: UICollectionView = {
@@ -29,8 +32,12 @@ final class NotificationViewController: NaviHelper {
     
     view.backgroundColor = .white
     
-    setupLayout()
-    makeUI()
+    getNoticeData(page: 0, size: 5) { NoticeData in
+      self.noticeDatas = NoticeData.content
+      
+      self.setupLayout()
+      self.makeUI()
+    }
   }
   
   // MARK: - navigationbar 설정
@@ -58,23 +65,42 @@ final class NotificationViewController: NaviHelper {
       $0.bottom.equalTo(view).offset(-10)
     }
   }
+  
+  func getNoticeData(page: Int,
+                     size: Int,
+                     completion: @escaping(NoticeData) -> Void){
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.getNotice(page: page, size: size)) { result in
+      switch result {
+      case .success(let response):
+        do {
+          let noticeData = try JSONDecoder().decode(NoticeData.self, from: response.data)
+          completion(noticeData)
+        } catch {
+          print("Failed to decode JSON: \(error)")
+        }
+      case .failure(let response):
+        print(response.response)
+      }
+    }
+  }
 }
 
 // MARK: - cell 함수
 extension NotificationViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return data.count
+    return noticeDatas?.count ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NotificationCell.cellId,
                                                   for: indexPath) as! NotificationCell
-    cell.titleLabel.text = data[indexPath.row]
+    cell.model = noticeDatas
     
     let isExpanded = selectedCellIndexPath == indexPath
-    let detailText = isExpanded ? footerdata[indexPath.row] : nil
+    let detailText = isExpanded ? noticeDatas?[indexPath.row].content : nil
     cell.configureWithDetail(detailText, isExpanded: isExpanded)
     
     return cell
@@ -102,8 +128,9 @@ extension NotificationViewController: UICollectionViewDelegateFlowLayout {
     let expandedHeight: CGFloat
     
     if let selected = selectedCellIndexPath, selected == indexPath {
-      let text = footerdata[indexPath.row]
-      expandedHeight =  defaultHeight + NotificationCell.calculateContentHeight(for: text,
+      let text = noticeDatas?[indexPath.row]
+      
+      expandedHeight =  defaultHeight + NotificationCell.calculateContentHeight(for: text?.content ?? "",
                                                                                 width: maxWidth)
     } else {
       expandedHeight = defaultHeight

@@ -205,11 +205,12 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = detailPostDataManager.getPostDetailData()?.postID else { return }
+    guard let postID = bookmarkDatas?.getBookmarkedPostsData.content[indexPath.row].postID else { return }
     
     detailPostDataManager.searchSinglePostData(postId: postID,
                                                loginStatus: true) {
       let postData = self.detailPostDataManager.getPostDetailData()
+      if postData?.close == true { return }
       
       let postedVC = PostedStudyViewController(postID: postID)
       postedVC.postedData = postData

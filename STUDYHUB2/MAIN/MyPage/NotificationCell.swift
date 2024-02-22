@@ -7,7 +7,7 @@ final class NotificationCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  var model: RecommendList? {
+  var model: [NoticeContent]? {
     didSet {
       bind()
     }
@@ -99,7 +99,12 @@ final class NotificationCell: UICollectionViewCell {
   }
 
   func bind(){
-    //    name.text = model?.recommend
+    model?.filter({ notice in
+      titleLabel.text = notice.title
+      let createDate = notice.createdDate
+      createdDateLabel.text = "\(createDate[0]). \(createDate[1]). \(createDate[2])"
+      return true
+    })
   }
   
   // 상세 정보를 설정하는 메서드
