@@ -695,7 +695,9 @@ final class CreateStudyViewController: NaviHelper {
                                       leftButtonTitle: "아니요",
                                       rightButtonTilte: "네")
     popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
+      self.dismiss(animated: false) {
+        self.navigationController?.popViewController(animated: true)
+      }
     }
     self.present(popupVC, animated: true)
   }

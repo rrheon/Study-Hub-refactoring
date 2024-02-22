@@ -165,7 +165,6 @@ final class PostDataManager {
                                createPostData: nil) { [weak self] (result: Result<PostDataContent, NetworkError>) in
       switch result {
       case .success(let postData):
-        print(postData)
         self?.newPostDatas = postData
         completion()
         

@@ -2,6 +2,7 @@
 import UIKit
 
 import SnapKit
+import Kingfisher
 
 final class SearchResultCell: UICollectionViewCell {
   
@@ -123,9 +124,9 @@ final class SearchResultCell: UICollectionViewCell {
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 48
-    imageView.clipsToBounds = true
     imageView.image = UIImage(named: "ProfileAvatar_change")
     imageView.contentMode = .scaleAspectFit
+    imageView.clipsToBounds = true
     return imageView
   }()
   
@@ -335,19 +336,22 @@ final class SearchResultCell: UICollectionViewCell {
     nickNameLabel.text = data.userData.nickname
     postedDate.text = "\(data.createdDate[0]).\(data.createdDate[1]).\(data.createdDate[2])"
     
-    if let url = URL(string: data.userData.imageURL ?? "") {
-      let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-          print("Error: \(error)")
-        } else if let data = data {
-          let image = UIImage(data: data)
+    if let imageURL = URL(string: data.userData.imageURL ?? "") {
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
+            
+      self.profileImageView.kf.setImage(with: imageURL,
+                                        options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
           DispatchQueue.main.async {
+            self.profileImageView.image = value.image
             self.profileImageView.layer.cornerRadius = 15
-            self.profileImageView.image = image
+            self.profileImageView.clipsToBounds = true
           }
+        case .failure(let error):
+          print("Image download failed: \(error)")
         }
       }
-      task.resume()
     }
   }
   

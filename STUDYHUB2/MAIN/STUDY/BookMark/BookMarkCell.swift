@@ -163,7 +163,8 @@ final class BookMarkCell: UICollectionViewCell {
       enterButton.setTitle("마감되었어요", for: .normal)
       enterButton.layer.borderColor = UIColor.bg40.cgColor
       enterButton.titleLabel?.textColor = .bg60
-      enterButton.isEnabled = true
+      enterButton.setTitleColor(.bg60, for: .normal)
+      enterButton.isEnabled = false
     }
   }
   

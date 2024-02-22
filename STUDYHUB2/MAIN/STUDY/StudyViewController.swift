@@ -7,6 +7,10 @@ final class StudyViewController: NaviHelper {
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   var recentDatas: PostDataContent?
+  var totalDatas: [Content]? = []
+  
+  var pageCount: Int = 0
+  var isInfiniteScroll = true
   
   private lazy var recentButton: UIButton = {
     let button = UIButton()
@@ -19,7 +23,7 @@ final class StudyViewController: NaviHelper {
     
     return button
   }()
-    
+  
   private lazy var popularButton: UIButton = {
     let button = UIButton()
     button.setTitle("   인기   ", for: .normal)
@@ -32,7 +36,7 @@ final class StudyViewController: NaviHelper {
   }()
   
   private lazy var studyCount: Int = recentDatas?.totalCount ?? 0
-    
+  
   private lazy var emptyImage = UIImage(named: "EmptyStudy")
   private lazy var emptyImageView = UIImageView(image: emptyImage)
   
@@ -87,9 +91,15 @@ final class StudyViewController: NaviHelper {
     redesignNavigationbar()
     
     setupCollectionView()
-        
+    
     self.postDataManager.getRecentPostDatas(hotType: "false") {
       self.recentDatas = self.postDataManager.getRecentPostDatas()
+      
+      guard let recentData = self.recentDatas else { return }
+      
+      
+      self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
+ 
       DispatchQueue.main.async {
         self.activityIndicator.stopAnimating()
         self.activityIndicator.removeFromSuperview()
@@ -150,13 +160,14 @@ final class StudyViewController: NaviHelper {
       make.height.equalTo(34)
       make.width.equalTo(57)
     }
-  
+    
     if studyCount > 0 {
       resultCollectionView.snp.makeConstraints { make in
         make.top.equalTo(contentView).offset(20)
         make.leading.trailing.equalTo(contentView)
         make.width.equalToSuperview()
-        make.height.equalTo(1200)
+//        make.height.equalTo(1200)
+        make.bottom.equalTo(addButton.snp.top).offset(-20) // 여백 추가
       }
       
       addButton.snp.makeConstraints { make in
@@ -175,7 +186,7 @@ final class StudyViewController: NaviHelper {
         make.top.equalTo(recentButton.snp.bottom).offset(10)
         make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
       }
-    }else {
+    } else {
       emptyImageView.snp.makeConstraints { make in
         make.centerX.equalToSuperview()
         make.centerY.equalToSuperview().offset(-50)
@@ -189,6 +200,7 @@ final class StudyViewController: NaviHelper {
         make.top.equalTo(emptyImageView.snp.bottom).offset(10)
         make.centerX.equalTo(emptyImageView)
       }
+      
       addButton.snp.makeConstraints { make in
         make.width.height.equalTo(60) // Increase width and height as needed
         make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
@@ -254,7 +266,7 @@ final class StudyViewController: NaviHelper {
       self.recentDatas = self.postDataManager.getRecentPostDatas()
       DispatchQueue.main.async {
         self.resultCollectionView.reloadData()
-
+        
         self.activityIndicator.stopAnimating()
         self.activityIndicator.removeFromSuperview()
       }
@@ -278,18 +290,78 @@ final class StudyViewController: NaviHelper {
   }
   
   // MARK: - 스크롤해서 네트워킹
-  func fectMoreData(hotType: String){
+  func fetchMoreData(hotType: String){
+    pageCount += 1
     waitingNetworking()
     postDataManager.getRecentPostDatas(hotType: hotType,
-                                       size: (recentDatas?.totalCount ?? 0) + 5) {
+                                       page: pageCount,
+                                       size: 5) {
+      guard let recentData = self.recentDatas else { return }
+    
       self.recentDatas = self.postDataManager.getRecentPostDatas()
+
+      if let totalDatas = self.totalDatas {
+          self.totalDatas = totalDatas.filter { existingData in
+            return !recentData.postDataByInquiries.content.contains { newData in
+              return newData.postID == existingData.postID
+            }
+          }
+        }
+      
+      self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
+   
       DispatchQueue.main.async {
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-        
-        self.resultCollectionView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+          self.activityIndicator.stopAnimating()
+          self.activityIndicator.removeFromSuperview()
+          
+          self.updateCollectionViewHeight()
+          self.resultCollectionView.reloadData()
+          self.isInfiniteScroll = true
+        }
       }
     }
+  }
+  
+  // MARK: - 스크롤 제약 업데이트
+  func updateCollectionViewHeight() {
+    // 기존의 제약 조건을 찾아 업데이트
+    let existingConstraint = resultCollectionView.constraints.first { constraint in
+      return constraint.firstAttribute == .height && constraint.relation == .equal
+    }
+    
+    if let existingConstraint = existingConstraint {
+      // 기존의 제약 조건이 존재하는 경우, 해당 제약 조건을 업데이트
+      existingConstraint.constant = calculateNewCollectionViewHeight()
+    } else {
+      // 기존의 제약 조건이 존재하지 않는 경우, 새로운 제약 조건 추가
+      resultCollectionView.snp.makeConstraints { make in
+        make.height.equalTo(calculateNewCollectionViewHeight())
+      }
+    }
+    
+    // 다른 View들의 제약 조건 수정
+    addButton.snp.updateConstraints { make in
+      make.bottom.equalTo(scrollView.frameLayoutGuide).offset(-30)
+    }
+    
+    contentView.snp.updateConstraints { make in
+      make.height.equalTo(calculateNewCollectionViewHeight())
+    }
+    
+    // 레이아웃 업데이트
+    self.view.layoutIfNeeded()
+  }
+
+  // MARK: - 스크롤 시 셀 높이 계산
+  func calculateNewCollectionViewHeight() -> CGFloat {
+    // resultCollectionView의 셀 개수에 따라 새로운 높이 계산
+    let cellHeight: CGFloat = 247
+    let spacing: CGFloat = 10
+    let numberOfCells = recentDatas?.postDataByInquiries.number ?? 0
+    let newHeight = CGFloat(numberOfCells) * cellHeight + CGFloat(numberOfCells - 1) * spacing
+    studyCount = numberOfCells
+    return newHeight
   }
 }
 
@@ -298,14 +370,13 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    studyCount = recentDatas?.totalCount ?? 0
+    studyCount = totalDatas?.count ?? 0
     return studyCount
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postId = recentDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
-    print(postId)
+    guard let postId = totalDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postId)
     postedVC.hidesBottomBarWhenPushed = true
     postedVC.previousStudyVC = self
@@ -326,8 +397,8 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
                                                   for: indexPath)
     if let cell = cell as? SearchResultCell {
-      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
-      
+//      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
+      let content = totalDatas?[indexPath.row]
       cell.model = content
       cell.delegate = self
     }
@@ -350,13 +421,19 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - 스크롤할 때 네트워킹 요청
 extension StudyViewController {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    if (resultCollectionView.contentOffset.y > (resultCollectionView.contentSize.height - resultCollectionView.bounds.size.height)){
-      
-      guard let last = recentDatas?.postDataByInquiries.last else { return }
-      
-      if !last {
-        fectMoreData(hotType: "false")
+    if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
+     
+      if isInfiniteScroll {
+        isInfiniteScroll = false
+        
+        fetchMoreData(hotType: "false")
+        
       }
+//      guard let last = recentDatas?.postDataByInquiries.last else { return }
+//
+//      if !last {
+//        fectMoreData(hotType: "false")
+//      }
     }
   }
 }
