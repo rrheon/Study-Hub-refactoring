@@ -9,8 +9,9 @@ final class StudyViewController: NaviHelper {
   var recentDatas: PostDataContent?
   var totalDatas: [Content]? = []
   
-  var pageCount: Int = 1
+  var pageCount: Int = 0
   var isInfiniteScroll = true
+  var searchType: String = "false"
   
   private lazy var recentButton: UIButton = {
     let button = UIButton()
@@ -100,7 +101,7 @@ final class StudyViewController: NaviHelper {
       
       
       self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
- 
+      
       DispatchQueue.main.async {
         self.activityIndicator.stopAnimating()
         self.activityIndicator.removeFromSuperview()
@@ -167,7 +168,7 @@ final class StudyViewController: NaviHelper {
         make.top.equalTo(contentView).offset(20)
         make.leading.trailing.equalTo(contentView)
         make.width.equalToSuperview()
-//        make.height.equalTo(1200)
+        //        make.height.equalTo(1200)
         make.bottom.equalTo(addButton.snp.top).offset(-20) // 여백 추가
       }
       
@@ -238,10 +239,29 @@ final class StudyViewController: NaviHelper {
   
   // MARK: - 게시글 작성 버튼 탭
   @objc func addButtonTapped() {
-    let createStudyVC = CreateStudyViewController()
-    createStudyVC.hidesBottomBarWhenPushed = true
-    createStudyVC.delegate = self
-    navigationController?.pushViewController(createStudyVC, animated: true)
+    loginStatus { loginCheck in
+      if loginCheck {
+        let createStudyVC = CreateStudyViewController()
+        createStudyVC.hidesBottomBarWhenPushed = true
+        createStudyVC.delegate = self
+        self.navigationController?.pushViewController(createStudyVC, animated: true)
+      } else {
+        let popupVC = PopupViewController(
+          title: "로그인이 필요해요",
+          desc: "계속하시려면 로그인을 해주세요!",
+          leftButtonTitle: "취소",
+          rightButtonTilte: "로그인")
+        
+        popupVC.popupView.rightButtonAction = {
+          self.dismiss(animated: true) {
+            self.dismiss(animated: true)
+          }
+        }
+        
+        popupVC.modalPresentationStyle = .overFullScreen
+        self.present(popupVC, animated: false)
+      }
+    }
   }
   
   // MARK: - 최신버튼 탭
@@ -249,7 +269,14 @@ final class StudyViewController: NaviHelper {
     activityIndicator.startAnimating()
     
     postDataManager.getRecentPostDatas(hotType: "false") {
+      self.searchType = "false"
       self.recentDatas = self.postDataManager.getRecentPostDatas()
+      
+      self.totalDatas = []
+      
+      guard let datas = self.recentDatas?.postDataByInquiries.content else { return }
+      self.totalDatas?.append(contentsOf: datas)
+      
       DispatchQueue.main.async {
         self.activityIndicator.stopAnimating()
         self.activityIndicator.removeFromSuperview()
@@ -266,8 +293,17 @@ final class StudyViewController: NaviHelper {
   
   // MARK: - 인기버튼 탭
   @objc func popularButtonTapped(){
+    resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
+
     postDataManager.getRecentPostDatas(hotType: "true") {
+      self.searchType = "true"
+
       self.recentDatas = self.postDataManager.getRecentPostDatas()
+      self.totalDatas = []
+      
+      guard let datas = self.recentDatas?.postDataByInquiries.content else { return }
+      self.totalDatas?.append(contentsOf: datas)
+      
       DispatchQueue.main.async {
         self.resultCollectionView.reloadData()
         
@@ -293,38 +329,47 @@ final class StudyViewController: NaviHelper {
     activityIndicator.startAnimating()
   }
   
+  func addPageCount(completion: @escaping (Int) -> Void){
+    pageCount += 1
+    completion(pageCount)
+  }
+  
   // MARK: - 스크롤해서 네트워킹
   func fetchMoreData(hotType: String){
-    pageCount += 1
-    waitingNetworking()
-    postDataManager.getRecentPostDatas(hotType: hotType,
-                                       page: pageCount,
-                                       size: 5) {
-      guard let recentData = self.recentDatas else { return }
-    
-      self.recentDatas = self.postDataManager.getRecentPostDatas()
 
-      if let totalDatas = self.totalDatas {
+    addPageCount { pageCount in
+      self.waitingNetworking()
+      self.postDataManager.getRecentPostDatas(hotType: hotType,
+                                              page: pageCount,
+                                         size: 5) {
+
+        guard let recentData = self.recentDatas else { return }
+        
+        self.recentDatas = self.postDataManager.getRecentPostDatas()
+        
+        if let totalDatas = self.totalDatas {
           self.totalDatas = totalDatas.filter { existingData in
             return !recentData.postDataByInquiries.content.contains { newData in
               return newData.postID == existingData.postID
             }
           }
         }
-      
-      self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
-   
-      DispatchQueue.main.async {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-          self.activityIndicator.stopAnimating()
-          self.activityIndicator.removeFromSuperview()
-          
-          self.updateCollectionViewHeight()
-          self.resultCollectionView.reloadData()
-          self.isInfiniteScroll = true
+        
+        self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
+        
+        DispatchQueue.main.async {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.removeFromSuperview()
+            
+            self.updateCollectionViewHeight()
+            self.resultCollectionView.reloadData()
+            self.isInfiniteScroll = true
+          }
         }
       }
     }
+   
   }
   
   // MARK: - 스크롤 제약 업데이트
@@ -356,7 +401,7 @@ final class StudyViewController: NaviHelper {
     // 레이아웃 업데이트
     self.view.layoutIfNeeded()
   }
-
+  
   // MARK: - 스크롤 시 셀 높이 계산
   func calculateNewCollectionViewHeight() -> CGFloat {
     // resultCollectionView의 셀 개수에 따라 새로운 높이 계산
@@ -391,7 +436,7 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
         postedVC.postedData = cellData
       }
     }
-
+    
     self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
@@ -401,8 +446,9 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
                                                   for: indexPath)
     if let cell = cell as? SearchResultCell {
-//      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
+      //      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
       let content = totalDatas?[indexPath.row]
+      print(content?.title)
       cell.model = content
       cell.delegate = self
     }
@@ -426,18 +472,18 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
 extension StudyViewController {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
-     
+      
       if isInfiniteScroll {
         isInfiniteScroll = false
         
-        fetchMoreData(hotType: "false")
+        fetchMoreData(hotType: searchType)
         
       }
-//      guard let last = recentDatas?.postDataByInquiries.last else { return }
-//
-//      if !last {
-//        fectMoreData(hotType: "false")
-//      }
+      //      guard let last = recentDatas?.postDataByInquiries.last else { return }
+      //
+      //      if !last {
+      //        fectMoreData(hotType: "false")
+      //      }
     }
   }
 }
@@ -460,7 +506,7 @@ extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
     
     self.bookmarkButtonTapped(postId,userId) {
-//      self.resultCollectionView.reloadData()
+      //      self.resultCollectionView.reloadData()
     }
   }
 }

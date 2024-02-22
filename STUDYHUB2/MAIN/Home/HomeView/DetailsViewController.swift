@@ -3,7 +3,7 @@ import UIKit
 import SnapKit
 
 final class DetailsViewController: NaviHelper {
-  
+
   // MARK: - 화면구성
   private let headerContentStackView: UIStackView = {
     let headerContentStackView = UIStackView()
@@ -186,9 +186,27 @@ final class DetailsViewController: NaviHelper {
 
   // MARK: - 작성하기버튼
   @objc func writeButtonTapped() {
-    let createStudyViewController = CreateStudyViewController()
-    createStudyViewController.hidesBottomBarWhenPushed = true
-    
-    navigationController?.pushViewController(createStudyViewController, animated: true)
+    loginStatus { loginCheck in
+      if loginCheck {
+        let createStudyVC = CreateStudyViewController()
+        createStudyVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(createStudyVC, animated: true)
+      } else {
+        let popupVC = PopupViewController(
+          title: "로그인이 필요해요",
+          desc: "계속하시려면 로그인을 해주세요!",
+          leftButtonTitle: "취소",
+          rightButtonTilte: "로그인")
+        
+        popupVC.popupView.rightButtonAction = {
+          self.dismiss(animated: true) {
+            self.dismiss(animated: true)
+          }
+        }
+        
+        popupVC.modalPresentationStyle = .overFullScreen
+        self.present(popupVC, animated: false)
+      }
+    }
   }
 }

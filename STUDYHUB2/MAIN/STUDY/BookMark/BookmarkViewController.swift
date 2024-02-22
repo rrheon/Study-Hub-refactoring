@@ -44,6 +44,19 @@ final class BookmarkViewController: NaviHelper {
                                                 fontType: "Pretendard",
                                                 fontSize: 16)
   
+  private lazy var loginButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("로그인하기", for: .normal)
+    button.backgroundColor = .o50
+    button.setTitleColor(.white, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    button.layer.cornerRadius = 6
+    button.addAction(UIAction { _ in
+      self.loginButtonTapped()
+    }, for: .touchUpInside)
+    return button
+  }()
+  
   private lazy var bookMarkCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -71,9 +84,16 @@ final class BookmarkViewController: NaviHelper {
     
     registerCell()
     
-    getBookmarkList(requestNum: defaultRequestNum) {
-      self.setupLayout()
-      self.makeUI()
+    loginStatus { result in
+      if result {
+        self.getBookmarkList(requestNum: self.defaultRequestNum) {
+          self.setupLayout()
+          self.makeUI(loginStatus: result)
+        }
+      } else {
+        self.setupLayout()
+        self.makeUI(loginStatus: result)
+      }
     }
   }
   
@@ -109,7 +129,7 @@ final class BookmarkViewController: NaviHelper {
   }
   
   // MARK: - makeUI
-  func makeUI(){
+  func makeUI(loginStatus: Bool){
     totalCountLabel.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
       make.leading.equalToSuperview().offset(20)
@@ -131,7 +151,7 @@ final class BookmarkViewController: NaviHelper {
         make.leading.trailing.bottom.equalTo(view)
       }
     } else {
-      noDataUI()
+      noDataUI(loginStatus: loginStatus)
     }
   }
   
@@ -143,7 +163,7 @@ final class BookmarkViewController: NaviHelper {
                                     forCellWithReuseIdentifier: BookMarkCell.id)
   }
   
-  func noDataUI(){
+  func noDataUI(loginStatus: Bool){
     view.addSubview(emptyMainImageView)
     
     emptyMainImageView.snp.makeConstraints { make in
@@ -159,6 +179,14 @@ final class BookmarkViewController: NaviHelper {
     emptyMainLabel.snp.makeConstraints { make in
       make.top.equalTo(emptyMainImageView.snp.bottom)
       make.centerX.equalTo(emptyMainImageView)
+    }
+    
+    view.addSubview(loginButton)
+    loginButton.isHidden = loginStatus
+    loginButton.snp.makeConstraints {
+      $0.top.equalTo(emptyMainLabel.snp.bottom).offset(20)
+      $0.leading.trailing.equalTo(emptyMainLabel)
+      $0.height.equalTo(47)
     }
   }
   
@@ -179,7 +207,7 @@ final class BookmarkViewController: NaviHelper {
         }
       }
       self.bookMarkCollectionView.isHidden = true
-      self.noDataUI()
+      self.noDataUI(loginStatus: false)
     }
   }
   
@@ -191,6 +219,12 @@ final class BookmarkViewController: NaviHelper {
       self.countNumber = self.bookmarkDatas?.totalCount ?? 0
       
       completion()
+    }
+  }
+  
+  func loginButtonTapped(){
+    self.dismiss(animated: true) {
+      self.dismiss(animated: true)
     }
   }
 }

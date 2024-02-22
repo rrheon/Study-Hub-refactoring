@@ -171,4 +171,10 @@ class NaviHelper: UIViewController {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
+  
+  func loginStatus(completion: @escaping (Bool) -> Void){
+    loginManager.refreshAccessToken { result in
+      completion(result)
+    }
+  }
 }

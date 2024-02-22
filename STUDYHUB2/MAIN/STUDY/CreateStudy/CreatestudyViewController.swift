@@ -122,7 +122,7 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - 스터디 팀원
   private lazy var studymemberLabelStackView = createStackView(axis: .horizontal, spacing: 10)
-
+  
   private lazy var studyMemberStackView = createStackView(axis: .vertical,
                                                           spacing: 5)
   
@@ -225,7 +225,7 @@ final class CreateStudyViewController: NaviHelper {
                                            textColor: .black,
                                            fontType: "Pretendard-SemiBold",
                                            fontSize: 16)
-
+  
   
   private lazy var fineStackView = createStackView(axis: .horizontal,
                                                    spacing: 10)
@@ -265,9 +265,9 @@ final class CreateStudyViewController: NaviHelper {
   private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
   
   private lazy var fineAmountCountLabel = createLabel(title: "원",
-                                             textColor: .bg80,
-                                             fontType: "Pretendard-SemiBold",
-                                             fontSize: 14)
+                                                      textColor: .bg80,
+                                                      fontType: "Pretendard-SemiBold",
+                                                      fontSize: 14)
   
   private lazy var maxFineLabel = createLabel(title: "최대 99,999원",
                                               textColor: .bg70,
@@ -314,9 +314,10 @@ final class CreateStudyViewController: NaviHelper {
     let completeButton = UIButton()
     completeButton.setTitle("완료하기", for: .normal)
     completeButton.setTitleColor(.white, for: .normal)
-    completeButton.backgroundColor = UIColor(hexCode: "#FF5530")
+    completeButton.backgroundColor = .o30
     completeButton.layer.cornerRadius = 5
     completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    completeButton.isEnabled = false
     return completeButton
   }()
   
@@ -415,7 +416,7 @@ final class CreateStudyViewController: NaviHelper {
     
     // 성별 버튼
     let genderButtonRightSpacer = UIView()
-  
+    
     [
       allGenderButton,
       maleOnlyButton,
@@ -462,7 +463,7 @@ final class CreateStudyViewController: NaviHelper {
     
     // 벌금 유무
     let fineButtonRightSpacer = UIView()
- 
+    
     fineStackView.distribution = .fill
     fineStackView.alignment = .leading
     [
@@ -545,7 +546,7 @@ final class CreateStudyViewController: NaviHelper {
     ].forEach {
       scrollView.addSubview($0)
     }
-
+    
     view.addSubview(scrollView)
   }
   
@@ -575,20 +576,20 @@ final class CreateStudyViewController: NaviHelper {
     selectMajorDividerLine.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
     }
-
+    
     totalSelectMajorStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 20)
     totalSelectMajorStackView.isLayoutMarginsRelativeArrangement = true
-
+    
     studyMemberStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     studyMemberStackView.isLayoutMarginsRelativeArrangement = true
-
+    
     studymemberLabelStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     studymemberLabelStackView.isLayoutMarginsRelativeArrangement = true
     
     studymemberDividerLine.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
     }
-
+    
     studymemberTextField.snp.makeConstraints {
       $0.height.equalTo(50)
     }
@@ -597,10 +598,10 @@ final class CreateStudyViewController: NaviHelper {
       $0.centerY.equalTo(studymemberTextField)
       $0.trailing.equalTo(studymemberTextField).offset(-20)
     }
-  
+    
     studyMemberCountStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 20, right: 0)
     studyMemberCountStackView.isLayoutMarginsRelativeArrangement = true
-
+    
     genderButtonStackView.distribution = .fillEqually
     
     genderButtonDividerLine.snp.makeConstraints {
@@ -609,14 +610,14 @@ final class CreateStudyViewController: NaviHelper {
     
     studyMethodLabelStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 20, right: 20)
     studyMethodLabelStackView.isLayoutMarginsRelativeArrangement = true
-   
+    
     studyMethodDivierLine.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
     }
     
     studyMethodStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 20, right: 20)
     studyMethodStackView.isLayoutMarginsRelativeArrangement = true
-  
+    
     
     fineStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
     fineStackView.isLayoutMarginsRelativeArrangement = true
@@ -639,7 +640,7 @@ final class CreateStudyViewController: NaviHelper {
     periodDividerLine.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
     }
-
+    
     startDateButton.tag = 1
     startDateButton.snp.makeConstraints {
       $0.height.equalTo(50)
@@ -701,32 +702,32 @@ final class CreateStudyViewController: NaviHelper {
     }
     self.present(popupVC, animated: true)
   }
-
+  
   // MARK: -  선택한 학과에 대한 버튼을 생성
   func addDepartmentButton(_ department: String) {
     totalSelectMajorStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 70, right: 20)
-
+    
     selectedMajor = department
     print(selectedMajor)
     guard let labelText = selectedMajor else { return }
-
+    
     selectedMajorLabel.text = "  \(labelText)"
     selectedMajorLabel.clipsToBounds = true
     selectedMajorLabel.layer.cornerRadius = 15
     selectedMajorLabel.backgroundColor = .bg30
     selectedMajorLabel.textAlignment = .left
     selectedMajorLabel.adjustsFontSizeToFitWidth = true
-
+    
     scrollView.addSubview(selectedMajorLabel)
     scrollView.addSubview(cancelButton)
-
+    
     selectedMajorLabel.isHidden = false
     selectedMajorLabel.snp.makeConstraints { make in
       make.top.equalTo(selectMajorLabel.snp.bottom).offset(10)
       make.leading.equalTo(selectMajorLabel)
       make.height.equalTo(30)
     }
-
+    
     cancelButton.isHidden = false
     cancelButton.snp.makeConstraints { make in
       make.centerY.equalTo(selectedMajorLabel.snp.centerY)
@@ -735,7 +736,7 @@ final class CreateStudyViewController: NaviHelper {
     
     view.layoutIfNeeded()
   }
-
+  
   @objc func cancelButtonTapped(){
     selectedMajorLabel.isHidden = true
     cancelButton.isHidden = true
@@ -817,7 +818,7 @@ final class CreateStudyViewController: NaviHelper {
     sender.isSelected = !sender.isSelected
     haveFineButton.isSelected = !sender.isSelected
     fineStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20)
-
+    
     
     [
       fineTypeLabel,
@@ -907,7 +908,6 @@ final class CreateStudyViewController: NaviHelper {
           return
         }
       }
-      
     }
   }
   
@@ -1071,7 +1071,7 @@ final class CreateStudyViewController: NaviHelper {
             self.fineTypesTextField.text = $0.penaltyWay
             self.fineAmountTextField.text = String($0.penalty)
           }
-                    
+          
           // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
           
           let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
@@ -1095,6 +1095,7 @@ final class CreateStudyViewController: NaviHelper {
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
   override func textFieldDidEndEditing(_ textField: UITextField) {
+    
     if textField == fineAmountTextField {
       if let text = fineAmountTextField.text,
          let number = Int(text),
