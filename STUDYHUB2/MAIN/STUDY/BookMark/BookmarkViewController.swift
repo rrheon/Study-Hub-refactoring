@@ -216,9 +216,15 @@ final class BookmarkViewController: NaviHelper {
                        completion: @escaping () -> Void){
     bookmarkManager.getBookmarkList(0, requestNum) { result in
       self.bookmarkDatas = result
-      self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+      self.countNumber = self.bookmarkDatas?.getBookmarkedPostsData.content.count ?? 0
       
       completion()
+    }
+  }
+  
+  func reloadBookmarkList(){
+    getBookmarkList(requestNum: 100) {
+      self.bookMarkCollectionView.reloadData()
     }
   }
   
@@ -234,7 +240,7 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return bookmarkDatas?.totalCount ?? 0
+    return countNumber 
   }
   
   func collectionView(_ collectionView: UICollectionView,
@@ -247,6 +253,7 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
       if postData?.close == true { return }
       
       let postedVC = PostedStudyViewController(postID: postID)
+      postedVC.previousBookMarkVC = self
       postedVC.postedData = postData
       self.navigationController?.pushViewController(postedVC, animated: true)
     }
@@ -284,6 +291,7 @@ extension BookmarkViewController: BookMarkDelegate {
       self.getBookmarkList(requestNum: self.defaultRequestNum) {
         self.bookMarkCollectionView.reloadData()
         self.countNumber = self.bookmarkDatas?.totalCount ?? 0
+        
       }
     }
   }

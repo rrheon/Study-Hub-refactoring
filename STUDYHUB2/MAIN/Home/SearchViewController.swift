@@ -14,6 +14,7 @@ final class SearchViewController: NaviHelper {
   var isInfiniteScroll = true
   var searchType: String = "false"
   var totalDatas: [Content]? = []
+  var loginStatus: Bool = false
   
   private lazy var studyCellCount: Int = self.searchResultData?.totalCount ?? 0
 
@@ -127,10 +128,12 @@ final class SearchViewController: NaviHelper {
     
     redesignSearchBar()
     
+    loginManager.refreshAccessToken { result in
+      self.loginStatus = result
+    }
     
     self.setUpLayout()
     self.makeUI()
-    
   }
   
   func makeUI() {
@@ -512,7 +515,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     cell.delegate = self
     let content = totalDatas?[indexPath.row]
     cell.model = content
-
+    cell.loginStatus = loginStatus
+    
     return cell
   }
 }

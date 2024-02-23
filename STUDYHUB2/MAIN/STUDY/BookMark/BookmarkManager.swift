@@ -19,7 +19,9 @@ final class BookmarkManager {
                                     needCheckToken: true) { result in
       switch result {
       case .success(let response):
-        completion()
+          completion()
+        
+        
       case .failure(let response):
         print(response.response)
       }

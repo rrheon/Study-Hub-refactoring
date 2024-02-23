@@ -11,6 +11,7 @@ final class RecruitPostCell: UICollectionViewCell {
   
   var model: Content? { didSet { bind() } }
   var checkBookmarked: Bool?
+  var loginStatus: Bool? = false
   
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8))
@@ -27,8 +28,6 @@ final class RecruitPostCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                    userId: self.model?.userData.userID ?? 0)
       self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
@@ -169,9 +168,14 @@ final class RecruitPostCell: UICollectionViewCell {
 
   
   private func bookmarkTapped(){
-    checkBookmarked = !(checkBookmarked ?? false)
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
+                                  userId: self.model?.userData.userID ?? 0)
+    
+    if loginStatus ?? false {
+      checkBookmarked = !(checkBookmarked ?? false)
+      let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+      bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    }
   }
   
   private func bind() {

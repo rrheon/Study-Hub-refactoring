@@ -11,7 +11,7 @@ import SnapKit
 
 final class CheckParticipantsVC: NaviHelper {
   let participateManager = ParticipateManager.shared
-
+  let myReqeustManager = MyRequestManager.shared
   var studyID: Int = 0
   var setting: SettinInspection = .standby
   lazy var settingValue = setting.description
@@ -316,7 +316,7 @@ final class CheckParticipantsVC: NaviHelper {
 
     self.waitButton.removeUnderline()
     self.participateButton.removeUnderline()
-    
+  
     waitingCollectionView.isHidden = true
     participateCollectionView.isHidden = true
     refuseCollectionView.isHidden = false
@@ -430,6 +430,7 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
       self.participateManager.acceptApplyUser(personData: personData) {
         popupVC.dismiss(animated: true)
         self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+        self.waitButtonTapped()
       }
     }
   }
@@ -441,9 +442,11 @@ extension CheckParticipantsVC: RefuseBottomSheetDelegate {
     let personData = RejectStudy(rejectReason: reason,
                                  rejectedUserId: userId,
                                  studyId: studyID)
+    print(personData)
     participateManager.rejectApplyUser(personData: personData) {
       self.showToast(message: "거절이 완료됐어요", alertCheck: true)
-      self.waitingCollectionView.reloadData()
+      self.waitButtonTapped()
+
     }
   }
   
@@ -453,6 +456,7 @@ extension CheckParticipantsVC: RefuseBottomSheetDelegate {
     if reasonNum == 3 {
       let refuseWriteVC = WriteRefuseReasonVC()
       refuseWriteVC.delegate = self
+      refuseWriteVC.userId = userId
       
       if let navigationController = self.navigationController {
         navigationController.pushViewController(refuseWriteVC, animated: true)

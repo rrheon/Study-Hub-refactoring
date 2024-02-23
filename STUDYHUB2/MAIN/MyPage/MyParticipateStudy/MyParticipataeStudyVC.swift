@@ -15,6 +15,8 @@ final class MyParticipateStudyVC: NaviHelper {
   let myRequestListManger = MyRequestManager.shared
   var participateInfo: TotalParticipateStudyData?
   
+  var previousMyPage: MyPageViewController?
+  
   var countPostNumber = 0 {
     didSet {
       totalPostCountLabel.text = "전체 \(countPostNumber)"
@@ -74,6 +76,15 @@ final class MyParticipateStudyVC: NaviHelper {
     scrollView.backgroundColor = .bg30
     return scrollView
   }()
+  
+  // MARK: - 이전페이지로 넘어갈 때
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent {
+      previousMyPage?.fetchUserData()
+    }
+  }
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {

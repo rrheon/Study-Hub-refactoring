@@ -13,6 +13,7 @@ final class SearchResultCell: UICollectionViewCell {
   var model: Content? { didSet { bind() } }
   
   var checkBookmarked: Bool?
+  var loginStatus: Bool = false
   
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
@@ -296,10 +297,14 @@ final class SearchResultCell: UICollectionViewCell {
     }
   }
   private func bookmarkTapped(){
+    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
+                                  userId: self.model?.userData.userID ?? 0)
     
-    checkBookmarked = !(checkBookmarked ?? false)
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    if loginStatus {
+      checkBookmarked = !(checkBookmarked ?? false)
+      let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+      bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    }
   }
   
   private func bind() {

@@ -10,6 +10,7 @@ final class HomeViewController: NaviHelper {
   
   var newPostDatas: PostDataContent?
   var deadlinePostDatas: PostDataContent?
+  var loginStatus: Bool = false
   
   // MARK: - 화면구성
   private lazy var mainStackView = createStackView(axis: .vertical,
@@ -153,14 +154,20 @@ final class HomeViewController: NaviHelper {
     settingUI()
   }
   
+  func homeTapBarTapped(){
+    reloadHomeVCCells()
+
+  }
+  
   // MARK: - UI세팅
   func settingUI(){
     ueserInfoManager.getUserInfo { userInfo in
       if userInfo?.nickname != nil {
         self.fetchData(loginStatus: true) {
-            print("로그인")
-            self.setUpLayout()
-            self.makeUI()
+          print("로그인")
+          self.loginStatus = true
+          self.setUpLayout()
+          self.makeUI()
         }
       }else {
         self.fetchData(loginStatus: false) {
@@ -419,6 +426,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         cell.model = content
         cell.delegate = self
+        cell.loginStatus = loginStatus
       }
 
       return cell
@@ -429,6 +437,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let content = deadlinePostDatas?.postDataByInquiries.content[indexPath.row]
         cell.model = content
         cell.delegate = self
+        cell.loginStatus = loginStatus
       }
       return cell
     }

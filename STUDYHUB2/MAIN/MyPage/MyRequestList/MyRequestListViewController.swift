@@ -12,6 +12,7 @@ import SnapKit
 final class MyRequestListViewController: NaviHelper {
   
   var myRequestListManger = MyRequestManager.shared
+  var previousMyPage: MyPageViewController?
   
   var requestStudyList: [RequestStudyContent]? = []
   
@@ -57,6 +58,15 @@ final class MyRequestListViewController: NaviHelper {
     view.clipsToBounds = false
     return view
   }()
+  
+  // MARK: - 이전페이지로 넘어갈 때
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent {
+      previousMyPage?.fetchUserData()
+    }
+  }
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {

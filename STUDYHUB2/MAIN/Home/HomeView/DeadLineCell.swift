@@ -12,6 +12,7 @@ final class DeadLineCell: UICollectionViewCell {
   var buttonAction: (() -> Void) = {}
   
   var checkBookmarked: Bool?
+  var loginStatus: Bool = false
 
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
@@ -137,9 +138,14 @@ final class DeadLineCell: UICollectionViewCell {
   }
   
   private func bookmarkTapped(){
-    checkBookmarked = !(checkBookmarked ?? false)
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-    bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
+                                  userId: self.model?.userData.userID ?? 0)
+    
+    if loginStatus {
+      checkBookmarked = !(checkBookmarked ?? false)
+      let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+      bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    }
   }
   
   private func bind() {

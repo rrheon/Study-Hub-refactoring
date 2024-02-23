@@ -12,6 +12,7 @@ final class StudyViewController: NaviHelper {
   var pageCount: Int = 0
   var isInfiniteScroll = true
   var searchType: String = "false"
+  var loginStatus: Bool = false
   
   private lazy var recentButton: UIButton = {
     let button = UIButton()
@@ -110,8 +111,15 @@ final class StudyViewController: NaviHelper {
         self.makeUI()
       }
     }
+    
+    loginManager.refreshAccessToken { result in
+      self.loginStatus = result
+    }
   }
   
+  func studyTapBarTapped(){
+    recentButtonTapped()
+  }
   
   // MARK: - setupLayout
   func setupLayout(){
@@ -442,6 +450,7 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
       let content = totalDatas?[indexPath.row]
       cell.model = content
       cell.delegate = self
+      cell.loginStatus = loginStatus
     }
     
     return cell
@@ -489,7 +498,7 @@ extension StudyViewController: AfterCreatePost {
 // MARK: - 북마크 관련
 extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
-    self.bookmarkButtonTapped(postId,userId) {
+    self.bookmarkButtonTapped(postId,userId) { 
       //      self.resultCollectionView.reloadData()
     }
   }

@@ -179,6 +179,10 @@ final class MyPageViewController: NaviHelper {
     buttonFuncSetting()
   }
   
+  func mypageTapBarTapped(){
+    fetchUserData()
+  }
+  
   // MARK: - setUpLayout
   func setUpLayout(){
     print(loginStatus)
@@ -418,6 +422,7 @@ final class MyPageViewController: NaviHelper {
   // MARK: - 참여한 스터디 버튼 탭
   func joinstudyButtonTapped(){
     let myParticipateVC = MyParticipateStudyVC()
+    myParticipateVC.previousMyPage = self
     myParticipateVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(myParticipateVC, animated: true)
   }
@@ -431,6 +436,7 @@ final class MyPageViewController: NaviHelper {
   
   @objc func myRequestPageButtonTapped() {
     let myRequestVC = MyRequestListViewController()
+    myRequestVC.previousMyPage = self
     myRequestVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(myRequestVC, animated: true)
   }

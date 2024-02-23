@@ -21,12 +21,14 @@ final class PostedStudyViewController: NaviHelper {
   
   var commentId: Int?
   var bookmarked: Bool?
+  var participateCheck: Bool?
   
   // 이전페이지의 종류가 스터디VC , 검색결과 VC도 있음
   var previousHomeVC: HomeViewController?
   var previousMyPostVC: MyPostViewController?
   var previousStudyVC: StudyViewController?
   var previousSearchVC: SearchViewController?
+  var previousBookMarkVC: BookmarkViewController?
   
   var myPostIDList: [Int] = []
   var userData: UserDetailData?
@@ -466,9 +468,25 @@ final class PostedStudyViewController: NaviHelper {
   // MARK: - 뒤로 이동
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-
+    
     if self.isMovingFromParent {
-      previousHomeVC?.reloadHomeVCCells()
+      
+      if let homeVC = previousHomeVC {
+        homeVC.reloadHomeVCCells()
+      }
+      
+      if let studyVC = previousStudyVC {
+        studyVC.recentButtonTapped()
+      }
+      
+      if let searchVC = previousSearchVC {
+        searchVC.allButtonTapped()
+      }
+      
+      if let bookmarkVC = previousBookMarkVC {
+        bookmarkVC.reloadBookmarkList()
+      }
+      
     }
   }
 
@@ -860,7 +878,7 @@ final class PostedStudyViewController: NaviHelper {
       }
     }
     
-    if postedData?.apply == true {
+    if postedData?.apply == true || participateCheck == true {
       participateButton.setTitle("수락 대기 중", for: .normal)
       participateButton.backgroundColor = .o30
       participateButton.isEnabled = false

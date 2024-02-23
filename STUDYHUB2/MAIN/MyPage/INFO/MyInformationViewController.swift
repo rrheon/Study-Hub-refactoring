@@ -179,6 +179,7 @@ final class MyInformViewController: NaviHelper {
     setUpLayout()
     makeUI()
     
+    
   }
   
   // MARK: - setUpLayout
