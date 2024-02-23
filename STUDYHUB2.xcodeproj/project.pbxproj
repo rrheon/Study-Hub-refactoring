@@ -61,6 +61,7 @@
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
+		EE5B2FD72B886BFE00D365A2 /* CommnetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
 		EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93562B2B6B874900D662CC /* BookmarkManager.swift */; };
@@ -173,6 +174,7 @@
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRejectReasonViewController.swift; sourceTree = "<group>"; };
 		EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeDTO.swift; sourceTree = "<group>"; };
+		EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommnetManager.swift; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		EE93562B2B6B874900D662CC /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				EE07ADC02AF0D5A40096890F /* SimilarPostCell.swift */,
 				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
 				EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */,
+				EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */,
 				EEFD5D312B654A5900D1CE00 /* Participate */,
 			);
 			path = PostedStudy;
@@ -758,6 +761,7 @@
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,
+				EE5B2FD72B886BFE00D365A2 /* CommnetManager.swift in Sources */,
 				EE02B1162B15FEEE0092082F /* ParticipateCell.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
 				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,

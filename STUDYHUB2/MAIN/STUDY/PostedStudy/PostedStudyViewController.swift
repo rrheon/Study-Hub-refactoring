@@ -17,6 +17,7 @@ final class PostedStudyViewController: NaviHelper {
   let myPostDataManager = MyPostInfoManager.shared
   let createPostManager = PostManager.shared
   let userDataManager = UserInfoManager.shared
+  let commentManager = CommentManager.shared
   
   var commentId: Int?
   var bookmarked: Bool?
@@ -475,7 +476,10 @@ final class PostedStudyViewController: NaviHelper {
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItemSetting()
-        
+    
+    let test = CommonNetworking.shared
+    test.delegate = self
+    
     DispatchQueue.main.async {
       self.getMyPostID {
         self.navigationItemSetting()
@@ -873,36 +877,24 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 댓글 작성하기
   func commentButtonTapped(completion: @escaping () -> Void){
-    let provider = MoyaProvider<networkingAPI>()
     guard let postId = postedData?.postID,
           let content = commentTextField.text else { return }
-    provider.request(.writeComment(_content: content, _postId: postId)) {
-      switch $0 {
-      case .success(let response):
-        completion()
-        return print(response.response)
-      case .failure(let response):
-        return print(response)
-      }
+    commentManager.createComment(content: content,
+                                 postId: postId) {
+      completion()
     }
   }
   
   // MARK: - 댓글 수정하기
   func modifyComment(completion: @escaping () -> Void){
-    guard let content = commentTextField.text else { return }
+    guard let content = commentTextField.text,
+          let commentId = commentId else { return }
     
     commentButton.setTitle("수정", for: .normal)
     commentButton.addAction(UIAction { _ in
-      let provider = MoyaProvider<networkingAPI>()
-      provider.request(.modifyComment(_commentId: self.commentId ?? 0,
-                                      _content: content)) {
-        switch $0 {
-        case .success(let response):
-          print(response.response)
-          completion()
-        case .failure(let response):
-          print(response.response)
-        }
+      self.commentManager.modifyComment(commentId: commentId ,
+                                        content: content) {
+        completion()
       }
     }, for: .touchUpInside)
   }
@@ -955,16 +947,8 @@ final class PostedStudyViewController: NaviHelper {
   
   // MARK: - 댓글삭제
   func deleteComment(commentId: Int, completion: @escaping () -> Void){
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.deleteComment(_commentId: commentId )) {
-      switch $0 {
-      case .success(let response):
-        print(response)
-        completion()
-       
-      case .failure(let response):
-        print(response.response)
-      }
+    commentManager.deleteComment(commentId: commentId) {
+      completion()
     }
   }
   
@@ -1285,6 +1269,9 @@ extension PostedStudyViewController: PopupViewDelegate {
 
 extension PostedStudyViewController: CheckLoginDelegate {
   func checkLoginPopup(checkUser: Bool) {
+    self.commentTextField.text = nil
+    self.commentTextField.resignFirstResponder()
+    
     checkLoginStatus(checkUser: checkUser)
   }
 }

@@ -13,7 +13,6 @@ final class PostManager {
   static let shared = PostManager()
   
   let tokenManager = TokenManager.shared
-  let networkingManager = Networking.networkinhShared
   let commonNetworking = CommonNetworking.shared
   
   private init() {}
@@ -36,17 +35,30 @@ final class PostManager {
   
   func modifyPost(data: UpdateStudyRequest,
                   completion: @escaping () -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .modifyMyPost(_data: data),
-                                    needCheckToken: true) { result in
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.modifyMyPost(_data: data)) { result in
+      print(data)
       switch result {
       case .success(let postResponse):
         print(postResponse.response)
-        let strData = String(data: postResponse.data, encoding: .utf8)
-        print("Response body: \(strData ?? "")")
+//        let strData = String(data: postResponse.data, encoding: .utf8)
+//        print("Response body: \(strData ?? "")")
         completion()
       case .failure(let error):
         print("Error: \(error)")
       }
     }
+//    commonNetworking.moyaNetworking(networkingChoice: .modifyMyPost(_data: data),
+//                                    needCheckToken: true) { result in
+//      switch result {
+//      case .success(let postResponse):
+//        print(postResponse.response)
+//        let strData = String(data: postResponse.data, encoding: .utf8)
+//        print("Response body: \(strData ?? "")")
+//        completion()
+//      case .failure(let error):
+//        print("Error: \(error)")
+//      }
+//    }
   }
 }

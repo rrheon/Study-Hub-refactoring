@@ -334,6 +334,7 @@ final class StudyViewController: NaviHelper {
     completion(pageCount)
   }
   
+  
   // MARK: - 스크롤해서 네트워킹
   func fetchMoreData(hotType: String){
 
@@ -346,14 +347,6 @@ final class StudyViewController: NaviHelper {
         guard let recentData = self.recentDatas else { return }
         
         self.recentDatas = self.postDataManager.getRecentPostDatas()
-        
-        if let totalDatas = self.totalDatas {
-          self.totalDatas = totalDatas.filter { existingData in
-            return !recentData.postDataByInquiries.content.contains { newData in
-              return newData.postID == existingData.postID
-            }
-          }
-        }
         
         self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
         
@@ -369,7 +362,6 @@ final class StudyViewController: NaviHelper {
         }
       }
     }
-   
   }
   
   // MARK: - 스크롤 제약 업데이트
@@ -420,6 +412,7 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
     studyCount = totalDatas?.count ?? 0
+    print(studyCount)
     return studyCount
   }
   
@@ -448,7 +441,6 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     if let cell = cell as? SearchResultCell {
       //      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
       let content = totalDatas?[indexPath.row]
-      print(content?.title)
       cell.model = content
       cell.delegate = self
     }
@@ -477,13 +469,7 @@ extension StudyViewController {
         isInfiniteScroll = false
         
         fetchMoreData(hotType: searchType)
-        
       }
-      //      guard let last = recentDatas?.postDataByInquiries.last else { return }
-      //
-      //      if !last {
-      //        fectMoreData(hotType: "false")
-      //      }
     }
   }
 }

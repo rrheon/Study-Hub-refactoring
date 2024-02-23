@@ -317,7 +317,7 @@ final class CreateStudyViewController: NaviHelper {
     completeButton.backgroundColor = .o30
     completeButton.layer.cornerRadius = 5
     completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
-    completeButton.isEnabled = false
+//    completeButton.isEnabled = false
     return completeButton
   }()
   
@@ -836,7 +836,7 @@ final class CreateStudyViewController: NaviHelper {
   @objc func completeButtonTapped() {
     // 수정하려면 postid도 넣어야함
     let test = (modifyPostID == nil) ? "POST" : "PUT"
-    
+    print(test)
     if test == "PUT" {
       let chatUrl = chatLinkTextField.text ?? ""
       let content = studyProduceTextView.text ?? ""
@@ -855,6 +855,7 @@ final class CreateStudyViewController: NaviHelper {
       let studyWay = contactMethod ?? "CONTACT"
       let title = studytitleTextField.text ?? ""
       
+      // 날짜 형식땨문인듯 2024-02-34 이여야함 지금은 2024-2-32 이런식
       let updatePostData = UpdateStudyRequest(chatUrl: chatUrl,
                                               close: false,
                                               content: content,
@@ -1076,14 +1077,14 @@ final class CreateStudyViewController: NaviHelper {
           
           let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
           //          let startDate = ""
-          //          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          self.startDateButton.setTitle(startDate, for: .normal)
+          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+          self.startDateButton.setTitle(changedStartDate, for: .normal)
           
           let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
           //          let endDate = ""
-          //          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
           
-          self.endDateButton.setTitle(endDate, for: .normal)
+          self.endDateButton.setTitle(changedEndDate, for: .normal)
         }
       }
       
