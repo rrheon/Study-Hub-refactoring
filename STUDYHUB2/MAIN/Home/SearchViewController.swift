@@ -10,7 +10,13 @@ final class SearchViewController: NaviHelper {
   let postDataManager = PostDataManager.shared
   
   var searchKeyword: String?
+  var pageCount: Int = 0
+  var isInfiniteScroll = true
+  var searchType: String = "false"
+  var totalDatas: [Content]? = []
   
+  private lazy var studyCellCount: Int = self.searchResultData?.totalCount ?? 0
+
   var recommendData: RecommendList?
   var searchResultData: PostDataContent?
   
@@ -106,6 +112,8 @@ final class SearchViewController: NaviHelper {
     return scrollView
   }()
   
+  private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
+  
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -194,12 +202,54 @@ final class SearchViewController: NaviHelper {
   func allButtonTapped() {
     updateButtonColors(selectedButton: allButton,
                        deselectedButtons: [popularButton, majorButton])
+    resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
+    pageCount = 0
+    self.postDataManager.getPostData(hot: "false",
+                                     text: self.searchKeyword,
+                                     page: pageCount,
+                                     size: 5,
+                                     titleAndMajor: "true",
+                                     loginStatus: false) { PostDataContent in
+      self.searchResultData = PostDataContent
+      self.totalDatas = []
+      
+      self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
+      
+      DispatchQueue.main.async {
+        self.resultCollectionView.reloadData()
+        
+        self.activityIndicator.stopAnimating()
+        self.activityIndicator.removeFromSuperview()
+      }
+    }
   }
   
   // MARK: - 인기버튼 눌렸을 때
   func popularButtonTapped() {
     updateButtonColors(selectedButton: popularButton,
                        deselectedButtons: [allButton, majorButton])
+    
+    resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
+    pageCount = 0
+    self.postDataManager.getPostData(hot: "true",
+                                     text: self.searchKeyword,
+                                     page: pageCount,
+                                     size: 5,
+                                     titleAndMajor: "true",
+                                     loginStatus: false) { PostDataContent in
+      self.searchResultData = PostDataContent
+
+      self.totalDatas = []
+      
+      self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
+      
+      DispatchQueue.main.async {
+        self.resultCollectionView.reloadData()
+        
+        self.activityIndicator.stopAnimating()
+        self.activityIndicator.removeFromSuperview()
+      }
+    }
   }
   
   // MARK: - 학과버튼 눌렸을 때
@@ -339,6 +389,23 @@ final class SearchViewController: NaviHelper {
       make.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
+  
+  func fetchData(keyword: String, page: Int, size: Int){
+    loginManager.refreshAccessToken { result in
+      self.postDataManager.getPostData(hot: "false",
+                                       text: keyword,
+                                       page: page,
+                                       size: size,
+                                       titleAndMajor: "true",
+                                       loginStatus: result) { result in
+        self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
+        self.studyCellCount = self.totalDatas?.count ?? 0
+        
+        self.updateUI()
+        self.searchBar.text = keyword
+      }
+    }
+  }
 }
 
 // MARK: - 서치바 함수
@@ -395,19 +462,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   
   // UITableViewDelegate 함수 (선택)
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let keyword =  recommendData?.recommendList[indexPath.row] else { return }
-    loginManager.refreshAccessToken { result in
-      self.postDataManager.getPostData(hot: "false",
-                                  text: keyword,
-                                  page: 0,
-                                  size: 5,
-                                  titleAndMajor: "true",
-                                       loginStatus: result) { result in
-        self.searchResultData = result
-        self.updateUI()
-        self.searchBar.text = keyword
-      }
-    }
+    guard let keyword = recommendData?.recommendList[indexPath.row] else { return }
+    searchKeyword = keyword
+    fetchData(keyword: keyword, page: 0, size: 5)
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -425,12 +482,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-    return searchResultData?.totalCount ?? 0
+    studyCellCount = totalDatas?.count ?? 0
+    return studyCellCount
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
-    guard let postID = searchResultData?.postDataByInquiries.content[indexPath.row].postID else { return }
+    guard let postID = totalDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
     postedVC.previousSearchVC = self
     postedVC.hidesBottomBarWhenPushed = true
@@ -452,7 +510,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
                                                   for: indexPath) as! SearchResultCell
     cell.delegate = self
-    let content = searchResultData?.postDataByInquiries.content[indexPath.row]
+    let content = totalDatas?[indexPath.row]
     cell.model = content
 
     return cell
@@ -485,4 +543,98 @@ extension SearchViewController: CheckLoginDelegate {
     checkLoginStatus(checkUser: checkUser)
   }
   
+}
+
+extension SearchViewController {
+  // MARK: - 네트워킹 기다릴 때
+   func waitingNetworking(){
+     view.addSubview(activityIndicator)
+     
+     activityIndicator.snp.makeConstraints {
+       $0.centerX.centerY.equalToSuperview()
+     }
+     
+     activityIndicator.startAnimating()
+   }
+   
+   func addPageCount(completion: @escaping (Int) -> Void){
+     pageCount += 1
+     completion(pageCount)
+   }
+   
+   
+   // MARK: - 스크롤해서 네트워킹
+  func fetchMoreData(hotType: String){
+    addPageCount { pageCount in
+      self.waitingNetworking()
+      
+      self.postDataManager.getPostData(hot: "false",
+                                       text: self.searchKeyword,
+                                       page: pageCount,
+                                       size: 5,
+                                       titleAndMajor: "true",
+                                       loginStatus: false) { PostDataContent in
+        
+        self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
+        
+        DispatchQueue.main.async {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.removeFromSuperview()
+            
+            self.updateCollectionViewHeight()
+            self.resultCollectionView.reloadData()
+            self.isInfiniteScroll = true
+          }
+        }
+      }
+    }
+  }
+   
+   // MARK: - 스크롤 제약 업데이트
+   func updateCollectionViewHeight() {
+     // 기존의 제약 조건을 찾아 업데이트
+     let existingConstraint = resultCollectionView.constraints.first { constraint in
+       return constraint.firstAttribute == .height && constraint.relation == .equal
+     }
+     
+     if let existingConstraint = existingConstraint {
+       // 기존의 제약 조건이 존재하는 경우, 해당 제약 조건을 업데이트
+       existingConstraint.constant = calculateNewCollectionViewHeight()
+     } else {
+       // 기존의 제약 조건이 존재하지 않는 경우, 새로운 제약 조건 추가
+       resultCollectionView.snp.makeConstraints { make in
+         make.height.equalTo(calculateNewCollectionViewHeight())
+       }
+     }
+     
+     
+     // 레이아웃 업데이트
+     self.view.layoutIfNeeded()
+   }
+   
+   // MARK: - 스크롤 시 셀 높이 계산
+   func calculateNewCollectionViewHeight() -> CGFloat {
+     // resultCollectionView의 셀 개수에 따라 새로운 높이 계산
+     let cellHeight: CGFloat = 247
+     let spacing: CGFloat = 10
+     let numberOfCells = searchResultData?.totalCount ?? 0
+     let newHeight = CGFloat(numberOfCells) * cellHeight + CGFloat(numberOfCells - 1) * spacing
+     
+     studyCellCount = numberOfCells
+     return newHeight
+   }
+}
+
+extension SearchViewController {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
+      
+      if isInfiniteScroll {
+        isInfiniteScroll = false
+        
+        fetchMoreData(hotType: searchType)
+      }
+    }
+  }
 }

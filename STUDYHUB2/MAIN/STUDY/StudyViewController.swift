@@ -342,7 +342,7 @@ final class StudyViewController: NaviHelper {
       self.waitingNetworking()
       self.postDataManager.getRecentPostDatas(hotType: hotType,
                                               page: pageCount,
-                                         size: 5) {
+                                              size: 5) {
 
         guard let recentData = self.recentDatas else { return }
         
@@ -412,7 +412,6 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
     studyCount = totalDatas?.count ?? 0
-    print(studyCount)
     return studyCount
   }
   
@@ -490,7 +489,6 @@ extension StudyViewController: AfterCreatePost {
 // MARK: - 북마크 관련
 extension StudyViewController: BookMarkDelegate {
   func bookmarkTapped(postId: Int, userId: Int) {
-    
     self.bookmarkButtonTapped(postId,userId) {
       //      self.resultCollectionView.reloadData()
     }
