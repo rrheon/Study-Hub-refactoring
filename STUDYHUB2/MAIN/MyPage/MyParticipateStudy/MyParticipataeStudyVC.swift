@@ -12,7 +12,7 @@ import SnapKit
 
 final class MyParticipateStudyVC: NaviHelper {
   let participateManager = ParticipateManager.shared
-  
+  let myRequestListManger = MyRequestManager.shared
   var participateInfo: TotalParticipateStudyData?
   
   var countPostNumber = 0 {
@@ -189,12 +189,62 @@ final class MyParticipateStudyVC: NaviHelper {
   }
   
   func confirmDeleteAll(){
-      let popupVC = PopupViewController(title: "스터디를 모두 삭제할까요?",
-                                        desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-     
-      popupVC.modalPresentationStyle = .overFullScreen
-      self.present(popupVC, animated: false)
+    let popupVC = PopupViewController(title: "스터디를 모두 삭제할까요?",
+                                      desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
+      self.participateInfo?.participateStudyData.content.map({ participateDatas in
+        self.myRequestListManger.deleteRequestStudy(studyId: participateDatas.studyID) {
+          print("전체삭제")
+        }
+      })
+      self.getRequestList {
+        self.myPostCollectionView.reloadData()
+        
+        if self.countPostNumber == 0 {
+          self.myPostCollectionView.isHidden = true
+          self.noDataUI()
+        }
+      }
+      self.showToast(message: "삭제가 완료됐어요.",
+                     imageCheck: true,
+                     alertCheck: true)
+      }
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.present(popupVC, animated: false)
   }
+  
+  func noDataUI(){
+    view.addSubview(emptyImage)
+    emptyImage.snp.makeConstraints {
+      $0.centerX.centerY.equalToSuperview()
+    }
+    
+    view.addSubview(emptyLabel)
+    emptyLabel.changeColor(label: emptyLabel,
+                           wantToChange: "참여한 스터디가 없어요",
+                           color: .bg60,
+                           font: UIFont(name: "Pretendard-Medium",
+                                        size: 16),
+                           lineSpacing: 5)
+    emptyLabel.snp.makeConstraints {
+      $0.top.equalTo(emptyImage.snp.bottom).offset(10)
+      $0.centerX.equalToSuperview()
+    }
+  }
+  
+  func getRequestList(completion: @escaping () -> Void) {
+      participateManager.getMyParticipateList(0, 5) { result in
+        self.participateInfo = nil
+        self.participateInfo = result
+        self.countPostNumber = result.totalCount
+       
+        completion()
+      }
+    }
+  
 }
 
 // MARK: - collectionView
@@ -235,7 +285,24 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
 
+      self.myRequestListManger.deleteRequestStudy(studyId: postID) {
+
+        self.getRequestList {
+          self.myPostCollectionView.reloadData()
+
+          if self.countPostNumber == 0 {
+            self.myPostCollectionView.isHidden = true
+            self.noDataUI()
+          }
+        }
+        self.showToast(message: "삭제가 완료됐어요.",
+                  imageCheck: true,
+                  alertCheck: true)
+      }
+    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

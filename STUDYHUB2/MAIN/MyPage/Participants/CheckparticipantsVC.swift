@@ -99,7 +99,7 @@ final class CheckParticipantsVC: NaviHelper {
     return imageView
   }()
 
-  private lazy var noParticipateLabel = createLabel(title: "참여 중인 팀원이 없어요",
+  private lazy var noParticipateLabel = createLabel(title: "참여를 기다리는 대기자가 없어요.",
                                                     textColor: .bg60,
                                                     fontType: "Pretendard-SemiBold",
                                                     fontSize: 16)
@@ -260,6 +260,13 @@ final class CheckParticipantsVC: NaviHelper {
       if self?.applyUserData?.applyUserData.content.count == 0 {
         collectionView.isHidden = true
         
+        if self?.settingValue == "ACCEPT" {
+          self?.noParticipateLabel.text = "참여 중인 팀원이 없어요."
+        } else if self?.settingValue == "REJECT" {
+          self?.noParticipateLabel.text = "회원님이 거절한 참여자가 없어요."
+        } else {
+          self?.noParticipateLabel.text = "참여를 기다리는 대기자가 없어요."
+        }
         self?.noParticipateLabel.isHidden = false
         self?.noParticipateImageView.isHidden = false
       } else {

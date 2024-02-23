@@ -27,12 +27,14 @@ struct ParticipateStudyData: Codable {
 struct ParticipateContent: Codable {
   let chatURL, content, inspection, major: String
   let postID: Int
+  let studyID: Int
   let title: String
   
   enum CodingKeys: String, CodingKey {
     case chatURL = "chatUrl"
     case content, inspection, major
     case postID = "postId"
+    case studyID = "studyId"
     case title
   }
 }
