@@ -243,7 +243,7 @@ final class CheckParticipantsVC: NaviHelper {
                           completion: @escaping () -> Void){
     participateManager.getApplyUserData(inspection: type,
                                         page: 0,
-                                        size : 5,
+                                        size : 50,
                                         studyID) { result in
       self.applyUserData = result
     

@@ -207,7 +207,7 @@ final class BookmarkViewController: NaviHelper {
         }
       }
       self.bookMarkCollectionView.isHidden = true
-      self.noDataUI(loginStatus: false)
+      self.noDataUI(loginStatus: true)
     }
   }
   

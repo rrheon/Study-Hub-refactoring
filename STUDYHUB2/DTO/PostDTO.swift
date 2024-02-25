@@ -113,7 +113,6 @@ struct CreateStudyRequest: Codable {
   var studyEndDate: String
   var studyPerson: Int
   var studyStartDate, studyWay, title: String
-  
 }
 
 // MARK: - 게시글 수정 시

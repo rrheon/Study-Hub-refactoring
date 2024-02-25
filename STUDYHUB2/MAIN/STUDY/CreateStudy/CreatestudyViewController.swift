@@ -12,24 +12,50 @@ final class CreateStudyViewController: NaviHelper {
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
   
-  var genderType: String?
-  var contactMethod: String?
-  var selectedMajor: String?
+  var genderType: String? {
+    didSet {
+      checkButtonActivation()
+    }
+  }
+  var contactMethod: String?{
+    didSet {
+      checkButtonActivation()
+    }
+  }
+  
+  var selectedMajor: String? {
+    didSet {
+      checkButtonActivation()
+    }
+  }
+  
   var modifyPostID: Int?
   
   weak var delegate: AfterCreatePost?
   
-  // 선택한 학과를 저장할 프로퍼티
-  var selectedDepartment: String? {
+  var fineCheck: Bool? {
     didSet {
-      // selectedDepartment가 설정되면 버튼을 생성
-      if let department = selectedDepartment {
-        addDepartmentButton(department)
-      }
+      checkButtonActivation()
+    }
+  }
+  var genderCheck: Bool? = false {
+    didSet {
+      checkButtonActivation()
     }
   }
   
-  var selectDate: String? = ""
+  var startDateCheck: String = "선택하기" {
+    didSet {
+      checkButtonActivation()
+    }
+  }
+  
+  var endDateCheck: String = "선택하기" {
+    didSet {
+      checkButtonActivation()
+    }
+  }
+  
   
   // MARK: - UI설정
   // 채팅방 링크
@@ -67,16 +93,17 @@ final class CreateStudyViewController: NaviHelper {
                                                    fontType: "Pretendard-SemiBold",
                                                    fontSize: 16)
   
+  let textViewContent = "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)"
   private lazy var studyProduceTextView: UITextView = {
     let tv = UITextView()
-    tv.text = "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)"
+    tv.text = textViewContent
     tv.textColor = UIColor.lightGray
     tv.font = UIFont.systemFont(ofSize: 15)
     tv.layer.borderWidth = 0.5
     tv.layer.borderColor = UIColor.lightGray.cgColor
     tv.layer.cornerRadius = 5.0
+    tv.adjustUITextViewHeight()
     tv.delegate = self
-    tv.textViewDidChange(tv)
     return tv
   }()
   
@@ -294,9 +321,7 @@ final class CreateStudyViewController: NaviHelper {
                                             fontSize: 16)
   
   private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
-  let startDatePicker = UIDatePicker()
-  let startDateTextField = UITextField()
-  var selectedStartDate: Date?
+
   
   private lazy var endLabel = createLabel(title: "종료하는 날",
                                           textColor: .black,
@@ -305,9 +330,6 @@ final class CreateStudyViewController: NaviHelper {
   
   private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
   
-  let endDatePicker = UIDatePicker()
-  let endDateTextField = UITextField()
-  var selectedEndDate: Date?
   
   // MARK: - 완료하기
   private lazy var completeButton: UIButton = {
@@ -317,7 +339,7 @@ final class CreateStudyViewController: NaviHelper {
     completeButton.backgroundColor = .o30
     completeButton.layer.cornerRadius = 5
     completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
-//    completeButton.isEnabled = false
+    completeButton.isEnabled = false
     return completeButton
   }()
   
@@ -337,6 +359,7 @@ final class CreateStudyViewController: NaviHelper {
     makeUI()
     
     postModify()
+    compleButtonCheck()
   }
   
   // MARK: - setUpLayout
@@ -748,6 +771,8 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - 벌금이 있을 때
   @objc func haveFineButtonTapped(_ sender: UIButton) {
+    fineCheck = true
+    
     sender.isSelected = !sender.isSelected
     noFineButton.isSelected = !sender.isSelected
     
@@ -815,6 +840,8 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - 벌금 없을 때 함수
   @objc func noFineButtonTapped(_ sender: UIButton) {
+    fineCheck = false
+    
     sender.isSelected = !sender.isSelected
     haveFineButton.isSelected = !sender.isSelected
     fineStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20)
@@ -928,6 +955,7 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - 성별 눌렸을 때 함수
   @objc func genderButtonTapped(_ sender: UIButton) {
+    genderCheck = true
     // Reset colors of all buttons
     allGenderButton.layer.borderColor = UIColor.bg50.cgColor
     allGenderButton.setTitleColor(.gray, for: .normal)
@@ -1083,7 +1111,6 @@ final class CreateStudyViewController: NaviHelper {
           let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
           //          let endDate = ""
           let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          
           self.endDateButton.setTitle(changedEndDate, for: .normal)
         }
       }
@@ -1091,12 +1118,58 @@ final class CreateStudyViewController: NaviHelper {
     }
   }
   
+  func compleButtonCheck(){
+    chatLinkTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    
+  }
+  
 }
 
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
-  override func textFieldDidEndEditing(_ textField: UITextField) {
+  func textViewDidChange(_ textView: UITextView) {
+    if textView == studyProduceTextView {
+      checkButtonActivation()
+    }
+  }
+  
+  @objc func textFieldDidChange(_ textField: UITextField) {
+    let monitoredTextFields: [UITextField] = [chatLinkTextField, studymemberTextField,
+                                              studytitleTextField, fineAmountTextField,
+                                              fineTypesTextField]
     
+    if monitoredTextFields.contains(textField) {
+      checkButtonActivation()
+    }
+  }
+
+
+  func checkButtonActivation() {
+    if chatLinkTextField.text?.isEmpty == false &&
+        studytitleTextField.text?.isEmpty == false &&
+        studymemberTextField.text?.isEmpty == false &&
+        studyProduceTextView.text != textViewContent &&
+        selectedMajor != nil &&
+        genderCheck == true &&
+        contactMethod != nil &&
+        startDateButton.currentTitle != "선택하기" &&
+        endDateButton.currentTitle != "선택하기" {
+      if fineCheck == true && fineAmountTextField.text?.isEmpty != false &&
+          fineTypesTextField.text?.isEmpty != false {
+        completeButton.isEnabled = false
+        completeButton.backgroundColor = .o30
+      } else {
+        completeButton.isEnabled = true
+        completeButton.backgroundColor = .o50
+      }
+    } else {
+      completeButton.isEnabled = false
+      completeButton.backgroundColor = .o30
+    }
+  }
+  
+
+  override func textFieldDidEndEditing(_ textField: UITextField) {
     if textField == fineAmountTextField {
       if let text = fineAmountTextField.text,
          let number = Int(text),
@@ -1133,8 +1206,10 @@ extension CreateStudyViewController: ChangeDateProtocol {
   func dataSend(data: String, buttonTag: Int) {
     if buttonTag == 1 {
       startDateButton.setTitle(data, for: .normal)
+      self.startDateCheck = data
     } else if buttonTag == 2 {
       endDateButton.setTitle(data, for: .normal)
+      self.endDateCheck = data
     }
   }
 }
