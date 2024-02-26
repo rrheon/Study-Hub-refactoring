@@ -409,8 +409,26 @@ final class MyPageViewController: NaviHelper {
       self.howToUseButtonTapped()
     }, for: .touchUpInside)
     
+    serviceButton.addAction(UIAction { _ in
+      self.serviceButtonTapped()
+    }, for: .touchUpInside)
+    
+    informhandleButton.addAction(UIAction { _ in
+      self.informhandleButtonTapped()
+    }, for: .touchUpInside)
+  }
+
+  func serviceButtonTapped(){
+    let serviceVC = ServiceUseInfoViewContrller()
+    serviceVC.hidesBottomBarWhenPushed = true
+    self.navigationController?.pushViewController(serviceVC, animated: true)
   }
   
+  func informhandleButtonTapped(){
+    let infoVC = PersonalInfoViewController()
+    infoVC.hidesBottomBarWhenPushed = true
+    self.navigationController?.pushViewController(infoVC, animated: true)
+  }
   // MARK: - 작성한 글 버튼 탭
   @objc func writtenButtonTapped(){
     let myPostVC = MyPostViewController()
