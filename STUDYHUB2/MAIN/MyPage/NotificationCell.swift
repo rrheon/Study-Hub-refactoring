@@ -30,7 +30,7 @@ final class NotificationCell: UICollectionViewCell {
   }()
   
   private lazy var describeLabel: BasePaddingLabel = {
-    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+    let label = BasePaddingLabel(padding: UIEdgeInsets(top: 20, left: 30, bottom: 20, right: 20))
     label.text = "설명설명"
     label.textColor = .bg90
     label.font = UIFont(name: "Pretendard-Medium", size: 14)

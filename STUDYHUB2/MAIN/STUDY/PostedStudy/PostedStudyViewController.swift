@@ -32,6 +32,7 @@ final class PostedStudyViewController: NaviHelper {
   
   var myPostIDList: [Int] = []
   var userData: UserDetailData?
+  var similarPostCount: Int?
   
   // 여기에 데이터가 들어오면 관련 UI에 데이터 넣어줌
   var postedData: PostDetailData? {
@@ -890,6 +891,11 @@ final class PostedStudyViewController: NaviHelper {
       participateButton.isEnabled = false
     }
     
+    similarPostCount = postedData?.relatedPost.count
+    if similarPostCount == 0 {
+      similarPostStackView.isHidden = true
+    }
+    
     similarCollectionView.reloadData()
   }
   
@@ -1129,7 +1135,8 @@ extension PostedStudyViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
-      return 3
+    if similarPostCount ?? 0 > 3 { similarPostCount = 3}
+    return similarPostCount ?? 0
   }
   
   func collectionView(_ collectionView: UICollectionView,

@@ -438,7 +438,8 @@ extension networkingAPI: TargetType {
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
         .deleteMyRequest(studyId: _),
-        .deleteAllBookMark:
+        .deleteAllBookMark,
+        .editUserMaojr(_major: _):
       return [ "Authorization": "\(accessToken)"]
       
     default:

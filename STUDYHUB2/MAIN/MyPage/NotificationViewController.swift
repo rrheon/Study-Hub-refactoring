@@ -6,10 +6,6 @@ import Moya
 
 final class NotificationViewController: NaviHelper {
   
-//  let data = ["사과", "배", "수박"]
-//  let footerdata = ["사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과사과",
-//                    "f2","f3" ]
-  
   var noticeDatas: [NoticeContent]? = []
   var selectedCellIndexPath: IndexPath?
   
@@ -32,7 +28,7 @@ final class NotificationViewController: NaviHelper {
     
     view.backgroundColor = .white
     
-    getNoticeData(page: 0, size: 5) { NoticeData in
+    getNoticeData(page: 0, size: 10) { NoticeData in
       self.noticeDatas = NoticeData.content
       
       self.setupLayout()

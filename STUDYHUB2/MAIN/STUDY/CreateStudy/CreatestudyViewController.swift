@@ -230,10 +230,11 @@ final class CreateStudyViewController: NaviHelper {
                                            fontType: "Pretendard-SemiBold",
                                            fontSize: 16)
   
-  private lazy var meetDescribeLabel = createLabel(title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
-                                                   textColor: .bg70,
-                                                   fontType: "Pretendard-Medium",
-                                                   fontSize: 12)
+  private lazy var meetDescribeLabel = createLabel(
+    title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
+    textColor: .bg70,
+    fontType: "Pretendard-Medium",
+    fontSize: 12)
   
   private lazy var studyMethodButtonStackView = createStackView(axis: .horizontal,
                                                                 spacing: 10)
@@ -708,6 +709,8 @@ final class CreateStudyViewController: NaviHelper {
   
   // MARK: - 수정 시 뒤로가기 눌렀을 때
   @objc override func leftButtonTapped(_ sender: UIBarButtonItem) {
+//    textViewContent.text = nil
+    studyProduceTextView.resignFirstResponder()
     
     guard let postID = modifyPostID else {
       navigationController?.popViewController(animated: true)
@@ -1062,6 +1065,8 @@ final class CreateStudyViewController: NaviHelper {
         modifyData.map {
           self.chatLinkTextField.text = $0.chatURL
           self.studyProduceTextView.text = $0.content
+          self.studyProduceTextView.textColor = .black
+
           self.studytitleTextField.text = $0.title
           
           self.selectedMajor = self.convertMajor($0.major, isEnglish: false)
@@ -1127,9 +1132,23 @@ final class CreateStudyViewController: NaviHelper {
 
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
+  
   func textViewDidChange(_ textView: UITextView) {
     if textView == studyProduceTextView {
       checkButtonActivation()
+      updateTextViewHeight()
+    }
+  }
+  
+  private func updateTextViewHeight() {
+    let fixedWidth = studyProduceTextView.frame.size.width
+    let newSize = studyProduceTextView.sizeThatFits(CGSize(width: fixedWidth,
+                                                           height: CGFloat.greatestFiniteMagnitude))
+    let newHeight = max(newSize.height, 170)
+    studyProduceTextView.constraints.forEach { constraint in
+      if constraint.firstAttribute == .height {
+        constraint.constant = newHeight
+      }
     }
   }
   

@@ -11,6 +11,8 @@ import SnapKit
 import Moya
 
 final class EditMajorViewController: NaviHelper {
+  let commonNetworking = CommonNetworking.shared
+  
   var beforeMajor: String?
   var changedMajor: String?
   var previousVC: MyInformViewController?
@@ -110,8 +112,8 @@ final class EditMajorViewController: NaviHelper {
       guard var changeMajor = searchController.text else { return }
       changeMajor = changeMajor.convertMajor(changeMajor, isEnglish: true)
       print(changeMajor)
-      let provider = MoyaProvider<networkingAPI>()
-      provider.request(.editUserMaojr(_major: changeMajor)) { result in
+      commonNetworking.moyaNetworking(networkingChoice: .editUserMaojr(_major: changeMajor),
+                                      needCheckToken: true) { result in
         switch result {
         case .success(let response):
           print(response.response)
