@@ -15,6 +15,7 @@ final class SearchViewController: NaviHelper {
   var searchType: String = "false"
   var totalDatas: [Content]? = []
   var loginStatus: Bool = false
+  var dataEmptyCheck: Bool = false
   
   private lazy var studyCellCount: Int = self.searchResultData?.totalCount ?? 0
 
@@ -201,30 +202,65 @@ final class SearchViewController: NaviHelper {
     navigationController?.pushViewController(bookmarkViewController, animated: true)
   }
   
-  // MARK: - 전체버튼 눌렸을 때
-  func allButtonTapped() {
-    updateButtonColors(selectedButton: allButton,
-                       deselectedButtons: [popularButton, majorButton])
+  func buttonTapped(hot: String, titleAndMajor: String){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
     pageCount = 0
-    self.postDataManager.getPostData(hot: "false",
+    self.postDataManager.getPostData(hot: hot,
                                      text: self.searchKeyword,
                                      page: pageCount,
                                      size: 5,
-                                     titleAndMajor: "true",
+                                     titleAndMajor: titleAndMajor,
                                      loginStatus: false) { PostDataContent in
       self.searchResultData = PostDataContent
       self.totalDatas = []
       
       self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
-      
       DispatchQueue.main.async {
         self.resultCollectionView.reloadData()
         
         self.activityIndicator.stopAnimating()
         self.activityIndicator.removeFromSuperview()
       }
+      
+      self.resultCollectionView.isHidden = false
+      [
+        self.emptyImageView,
+        self.emptyLabel
+      ].forEach {
+        $0.isHidden = true
+      }
+    return
+      self.dataEmptyCheck = true
     }
+    
+    if dataEmptyCheck {
+      resultCollectionView.isHidden = true
+      [
+        emptyImageView,
+        emptyLabel
+      ].forEach {
+        view.addSubview($0)
+        $0.isHidden = false
+      }
+      
+      emptyImageView.snp.makeConstraints {
+        $0.centerY.equalToSuperview().offset(-30)
+        $0.centerX.equalToSuperview()
+      }
+
+      emptyLabel.snp.makeConstraints {
+        $0.top.equalTo(emptyImageView.snp.bottom).offset(10)
+        $0.centerX.equalTo(emptyImageView)
+      }
+    }
+  }
+  
+  // MARK: - 전체버튼 눌렸을 때
+  func allButtonTapped() {
+    updateButtonColors(selectedButton: allButton,
+                       deselectedButtons: [popularButton, majorButton])
+    
+    buttonTapped(hot: "false", titleAndMajor: "true")
   }
   
   // MARK: - 인기버튼 눌렸을 때
@@ -232,33 +268,16 @@ final class SearchViewController: NaviHelper {
     updateButtonColors(selectedButton: popularButton,
                        deselectedButtons: [allButton, majorButton])
     
-    resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
-    pageCount = 0
-    self.postDataManager.getPostData(hot: "true",
-                                     text: self.searchKeyword,
-                                     page: pageCount,
-                                     size: 5,
-                                     titleAndMajor: "true",
-                                     loginStatus: false) { PostDataContent in
-      self.searchResultData = PostDataContent
+    buttonTapped(hot: "true", titleAndMajor: "true")
 
-      self.totalDatas = []
-      
-      self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
-      
-      DispatchQueue.main.async {
-        self.resultCollectionView.reloadData()
-        
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-      }
-    }
   }
   
   // MARK: - 학과버튼 눌렸을 때
   func majorButtonTapped() {
     updateButtonColors(selectedButton: majorButton,
                        deselectedButtons: [allButton, popularButton])
+    
+    buttonTapped(hot: "false", titleAndMajor: "false")
   }
   
   // 버튼 색상 업데이트 함수
@@ -393,13 +412,13 @@ final class SearchViewController: NaviHelper {
     }
   }
   
-  func fetchData(keyword: String, page: Int, size: Int){
+  func fetchData(keyword: String, page: Int, size: Int, titleAndMajor: String){
     loginManager.refreshAccessToken { result in
       self.postDataManager.getPostData(hot: "false",
                                        text: keyword,
                                        page: page,
                                        size: size,
-                                       titleAndMajor: "true",
+                                       titleAndMajor: titleAndMajor,
                                        loginStatus: result) { result in
         self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
         self.studyCellCount = self.totalDatas?.count ?? 0
@@ -467,7 +486,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let keyword = recommendData?.recommendList[indexPath.row] else { return }
     searchKeyword = keyword
-    fetchData(keyword: keyword, page: 0, size: 5)
+    fetchData(keyword: keyword, page: 0, size: 5, titleAndMajor: "true")
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -568,7 +587,7 @@ extension SearchViewController {
    
    
    // MARK: - 스크롤해서 네트워킹
-  func fetchMoreData(hotType: String){
+  func fetchMoreData(hotType: String, titleAndMajor: String){
     addPageCount { pageCount in
       self.waitingNetworking()
       
@@ -576,7 +595,7 @@ extension SearchViewController {
                                        text: self.searchKeyword,
                                        page: pageCount,
                                        size: 5,
-                                       titleAndMajor: "true",
+                                       titleAndMajor: titleAndMajor,
                                        loginStatus: false) { PostDataContent in
         
         self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
@@ -637,7 +656,7 @@ extension SearchViewController {
       if isInfiniteScroll {
         isInfiniteScroll = false
         
-        fetchMoreData(hotType: searchType)
+        fetchMoreData(hotType: searchType, titleAndMajor: "true")
       }
     }
   }

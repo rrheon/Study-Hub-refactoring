@@ -69,6 +69,7 @@ final class PostDataManager {
           let searchResult = try JSONDecoder().decode(PostDataContent.self, from: response.data)
           self.newPostDatas = searchResult
         } catch {
+          self.newPostDatas = nil
           print("Failed to decode JSON: \(error)")
         }
       case .failure(let response):

@@ -81,15 +81,15 @@ final class ParticipateVC: NaviHelper {
     view.backgroundColor = .white
     
     navigationItemSetting()
-    
-    setupLayout()
-    makeUI()
-    
+  
     changeTitleLabelColor()
     
     postDeatilManager.searchSinglePostData(postId: postId,
                                            loginStatus: true) {
       self.postData = self.postDeatilManager.getPostDetailData()
+      
+      self.setupLayout()
+      self.makeUI()
     }
   }
   
@@ -200,12 +200,15 @@ extension ParticipateVC {
       textView.textColor = UIColor.black
       textView.layer.borderColor = UIColor.black.cgColor
       
-      completeButton.isEnabled = true
-      completeButton.backgroundColor = .o50
+      if self.postData?.apply == false {
+        completeButton.isEnabled = true
+        completeButton.backgroundColor = .o50
+      }
     }
   }
   
   override func textViewDidEndEditing(_ textView: UITextView) {
+    
     if textView.text.isEmpty {
       textView.text = "ex) 욕설 등의 부적절한 말을 사용했습니다, 저희 스터디와 맞지 않습니다"
       textView.textColor = UIColor.bg70

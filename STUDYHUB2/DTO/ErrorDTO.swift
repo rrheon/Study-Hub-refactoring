@@ -13,3 +13,7 @@ enum NetworkError: Error {
   case dataError
   case parseError
 }
+
+struct StudySearchError: Codable {
+  let status, message: String
+}

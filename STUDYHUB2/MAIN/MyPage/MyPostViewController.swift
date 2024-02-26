@@ -110,7 +110,7 @@ final class MyPostViewController: NaviHelper {
     
     registerCell()
     
-    getMyPostData(size: 5) {
+    getMyPostData(size: 100) {
       self.setupLayout()
       self.makeUI()
     }
@@ -220,6 +220,7 @@ final class MyPostViewController: NaviHelper {
           guard let postCount = self?.myPostDataManager.getMyTotalPostData() else { return }
           self?.countPostNumber = postCount.totalCount
           self?.myPostCollectionView.reloadData()
+
           completion()
         }
       }
