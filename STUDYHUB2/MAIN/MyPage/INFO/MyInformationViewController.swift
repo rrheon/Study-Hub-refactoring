@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import Photos
 
 import SnapKit
 import Moya
@@ -441,13 +442,74 @@ extension MyInformViewController: BottomSheetDelegate {
   }
   
   func firstButtonTapped(postID: Int?) {
-    changeProfileImage(type: .camera)
+//    changeProfileImage(type: .camera)
+    requestCameraAccess()
+
   }
   
   // 앨범에서 선택하기
   func secondButtonTapped(postID: Int?) {
-    changeProfileImage(type: .photoLibrary)
+//    changeProfileImage(type: .photoLibrary)
+    requestPhotoLibraryAccess()
+
   }
+  
+  func requestCameraAccess() {
+    AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+      if granted {
+        DispatchQueue.main.async {
+          self?.changeProfileImage(type: .camera)
+        }
+      } else {
+        DispatchQueue.main.async {
+          self?.showAccessDeniedAlert()
+        }
+      }
+    }
+  }
+  
+  func requestPhotoLibraryAccess() {
+    PHPhotoLibrary.requestAuthorization { [weak self] status in
+      switch status {
+      case .authorized:
+        DispatchQueue.main.async {
+          self?.changeProfileImage(type: .photoLibrary)
+        }
+      case .denied, .restricted:
+        DispatchQueue.main.async {
+          self?.showAccessDeniedAlert()
+        }
+      case .notDetermined:
+        self?.requestPhotoLibraryAccess()
+      default:
+        break
+      }
+    }
+  }
+  
+  func showAccessDeniedAlert() {
+    let popupVC = PopupViewController(
+      title: "사진을 변경하려면 허용이 필요해요",
+      desc: "",
+      leftButtonTitle: "취소",
+      rightButtonTilte: "설정"
+    )
+    
+    popupVC.popupView.leftButtonAction = {
+      self.dismiss(animated: true, completion: nil)
+    }
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true) {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(settingsURL)
+      }
+    }
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.present(popupVC, animated: false)
+  }
+
 }
 
 // 사진 선택
