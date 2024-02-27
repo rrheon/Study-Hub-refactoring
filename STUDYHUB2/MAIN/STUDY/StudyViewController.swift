@@ -429,15 +429,24 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     let postedVC = PostedStudyViewController(postID: postId)
     postedVC.hidesBottomBarWhenPushed = true
     postedVC.previousStudyVC = self
-    
+
+    var username: String? = nil
+
     loginManager.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
         postedVC.postedData = cellData
+        
+        username = cellData?.postedUser.nickname
+
+        if username == nil {
+          self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
+          return
+        }
+        self.navigationController?.pushViewController(postedVC, animated: true)
+
       }
     }
-    
-    self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
   func collectionView(_ collectionView: UICollectionView,

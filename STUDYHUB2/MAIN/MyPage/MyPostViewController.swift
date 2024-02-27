@@ -295,15 +295,24 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
     postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
     
+    var username: String? = nil
+    
     loginManager.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postID,
                                                  loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
         postedVC.postedData = cellData
+        
+        
+        username = cellData?.postedUser.nickname
+        
+        if username == nil {
+          self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
+          return
+        }
+        self.navigationController?.pushViewController(postedVC, animated: true)
       }
     }
-
-    self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
   func collectionView(_ collectionView: UICollectionView,

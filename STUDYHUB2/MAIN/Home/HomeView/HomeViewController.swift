@@ -390,7 +390,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
     var postID: Int? = nil
-    
+    var username: String? = nil
     if collectionView.tag == 1 {
       guard let newPostID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
       postID = newPostID
@@ -408,11 +408,18 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
       self.detailPostDataManager.searchSinglePostData(postId: postID ?? 0,
                                                  loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
+        username = cellData?.postedUser.nickname
+      
         postedVC.postedData = cellData
+     
+        if username == nil {
+          self.showToast(message: "해당 post에 접근할 수 없습니다",imageCheck: false)
+          return
+        }
+        
+        self.navigationController?.pushViewController(postedVC, animated: true)
       }
     }
-
-    self.navigationController?.pushViewController(postedVC, animated: true)
   }
   
   func collectionView(_ collectionView: UICollectionView,

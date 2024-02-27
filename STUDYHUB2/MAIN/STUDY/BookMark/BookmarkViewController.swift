@@ -251,11 +251,20 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
                                                loginStatus: true) {
       let postData = self.detailPostDataManager.getPostDetailData()
       if postData?.close == true { return }
-      
+      var username: String? = nil
+
       let postedVC = PostedStudyViewController(postID: postID)
       postedVC.previousBookMarkVC = self
       postedVC.postedData = postData
+      
+      username = postData?.postedUser.nickname
+      
+      if username == nil {
+        self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
+        return
+      }
       self.navigationController?.pushViewController(postedVC, animated: true)
+      
     }
   }
   
