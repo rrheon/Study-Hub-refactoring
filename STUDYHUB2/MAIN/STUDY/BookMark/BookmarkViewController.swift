@@ -299,9 +299,21 @@ extension BookmarkViewController: BookMarkDelegate {
 
 extension BookmarkViewController: ParticipatePostDelegate{
   func participateButtonTapped(studyId: Int, postId: Int) {
-    let participateVC = ParticipateVC()
-    participateVC.studyId = studyId
-    participateVC.postId = postId
-    self.navigationController?.pushViewController(participateVC, animated: true)
+    detailPostDataManager.searchSinglePostData(postId: postId,
+                                               loginStatus: true) {
+      let checkApply = self.detailPostDataManager.getPostDetailData()?.apply
+
+      if checkApply ?? false {
+        self.showToast(message: "이미 신청한 스터디예요.", imageCheck: false)
+        return
+      }
+      
+      let participateVC = ParticipateVC()
+      participateVC.studyId = studyId
+      participateVC.postId = postId
+      self.navigationController?.pushViewController(participateVC, animated: true)
+    }
+    
+   
   }
 }
