@@ -1002,7 +1002,7 @@
 				DEVELOPMENT_TEAM = AANGG4Q668;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = STUDYHUB2/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "스터디허브";
+				INFOPLIST_KEY_CFBundleDisplayName = STUDYHUB;
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 변경을 위해 카메라 사용 권한이 필요해요.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 변경을 위해 앨범 사용 권한이 필요해요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1038,7 +1038,7 @@
 				DEVELOPMENT_TEAM = AANGG4Q668;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = STUDYHUB2/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "스터디허브";
+				INFOPLIST_KEY_CFBundleDisplayName = STUDYHUB;
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 변경을 위해 카메라 사용 권한이 필요해요.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 변경을 위해 앨범 사용 권한이 필요해요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
