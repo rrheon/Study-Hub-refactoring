@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import SafariServices
 
 import SnapKit
 
 final class TermsOfServiceViewController: NaviHelper {
+  var checkStatus: Bool = false
+  let personalURL = "https://github.com/study-hub-inu/study-hub-iOS-2/blob/main/STUDYHUB2/Assets.xcassets/InfoImage.imageset/InfoImage.png"
+  let serviceURl = "https://github.com/study-hub-inu/study-hub-iOS-2/blob/main/STUDYHUB2/Assets.xcassets/serviceImage.imageset/serviceImage.png"
+  
   // MARK: - UI
   private lazy var pageNumberLabel = createLabel(title: "1/5",
                                                  textColor: .g60,
@@ -76,9 +81,12 @@ final class TermsOfServiceViewController: NaviHelper {
   private lazy var goToFirstServicePageButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.moveToPage(button: self.goToFirstServicePageButton)},
+                     for: .touchUpInside)
     return button
   }()
- 
+  
   // 개별동의 두 번째
   private lazy var agreeSecondCheckButton: UIButton = {
     let button = UIButton()
@@ -104,6 +112,9 @@ final class TermsOfServiceViewController: NaviHelper {
   private lazy var goToSecondServicePageButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
+    button.addAction(UIAction { _ in
+      self.moveToPage(button: self.goToSecondServicePageButton)},
+                     for: .touchUpInside)
     return button
   }()
   
@@ -224,7 +235,7 @@ final class TermsOfServiceViewController: NaviHelper {
   // MARK: - navigation
   override func navigationItemSetting() {
     super.navigationItemSetting()
-  
+    
     navigationItem.rightBarButtonItems = .none
     self.navigationItem.title = "회원가입"
     self.navigationController?.navigationBar.titleTextAttributes = [
@@ -234,6 +245,14 @@ final class TermsOfServiceViewController: NaviHelper {
   
   override func leftButtonTapped(_ sender: UIBarButtonItem) {
     dismiss(animated: true)
+  }
+  
+  func moveToPage(button: UIButton) {
+    let check = button == goToFirstServicePageButton ? serviceURl : personalURL
+    let url = NSURL(string: check)
+    
+    let urlView: SFSafariViewController = SFSafariViewController(url: url as! URL)
+    self.present(urlView, animated: true)
   }
   
   // MARK: - 전체동의 버튼
@@ -253,21 +272,23 @@ final class TermsOfServiceViewController: NaviHelper {
     nextButton.setTitleColor(nextButtonTextColor, for: .normal)
     
     agreeAllCheckButton.isSelected.toggle()
+    checkStatus.toggle()
   }
   
   // MARK: - 버튼 별 터치
   func serviceButtonTapped(button: UIButton) {
-
+    
     let check = button.isSelected ? "ButtonEmpty" : "ButtonChecked"
     button.setImage(UIImage(named: check), for: .normal)
-
+    
     button.isSelected.toggle()
-
-    let allSelected = agreeFirstCheckButton.isSelected && agreeSecondCheckButton.isSelected
-    let allCheckImage = allSelected ? "ButtonChecked" : "ButtonEmpty"
+    
+    checkStatus = agreeFirstCheckButton.isSelected && agreeSecondCheckButton.isSelected
+    let allCheckImage = checkStatus ? "ButtonChecked" : "ButtonEmpty"
     agreeAllCheckButton.setImage(UIImage(named: allCheckImage), for: .normal)
     
-    if allSelected {
+    
+    if checkStatus {
       nextButton.backgroundColor = .o50
       nextButton.setTitleColor(.white, for: .normal)
       agreeAllCheckButton.isSelected.toggle()
@@ -276,13 +297,13 @@ final class TermsOfServiceViewController: NaviHelper {
       nextButton.setTitleColor(.g90, for: .normal)
     }
   }
-
+  
   // MARK: - 다음버튼, 밑에꺼 하나만 눌러도 넘어감 - 고치자
   func nextButtonTapped(){
-    if agreeAllCheckButton.isSelected {
+    if checkStatus {
       let signUpVC = SignUpViewController()
       navigationController?.pushViewController(signUpVC, animated: true)
     }
-
+    
   }
 }

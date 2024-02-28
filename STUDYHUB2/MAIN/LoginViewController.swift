@@ -324,8 +324,7 @@ final class LoginViewController: UIViewController {
     let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
   }
-  
-  
+
   // MARK: - 로그인 버튼 눌리는 함수
   @objc func loginButtonTapped() {
     // 이메일 없으면 경고
@@ -374,7 +373,7 @@ final class LoginViewController: UIViewController {
   // MARK: - email action 함수
   @objc func emailTextFieldDidChange() {
     if let email = emailTextField.text, !email.isEmpty {
-      let isValidEmail = email.hasSuffix("@inu.ac.kr")
+      let isValidEmail = isValidEmail(email)
       
       emailTextFielddividerLine.backgroundColor = isValidEmail ? .g100 : .g60
       emailAlertLabel.isHidden = true
@@ -383,7 +382,7 @@ final class LoginViewController: UIViewController {
   
   @objc func emailTextFieldEnd() {
     if let email = emailTextField.text, !email.isEmpty {
-      let isValidEmail = email.hasSuffix("@inu.ac.kr")
+      let isValidEmail = isValidEmail(email)
       
       emailTextFielddividerLine.backgroundColor = isValidEmail ? .g100 : .r50
       emailAlertLabel.isHidden = isValidEmail ? true : false

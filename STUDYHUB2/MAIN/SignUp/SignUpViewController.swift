@@ -235,7 +235,7 @@ final class SignUpViewController: NaviHelper {
   // MARK: - 이메일 유효성 검증
   @objc func emailTextFieldDidChange(){
     guard let email = emailTextField.text else { return }
-    if !email.hasSuffix("@inu.ac.kr"){
+    if !isValidEmail(email){
       emailStatusLabel.isHidden = false
       emailTextFielddividerLine.backgroundColor = .r50
       
@@ -270,7 +270,7 @@ final class SignUpViewController: NaviHelper {
   @objc func checkEmailDuplication(){
     guard let email = emailTextField.text else { return }
   
-    if email.hasSuffix("@inu.ac.kr") {
+    if isValidEmail(email) {
       editUserManager.checkEmailDuplication(email: email) { result in
         if result {
           DispatchQueue.main.async {

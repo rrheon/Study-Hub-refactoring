@@ -247,4 +247,9 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       return base64String
   }
 
+  func isValidEmail(_ email: String) -> Bool {
+      let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+      let test = NSPredicate(format:"SELF MATCHES %@", regex)
+      return test.evaluate(with: email)
+  }
 }

@@ -288,10 +288,15 @@ extension MyParticipateStudyVC: UICollectionViewDelegateFlowLayout {
 
 extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func moveToChatUrl(chatURL: NSURL) {
-    let chatLinkSafariView: SFSafariViewController = SFSafariViewController(url: chatURL as URL)
+    guard UIApplication.shared.canOpenURL(chatURL as URL) else {
+      showToast(message: "해당 주소를 사용할 수 없어요")
+      return
+    }
+    
+    let chatLinkSafariView = SFSafariViewController(url: chatURL as URL)
     self.present(chatLinkSafariView, animated: true)
-  
   }
+
   
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",

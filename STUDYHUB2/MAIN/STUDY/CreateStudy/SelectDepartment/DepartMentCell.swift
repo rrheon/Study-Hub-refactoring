@@ -11,7 +11,11 @@ final class CustomCell: UITableViewCell {
     }
   }
 
-  var textColor: UIColor?
+  var textColor: UIColor? {
+    didSet {
+      name.textColor = textColor
+    }
+  }
   static let cellId = "CellId"
   var buttonAction: (() -> Void) = {}
   
