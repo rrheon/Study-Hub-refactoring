@@ -183,6 +183,7 @@ final class PasswordViewController: NaviHelper {
       $0.leading.equalTo(pageNumberLabel.snp.leading)
     }
     
+    passwordTextField.delegate = self
     passwordTextField.snp.makeConstraints {
       $0.top.equalTo(passwordLabel.snp.bottom).offset(10)
       $0.leading.equalTo(passwordLabel.snp.leading).offset(-5)
@@ -208,6 +209,7 @@ final class PasswordViewController: NaviHelper {
       $0.top.equalTo(passwordTextFielddividerLine.snp.bottom).offset(5)
     }
     
+    confirmPasswordTextField.delegate = self
     confirmPasswordTextField.snp.makeConstraints {
       $0.top.equalTo(passwordTextFielddividerLine.snp.bottom).offset(30)
       $0.leading.trailing.equalTo(passwordTextField)

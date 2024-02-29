@@ -164,6 +164,7 @@ final class SignUpViewController: NaviHelper {
       $0.leading.equalTo(emailPromptLabel.snp.leading)
     }
     
+    emailTextField.delegate = self
     emailTextField.snp.makeConstraints {
       $0.top.equalTo(emailLabel.snp.bottom).offset(20)
       $0.leading.equalTo(emailLabel)
@@ -206,6 +207,7 @@ final class SignUpViewController: NaviHelper {
     }
     
     codeTextField.isHidden = true
+    codeTextField.delegate = self
     codeTextField.snp.makeConstraints { make in
       make.top.equalTo(verificationLabel.snp.bottom).offset(20)
       make.leading.equalTo(emailStatusLabel.snp.leading)

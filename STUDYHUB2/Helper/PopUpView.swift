@@ -120,7 +120,7 @@ final class PopupView: UIView {
   
   private func setupConstraints() {
     self.popupView.snp.makeConstraints { make in
-      make.centerX.centerY.equalToSuperview()
+      make.center.equalToSuperview()
       make.width.equalToSuperview().multipliedBy(0.8)
     }
     
@@ -136,6 +136,7 @@ final class PopupView: UIView {
     
     leftButton.snp.makeConstraints { make in
       make.height.equalTo(47)
+      make.width.equalTo(rightButton) // 좌우 버튼의 크기를 같게 설정
     }
     
     rightButton.snp.makeConstraints { make in
@@ -152,8 +153,8 @@ final class PopupView: UIView {
         make.height.equalTo(47)
       }
     }
-
   }
+
 
   @objc private func leftButtonTapped() {
     leftButtonAction?()

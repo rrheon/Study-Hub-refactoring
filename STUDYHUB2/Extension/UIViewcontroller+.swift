@@ -252,4 +252,5 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       let test = NSPredicate(format:"SELF MATCHES %@", regex)
       return test.evaluate(with: email)
   }
+  
 }

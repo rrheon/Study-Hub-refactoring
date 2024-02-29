@@ -250,6 +250,7 @@ final class LoginViewController: UIViewController {
       $0.leading.equalToSuperview().offset(10)
     }
     
+    emailTextField.delegate = self
     emailTextField.snp.makeConstraints {
       $0.leading.equalTo(emailLabel)
       $0.trailing.equalToSuperview().offset(-20)
@@ -274,6 +275,7 @@ final class LoginViewController: UIViewController {
       $0.top.equalTo(emailTextFielddividerLine.snp.bottom).offset(40)
     }
     
+    passwordTextField.delegate = self
     passwordTextField.snp.makeConstraints {
       $0.leading.equalTo(emailTextField)
       $0.top.equalTo(passwordLabel.snp.bottom).offset(5)
@@ -434,6 +436,15 @@ final class LoginViewController: UIViewController {
     navigationController.modalPresentationStyle = .fullScreen
     
     self.present(navigationController, animated: true, completion: nil)
+  }
+  
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+    self.view.endEditing(true)
+  }
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+    textField.resignFirstResponder()
+    return true
   }
 }
 

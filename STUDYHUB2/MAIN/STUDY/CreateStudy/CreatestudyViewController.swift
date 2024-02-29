@@ -361,7 +361,20 @@ final class CreateStudyViewController: NaviHelper {
     
     postModify()
     compleButtonCheck()
+    
+    setScrollViewSingTap()
+ 
   }
+  
+  func setScrollViewSingTap(){
+    let singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(myTapMethod))
+    singleTapGestureRecognizer.numberOfTapsRequired = 1
+    singleTapGestureRecognizer.isEnabled = true
+    singleTapGestureRecognizer.cancelsTouchesInView = false
+    scrollView.addGestureRecognizer(singleTapGestureRecognizer)
+  }
+  
+  @objc func myTapMethod(sender: UITapGestureRecognizer) {self.view.endEditing(true)}
   
   // MARK: - setUpLayout
   func setUpLayout(){
@@ -589,6 +602,7 @@ final class CreateStudyViewController: NaviHelper {
       $0.height.equalTo(50)
     }
     
+    studyProduceTextView.delegate = self
     studyProduceTextView.snp.makeConstraints {
       $0.height.equalTo(170)
     }
@@ -1132,6 +1146,9 @@ final class CreateStudyViewController: NaviHelper {
 
 // MARK: - textField 0 입력 시
 extension CreateStudyViewController {
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+    self.view.endEditing(true)
+  }
   
   func textViewDidChange(_ textView: UITextView) {
     if textView == studyProduceTextView {
@@ -1145,6 +1162,7 @@ extension CreateStudyViewController {
     let newSize = studyProduceTextView.sizeThatFits(CGSize(width: fixedWidth,
                                                            height: CGFloat.greatestFiniteMagnitude))
     let newHeight = max(newSize.height, 170)
+    studyProduceTextView.delegate = self
     studyProduceTextView.constraints.forEach { constraint in
       if constraint.firstAttribute == .height {
         constraint.constant = newHeight
