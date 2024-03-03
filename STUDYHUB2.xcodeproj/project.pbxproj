@@ -422,8 +422,7 @@
 				EE98B1B12B3D4FC20025C4F8 /* EditUserInfoManager.swift */,
 				EE98B1AE2B3BDEB80025C4F8 /* EditInfo */,
 			);
-			name = INFO;
-			path = "../../../../../Documents/study-hub-iOS-yongheon/STUDYHUB2/MAIN/MyPage/INFO";
+			path = INFO;
 			sourceTree = "<group>";
 		};
 		EEB51E892B103C2300C23AB4 /* MyPost */ = {
@@ -1015,7 +1014,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1052,7 +1051,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

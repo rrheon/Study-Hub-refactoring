@@ -306,6 +306,8 @@ final class DeleteIDViewContoller: NaviHelper {
         navigationController.dismiss(animated: true)
         navigationController.popToRootViewController(animated: false)
        
+        TokenManager.shared.deleteTokens()
+        
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .overFullScreen
         navigationController.present(loginVC, animated: true, completion: nil)
