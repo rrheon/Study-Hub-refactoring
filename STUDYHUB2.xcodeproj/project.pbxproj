@@ -100,7 +100,6 @@
 		F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421912A7D6816006C6B87 /* AppDelegate.swift */; };
 		F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421932A7D6816006C6B87 /* SceneDelegate.swift */; };
 		F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421952A7D6816006C6B87 /* LoginViewController.swift */; };
-		F80421992A7D6816006C6B87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F80421972A7D6816006C6B87 /* Main.storyboard */; };
 		F804219B2A7D6818006C6B87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F804219A2A7D6818006C6B87 /* Assets.xcassets */; };
 		F804219E2A7D6818006C6B87 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */; };
 		F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421C72A7D800E006C6B87 /* SignUpViewController.swift */; };
@@ -222,7 +221,6 @@
 		F80421912A7D6816006C6B87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F80421932A7D6816006C6B87 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F80421952A7D6816006C6B87 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		F80421982A7D6816006C6B87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F804219A2A7D6818006C6B87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F804219D2A7D6818006C6B87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F804219F2A7D6818006C6B87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -536,7 +534,6 @@
 				EEFD5D222B5F67C300D1CE00 /* DTO */,
 				F8085D3F2A815DB00067D4DE /* MAIN */,
 				EE0A8B712B0896B4001C3F41 /* Font */,
-				F80421972A7D6816006C6B87 /* Main.storyboard */,
 				F804219A2A7D6818006C6B87 /* Assets.xcassets */,
 				F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */,
 				F804219F2A7D6818006C6B87 /* Info.plist */,
@@ -702,7 +699,6 @@
 				EE0A8B822B089729001C3F41 /* Pretendard-ExtraBold.otf in Resources */,
 				F804219B2A7D6818006C6B87 /* Assets.xcassets in Resources */,
 				EE0A8B7E2B089729001C3F41 /* Pretendard-Light.otf in Resources */,
-				F80421992A7D6816006C6B87 /* Main.storyboard in Resources */,
 				EE0A8B832B089729001C3F41 /* Pretendard-Black.otf in Resources */,
 				EE0A8B7B2B089729001C3F41 /* Pretendard-SemiBold.otf in Resources */,
 			);
@@ -857,14 +853,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F80421972A7D6816006C6B87 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F80421982A7D6816006C6B87 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -926,7 +914,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -980,7 +968,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1005,16 +993,17 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 변경을 위해 카메라 사용 권한이 필요해요.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 변경을 위해 앨범 사용 권한이 필요해요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.02;
+				MARKETING_VERSION = 1.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1042,16 +1031,17 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 변경을 위해 카메라 사용 권한이 필요해요.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "프로필 사진 변경을 위해 앨범 사용 권한이 필요해요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.02;
+				MARKETING_VERSION = 1.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
