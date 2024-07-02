@@ -378,9 +378,9 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
   func collectionView(_ collectionView: UICollectionView,
                       numberOfItemsInSection section: Int) -> Int {
     if collectionView.tag == 1 {
-      return 5
+      return 0
     } else if collectionView.tag == 2 {
-      return 4
+      return 0
     }
     else {
       return 0

@@ -44,7 +44,8 @@ struct Content: Codable {
   enum CodingKeys: String, CodingKey {
     case postID = "postId"
     case major, title, studyStartDate, studyEndDate, createdDate,
-         studyPerson, filteredGender, penalty, penaltyWay, remainingSeat, close, userData, bookmarked
+         studyPerson, filteredGender, penalty, penaltyWay, remainingSeat,
+         close, userData, bookmarked
   }
 }
 
@@ -69,7 +70,8 @@ struct PostDetailData: Codable {
   
   enum CodingKeys: String, CodingKey {
     case postID = "postId"
-    case title, createdDate, content, major, studyPerson, filteredGender, studyWay, penalty, penaltyWay, studyStartDate, studyEndDate, remainingSeat
+    case title, createdDate, content, major, studyPerson, filteredGender,
+         studyWay, penalty, penaltyWay, studyStartDate, studyEndDate, remainingSeat
     case chatURL = "chatUrl"
     case studyID = "studyId"
     case postedUser, relatedPost, close, apply, usersPost, bookmarked

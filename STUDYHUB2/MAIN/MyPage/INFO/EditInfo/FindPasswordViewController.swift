@@ -168,7 +168,7 @@ final class FindPasswordViewController: NaviHelper {
     navigationItem.rightBarButtonItem = completeButton
   }
   
-  // MARK: - 이메일 가입여부 확인
+  // MARK: - 이메일 가입여부 200,400 - 없는 이메일 /409 - 있는 이메일
   @objc func checkEmailValid(){
     guard let email = emailTextField.text else { return }
     print("이메일 가입 여부")
@@ -216,6 +216,9 @@ final class FindPasswordViewController: NaviHelper {
       $0.leading.equalTo(titleLabel.snp.leading)
     }
     
+    codeTextField.addTarget(self,
+                            action: #selector(textFieldDidChange(_:)),
+                            for: .editingChanged)
     codeTextField.snp.makeConstraints {
       $0.top.equalTo(emailLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel.snp.leading)
@@ -238,6 +241,7 @@ final class FindPasswordViewController: NaviHelper {
     
     editUserInfoManager.checkValidCode(code: code,
                                        email: email) { result in
+      print(result)
       if result == "true" {
         self.afterCheckCode()
       } else {
@@ -434,7 +438,7 @@ extension FindPasswordViewController {
       let completeButton = UIBarButtonItem(image: completeImg,
                                            style: .plain,
                                            target: self,
-                                           action: #selector(afterCheckCode))
+                                           action: #selector(checkValidCode))
       navigationItem.rightBarButtonItem = completeButton
     }
     

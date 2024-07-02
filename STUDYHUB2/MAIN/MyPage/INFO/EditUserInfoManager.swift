@@ -67,8 +67,9 @@ final class EditUserInfoManager {
         case 200:
           //가입이 안된경우
           completion(false)
+        case 400:
+          completion(false)
         default:
-          print("q12")
           // 가입이 된경우
           completion(true)
         }
@@ -87,13 +88,12 @@ final class EditUserInfoManager {
                                                                    _email: email)) { result in
       switch result {
       case .success(let response):
-        print(response.response)
         let res = String(data: response.data, encoding: .utf8) ?? "No data"
         if let i = res.firstIndex(of: ":"), let j = res.firstIndex(of: "}") {
           let startIndex = res.index(after: i)
           let endIndex = res.index(before: j)
           let codeCheck = res[startIndex...endIndex]
-          
+          print(codeCheck)
           switch codeCheck{
           case "true":
             completion("true")

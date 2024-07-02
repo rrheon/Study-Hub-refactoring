@@ -391,8 +391,7 @@ final class MyInformViewController: NaviHelper {
   
   // MARK: - 비밀번호 변경 버튼
   func passwordEditButtonTapped(){
-    let editPasswordVC = FindPasswordViewController()
-    editPasswordVC.previousVC = self
+    let editPasswordVC = EditPasswordViewController()
     editPasswordVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(editPasswordVC, animated: true)
   }
