@@ -34,7 +34,6 @@ extension UIColor {
   static let g80 = UIColor(red: 0.39, green: 0.39, blue: 0.39, alpha: 1.00)
   static let g90 = UIColor(red: 0.44, green: 0.44, blue: 0.44, alpha: 1.00)
 
-
   static let g_10 = UIColor(red: 0.16, green: 0.82, blue: 0.18, alpha: 1.00)
 
   static let changeInfo = UIColor(red: 1.00, green: 0.33, blue: 0.19, alpha: 1.00)
@@ -64,9 +63,5 @@ extension UIColor {
               green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
               blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
               alpha: alpha)
-    
-
   }
-  
-
 }

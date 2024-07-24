@@ -1,6 +1,0 @@
-framework module Pods_STUDYHUB2_STUDYHUB2UITests {
-  umbrella header "Pods-STUDYHUB2-STUDYHUB2UITests-umbrella.h"
-
-  export *
-  module * { export * }
-}

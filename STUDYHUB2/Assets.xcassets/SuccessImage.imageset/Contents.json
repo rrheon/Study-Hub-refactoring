@@ -6,10 +6,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "Control_Radio_Basic.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Control_Radio_Basic-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

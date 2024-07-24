@@ -253,4 +253,25 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       return test.evaluate(with: email)
   }
   
+  func isVaildPassword(password: String) -> Bool {
+    let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
+    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
+  }
+  
+  func moveToOtherVC(vc: UIViewController, naviCheck: Bool){
+    let destinationVC = vc
+    let navigationVC = UINavigationController(rootViewController: destinationVC)
+    let movedVC = naviCheck ? navigationVC : destinationVC
+    
+    movedVC.modalPresentationStyle = .fullScreen
+    self.present(navigationVC, animated: true, completion: nil)
+  }
+  
+  func moveToTabbar() {
+    let tapbarcontroller = TabBarController()
+    tapbarcontroller.modalPresentationStyle = .fullScreen
+    
+    self.present(tapbarcontroller, animated: true, completion: nil)
+  }
+
 }

@@ -1,20 +1,52 @@
 PODS:
+  - Alamofire (5.9.1)
   - FSCalendar (2.8.4)
+  - Kingfisher (7.11.0)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
+  - RxCocoa (6.6.0):
+    - RxRelay (= 6.6.0)
+    - RxSwift (= 6.6.0)
+  - RxRelay (6.6.0):
+    - RxSwift (= 6.6.0)
+  - RxSwift (6.6.0)
   - SnapKit (5.6.0)
+  - Then (3.0.0)
 
 DEPENDENCIES:
   - FSCalendar
+  - Kingfisher (~> 7.0)
+  - Moya (~> 15.0)
+  - RxCocoa
+  - RxSwift
   - SnapKit (~> 5.6.0)
+  - Then
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - FSCalendar
+    - Kingfisher
+    - Moya
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SnapKit
+    - Then
 
 SPEC CHECKSUMS:
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
+  Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
+  RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
+  RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: f4a221f48696828d950158dcbd716463a81a544c
+PODFILE CHECKSUM: 06d0be365d49ba5d8f0089945c2dc58c42537859
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

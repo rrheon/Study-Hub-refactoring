@@ -9,7 +9,7 @@ import UIKit
 
 class NaviHelper: UIViewController {
   let bookmarkManager = BookmarkManager.shared
-  let loginManager = LoginManager.shared
+  let commonNetworking = CommonNetworking.shared
   
   private let postID: Int?
   
@@ -42,7 +42,6 @@ class NaviHelper: UIViewController {
   
   // MARK: - navi 설정
   func navigationItemSetting() {
-    
     let homeImg = UIImage(named: "LeftArrow")?.withRenderingMode(.alwaysOriginal)
     let leftButton = UIBarButtonItem(image: homeImg,
                                      style: .plain,
@@ -55,14 +54,12 @@ class NaviHelper: UIViewController {
                                       target: self,
                                       action: #selector(rightButtonTapped))
     
-    
     self.navigationController?.navigationBar.barTintColor =  .black
     self.navigationController?.navigationBar.backgroundColor = .black
     self.navigationController?.navigationBar.isTranslucent = false
     
     self.navigationItem.leftBarButtonItem = leftButton
     self.navigationItem.rightBarButtonItem = rightButton
-    
   }
   
   @objc func leftButtonTapped(_ sender: UIBarButtonItem) {
@@ -173,7 +170,7 @@ class NaviHelper: UIViewController {
   }
   
   func loginStatus(completion: @escaping (Bool) -> Void){
-    loginManager.refreshAccessToken { result in
+    commonNetworking.refreshAccessToken { result in
       completion(result)
     }
   }

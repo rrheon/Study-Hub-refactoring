@@ -26,7 +26,9 @@ extension UILabel {
     if let lineSpacing = lineSpacing {
       let style = NSMutableParagraphStyle()
       style.lineSpacing = lineSpacing
-      originalText.addAttribute(.paragraphStyle, value: style, range: NSRange(location: 0, length: originalText.length))
+      originalText.addAttribute(.paragraphStyle,
+                                value: style,
+                                range: NSRange(location: 0,length: originalText.length))
     }
     
     label.attributedText = originalText

@@ -9,7 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   let tokenManager = TokenManager.shared
-  let loginManager = LoginManager.shared
+  let loginManager = LoginViewModel.shared
   let infoManager = UserInfoManager.shared
   var window: UIWindow?
   
@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     loginManager.refreshAccessToken { result in
       DispatchQueue.main.async {
-        
         switch result {
         case true:
           let tabBarController = TabBarController()
@@ -27,19 +26,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case false:
           let loginViewController = LoginViewController()
           self.window?.rootViewController = loginViewController
-          
         }
         
         self.window?.makeKeyAndVisible()
-        
       }
     }
   }
-  
-  
-  
-  
-  
   
   func sceneDidDisconnect(_ scene: UIScene) {
     // Called as the scene is being released by the system.

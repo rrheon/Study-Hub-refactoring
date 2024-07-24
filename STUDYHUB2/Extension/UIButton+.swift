@@ -19,7 +19,10 @@ extension UIButton {
       return objc_getAssociatedObject(self, &AssociatedKeys.titleLabelKey) as? UIView
     }
     set {
-      objc_setAssociatedObject(self, &AssociatedKeys.titleLabelKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+      objc_setAssociatedObject(self,
+                               &AssociatedKeys.titleLabelKey,
+                               newValue,
+                               .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
   }
   

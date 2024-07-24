@@ -6,10 +6,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "icon_gender_girl_m@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "icon_gender_girl_m@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
