@@ -78,6 +78,9 @@
 		EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */; };
 		EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1A82B35276D0025C4F8 /* Networking.swift */; };
 		EEA53A3B2C51338300C8FEFF /* UITextView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA53A3A2C51338300C8FEFF /* UITextView+.swift */; };
+		EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */; };
+		EEA53A402C5252D000C8FEFF /* AuthTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */; };
+		EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */; };
 		EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */; };
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
@@ -94,7 +97,7 @@
 		EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D272B600B6500D1CE00 /* PostDTO.swift */; };
 		EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D292B600BA600D1CE00 /* UserDTO.swift */; };
 		EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */; };
-		EEFD5D2E2B60D37A00D1CE00 /* TermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */; };
+		EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2D2B60D37A00D1CE00 /* AgreementViewController.swift */; };
 		EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */; };
 		EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D322B654C4200D1CE00 /* ParticipateManager.swift */; };
 		EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */; };
@@ -196,6 +199,9 @@
 		EEA53A342C50E11F00C8FEFF /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = SDKROOT; };
 		EEA53A382C50E5F300C8FEFF /* Pods_STUDYHUB2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_STUDYHUB2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEA53A3A2C51338300C8FEFF /* UITextView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+.swift"; sourceTree = "<group>"; };
+		EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyHubButton.swift; sourceTree = "<group>"; };
+		EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTitleView.swift; sourceTree = "<group>"; };
+		EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementViewModel.swift; sourceTree = "<group>"; };
 		EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoManager.swift; sourceTree = "<group>"; };
 		EEB51E852B103C2300C23AB4 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPageViewController.swift; path = ../MyPageViewController.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
@@ -219,7 +225,7 @@
 		EEFD5D272B600B6500D1CE00 /* PostDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDTO.swift; sourceTree = "<group>"; };
 		EEFD5D292B600BA600D1CE00 /* UserDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDTO.swift; sourceTree = "<group>"; };
 		EEFD5D2B2B600CA000D1CE00 /* ErrorDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDTO.swift; sourceTree = "<group>"; };
-		EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceViewController.swift; sourceTree = "<group>"; };
+		EEFD5D2D2B60D37A00D1CE00 /* AgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementViewController.swift; sourceTree = "<group>"; };
 		EEFD5D2F2B639D3200D1CE00 /* CreateAccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountManager.swift; sourceTree = "<group>"; };
 		EEFD5D322B654C4200D1CE00 /* ParticipateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateManager.swift; sourceTree = "<group>"; };
 		EEFD5D362B65C41600D1CE00 /* ParticipateDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateDTO.swift; sourceTree = "<group>"; };
@@ -403,6 +409,7 @@
 		EE3AD8B52C467E6C000A8CCA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EEA53A3E2C5250F900C8FEFF /* CustomUI */,
 				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* SignupScene */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
@@ -454,7 +461,6 @@
 			isa = PBXGroup;
 			children = (
 				F80421952A7D6816006C6B87 /* LoginViewController.swift */,
-				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
 				EE7614992C50D5480008E463 /* ViewModel */,
 			);
 			path = View;
@@ -477,6 +483,41 @@
 				EE98B1AF2B3C387A0025C4F8 /* FindPasswordViewController.swift */,
 			);
 			path = EditInfomationView;
+			sourceTree = "<group>";
+		};
+		EEA53A3E2C5250F900C8FEFF /* CustomUI */ = {
+			isa = PBXGroup;
+			children = (
+				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
+				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
+				EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */,
+			);
+			path = CustomUI;
+			sourceTree = "<group>";
+		};
+		EEA53A412C528A6B00C8FEFF /* AgreementSccene */ = {
+			isa = PBXGroup;
+			children = (
+				EEA53A422C528A8600C8FEFF /* View */,
+				EEA53A432C528A9100C8FEFF /* ViewModel */,
+			);
+			path = AgreementSccene;
+			sourceTree = "<group>";
+		};
+		EEA53A422C528A8600C8FEFF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEFD5D2D2B60D37A00D1CE00 /* AgreementViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEA53A432C528A9100C8FEFF /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EEB51E722B103C0100C23AB4 /* Recovered References */ = {
@@ -624,7 +665,7 @@
 		F80421C42A7D7C25006C6B87 /* SignupScene */ = {
 			isa = PBXGroup;
 			children = (
-				EEFD5D2D2B60D37A00D1CE00 /* TermsOfServiceViewController.swift */,
+				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
 				F80421C72A7D800E006C6B87 /* SignUpViewController.swift */,
 				F80421C92A7D9534006C6B87 /* PasswordViewController.swift */,
 				F80421CB2A7D9BC3006C6B87 /* NicknameViewController.swift */,
@@ -832,7 +873,7 @@
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
 				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* PasswordViewController.swift in Sources */,
-				EEFD5D2E2B60D37A00D1CE00 /* TermsOfServiceViewController.swift in Sources */,
+				EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */,
 				EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */,
 				EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */,
 				EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */,
@@ -856,6 +897,7 @@
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
+				EEA53A402C5252D000C8FEFF /* AuthTitleView.swift in Sources */,
 				EEDD81142B7DFCC30022302E /* MyRequestManager.swift in Sources */,
 				EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */,
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
@@ -868,6 +910,7 @@
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,
 				EEFD5D262B5F6C4D00D1CE00 /* CommonNetworking.swift in Sources */,
+				EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */,
 				EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */,
 				EE271F262AD77CD100190E7A /* UIViewcontroller+.swift in Sources */,
 				EE271F2C2AD9250F00190E7A /* UIView+.swift in Sources */,
@@ -884,6 +927,7 @@
 				EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */,
 				EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
+				EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */,
 				EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */,
 				F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */,
 				EEA53A3B2C51338300C8FEFF /* UITextView+.swift in Sources */,

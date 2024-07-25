@@ -29,20 +29,8 @@ final class LoginViewController: UIViewController {
     type: "password")
   
   private lazy var passwordTextField = AuthTextField(setValue: passwordTextFieldValue)
-  
-  var eyeButton = UIButton(type: .custom)
-  
-  // 로그인 버튼
-  private lazy var loginButton: UIButton = {
-    let loginButton = UIButton(type: .system)
-    loginButton.setTitle("로그인하기", for: .normal)
-    loginButton.setTitleColor(.white, for: .normal)
-    loginButton.backgroundColor = .o50
-    loginButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 18)
-    loginButton.layer.cornerRadius = 10
-    loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-    return loginButton
-  }()
+      
+  private lazy var loginButton = StudyHubButton(title: "로그인하기", actionDelegate: self)
   
   // 비밀번호 잊엇을 때
   private lazy var forgotPasswordButton: UIButton = {
@@ -92,7 +80,6 @@ final class LoginViewController: UIViewController {
     [
       mainImageView,
       passwordTextField,
-      eyeButton,
       loginButton,
       forgotPasswordButton,
       exploreButton,
@@ -111,7 +98,7 @@ final class LoginViewController: UIViewController {
       $0.width.equalTo(400)
       $0.height.equalTo(250)
     }
-
+    
     emailTextField.snp.makeConstraints {
       $0.top.equalTo(mainImageView.snp.bottom)
       $0.leading.equalToSuperview().offset(10)
@@ -120,15 +107,11 @@ final class LoginViewController: UIViewController {
     }
     
     passwordTextField.setPasswordSecure()
-     passwordTextField.snp.makeConstraints {
+    passwordTextField.snp.makeConstraints {
       $0.leading.equalTo(emailTextField)
       $0.trailing.equalToSuperview().offset(-20)
       $0.top.equalTo(emailTextField.snp.bottom).offset(40)
       $0.height.equalTo(50)
-    }
-    
-    eyeButton.snp.makeConstraints {
-      $0.trailing.equalTo(passwordTextField.snp.trailing)
     }
     
     loginButton.snp.makeConstraints {
@@ -155,40 +138,14 @@ final class LoginViewController: UIViewController {
   }
   
   // MARK: - 함수
-  @objc func loginButtonTapped() {
-    guard let email = emailTextField.getTextFieldValue() ,!email.isEmpty,
-          let password = passwordTextField.getTextFieldValue(), !password.isEmpty else {
-      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false, alertCheck: true)
-      return
-    }
-   
-    emailTextField.hideAlertLabel()
-    passwordTextField.hideAlertLabel()
-    
-    loginViewModel.login(email: email, password: password) { [weak self] result in
-      DispatchQueue.main.async {
-        self?.handleLoginResult(result)
-      }
-    }
-  }
-  
-  private func handleLoginResult(_ success: Bool) {
-    success ? moveToTabbar() : failToLogin()
-  }
-
-  func failToLogin(){
-    emailTextField.failToLogin()
-    passwordTextField.failToLogin()
-  }
-  
   // MARK: - 둘러보기 함수
   @objc func exploreButtonTapped() {
     moveToTabbar()
   }
-
+  
   // MARK: - 회원가입
   @objc func signUpButtonTapped() {
-    moveToOtherVC(vc: TermsOfServiceViewController(), naviCheck: true)
+    moveToOtherVC(vc: AgreementViewController(), naviCheck: true)
   }
   
   // MARK: - 비밀번호 잊었을 때
@@ -206,3 +163,30 @@ final class LoginViewController: UIViewController {
   }
 }
 
+extension LoginViewController: StudyHubButtonProtocol {
+  func buttonTapped() {
+    guard let email = emailTextField.getTextFieldValue() ,!email.isEmpty,
+          let password = passwordTextField.getTextFieldValue(), !password.isEmpty else {
+      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false, alertCheck: true)
+      return
+    }
+    
+    emailTextField.hideAlertLabel()
+    passwordTextField.hideAlertLabel()
+    
+    loginViewModel.login(email: email, password: password) { [weak self] result in
+      DispatchQueue.main.async {
+        self?.handleLoginResult(result)
+      }
+    }
+  }
+  
+  private func handleLoginResult(_ success: Bool) {
+    success ? moveToTabbar() : failToLogin()
+  }
+  
+  func failToLogin(){
+    emailTextField.failToLogin()
+    passwordTextField.failToLogin()
+  }
+}

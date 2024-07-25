@@ -10,8 +10,8 @@ struct SetAuthTextFieldValue {
   var type: String
 }
 
-class AuthTextField: UIView {
-  var setValues: SetAuthTextFieldValue
+final class AuthTextField: UIView {
+  private var setValues: SetAuthTextFieldValue
 
   private lazy var label = UILabel().then{
     $0.text = setValues.labelTitle

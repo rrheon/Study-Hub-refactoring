@@ -10,26 +10,14 @@ import SafariServices
 
 import SnapKit
 
-final class TermsOfServiceViewController: NaviHelper {
+final class AgreementViewController: NaviHelper {
   var checkStatus: Bool = false
-  let personalURL = "https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/InfoImage.imageset/InfoImage.png"
-  let serviceURl = "https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/serviceImage.imageset/serviceImage.png"
-  
+ 
+  let viewModel = AgreementViewModel()
   // MARK: - UI
-  private lazy var pageNumberLabel = createLabel(title: "1/5",
-                                                 textColor: .g60,
-                                                 fontType: "Pretendard-SemiBold",
-                                                 fontSize: 18)
-  
-  private lazy var titleLabel = createLabel(title: "이용약관에 동의해주세요",
-                                            textColor: .white,
-                                            fontType: "Pretendard-Bold",
-                                            fontSize: 20)
-  
-  private lazy var underTitleLabel = createLabel(title: "서비스 이용을 위해서 약관 동의가 필요해요",
-                                                 textColor: .g40,
-                                                 fontType: "Pretendard-Medium",
-                                                 fontSize: 14)
+  private lazy var mainTitleView = AuthTitleView(pageNumber: "1/5",
+                                                 pageTitle: "이용약관에 동의해주세요",
+                                                 pageContent: "서비스 이용을 위해서 약관 동의가 필요해요")
   
   // 전체동의
   private lazy var agreeAllButton: UIButton = {
@@ -118,20 +106,7 @@ final class TermsOfServiceViewController: NaviHelper {
     return button
   }()
   
-  // 다음버튼
-  private lazy var nextButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("다음", for: .normal)
-    button.setTitleColor(UIColor.g90, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendara-Medium",
-                                     size: 14)
-    button.layer.cornerRadius = 6
-    button.backgroundColor = .o60
-    button.addAction(UIAction { _ in
-      self.nextButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
   
   // MARK: - viewdidload
   override func viewDidLoad() {
@@ -148,9 +123,7 @@ final class TermsOfServiceViewController: NaviHelper {
   // MARK: - setupLayout
   func setupLayout(){
     [
-      pageNumberLabel,
-      titleLabel,
-      underTitleLabel,
+      mainTitleView,
       agreeAllButton,
       agreeAllCheckButton,
       agreeFirstCheckButton,
@@ -167,24 +140,14 @@ final class TermsOfServiceViewController: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
-    pageNumberLabel.snp.makeConstraints {
+    mainTitleView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     
-    titleLabel.snp.makeConstraints {
-      $0.top.equalTo(pageNumberLabel.snp.bottom).offset(10)
-      $0.leading.equalTo(pageNumberLabel.snp.leading)
-    }
-    
-    underTitleLabel.snp.makeConstraints {
-      $0.top.equalTo(titleLabel.snp.bottom).offset(10)
-      $0.leading.equalTo(titleLabel.snp.leading)
-    }
-    
     agreeAllButton.snp.makeConstraints {
-      $0.top.equalTo(underTitleLabel.snp.bottom).offset(20)
-      $0.leading.equalTo(underTitleLabel)
+      $0.top.equalTo(mainTitleView.snp.bottom).offset(120)
+      $0.leading.equalTo(mainTitleView)
       $0.trailing.equalToSuperview().offset(-20)
       $0.height.equalTo(56)
     }
@@ -224,9 +187,10 @@ final class TermsOfServiceViewController: NaviHelper {
       $0.centerY.equalTo(secondServiceButton)
     }
     
+    nextButton.unableButton(true)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
-      $0.leading.equalTo(titleLabel.snp.leading)
+      $0.leading.equalTo(mainTitleView.snp.leading)
       $0.trailing.equalToSuperview().offset(-20)
       $0.height.equalTo(55)
     }
@@ -245,8 +209,8 @@ final class TermsOfServiceViewController: NaviHelper {
   }
   
   func moveToPage(button: UIButton) {
-    let check = button == goToFirstServicePageButton ? serviceURl : personalURL
-    let url = NSURL(string: check)
+    let check = button == goToFirstServicePageButton ? viewModel.serviceURL : viewModel.personalURL
+    let url = NSURL(string: check.rawValue)
     
     let urlView: SFSafariViewController = SFSafariViewController(url: url as! URL)
     self.present(urlView, animated: true)
@@ -263,10 +227,8 @@ final class TermsOfServiceViewController: NaviHelper {
       $0.setImage(UIImage(named: check), for: .normal)
     }
     
-    let nextButtonColor = !agreeAllCheckButton.isSelected ? UIColor.o50 : UIColor.o60
-    let nextButtonTextColor = !agreeAllCheckButton.isSelected ? UIColor.white : UIColor.g90
-    nextButton.backgroundColor = nextButtonColor
-    nextButton.setTitleColor(nextButtonTextColor, for: .normal)
+    let nextButtonColor = agreeAllCheckButton.isSelected
+    nextButton.unableButton(nextButtonColor)
     
     agreeAllCheckButton.isSelected.toggle()
     checkStatus.toggle()
@@ -274,29 +236,26 @@ final class TermsOfServiceViewController: NaviHelper {
   
   // MARK: - 버튼 별 터치
   func serviceButtonTapped(button: UIButton) {
-    
     let check = button.isSelected ? "ButtonEmpty" : "ButtonChecked"
     button.setImage(UIImage(named: check), for: .normal)
-    
     button.isSelected.toggle()
     
     checkStatus = agreeFirstCheckButton.isSelected && agreeSecondCheckButton.isSelected
     let allCheckImage = checkStatus ? "ButtonChecked" : "ButtonEmpty"
     agreeAllCheckButton.setImage(UIImage(named: allCheckImage), for: .normal)
     
-    
     if checkStatus {
-      nextButton.backgroundColor = .o50
-      nextButton.setTitleColor(.white, for: .normal)
+      nextButton.unableButton(false)
       agreeAllCheckButton.isSelected.toggle()
     } else {
-      nextButton.backgroundColor = .o60
-      nextButton.setTitleColor(.g90, for: .normal)
+      nextButton.unableButton(true)
     }
   }
-  
+}
+
+extension AgreementViewController: StudyHubButtonProtocol{
   // MARK: - 다음버튼, 밑에꺼 하나만 눌러도 넘어감 - 고치자
-  func nextButtonTapped(){
+  func buttonTapped() {
     if checkStatus {
       let signUpVC = SignUpViewController()
       navigationController?.pushViewController(signUpVC, animated: true)

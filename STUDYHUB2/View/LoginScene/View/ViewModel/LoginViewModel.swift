@@ -19,25 +19,20 @@ class LoginViewModel: CommonNetworking {
       return
     }
     
-    // Create a dictionary to represent the login data
     let loginData: [String: Any] = [
       "email": email,
       "password": password
     ]
     
-    // Convert the loginData dictionary to JSON data
     do {
       let jsonData = try JSONSerialization.data(withJSONObject: loginData, options: [])
       
-      // Create a URLRequest with the login URL
       var request = URLRequest(url: loginURL)
       request.httpMethod = "POST"
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")
       request.httpBody = jsonData
       
-      // Create a URLSessionDataTask to perform the request
       let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-        // Handle the response
         if let data = data,
            let response = response as? HTTPURLResponse,
            response.statusCode == 200 {
@@ -59,15 +54,11 @@ class LoginViewModel: CommonNetworking {
           completion(false)
         }
       }
-      
-      // Start the URLSessionDataTask
       task.resume()
       
     } catch {
-      // Handle JSON serialization error
       print("JSON Serialization Error: \(error)")
     }
   }
-
 }
 

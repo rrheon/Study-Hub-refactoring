@@ -19,7 +19,7 @@ extension UITextField {
       guard let self = self else { return }
       self.isSecureTextEntry.toggle()
       isSecure.toggle()
-      let eyeImage = isSecure ? "eye_open" : "CloseEyeImage"
+      let eyeImage = isSecure ? "CloseEyeImage" : "eye_open"
       eyeButton.setImage(UIImage(named: eyeImage), for: .normal)
     }), for: .touchUpInside)
     
