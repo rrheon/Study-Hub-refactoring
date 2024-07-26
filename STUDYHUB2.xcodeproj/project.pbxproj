@@ -85,6 +85,11 @@
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
 		EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */; };
+		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
+		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
+		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
+		EED00B7A2C534F05000D2E23 /* StudyHubURL.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B792C534F05000D2E23 /* StudyHubURL.plist */; };
+		EED00B7E2C539D51000D2E23 /* CommonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */; };
 		EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FC2B6D12990022302E /* InquiryViewController.swift */; };
 		EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */; };
 		EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */; };
@@ -106,7 +111,7 @@
 		F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421952A7D6816006C6B87 /* LoginViewController.swift */; };
 		F804219B2A7D6818006C6B87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F804219A2A7D6818006C6B87 /* Assets.xcassets */; };
 		F804219E2A7D6818006C6B87 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */; };
-		F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421C72A7D800E006C6B87 /* SignUpViewController.swift */; };
+		F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421C72A7D800E006C6B87 /* CheckEmailViewController.swift */; };
 		F80421CA2A7D9534006C6B87 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421C92A7D9534006C6B87 /* PasswordViewController.swift */; };
 		F80421CC2A7D9BC3006C6B87 /* NicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421CB2A7D9BC3006C6B87 /* NicknameViewController.swift */; };
 		F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421CD2A7DA2F3006C6B87 /* DepartmentViewController.swift */; };
@@ -213,6 +218,11 @@
 		EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseBottomSheet.swift; sourceTree = "<group>"; };
 		EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusePersonCell.swift; sourceTree = "<group>"; };
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
+		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
+		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
+		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
+		EED00B792C534F05000D2E23 /* StudyHubURL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StudyHubURL.plist; sourceTree = "<group>"; };
+		EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewModel.swift; sourceTree = "<group>"; };
 		EEDD80FC2B6D12990022302E /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		EEDD80FE2B6D1B350022302E /* InquiryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryDTO.swift; sourceTree = "<group>"; };
 		EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewController.swift; sourceTree = "<group>"; };
@@ -236,7 +246,7 @@
 		F804219A2A7D6818006C6B87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F804219D2A7D6818006C6B87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F804219F2A7D6818006C6B87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F80421C72A7D800E006C6B87 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		F80421C72A7D800E006C6B87 /* CheckEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEmailViewController.swift; sourceTree = "<group>"; };
 		F80421C92A7D9534006C6B87 /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		F80421CB2A7D9BC3006C6B87 /* NicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameViewController.swift; sourceTree = "<group>"; };
 		F80421CD2A7DA2F3006C6B87 /* DepartmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartmentViewController.swift; sourceTree = "<group>"; };
@@ -402,6 +412,8 @@
 		EE3AD8B42C467E62000A8CCA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
+				EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -453,6 +465,7 @@
 			isa = PBXGroup;
 			children = (
 				EE7614982C50D53F0008E463 /* View */,
+				EE7614992C50D5480008E463 /* ViewModel */,
 			);
 			path = LoginScene;
 			sourceTree = "<group>";
@@ -461,7 +474,6 @@
 			isa = PBXGroup;
 			children = (
 				F80421952A7D6816006C6B87 /* LoginViewController.swift */,
-				EE7614992C50D5480008E463 /* ViewModel */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -488,6 +500,7 @@
 		EEA53A3E2C5250F900C8FEFF /* CustomUI */ = {
 			isa = PBXGroup;
 			children = (
+				EED00B712C5342DD000D2E23 /* CommonNavi.swift */,
 				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
 				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
 				EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */,
@@ -577,6 +590,22 @@
 			path = Wait;
 			sourceTree = "<group>";
 		};
+		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
+			isa = PBXGroup;
+			children = (
+				EED00B802C53B36C000D2E23 /* View */,
+			);
+			path = CheckEmailScene;
+			sourceTree = "<group>";
+		};
+		EED00B802C53B36C000D2E23 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F80421C72A7D800E006C6B87 /* CheckEmailViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		EEDD81102B7DE2780022302E /* MyRequestList */ = {
 			isa = PBXGroup;
 			children = (
@@ -657,6 +686,8 @@
 				EE3AD8B62C467E72000A8CCA /* ViewModel */,
 				F804219A2A7D6818006C6B87 /* Assets.xcassets */,
 				F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */,
+				EED00B752C534C21000D2E23 /* MajorDataSet.plist */,
+				EED00B792C534F05000D2E23 /* StudyHubURL.plist */,
 				F804219F2A7D6818006C6B87 /* Info.plist */,
 			);
 			path = STUDYHUB2;
@@ -666,7 +697,7 @@
 			isa = PBXGroup;
 			children = (
 				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
-				F80421C72A7D800E006C6B87 /* SignUpViewController.swift */,
+				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
 				F80421C92A7D9534006C6B87 /* PasswordViewController.swift */,
 				F80421CB2A7D9BC3006C6B87 /* NicknameViewController.swift */,
 				F80421CD2A7DA2F3006C6B87 /* DepartmentViewController.swift */,
@@ -784,8 +815,10 @@
 				F804219E2A7D6818006C6B87 /* LaunchScreen.storyboard in Resources */,
 				EE0A8B7C2B089729001C3F41 /* Pretendard-Bold.otf in Resources */,
 				EE0A8B7F2B089729001C3F41 /* Pretendard-Thin.otf in Resources */,
+				EED00B7A2C534F05000D2E23 /* StudyHubURL.plist in Resources */,
 				EE0A8B802B089729001C3F41 /* Pretendard-Regular.otf in Resources */,
 				EE0A8B822B089729001C3F41 /* Pretendard-ExtraBold.otf in Resources */,
+				EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */,
 				F804219B2A7D6818006C6B87 /* Assets.xcassets in Resources */,
 				EE0A8B7E2B089729001C3F41 /* Pretendard-Light.otf in Resources */,
 				EE0A8B832B089729001C3F41 /* Pretendard-Black.otf in Resources */,
@@ -862,6 +895,7 @@
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
+				EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
@@ -890,7 +924,7 @@
 				EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */,
 				EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */,
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
-				F80421C82A7D800E006C6B87 /* SignUpViewController.swift in Sources */,
+				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
@@ -908,6 +942,7 @@
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,
+				EED00B7E2C539D51000D2E23 /* CommonViewModel.swift in Sources */,
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,
 				EEFD5D262B5F6C4D00D1CE00 /* CommonNetworking.swift in Sources */,
 				EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */,
@@ -921,6 +956,7 @@
 				EE1E44112B17222200223436 /* MyPostCell.swift in Sources */,
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
 				EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */,
+				EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */,
 				F87377592AA850940055B041 /* DepartmentselectViewController.swift in Sources */,
 				EE07ADB52AEFC2B90096890F /* UITextField+.swift in Sources */,
 				EE0A8B602AFA7FD2001C3F41 /* SearchResultCell.swift in Sources */,

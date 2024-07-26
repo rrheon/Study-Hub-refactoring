@@ -18,7 +18,7 @@ final class LoginViewController: UIViewController {
     labelTitle: "이메일",
     textFieldPlaceholder: "이메일 주소를 입력해주세요 (@inu.ac.kr)",
     alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요",
-    type: "email")
+    type: true)
   
   private lazy var emailTextField = AuthTextField(setValue: emailTextFieldValue)
   
@@ -26,8 +26,8 @@ final class LoginViewController: UIViewController {
     labelTitle: "비밀번호",
     textFieldPlaceholder: "비밀번호를 입력해주세요",
     alertLabelTitle: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)",
-    type: "password")
-  
+    type: false)
+
   private lazy var passwordTextField = AuthTextField(setValue: passwordTextFieldValue)
       
   private lazy var loginButton = StudyHubButton(title: "로그인하기", actionDelegate: self)

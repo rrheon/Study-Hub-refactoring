@@ -33,10 +33,10 @@ final class AuthTitleView: UIView {
     $0.font = UIFont(name: "Pretendard-Medium", size: 14)
   }
   
-  init(pageNumber: String, pageTitle: String, pageContent: String) {
+  init(pageNumber: String, pageTitle: String, pageContent: String?) {
     self.pageNumber = pageNumber
     self.pageTitle = pageTitle
-    self.pageContent = pageContent
+    self.pageContent = pageContent ?? ""
     
     super.init(frame: .zero)
     
@@ -68,6 +68,7 @@ final class AuthTitleView: UIView {
       $0.leading.equalTo(pageNumberLabel)
     }
     
+    underTitleLabel.isHidden = pageContent.isEmpty
     underTitleLabel.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
       $0.leading.equalTo(pageNumberLabel)

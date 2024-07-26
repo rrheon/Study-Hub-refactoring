@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>personal</key>
+    <string>https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/InfoImage.imageset/InfoImage.png</string>
+    <key>service</key>
+    <string>https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/serviceImage.imageset/serviceImage.png</string>
+</dict>
+</plist>

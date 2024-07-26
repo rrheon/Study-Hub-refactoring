@@ -9,102 +9,60 @@ import UIKit
 import SafariServices
 
 import SnapKit
+import RxSwift
+import Then
 
-final class AgreementViewController: NaviHelper {
-  var checkStatus: Bool = false
- 
+final class AgreementViewController: CommonNavi {
   let viewModel = AgreementViewModel()
+  
   // MARK: - UI
   private lazy var mainTitleView = AuthTitleView(pageNumber: "1/5",
                                                  pageTitle: "이용약관에 동의해주세요",
                                                  pageContent: "서비스 이용을 위해서 약관 동의가 필요해요")
   
   // 전체동의
-  private lazy var agreeAllButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("전체동의", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendara-Medium",
-                                     size: 16)
-    button.backgroundColor = .g100
-    button.layer.cornerRadius = 6
-    button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -200, bottom: 0, right: 0)
-    button.addAction(UIAction { _ in
-      self.agreeAllButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var agreeAllButton = UIButton().then {
+   $0.setTitle("전체동의", for: .normal)
+   $0.setTitleColor(UIColor.white, for: .normal)
+   $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 16)
+   $0.backgroundColor = .g100
+   $0.layer.cornerRadius = 6
+   $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -200, bottom: 0, right: 0)
+  }
   
-  private lazy var agreeAllCheckButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.agreeAllButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var agreeAllCheckButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+  }
   
   // 개별동의 첫 번째
-  private lazy var agreeFirstCheckButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.serviceButtonTapped(button: button)
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var agreeFirstCheckButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+  }
   
-  private lazy var firstServiceButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("[필수] 서비스 이용약관 동의", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendara-Medium",
-                                     size: 14)
-    button.addAction(UIAction { _ in
-      self.serviceButtonTapped(button: self.agreeFirstCheckButton)
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var firstServiceButton = UIButton().then {
+    $0.setTitle("[필수] 서비스 이용약관 동의", for: .normal)
+    $0.setTitleColor(UIColor.white, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 14)
+  }
   
-  private lazy var goToFirstServicePageButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "RightArrow"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.moveToPage(button: self.goToFirstServicePageButton)},
-                     for: .touchUpInside)
-    return button
-  }()
+  private lazy var goToFirstServicePageButton = UIButton().then {
+    $0.setImage(UIImage(named: "RightArrow"), for: .normal)
+  }
   
   // 개별동의 두 번째
-  private lazy var agreeSecondCheckButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.serviceButtonTapped(button: button)
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var agreeSecondCheckButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+  }
   
-  private lazy var secondServiceButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("[필수] 개인정보 수집 및 이용 동의", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendara-Medium",
-                                     size: 14)
-    button.addAction(UIAction { _ in
-      self.serviceButtonTapped(button: self.agreeSecondCheckButton)
-    }, for: .touchUpInside)
-    return button
-  }()
+  private lazy var secondServiceButton = UIButton().then {
+    $0.setTitle("[필수] 개인정보 수집 및 이용 동의", for: .normal)
+    $0.setTitleColor(UIColor.white, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 14)
+  }
   
-  private lazy var goToSecondServicePageButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "RightArrow"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.moveToPage(button: self.goToSecondServicePageButton)},
-                     for: .touchUpInside)
-    return button
-  }()
+  private lazy var goToSecondServicePageButton = UIButton().then {
+    $0.setImage(UIImage(named: "RightArrow"), for: .normal)
+  }
   
   private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
   
@@ -114,10 +72,13 @@ final class AgreementViewController: NaviHelper {
     
     view.backgroundColor = .black
     
-    navigationItemSetting()
+    navigationSetting()
     
     setupLayout()
     makeUI()
+    
+    setupBindings()
+    setupActions()
   }
   
   // MARK: - setupLayout
@@ -197,58 +158,87 @@ final class AgreementViewController: NaviHelper {
   }
   
   // MARK: - navigation
-  override func navigationItemSetting() {
-    super.navigationItemSetting()
-    
-    navigationItem.rightBarButtonItems = .none
+  func navigationSetting() {
     settingNavigationTitle(title: "회원가입")
+    leftButtonSetting()
   }
   
   override func leftButtonTapped(_ sender: UIBarButtonItem) {
     dismiss(animated: true)
   }
   
+  private func setupBindings() {
+    viewModel.agreeAllCheckButtonState
+      .subscribe(onNext: { [weak self] isSelected in
+        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
+        self?.agreeAllCheckButton.setImage(image, for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.agreeFirstCheckButtonState
+      .subscribe(onNext: { [weak self] isSelected in
+        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
+        self?.agreeFirstCheckButton.setImage(image, for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.agreeSecondCheckButtonState
+      .subscribe(onNext: { [weak self] isSelected in
+        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
+        self?.agreeSecondCheckButton.setImage(image, for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.checkStatus
+      .subscribe(onNext: { [weak self] status in
+        let image = UIImage(named: status ? "ButtonChecked" : "ButtonEmpty")
+        self?.agreeAllCheckButton.setImage(image, for: .normal)
+        self?.nextButton.unableButton(!status)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.checkStatus
+             .bind(to: nextButton.rx.isEnabled)
+             .disposed(by: viewModel.disposeBag)
+  }
+  
+  private func setupActions() {
+    agreeAllCheckButton.rx.tap
+      .bind { [weak self] in
+        self?.viewModel.toggleAllAgreement()
+      }
+      .disposed(by: viewModel.disposeBag)
+    
+    agreeFirstCheckButton.rx.tap
+      .bind { [weak self] in
+        self?.viewModel.toggleAgreement(for: self!.viewModel.agreeFirstCheckButtonState)
+      }
+      .disposed(by: viewModel.disposeBag)
+    
+    agreeSecondCheckButton.rx.tap
+      .bind { [weak self] in
+        self?.viewModel.toggleAgreement(for: self!.viewModel.agreeSecondCheckButtonState)
+      }
+      .disposed(by: viewModel.disposeBag)
+    
+    goToFirstServicePageButton.rx.tap
+      .bind { [weak self] in
+        self?.moveToPage(button: self!.goToFirstServicePageButton)
+      }
+      .disposed(by: viewModel.disposeBag)
+    
+    goToSecondServicePageButton.rx.tap
+      .bind { [weak self] in
+        self?.moveToPage(button: self!.goToSecondServicePageButton)
+      }.disposed(by: viewModel.disposeBag)
+  }
+  
   func moveToPage(button: UIButton) {
-    let check = button == goToFirstServicePageButton ? viewModel.serviceURL : viewModel.personalURL
-    let url = NSURL(string: check.rawValue)
-    
-    let urlView: SFSafariViewController = SFSafariViewController(url: url as! URL)
-    self.present(urlView, animated: true)
-  }
-  
-  // MARK: - 전체동의 버튼
-  func agreeAllButtonTapped(){
-    let check = agreeAllCheckButton.isSelected ? "ButtonEmpty" : "ButtonChecked"
-    [
-      agreeAllCheckButton,
-      agreeFirstCheckButton,
-      agreeSecondCheckButton
-    ].forEach {
-      $0.setImage(UIImage(named: check), for: .normal)
-    }
-    
-    let nextButtonColor = agreeAllCheckButton.isSelected
-    nextButton.unableButton(nextButtonColor)
-    
-    agreeAllCheckButton.isSelected.toggle()
-    checkStatus.toggle()
-  }
-  
-  // MARK: - 버튼 별 터치
-  func serviceButtonTapped(button: UIButton) {
-    let check = button.isSelected ? "ButtonEmpty" : "ButtonChecked"
-    button.setImage(UIImage(named: check), for: .normal)
-    button.isSelected.toggle()
-    
-    checkStatus = agreeFirstCheckButton.isSelected && agreeSecondCheckButton.isSelected
-    let allCheckImage = checkStatus ? "ButtonChecked" : "ButtonEmpty"
-    agreeAllCheckButton.setImage(UIImage(named: allCheckImage), for: .normal)
-    
-    if checkStatus {
-      nextButton.unableButton(false)
-      agreeAllCheckButton.isSelected.toggle()
-    } else {
-      nextButton.unableButton(true)
+    let url = button == goToFirstServicePageButton ? viewModel.serviceURL : viewModel.personalURL
+
+    if let url = URL(string: url) {
+      let urlView = SFSafariViewController(url: url)
+      present(urlView, animated: true)
     }
   }
 }
@@ -256,9 +246,7 @@ final class AgreementViewController: NaviHelper {
 extension AgreementViewController: StudyHubButtonProtocol{
   // MARK: - 다음버튼, 밑에꺼 하나만 눌러도 넘어감 - 고치자
   func buttonTapped() {
-    if checkStatus {
-      let signUpVC = SignUpViewController()
-      navigationController?.pushViewController(signUpVC, animated: true)
-    }
+    let signUpVC = CheckEmailViewController()
+    self.navigationController?.pushViewController(signUpVC, animated: true)
   }
 }

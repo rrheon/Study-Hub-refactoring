@@ -6,8 +6,8 @@ import Then
 struct SetAuthTextFieldValue {
   var labelTitle: String
   var textFieldPlaceholder: String
-  var alertLabelTitle: String
-  var type: String
+  var alertLabelTitle: String?
+  var type: Bool
 }
 
 final class AuthTextField: UIView {
@@ -85,9 +85,9 @@ final class AuthTextField: UIView {
     }
   }
   
-  func checkTextField(context: String?, type: String, typing: Bool, chageColor: UIColor){
+  func checkTextField(context: String?, type: Bool, typing: Bool, chageColor: UIColor){
     if let context = context, !context.isEmpty {
-      let checkValid = type == "email" ? isValidEmail(context) : isVaildPassword(password: context)
+       let checkValid = type ? isValidEmail(context) : isVaildPassword(password: context)
       
       underlineView.backgroundColor = checkValid ? .g100 : chageColor
       alertLabel.isHidden = typing ? true : checkValid
@@ -95,11 +95,14 @@ final class AuthTextField: UIView {
   }
   
   @objc private func textFieldDidChange() {
-    checkTextField(context: textField.text, type: setValues.type, typing: true, chageColor: .g60)
+    checkTextField(context: textField.text, type: setValues.type,
+                   typing: true, chageColor: .g60)
   }
   
   @objc private func textFieldEnd() {
-    checkTextField(context: textField.text, type: setValues.type, typing: false, chageColor: .r50)
+    let color = setValues.labelTitle == "인증코드" ? UIColor.g100 : .r50
+    checkTextField(context: textField.text, type: setValues.type,
+                   typing: false, chageColor: color)
   }
   
   func isValidEmail(_ email: String) -> Bool {
