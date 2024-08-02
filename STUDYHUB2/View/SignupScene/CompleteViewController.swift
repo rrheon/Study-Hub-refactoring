@@ -6,23 +6,13 @@ import SnapKit
 final class CompleteViewController: UIViewController {
   
   // MARK: - 화면구성
-  private lazy var mainImageView: UIImageView = UIImageView(image: UIImage(named: "SingupCompleteImage"))
+  private lazy var mainImageView: UIImageView = UIImageView(
+    image: UIImage(named: "SingupCompleteImage"))
 
-  private lazy var underMainImageView: UIImageView = UIImageView(image: UIImage(named: "UnderSingupCompleteImage"))
+  private lazy var underMainImageView: UIImageView = UIImageView(
+    image: UIImage(named: "UnderSingupCompleteImage"))
   
-  private lazy var startButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setTitle("시작하기", for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.backgroundColor = .o50
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    button.layer.cornerRadius = 10
-    button.addAction(UIAction { _ in
-      self.startButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
-  
+  private lazy var startButton = StudyHubButton(title: "시작하기", actionDelegate: self)
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -75,5 +65,11 @@ final class CompleteViewController: UIViewController {
     navigationController.modalPresentationStyle = .fullScreen
     
     present(navigationController, animated: true, completion: nil)
+  }
+}
+
+extension CompleteViewController: StudyHubButtonProtocol {
+  func buttonTapped() {
+    startButtonTapped()
   }
 }

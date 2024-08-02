@@ -10,6 +10,7 @@ import SafariServices
 
 import SnapKit
 import RxSwift
+import RxCocoa
 import Then
 
 final class AgreementViewController: CommonNavi {
@@ -22,12 +23,12 @@ final class AgreementViewController: CommonNavi {
   
   // 전체동의
   private lazy var agreeAllButton = UIButton().then {
-   $0.setTitle("전체동의", for: .normal)
-   $0.setTitleColor(UIColor.white, for: .normal)
-   $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 16)
-   $0.backgroundColor = .g100
-   $0.layer.cornerRadius = 6
-   $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -200, bottom: 0, right: 0)
+    $0.setTitle("전체동의", for: .normal)
+    $0.setTitleColor(UIColor.white, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 16)
+    $0.backgroundColor = .g100
+    $0.layer.cornerRadius = 6
+    $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -200, bottom: 0, right: 0)
   }
   
   private lazy var agreeAllCheckButton = UIButton().then {
@@ -198,8 +199,8 @@ final class AgreementViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     viewModel.checkStatus
-             .bind(to: nextButton.rx.isEnabled)
-             .disposed(by: viewModel.disposeBag)
+      .bind(to: nextButton.rx.isEnabled)
+      .disposed(by: viewModel.disposeBag)
   }
   
   private func setupActions() {
@@ -235,7 +236,7 @@ final class AgreementViewController: CommonNavi {
   
   func moveToPage(button: UIButton) {
     let url = button == goToFirstServicePageButton ? viewModel.serviceURL : viewModel.personalURL
-
+    
     if let url = URL(string: url) {
       let urlView = SFSafariViewController(url: url)
       present(urlView, animated: true)

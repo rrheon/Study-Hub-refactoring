@@ -165,20 +165,26 @@ final class LoginViewController: UIViewController {
 
 extension LoginViewController: StudyHubButtonProtocol {
   func buttonTapped() {
-    guard let email = emailTextField.getTextFieldValue() ,!email.isEmpty,
-          let password = passwordTextField.getTextFieldValue(), !password.isEmpty else {
-      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false, alertCheck: true)
-      return
-    }
+//    guard let email = emailTextField.getTextFieldValue() ,!email.isEmpty,
+//          let password = passwordTextField.getTextFieldValue(), !password.isEmpty else {
+//      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false, alertCheck: true)
+//      return
+//    }
+//    
+//    emailTextField.alertLabelSetting(hidden: true)
+//    passwordTextField.alertLabelSetting(hidden: true)
+//    
+//    loginViewModel.login(email: email, password: password) { [weak self] result in
+//      DispatchQueue.main.async {
+//        self?.handleLoginResult(result)
+//      }
+//    }
+    let password =  passwordTextField.getTextFieldValue()
+      let signupDatas = SignupDats(password: password)
+      let nicknameVC = EnterNicknameViewController(signupDatas)
     
-    emailTextField.hideAlertLabel()
-    passwordTextField.hideAlertLabel()
+      navigationController?.pushViewController(nicknameVC, animated: true)
     
-    loginViewModel.login(email: email, password: password) { [weak self] result in
-      DispatchQueue.main.async {
-        self?.handleLoginResult(result)
-      }
-    }
   }
   
   private func handleLoginResult(_ success: Bool) {

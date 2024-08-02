@@ -8,6 +8,7 @@
 import Foundation
 
 import RxSwift
+
 class CommonViewModel {
   let disposeBag = DisposeBag()
 }

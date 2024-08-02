@@ -4,13 +4,13 @@ import SnapKit
 import Then
 
 struct SetAuthTextFieldValue {
-  var labelTitle: String
+  var labelTitle: String?
   var textFieldPlaceholder: String
   var alertLabelTitle: String?
   var type: Bool
 }
 
-final class AuthTextField: UIView {
+class AuthTextField: UIView {
   private var setValues: SetAuthTextFieldValue
 
   private lazy var label = UILabel().then{
@@ -19,7 +19,7 @@ final class AuthTextField: UIView {
     $0.font = UIFont(name: "Pretendard-Medium", size: 16)
   }
   
-  private let textField = UITextField().then {
+  lazy var textField = UITextField().then {
     $0.font = UIFont(name: "Pretendard-Medium", size: 14)
     $0.textColor = .white
     $0.backgroundColor = .black
@@ -87,19 +87,19 @@ final class AuthTextField: UIView {
   
   func checkTextField(context: String?, type: Bool, typing: Bool, chageColor: UIColor){
     if let context = context, !context.isEmpty {
-       let checkValid = type ? isValidEmail(context) : isVaildPassword(password: context)
+       let checkValid = type ? isValidEmail(context) : isValidPassword(password: context)
       
       underlineView.backgroundColor = checkValid ? .g100 : chageColor
       alertLabel.isHidden = typing ? true : checkValid
     }
   }
-  
-  @objc private func textFieldDidChange() {
+
+  @objc func textFieldDidChange() {
     checkTextField(context: textField.text, type: setValues.type,
                    typing: true, chageColor: .g60)
   }
   
-  @objc private func textFieldEnd() {
+  @objc func textFieldEnd() {
     let color = setValues.labelTitle == "인증코드" ? UIColor.g100 : .r50
     checkTextField(context: textField.text, type: setValues.type,
                    typing: false, chageColor: color)
@@ -110,7 +110,7 @@ final class AuthTextField: UIView {
       return NSPredicate(format:"SELF MATCHES %@", regex).evaluate(with: email)
   }
   
-  func isVaildPassword(password: String) -> Bool {
+  func isValidPassword(password: String) -> Bool {
     let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
   }
@@ -141,7 +141,14 @@ final class AuthTextField: UIView {
     alertLabel.isHidden = false
   }
   
-  func hideAlertLabel(){
-    alertLabel.isHidden = true
+  func alertLabelSetting(hidden: Bool,
+                         title: String = "",
+                         textColor: UIColor = .r50,
+                         underLineColor: UIColor = .r50){
+    alertLabel.isHidden = hidden
+    alertLabel.text = title
+    alertLabel.textColor = textColor
+    
+    underlineView.backgroundColor = underLineColor
   }
 }
