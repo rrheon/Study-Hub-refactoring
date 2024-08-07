@@ -65,7 +65,7 @@ final class AgreementViewController: CommonNavi {
     $0.setImage(UIImage(named: "RightArrow"), for: .normal)
   }
   
-  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
+  private lazy var nextButton = StudyHubButton(title: "다음")
   
   // MARK: - viewdidload
   override func viewDidLoad() {
@@ -149,7 +149,6 @@ final class AgreementViewController: CommonNavi {
       $0.centerY.equalTo(secondServiceButton)
     }
     
-    nextButton.unableButton(true)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -190,16 +189,12 @@ final class AgreementViewController: CommonNavi {
       })
       .disposed(by: viewModel.disposeBag)
     
-    viewModel.checkStatus
+    viewModel.nextButtonStatus
       .subscribe(onNext: { [weak self] status in
         let image = UIImage(named: status ? "ButtonChecked" : "ButtonEmpty")
         self?.agreeAllCheckButton.setImage(image, for: .normal)
-        self?.nextButton.unableButton(!status)
+        self?.nextButton.unableButton(status)
       })
-      .disposed(by: viewModel.disposeBag)
-    
-    viewModel.checkStatus
-      .bind(to: nextButton.rx.isEnabled)
       .disposed(by: viewModel.disposeBag)
   }
   
@@ -232,6 +227,13 @@ final class AgreementViewController: CommonNavi {
       .bind { [weak self] in
         self?.moveToPage(button: self!.goToSecondServicePageButton)
       }.disposed(by: viewModel.disposeBag)
+    
+    nextButton.rx.tap
+      .bind { [weak self] in
+        let signUpVC = CheckEmailViewController()
+        self?.navigationController?.pushViewController(signUpVC, animated: true)
+      }
+      .disposed(by: viewModel.disposeBag)
   }
   
   func moveToPage(button: UIButton) {
@@ -241,13 +243,5 @@ final class AgreementViewController: CommonNavi {
       let urlView = SFSafariViewController(url: url)
       present(urlView, animated: true)
     }
-  }
-}
-
-extension AgreementViewController: StudyHubButtonProtocol{
-  // MARK: - 다음버튼, 밑에꺼 하나만 눌러도 넘어감 - 고치자
-  func buttonTapped() {
-    let signUpVC = CheckEmailViewController()
-    self.navigationController?.pushViewController(signUpVC, animated: true)
   }
 }

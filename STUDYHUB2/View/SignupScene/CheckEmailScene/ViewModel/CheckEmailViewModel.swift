@@ -13,9 +13,14 @@ import RxRelay
 final class CheckEmailViewModel: CommonViewModel {
   let editUserManager = EditUserInfoManager.shared
   
-  let email = BehaviorRelay(value: "")
+  let email = PublishRelay<String>()
+  let code = PublishRelay<String>()
   let isEmailDuplication = PublishRelay<Bool>()
   let isValidCode = PublishRelay<String>()
+  
+  var nextButtonStatus: Observable<Bool> {
+    return Observable.combineLatest(email, code).map { !$0.isEmpty && !$1.isEmpty }
+  }
   
   var resend: Bool = false
 
@@ -38,6 +43,6 @@ final class CheckEmailViewModel: CommonViewModel {
   }
   
   func changeStatus(){
-    resend.toggle()
+    self.resend = true
   }
 }

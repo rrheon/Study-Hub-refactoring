@@ -16,7 +16,7 @@ class AgreementViewModel: CommonViewModel {
     self.loadURLs()
   }
   
-  var checkStatus: Observable<Bool> {
+  var nextButtonStatus: Observable<Bool> {
     return Observable.combineLatest(agreeFirstCheckButtonState,
                                     agreeSecondCheckButtonState).map { $0 && $1 }
   }

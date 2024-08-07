@@ -62,7 +62,6 @@
 		EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4412C5787EB00057475 /* EnterPasswordViewModel.swift */; };
 		EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */; };
 		EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */; };
-		EE27B44B2C59082C00057475 /* EnterNicknameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B44A2C59082C00057475 /* EnterNicknameTextField.swift */; };
 		EE27B44E2C5B70B700057475 /* EnterDepartmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
@@ -190,7 +189,6 @@
 		EE27B4412C5787EB00057475 /* EnterPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordViewModel.swift; sourceTree = "<group>"; };
 		EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordTextField.swift; sourceTree = "<group>"; };
 		EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameViewModel.swift; sourceTree = "<group>"; };
-		EE27B44A2C59082C00057475 /* EnterNicknameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameTextField.swift; sourceTree = "<group>"; };
 		EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterDepartmentViewModel.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
@@ -592,7 +590,6 @@
 				EED00B712C5342DD000D2E23 /* CommonNavi.swift */,
 				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
 				EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */,
-				EE27B44A2C59082C00057475 /* EnterNicknameTextField.swift */,
 				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
 				EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */,
 			);
@@ -1069,7 +1066,6 @@
 				EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
 				EE27B44E2C5B70B700057475 /* EnterDepartmentViewModel.swift in Sources */,
-				EE27B44B2C59082C00057475 /* EnterNicknameTextField.swift in Sources */,
 				EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */,
 				EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */,
 				F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */,

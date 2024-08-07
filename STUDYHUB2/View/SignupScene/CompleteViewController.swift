@@ -12,7 +12,7 @@ final class CompleteViewController: UIViewController {
   private lazy var underMainImageView: UIImageView = UIImageView(
     image: UIImage(named: "UnderSingupCompleteImage"))
   
-  private lazy var startButton = StudyHubButton(title: "시작하기", actionDelegate: self)
+  private lazy var startButton = StudyHubButton(title: "시작하기")
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -68,7 +68,7 @@ final class CompleteViewController: UIViewController {
   }
 }
 
-extension CompleteViewController: StudyHubButtonProtocol {
+extension CompleteViewController {
   func buttonTapped() {
     startButtonTapped()
   }

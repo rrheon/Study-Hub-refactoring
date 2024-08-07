@@ -9,7 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   let tokenManager = TokenManager.shared
-  let loginManager = LoginViewModel.shared
+  let loginManager = CommonNetworking.shared
   let infoManager = UserInfoManager.shared
   var window: UIWindow?
   

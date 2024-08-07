@@ -14,8 +14,7 @@ final class DepartmentViewController: CommonNavi {
   
   private lazy var textFieldValue = SetAuthTextFieldValue(
     labelTitle: "헉과",
-    textFieldPlaceholder: "학과를 입력해주세요",
-    type: false)
+    textFieldPlaceholder: "학과를 입력해주세요")
   
   private lazy var majorTextField = AuthTextField(setValue: textFieldValue)
   
@@ -27,15 +26,14 @@ final class DepartmentViewController: CommonNavi {
 
   private lazy var resultTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(CustomCell.self,
-                       forCellReuseIdentifier: CustomCell.cellId)
+    tableView.register(CustomCell.self, forCellReuseIdentifier: CustomCell.cellId)
     tableView.backgroundColor = .black
     tableView.separatorInset.left = 0
     tableView.layer.cornerRadius = 10
     return tableView
   }()
 
-  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
+  private lazy var nextButton = StudyHubButton(title: "다음")
   
   init(_ value: SignupDataProtocol) {
     self.viewModel = EnterDepartmentViewModel(value)
@@ -184,7 +182,7 @@ final class DepartmentViewController: CommonNavi {
 //  }
 }
 
-extension DepartmentViewController: StudyHubButtonProtocol {
+extension DepartmentViewController {
   func buttonTapped() {
     print("1")
   }

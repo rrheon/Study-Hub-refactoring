@@ -7,16 +7,9 @@
 
 import UIKit
 
-protocol StudyHubButtonProtocol: AnyObject {
-  func buttonTapped()
-}
-
 final class StudyHubButton: UIButton {
-  private weak var buttonActionDelegate: StudyHubButtonProtocol?
   
-  init(title: String, fontSize: CGFloat = 16,
-       radious: CGFloat = 6 , actionDelegate: StudyHubButtonProtocol) {
-    self.buttonActionDelegate = actionDelegate
+  init(title: String, fontSize: CGFloat = 16, radious: CGFloat = 6) {
     super.init(frame: .zero)
     setup(title: title, fontSize: fontSize, radious: radious)
   }
@@ -31,9 +24,6 @@ final class StudyHubButton: UIButton {
     self.backgroundColor = .o50
     self.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: fontSize)
     self.layer.cornerRadius = radious
-    self.addAction(UIAction { [weak self] _ in
-      self?.buttonActionDelegate?.buttonTapped()
-    }, for: .touchUpInside)
   }
   
   func unableButton(_ check: Bool){

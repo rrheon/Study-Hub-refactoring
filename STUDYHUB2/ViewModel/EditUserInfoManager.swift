@@ -20,7 +20,6 @@ final class EditUserInfoManager {
     let urlPath = "/users/duplication-nickname"
     let queryItems = [URLQueryItem(name: "nickname", value: nickName)]
 
-    // Networking 인스턴스를 사용하여 요청을 보냅니다.
     networkingManager.fetchData(type: "GET",
                                 apiVesrion: "v1",
                                 urlPath: urlPath,

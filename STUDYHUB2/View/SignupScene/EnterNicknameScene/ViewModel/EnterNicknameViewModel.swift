@@ -14,8 +14,8 @@ final class EnterNicknameViewModel: SignupViewModel {
   
   let edit = EditUserInfoManager.shared
   
-  let checkValidNickname = BehaviorRelay(value: false)
-  let checkDuplicationNickname = BehaviorRelay<String>(value: "")
+  let checkValidNickname = PublishRelay<Bool>()
+  let checkDuplicationNickname = PublishRelay<String>()
   
   let femaleButtonStatus = BehaviorRelay(value: false)
   let maleButtonStatus = BehaviorRelay(value: false)

@@ -3,9 +3,44 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+// 전처리
+#if DEBUG
+
+import SwiftUI
+@available(iOS 13.0, *)
+
+// UIViewControllerRepresentable을 채택
+struct ViewControllerRepresentable: UIViewControllerRepresentable {
+    // update
+    // _ uiViewController: UIViewController로 지정
+    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
+        
+    }
+    // makeui
+    func makeUIViewController(context: Context) -> UIViewController {
+    // Preview를 보고자 하는 Viewcontroller 이름
+    // e.g.)
+      var viewModel = SignupDats()
+
+      return EnterNicknameViewController(viewModel)
+    }
+}
+
+struct ViewController_Previews: PreviewProvider {
+    
+    @available(iOS 13.0, *)
+    static var previews: some View {
+        // UIViewControllerRepresentable에 지정된 이름.
+        ViewControllerRepresentable()
+
+// 테스트 해보고자 하는 기기
+            .previewDevice("iPhone 11")
+    }
+}
+#endif
 
 final class EnterNicknameViewController: CommonNavi {
-
+  
   let viewModel: EnterNicknameViewModel
   
   // MARK: - 화면구성
@@ -15,15 +50,13 @@ final class EnterNicknameViewController: CommonNavi {
   
   private lazy var textFieldValues = SetAuthTextFieldValue(labelTitle: "닉네임",
                                                            textFieldPlaceholder: "닉네임을 입력해주세요",
-                                                           alertLabelTitle: "",
-                                                           type: true)
+                                                           alertLabelTitle: "")
   
   private lazy var nicknameTextField = AuthTextField(setValue: textFieldValues)
   
   private lazy var checkDuplicationButton = StudyHubButton(title: "중복 확인",
                                                            fontSize: 14,
-                                                           radious: 4,
-                                                           actionDelegate: self)
+                                                           radious: 4)
   // 닉네임 세는 라벨
   private lazy var characterCountLabel = createLabel(
     title: "0/10",
@@ -37,13 +70,13 @@ final class EnterNicknameViewController: CommonNavi {
     textColor: .g50,
     fontType: "Pretendard-Medium",
     fontSize: 14)
-
+  
   private lazy var choiceFemaleButton = createGenderButton("여자")
   private lazy var choiceMaleButton = createGenderButton("남자")
   
   // 다음 버튼
-  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
- 
+  private lazy var nextButton = StudyHubButton(title: "다음")
+  
   init(_ values: SignupDataProtocol) {
     self.viewModel = EnterNicknameViewModel(values)
     super.init()
@@ -74,7 +107,7 @@ final class EnterNicknameViewController: CommonNavi {
     settingNavigationTitle(title: "회원가입")
     leftButtonSetting()
   }
-
+  
   // MARK: - setUpLayout
   func setUpLayout(){
     [
@@ -97,7 +130,7 @@ final class EnterNicknameViewController: CommonNavi {
       $0.top.equalToSuperview().offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
-  
+    
     nicknameTextField.snp.makeConstraints {
       $0.top.equalTo(mainTitleView.snp.bottom).offset(130)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -136,6 +169,7 @@ final class EnterNicknameViewController: CommonNavi {
       $0.height.equalTo(45)
     }
     
+    nextButton.unableButton(false)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-40)
       $0.height.equalTo(55)
@@ -156,22 +190,37 @@ final class EnterNicknameViewController: CommonNavi {
     return button
   }
   
+  func changeButtonUI(selet button: UIButton, deselect otherButton: UIButton){
+    genderButtonSetting(button: button,
+                        backgroundColor: .o60,
+                        titleColor: .o20,
+                        borderColor: .o50)
+    
+    genderButtonSetting(button: otherButton,
+                        backgroundColor: .g100,
+                        titleColor: .g60,
+                        borderColor: .g80)
+  }
+  
   func setupBindings(){
+    nicknameTextField.textField.rx.controlEvent([.editingDidBegin, .editingDidEnd])
+      .subscribe(onNext: { [weak self] in
+        guard let isTextFieldEditing = self?.nicknameTextField.textField.isEditing else { return }
+        let color: UIColor = isTextFieldEditing ? .g60 : .g100
+        self?.nicknameTextField.alertLabelSetting(
+          hidden: true,
+          title: "",
+          textColor: color,
+          underLineColor: color)
+        
+      })
+      .disposed(by: viewModel.disposeBag)
+    
     viewModel.femaleButtonStatus
       .subscribe { [weak self] in
         guard let self = self else { return }
         if $0 {
-          genderButtonSetting(button: choiceFemaleButton,
-                              backgroundColor: .o60,
-                              titleColor: .o20,
-                              borderColor: .o50)
-          
-          genderButtonSetting(button: choiceMaleButton,
-                              backgroundColor: .g100,
-                              titleColor: .g60,
-                              borderColor: .g80)
-          
-          nextbuttonUIChange()
+          changeButtonUI(selet: choiceFemaleButton, deselect: choiceMaleButton)
         }
       }.disposed(by: viewModel.disposeBag)
     
@@ -179,22 +228,11 @@ final class EnterNicknameViewController: CommonNavi {
       .subscribe { [weak self] in
         guard let self = self else { return }
         if $0 {
-          genderButtonSetting(button: choiceMaleButton,
-                              backgroundColor: .o60,
-                              titleColor: .o20,
-                              borderColor: .o50)
-          
-          genderButtonSetting(button: choiceFemaleButton,
-                              backgroundColor: .g100,
-                              titleColor: .g60,
-                              borderColor: .g80)
-         
-          nextbuttonUIChange()
+          changeButtonUI(selet: choiceMaleButton, deselect: choiceFemaleButton)
         }
       }.disposed(by: viewModel.disposeBag)
     
     viewModel.checkValidNickname
-      .filter { $0 }
       .subscribe(onNext: { [weak self] in
         if $0 {
           guard let nickname = self?.nicknameTextField.getTextFieldValue() else { return }
@@ -206,13 +244,15 @@ final class EnterNicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     viewModel.checkDuplicationNickname
-      .subscribe(onNext: { [weak self] in
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] in
         if $0 == "Error"{
           self?.characterCountLabel.isHidden = true
-          self?.nicknameTextField.alertLabelSetting(hidden: false,
-                                                   title: "사용 가능한 닉네임이에요",
-                                                   textColor: .g_10,
-                                                   underLineColor: .g_10)
+          self?.nicknameTextField.alertLabelSetting(
+            hidden: false,
+            title: "사용 가능한 닉네임이에요",
+            textColor: .g_10,
+            underLineColor: .g_10)
         } else {
           self?.failToCheckDuplicaiton(content: "이미 존재하는 닉네임이에요")
         }
@@ -220,7 +260,9 @@ final class EnterNicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     viewModel.isActivateNextButton
-      .bind(to: nextButton.rx.isEnabled)
+      .subscribe(onNext: {
+        self.nextButton.unableButton($0)
+      })
       .disposed(by: viewModel.disposeBag)
   }
   
@@ -243,6 +285,13 @@ final class EnterNicknameViewController: CommonNavi {
         self?.viewModel.checkValidNickname(nickname: nickname)
       }
       .disposed(by: viewModel.disposeBag)
+    
+    nextButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        let signupDatas = SignupDats(password: self?.nicknameTextField.getTextFieldValue())
+        self?.moveToOtherVC(vc: DepartmentViewController(signupDatas), naviCheck: true)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
 
   func genderButtonSetting(button: UIButton,
@@ -254,51 +303,8 @@ final class EnterNicknameViewController: CommonNavi {
       button.layer.borderColor = borderColor.cgColor
   }
   
-  // MARK: - 중복검사하는 기능
-//  @objc func completeButtonTapped() {
-//    guard let nickname = nicknameTextField.getTextFieldValue() else { return }
-//    
-//    checkValidandDuplication(nickname: nickname) { isValid in
-//      if isValid {
-//        DispatchQueue.main.async {
-//          
-//          self.characterCountLabel.isHidden = true
-//          
-//        
-//          self.nicknameTextField.alertLabelSetting(hidden: false,
-//                                              title: "사용 가능한 닉네임이에요",
-//                                              textColor: .g_10,
-//                                              underLineColor: .g_10)
-//        }
-//      }
-//    }
-//  }
-  
-  // MARK: - 닉네임 중복 확인
-//  func checkValidandDuplication(nickname: String,
-//                                completion: @escaping (Bool) -> Void) {
-//    let checkNickname = checkValidNickname(nickname: nickname)
-//    
-//    if checkNickname == true {
-//      viewModel.checkNicknameDuplication(nickName: nickname) { status in
-//        // badrequest == 중복 , error == 가능
-//        if status == "Error" {
-//       
-//          completion(true)
-//        } else {
-//          DispatchQueue.main.async {
-//            self.failToCheckDuplicaiton(content: "이미 존재하는 닉네임이에요")
-//          }
-//          completion(false)
-//        }
-//      }
-//    } else {
-//      self.failToCheckDuplicaiton(content: "이모티콘,특수문자,띄어쓰기는 사용할 수 없어요")
-//    }
-//    completion(false)
-//  }
-//  
   // MARK: - 중복 확인에 실패
+  
   func failToCheckDuplicaiton(content: String){
     self.characterCountLabel.isHidden = true
     
@@ -309,31 +315,6 @@ final class EnterNicknameViewController: CommonNavi {
 
     self.nextButton.backgroundColor = .o60
     self.nextButton.setTitleColor(.g90, for: .normal)
-  }
-  
-//  @objc func nicknameTextfieldDidchange(){
-//    guard let text = nicknameTextField.getTextFieldValue() else { return }
-//
-//    nextbuttonUIChange()
-//  }
-//  
-  func nextbuttonUIChange(){
-    nextButton.backgroundColor = .o50
-    nextButton.setTitleColor(.white, for: .normal)
-  }
-  
-  // MARK: - 다음 버튼
-  func nextButtonTapped(){
-    let signupDatas = SignupDats(password: nicknameTextField.getTextFieldValue())
-    let departmentVC = DepartmentViewController(signupDatas)
-    
-    navigationController?.pushViewController(departmentVC, animated: true)
-  }
-}
-
-extension EnterNicknameViewController: StudyHubButtonProtocol {
-  func buttonTapped() {
-    nextButtonTapped()
   }
 }
 

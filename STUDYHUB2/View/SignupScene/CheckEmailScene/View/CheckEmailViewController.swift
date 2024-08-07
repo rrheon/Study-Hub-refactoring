@@ -6,7 +6,6 @@ import RxSwift
 import RxCocoa
 
 final class CheckEmailViewController: CommonNavi {
-  
   let viewModel = CheckEmailViewModel()
   
   private lazy var mainTitleView = AuthTitleView(pageNumber: "2/5",
@@ -17,8 +16,7 @@ final class CheckEmailViewController: CommonNavi {
   private lazy var emailTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "이메일",
     textFieldPlaceholder: "@inu.ac.kr",
-    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요",
-    type: true)
+    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요")
   
   private lazy var emailTextField = AuthTextField(setValue: emailTextFieldValue)
   
@@ -35,12 +33,11 @@ final class CheckEmailViewController: CommonNavi {
   private lazy var codeTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "인증코드",
     textFieldPlaceholder: "인증코드를 입력해주세요",
-    alertLabelTitle: "",
-    type: false)
+    alertLabelTitle: "")
   
   private lazy var codeTextField = AuthTextField(setValue: codeTextFieldValue)
   
-  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
+  private lazy var nextButton = StudyHubButton(title: "다음")
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -90,7 +87,7 @@ final class CheckEmailViewController: CommonNavi {
       $0.height.equalTo(30)
     }
     
-    nextButton.unableButton(true)
+    nextButton.unableButton(false)
     nextButton.snp.makeConstraints {
       $0.centerX.equalTo(view)
       $0.bottom.equalToSuperview().offset(-50)
@@ -112,10 +109,41 @@ final class CheckEmailViewController: CommonNavi {
     leftButtonSetting()
   }
   
+  func handleTextFieldEvents(textField: AuthTextField) {
+    guard let text = textField.getTextFieldValue() else { return }
+    
+    let isValid = textField.isValidEmail(text)
+    let invalidMessage = "잘못된 주소예요. 다시 입력해주세요"
+    if isValid {
+      textField.alertLabelSetting(hidden: true, title: "", textColor: .g60, underLineColor: .g60)
+      unableValidButton(true)
+    }else {
+      textField.alertLabelSetting(hidden: false, title: invalidMessage)
+    }
+  }
+  
   private func setupBindings() {
-    emailTextField.textField.rx.text
-      .orEmpty
+    emailTextField.textField.rx.text.orEmpty
       .bind(to: viewModel.email)
+      .disposed(by: viewModel.disposeBag)
+    
+    codeTextField.textField.rx.text.orEmpty
+      .bind(to: viewModel.code)
+      .disposed(by: viewModel.disposeBag)
+    
+    emailTextField.textField.rx.controlEvent(.editingChanged)
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        handleTextFieldEvents(textField: emailTextField)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    codeTextField.textField.rx.controlEvent([.editingChanged, .editingDidEnd])
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        let color: UIColor = codeTextField.textField.isEditing ? .g60 : .g100
+          codeTextField.alertLabelSetting(hidden: true, title: "", textColor: color, underLineColor: color)
+      })
       .disposed(by: viewModel.disposeBag)
     
     viewModel.isEmailDuplication
@@ -139,6 +167,16 @@ final class CheckEmailViewController: CommonNavi {
                                                                    large: false)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.nextButtonStatus
+      .bind(to: nextButton.rx.isEnabled)
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.nextButtonStatus
+      .subscribe {
+        self.nextButton.unableButton($0)
+      }
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
@@ -146,6 +184,15 @@ final class CheckEmailViewController: CommonNavi {
       .asDriver()
       .drive(onNext: { [weak self] in
         self?.checkEmailDuplication()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    nextButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        guard let code = self?.codeTextField.getTextFieldValue(),
+              let email = self?.emailTextField.getTextFieldValue() else { return }
+        self?.viewModel.checkValidCode(code: code, email: email)
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -163,33 +210,32 @@ final class CheckEmailViewController: CommonNavi {
     guard let email = emailTextField.getTextFieldValue() else { return }
     viewModel.sendEmailCode(email) {
       self.settingUIAfterSendCode()
-
+      
       if self.viewModel.resend {
         self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
       }
+      
+      self.viewModel.changeStatus()
     }
   }
   
   // MARK: - 인증코드 전송 후 UI설정
   func settingUIAfterSendCode(){
-    guard let email = emailTextField.getTextFieldValue() else { return }
-    if emailTextField.isValidEmail(email) {
-      self.emailTextField.alertLabelSetting(hidden: false,
-                                            title: "이메일 코드를 메일로 보내드렸어요.",
-                                            textColor: .g80,
-                                            underLineColor: .g100)
-      
-      self.validButton.setTitle("재전송", for: .normal)
-      self.codeTextField.isHidden = false
-      self.viewModel.changeStatus()
-    }
+    self.emailTextField.alertLabelSetting(hidden: false,
+                                          title: "이메일 코드를 메일로 보내드렸어요.",
+                                          textColor: .g80,
+                                          underLineColor: .g100)
+    
+    self.validButton.setTitle("재전송", for: .normal)
+    self.codeTextField.isHidden = false
   }
   
-  // MARK: - 인증코드 검증
-  func nextButtonTapped(){
-    guard let code = codeTextField.getTextFieldValue(),
-          let email = emailTextField.getTextFieldValue() else { return }
-    viewModel.checkValidCode(code: code, email: email)
+  func unableValidButton(_ check: Bool){
+    validButton.isEnabled = check
+    validButton.backgroundColor = check ? .o50 : .o60
+    
+    let titleColor = check ? UIColor.white : UIColor.g70
+    validButton.setTitleColor(titleColor, for: .normal)
   }
   
   // MARK: - 비밀번호 설정화면으로 이동
@@ -197,11 +243,5 @@ final class CheckEmailViewController: CommonNavi {
     let signupDatas = SignupDats(email: email)
     let passwordVC = EnterPasswordViewController(signupDatas)
     navigationController?.pushViewController(passwordVC, animated: true)
-  }
-}
-
-extension CheckEmailViewController: StudyHubButtonProtocol {
-  func buttonTapped() {
-    nextButtonTapped()
   }
 }
