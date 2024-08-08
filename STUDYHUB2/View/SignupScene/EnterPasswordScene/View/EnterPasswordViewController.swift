@@ -114,8 +114,11 @@ final class EnterPasswordViewController: CommonNavi {
     nextButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        let signupDatas = SignupDats(password: passwordTextField.getTextFieldValue())
-        moveToOtherVC(vc: EnterNicknameViewController(signupDatas), naviCheck: true)
+        let signupDatas = SignupDats(email: viewModel.email,
+                                     password: passwordTextField.getTextFieldValue())
+        
+        let nicknameVC = EnterNicknameViewController(signupDatas)
+        navigationController?.pushViewController(nicknameVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -128,7 +131,8 @@ final class EnterPasswordViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
  
     viewModel.passwordsMatch
-      .subscribe(onNext: { [weak self] in
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
         self?.nextButton.unableButton($0)
         if self?.confirmPasswordTextField.getTextFieldValue() != "" {
           let color: UIColor = $0 ? .g_10 : .r50
@@ -138,8 +142,7 @@ final class EnterPasswordViewController: CommonNavi {
             title: text,
             textColor: color,
             underLineColor: color)
-        }
-      })
+        }})
       .disposed(by: viewModel.disposeBag)
   }
   

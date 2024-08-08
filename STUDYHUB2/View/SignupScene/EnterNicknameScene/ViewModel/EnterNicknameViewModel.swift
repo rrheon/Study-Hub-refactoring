@@ -20,6 +20,7 @@ final class EnterNicknameViewModel: SignupViewModel {
   let femaleButtonStatus = BehaviorRelay(value: false)
   let maleButtonStatus = BehaviorRelay(value: false)
 
+  var selectedGender = String()
   var isActivateNextButton: Observable<Bool> {
     return Observable.combineLatest(checkDuplicationNickname,
                                     femaleButtonStatus,
@@ -38,8 +39,10 @@ final class EnterNicknameViewModel: SignupViewModel {
     
     if button === femaleButtonStatus {
       maleButtonStatus.accept(!newState)
+      selectedGender = "FEMALE"
     } else if button === maleButtonStatus {
       femaleButtonStatus.accept(!newState)
+      selectedGender = "MALE"
     }
   }
   

@@ -170,29 +170,26 @@ final class AgreementViewController: CommonNavi {
   private func setupBindings() {
     viewModel.agreeAllCheckButtonState
       .subscribe(onNext: { [weak self] isSelected in
-        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
-        self?.agreeAllCheckButton.setImage(image, for: .normal)
+        self?.setButtonUI(self!.agreeAllCheckButton, status: isSelected)
       })
       .disposed(by: viewModel.disposeBag)
     
     viewModel.agreeFirstCheckButtonState
       .subscribe(onNext: { [weak self] isSelected in
-        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
-        self?.agreeFirstCheckButton.setImage(image, for: .normal)
+        self?.setButtonUI(self!.agreeFirstCheckButton, status: isSelected)
       })
       .disposed(by: viewModel.disposeBag)
     
     viewModel.agreeSecondCheckButtonState
       .subscribe(onNext: { [weak self] isSelected in
-        let image = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
-        self?.agreeSecondCheckButton.setImage(image, for: .normal)
+        self?.setButtonUI(self!.agreeSecondCheckButton, status: isSelected)
       })
       .disposed(by: viewModel.disposeBag)
     
     viewModel.nextButtonStatus
-      .subscribe(onNext: { [weak self] status in
-        let image = UIImage(named: status ? "ButtonChecked" : "ButtonEmpty")
-        self?.agreeAllCheckButton.setImage(image, for: .normal)
+      .asDriver(onErrorJustReturn: false)
+      .drive(onNext: { [weak self] status in
+        self?.setButtonUI(self!.agreeAllCheckButton, status: status)
         self?.nextButton.unableButton(status)
       })
       .disposed(by: viewModel.disposeBag)
@@ -234,6 +231,11 @@ final class AgreementViewController: CommonNavi {
         self?.navigationController?.pushViewController(signUpVC, animated: true)
       }
       .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setButtonUI(_ button: UIButton, status: Bool ){
+    let image = UIImage(named: status ? "ButtonChecked" : "ButtonEmpty")
+    button.setImage(image, for: .normal)
   }
   
   func moveToPage(button: UIButton) {

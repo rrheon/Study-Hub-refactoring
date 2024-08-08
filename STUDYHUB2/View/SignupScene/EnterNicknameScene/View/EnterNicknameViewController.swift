@@ -3,41 +3,6 @@ import UIKit
 
 import SnapKit
 import RxCocoa
-// 전처리
-#if DEBUG
-
-import SwiftUI
-@available(iOS 13.0, *)
-
-// UIViewControllerRepresentable을 채택
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    // update
-    // _ uiViewController: UIViewController로 지정
-    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
-        
-    }
-    // makeui
-    func makeUIViewController(context: Context) -> UIViewController {
-    // Preview를 보고자 하는 Viewcontroller 이름
-    // e.g.)
-      var viewModel = SignupDats()
-
-      return EnterNicknameViewController(viewModel)
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    
-    @available(iOS 13.0, *)
-    static var previews: some View {
-        // UIViewControllerRepresentable에 지정된 이름.
-        ViewControllerRepresentable()
-
-// 테스트 해보고자 하는 기기
-            .previewDevice("iPhone 11")
-    }
-}
-#endif
 
 final class EnterNicknameViewController: CommonNavi {
   
@@ -260,7 +225,8 @@ final class EnterNicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     viewModel.isActivateNextButton
-      .subscribe(onNext: {
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: {
         self.nextButton.unableButton($0)
       })
       .disposed(by: viewModel.disposeBag)
@@ -288,8 +254,13 @@ final class EnterNicknameViewController: CommonNavi {
     
     nextButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        let signupDatas = SignupDats(password: self?.nicknameTextField.getTextFieldValue())
-        self?.moveToOtherVC(vc: DepartmentViewController(signupDatas), naviCheck: true)
+        let signupDatas = SignupDats(
+          email: self?.viewModel.email,
+          password: self?.viewModel.password,
+          gender: self?.viewModel.selectedGender,
+          nickname: self?.nicknameTextField.getTextFieldValue())
+        let departmentVC = DepartmentViewController(signupDatas)
+        self?.navigationController?.pushViewController(departmentVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
   }

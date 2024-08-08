@@ -173,9 +173,10 @@ final class CheckEmailViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     viewModel.nextButtonStatus
-      .subscribe {
-        self.nextButton.unableButton($0)
-      }
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        self?.nextButton.unableButton($0)
+      })
       .disposed(by: viewModel.disposeBag)
   }
   
@@ -208,24 +209,24 @@ final class CheckEmailViewController: CommonNavi {
   // MARK: - 인증코드 전송
   func sendEmailCode(){
     guard let email = emailTextField.getTextFieldValue() else { return }
+    
+    self.emailTextField.alertLabelSetting(hidden: false,
+                                          title: "이메일 코드를 메일로 보내드렸어요.",
+                                          textColor: .g80,
+                                          underLineColor: .g100)
+    if self.viewModel.resend {
+      self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
+    }
+    
+    self.viewModel.changeStatus()
+    
     viewModel.sendEmailCode(email) {
       self.settingUIAfterSendCode()
-      
-      if self.viewModel.resend {
-        self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
-      }
-      
-      self.viewModel.changeStatus()
     }
   }
   
   // MARK: - 인증코드 전송 후 UI설정
   func settingUIAfterSendCode(){
-    self.emailTextField.alertLabelSetting(hidden: false,
-                                          title: "이메일 코드를 메일로 보내드렸어요.",
-                                          textColor: .g80,
-                                          underLineColor: .g100)
-    
     self.validButton.setTitle("재전송", for: .normal)
     self.codeTextField.isHidden = false
   }

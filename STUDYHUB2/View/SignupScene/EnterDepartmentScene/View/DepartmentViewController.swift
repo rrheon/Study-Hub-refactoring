@@ -2,7 +2,7 @@
 import UIKit
 
 import SnapKit
-import RxSwift
+import RxCocoa
 
 final class DepartmentViewController: CommonNavi {
   let viewModel: EnterDepartmentViewModel
@@ -138,6 +138,12 @@ final class DepartmentViewController: CommonNavi {
         self?.viewModel.searchMajorFromPlist(text)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isSuccessCreateAccount
+      .subscribe(onNext: { [weak self] _ in
+        self?.moveToOtherVC(vc: CompleteViewController(), naviCheck: false)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
@@ -150,41 +156,26 @@ final class DepartmentViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     searchButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        guard let test = self?.majorTextField.getTextFieldValue()?.isEmpty else { return }
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        guard let _ = self?.majorTextField.getTextFieldValue()?.isEmpty else { return }
         self?.majorTextField.textField.text = ""
         self?.viewModel.searchMajorFromPlist("")
         self?.nextButton.unableButton(false)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    nextButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let major = self?.majorTextField.getTextFieldValue() else { return }
+        self?.viewModel.createAccount(major)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
-  
-//  // MARK: - 다음버튼
-//  func nextButtonTapped(){
-//    guard let email = viewModel.email,
-//          let gender = gender,
-//          let nickname = nickname,
-//          let password = password,
-//          let originMajor = majorTextfield.text else { return }
-//    let major = convertMajor(originMajor, isEnglish: true)
-//
-//    let accountData = CreateAccount(email: email,
-//                                    gender: gender,
-//                                    major: major,
-//                                    nickname: nickname,
-//                                    password: password)
-//    
-//    createAccountManager.createNewAccount(accountData: accountData) {
-//      let completeVC = CompleteViewController()
-//      completeVC.modalPresentationStyle = .fullScreen
-//      self.present(completeVC, animated: true)
-//    }
-//  }
 }
 
-extension DepartmentViewController {
-  func buttonTapped() {
-    print("1")
+extension DepartmentViewController: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 48.0
   }
 }
-  
