@@ -21,26 +21,22 @@ final class UserInfoManager {
       completion(self.userData)
     }
   }
-
+  
   private func fetchUserInfo(completion: @escaping () -> Void){
-    networkingManager.fetchData(type: "GET",
-                                apiVesrion: "v1",
-                                urlPath: "/users",
-                                queryItems: nil,
-                                tokenNeed: true,
-                                createPostData: nil) { (result: Result<UserDetailData,
-                                                        NetworkError>) in
-      switch result {
-      case .success(let userData):
-        
-        self.userData = userData
-        
-        completion()
-        
-      case .failure(let error):
-        // 네트워크 오류 또는 데이터 파싱 오류를 처리합니다.
-        print("Error: \(error)")
+    networkingManager.fetchData(
+      type: "GET",
+      apiVesrion: "v1",
+      urlPath: "/users",
+      queryItems: nil,
+      tokenNeed: true,
+      createPostData: nil) { (result: Result<UserDetailData, NetworkError>) in
+        switch result {
+        case .success(let userData):
+          self.userData = userData
+          completion()
+        case .failure(let error):
+          print("Error: \(error)")
+        }
       }
-    }
   }
 }

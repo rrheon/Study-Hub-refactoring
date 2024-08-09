@@ -21,13 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       DispatchQueue.main.async {
         switch result {
         case true:
-          let tabBarController = TabBarController()
+          let tabBarController = TabBarController(true)
           self.window?.rootViewController = tabBarController
         case false:
           let loginViewController = LoginViewController()
           self.window?.rootViewController = loginViewController
         }
-        
         self.window?.makeKeyAndVisible()
       }
     }

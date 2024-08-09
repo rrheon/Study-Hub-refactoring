@@ -152,7 +152,7 @@ final class LoginViewController: UIViewController {
   func setupActions(){
     exploreButton.rx.tap
       .subscribe(onNext:  { [weak self] in
-        self?.moveToTabbar()
+        self?.moveToTabbar(false)
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -225,7 +225,7 @@ final class LoginViewController: UIViewController {
   }
   
   private func handleLoginResult(_ success: Bool) {
-    success ? moveToTabbar() : failToLogin()
+    success ? moveToTabbar(success) : failToLogin()
   }
   
   func failToLogin(){

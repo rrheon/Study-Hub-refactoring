@@ -11,36 +11,37 @@ class CommonNavi: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
-  // MARK: - navi 설정
-  func leftButtonSetting() {
-    let homeImg = UIImage(named: "LeftArrow")?.withRenderingMode(.alwaysOriginal)
-    let leftButton = UIBarButtonItem(image: homeImg,
-                                     style: .plain,
-                                     target: self,
-                                     action: #selector(leftButtonTapped(_:)))
-    
+  func leftButtonSetting(imgName: String = "LeftArrow", activate: Bool = true) {
+    let homeImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
+    let leftButton = UIBarButtonItem(
+      image: homeImg,
+      style: .plain,
+      target: self,
+      action: #selector(leftButtonTapped(_:)))
+    leftButton.isEnabled = activate
     self.navigationItem.leftBarButtonItem = leftButton
-  }
-  
-  func rightButtonSetting() {
-    let rightButtonImg = UIImage(named: "RightButtonImg")?.withRenderingMode(.alwaysOriginal)
-    let rightButton = UIBarButtonItem(image: rightButtonImg,
-                                      style: .plain,
-                                      target: self,
-                                      action: #selector(rightButtonTapped))
-  
-    self.navigationItem.rightBarButtonItem = rightButton
   }
   
   @objc func leftButtonTapped(_ sender: UIBarButtonItem) {
     self.navigationController?.popViewController(animated: true)
   }
   
-  @objc func rightButtonTapped() {
+  func rightButtonSetting(imgName: String){
+    let bookMarkImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
+    lazy var bookMark = UIBarButtonItem(
+      image: bookMarkImg,
+      style: .plain,
+      target: self,
+      action: #selector(rightButtonTapped(_:)))
+    bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
+    navigationItem.rightBarButtonItem = bookMark
   }
   
+  @objc func rightButtonTapped(_ sender: UIBarButtonItem) {}
+  
   // MARK: - 네비게이션 바 제목설정
+  
   func settingNavigationTitle(title: String,
                               font: String = "Pretendard-Bold",
                               size: CGFloat = 18){

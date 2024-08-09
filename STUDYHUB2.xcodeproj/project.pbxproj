@@ -101,6 +101,7 @@
 		EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */; };
 		EEDD81122B7DE3D70022302E /* MyReqeustCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */; };
 		EEDD81142B7DFCC30022302E /* MyRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD81132B7DFCC30022302E /* MyRequestManager.swift */; };
+		EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD042C64D41F00FA347D /* HomeViewModel.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
@@ -240,6 +241,7 @@
 		EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewController.swift; sourceTree = "<group>"; };
 		EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReqeustCell.swift; sourceTree = "<group>"; };
 		EEDD81132B7DFCC30022302E /* MyRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestManager.swift; sourceTree = "<group>"; };
+		EEDDDD042C64D41F00FA347D /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
@@ -336,15 +338,15 @@
 			path = SelectDepartment;
 			sourceTree = "<group>";
 		};
-		EE0A8B582AF93255001C3F41 /* HomeView */ = {
+		EE0A8B582AF93255001C3F41 /* MainScene */ = {
 			isa = PBXGroup;
 			children = (
-				F8085D402A815DCD0067D4DE /* HomeViewController.swift */,
+				EEDDDD012C64D2FC00FA347D /* HomeScene */,
 				F86E03202A8BFC8000164976 /* DetailsViewController.swift */,
 				EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */,
 				EE0A8B5B2AF9330F001C3F41 /* DeadLineCell.swift */,
 			);
-			path = HomeView;
+			path = MainScene;
 			sourceTree = "<group>";
 		};
 		EE0A8B612AFCB4DC001C3F41 /* BookMark */ = {
@@ -511,7 +513,7 @@
 				EEA53A3E2C5250F900C8FEFF /* CustomUI */,
 				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* SignupScene */,
-				EE0A8B582AF93255001C3F41 /* HomeView */,
+				EE0A8B582AF93255001C3F41 /* MainScene */,
 				F89A01652A87FAE000B4C10D /* StudyView */,
 				EE3AD8B72C467F01000A8CCA /* SearchView */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
@@ -711,6 +713,31 @@
 				EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */,
 			);
 			path = MyRequestList;
+			sourceTree = "<group>";
+		};
+		EEDDDD012C64D2FC00FA347D /* HomeScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDDD022C64D30A00FA347D /* View */,
+				EEDDDD032C64D31400FA347D /* ViewModel */,
+			);
+			path = HomeScene;
+			sourceTree = "<group>";
+		};
+		EEDDDD022C64D30A00FA347D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F8085D402A815DCD0067D4DE /* HomeViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEDDDD032C64D31400FA347D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDDD042C64D41F00FA347D /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EEFD5D222B5F67C300D1CE00 /* DTO */ = {
@@ -981,6 +1008,7 @@
 				EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */,
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
+				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */,
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,

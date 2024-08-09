@@ -155,7 +155,6 @@ final class RecruitPostCell: UICollectionViewCell {
     self.layer.borderWidth = 0.1
     self.layer.borderColor = UIColor.cellShadow.cgColor
     self.layer.cornerRadius = 10
-    
   }
   
   // MARK: - 셀 재사용 관련
@@ -166,7 +165,6 @@ final class RecruitPostCell: UICollectionViewCell {
     checkBookmarked = false
   }
 
-  
   private func bookmarkTapped(){
     self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
                                   userId: self.model?.userData.userID ?? 0)
@@ -204,7 +202,6 @@ final class RecruitPostCell: UICollectionViewCell {
                                color: .o50)
     
   }
-  
 }
 
 

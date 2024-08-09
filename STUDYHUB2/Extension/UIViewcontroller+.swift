@@ -267,8 +267,8 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     self.present(navigationVC, animated: true, completion: nil)
   }
   
-  func moveToTabbar() {
-    let tapbarcontroller = TabBarController()
+  func moveToTabbar(_ loginStatus: Bool) {
+    let tapbarcontroller = TabBarController(loginStatus)
     tapbarcontroller.modalPresentationStyle = .fullScreen
     
     self.present(tapbarcontroller, animated: true, completion: nil)

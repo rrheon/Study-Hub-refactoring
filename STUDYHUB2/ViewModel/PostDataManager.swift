@@ -81,7 +81,7 @@ final class PostDataManager {
   
   
   func getNewPostData(_ token: Bool ,
-                      completion: @escaping() -> Void){
+                      completion: @escaping(PostDataContent) -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "false"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "5"),
@@ -97,7 +97,7 @@ final class PostDataManager {
       switch result {
       case .success(let postData):
         self.newPostDatas = postData
-        completion()
+        completion(postData)
       case .failure(let error):
         print("에러:", error)
       }
@@ -116,7 +116,7 @@ final class PostDataManager {
   }
   
   func getDeadLinePostData(_ token: Bool,
-                           completion: @escaping() -> Void){
+                           completion: @escaping(PostDataContent) -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "true"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "4"),
@@ -131,7 +131,7 @@ final class PostDataManager {
       switch result {
       case .success(let postData):
         self.newPostDatas = postData
-        completion()
+        completion(postData)
       case .failure(let error):
         print("에러:", error)
       }

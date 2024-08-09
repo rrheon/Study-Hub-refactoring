@@ -1283,9 +1283,7 @@ extension PostedStudyViewController: PopupViewDelegate {
   func afterDeletePost(completion: @escaping () -> Void) {
     navigationController?.popViewController(animated: true)
     if (previousHomeVC != nil) {
-      previousHomeVC?.fetchData(loginStatus: true) {
-        print("삭제 후 리로드")
-      }
+//      previousHomeVC?.fetchData(loginStatus: true)
     }else {
       previousMyPostVC?.afterDeletePost {
         print("삭제 후 마이페이")
