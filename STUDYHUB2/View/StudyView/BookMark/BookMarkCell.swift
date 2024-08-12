@@ -8,8 +8,20 @@ import UIKit
 
 import SnapKit
 
-protocol BookMarkDelegate: AnyObject {
+protocol BookMarkDelegate: CommonProtocol {
   func bookmarkTapped(postId: Int, userId: Int)
+}
+
+extension BookMarkDelegate {
+  func bookmarkTapped(postId: Int, userId: Int){
+    commonNetworking.moyaNetworking(
+      networkingChoice: .changeBookMarkStatus(postId), needCheckToken: true
+    ) {
+      let statusCode = $0.map { $0.statusCode }
+      // 코드 받아서 예외처리
+      print(statusCode)
+    }
+  }
 }
 
 protocol ParticipatePostDelegate: AnyObject {
@@ -20,7 +32,7 @@ final class BookMarkCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  weak var delegate: BookMarkDelegate?
+  var delegate: BookMarkDelegate?
   weak var postDelegate: ParticipatePostDelegate?
   
   var model: BookmarkContent? { didSet { bind()} }

@@ -6,7 +6,7 @@ import SnapKit
 final class DeadLineCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  weak var delegate: BookMarkDelegate?
+  var delegate: BookMarkDelegate?
   
   var model: Content? { didSet { bind() } }
   var buttonAction: (() -> Void) = {}

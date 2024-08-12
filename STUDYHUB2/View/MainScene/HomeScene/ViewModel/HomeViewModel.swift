@@ -11,8 +11,6 @@ import RxRelay
 
 final class HomeViewModel: CommonViewModel {
   let postDataManager = PostDataManager.shared
-  let detailPostDataManager = PostDetailInfoManager.shared
-  let userInfoManager = UserInfoManager.shared
   
   var newPostDatas = PublishRelay<[Content]>()
   var deadlinePostDatas = PublishRelay<[Content]>()

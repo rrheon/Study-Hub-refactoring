@@ -8,11 +8,13 @@
 import Foundation
 
 // MARK: - 추천 검색어
+
 struct RecommendList: Codable {
   let recommendList: [String]
 }
 
 // MARK: - 포스트 전체조회
+
 struct PostDataContent: Codable {
   var postDataByInquiries: PostDataByInquiries
   let totalCount: Int
@@ -28,6 +30,7 @@ struct PostDataByInquiries: Codable {
 }
 
 // 포스트 전체조회 content
+
 struct Content: Codable {
   let postID: Int
   let major, title: String
@@ -49,8 +52,8 @@ struct Content: Codable {
   }
 }
 
-
 // MARK: - 게시글 단건조회
+
 struct PostDetailData: Codable {
   let postID: Int
   let title: String
@@ -79,6 +82,7 @@ struct PostDetailData: Codable {
 }
 
 // 단건조회 시 해당 포스트 유저에 대한 정보
+
 struct PostedUser: Codable {
   let userID: Int
   let major, nickname: String
@@ -92,6 +96,7 @@ struct PostedUser: Codable {
 }
 
 // 단건조회 시 해당 포스트와 유사한 게시글의 정보
+
 struct RelatedPost: Codable {
   let postID: Int
   let title, major: String
@@ -106,6 +111,7 @@ struct RelatedPost: Codable {
 
 
 // MARK: - 게시글 생성 시
+
 struct CreateStudyRequest: Codable {
   var chatUrl: String
   var close: Bool
@@ -118,6 +124,7 @@ struct CreateStudyRequest: Codable {
 }
 
 // MARK: - 게시글 수정 시
+
 struct UpdateStudyRequest: Codable {
   let chatUrl: String
   let close: Bool
@@ -132,12 +139,14 @@ struct UpdateStudyRequest: Codable {
 
 
 // MARK: - 내가 쓴 게시글
+
 struct MyPostData: Codable {
   let posts: Posts
   let totalCount: Int
 }
 
 // MARK: - Posts
+
 struct Posts: Codable {
   let myPostcontent: [MyPostcontent]
   let empty, first, last: Bool
@@ -153,6 +162,7 @@ struct Posts: Codable {
 }
 
 // MARK: - MyPostcontent
+
 struct MyPostcontent: Codable {
   let close: Bool
   let content, major: String
@@ -167,6 +177,7 @@ struct MyPostcontent: Codable {
 }
 
 // MARK: - Pageable
+
 struct Pageable: Codable {
   let sort: Sort
   let pageNumber, pageSize, offset: Int
@@ -174,6 +185,7 @@ struct Pageable: Codable {
 }
 
 // MARK: - Sort
+
 struct Sort: Codable {
   let empty, sorted, unsorted: Bool
 }

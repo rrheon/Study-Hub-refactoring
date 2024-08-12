@@ -23,7 +23,10 @@ final class HomeViewController: CommonNavi {
   // MARK: - 서치바
   private let searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
-  private lazy var newStudyLabel = createHomeLabel(title: "NEW! 모집 중인 스터디예요", changeLength: 4)
+  private lazy var newStudyLabel = createHomeLabel(
+    title: "NEW! 모집 중인 스터디예요",
+    changeLength: 4
+  )
 
   private lazy var allButton: UIButton = {
     let button = UIButton()
@@ -86,12 +89,15 @@ final class HomeViewController: CommonNavi {
   }()
   
   private lazy var deadLineStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var totalStackView = createStackView(axis: .vertical,spacing: 10)
+  private lazy var totalStackView = createStackView(axis: .vertical, spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
   
   init(_ loginStatus: Bool) {
     self.viewModel = HomeViewModel(loginStatus: loginStatus)
     super.init()
+    
+    viewModel.fetchNewPostDatas()
+    viewModel.fetchDeadLinePostDatas()
   }
   
   required init?(coder: NSCoder) {
@@ -104,9 +110,6 @@ final class HomeViewController: CommonNavi {
     
     view.backgroundColor = .black
     navigationController?.navigationBar.backgroundColor = .black
-    
-    let test = CommonNetworking.shared
-    test.delegate = self
     
     setupBindings()
     setupCollectionView()
@@ -127,7 +130,6 @@ final class HomeViewController: CommonNavi {
   func setUpLayout(){
     scrollView.addSubview(mainImageView)
     scrollView.addSubview(detailsButton)
-    detailsButton.addTarget(self, action: #selector(detailsButtonTapped), for: .touchUpInside)
 
     [
       newStudyLabel,
@@ -185,6 +187,7 @@ final class HomeViewController: CommonNavi {
     }
     
     searchBar.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    searchBar.delegate = self
     searchBar.snp.makeConstraints {
       $0.height.equalTo(50)
     }
@@ -222,9 +225,11 @@ final class HomeViewController: CommonNavi {
     newStudyLabel.textColor = .black
     
     let attributedText = NSMutableAttributedString(string: title)
-    attributedText.addAttribute(.foregroundColor,
-                                value: UIColor(hexCode: "FF5935"),
-                                range: NSRange(location: 0, length: changeLength))
+    attributedText.addAttribute(
+      .foregroundColor,
+      value: UIColor(hexCode: "FF5935"),
+      range: NSRange(location: 0, length: changeLength)
+    )
     newStudyLabel.attributedText = attributedText
     return newStudyLabel
   }
@@ -244,10 +249,15 @@ final class HomeViewController: CommonNavi {
     deadLineCollectionView.rx.setDelegate(self)
       .disposed(by: viewModel.disposeBag)
     
-    recrutingCollectionView.register(RecruitPostCell.self,
-                                     forCellWithReuseIdentifier: RecruitPostCell.id)
-    deadLineCollectionView.register(DeadLineCell.self,
-                                    forCellWithReuseIdentifier: DeadLineCell.id)
+    recrutingCollectionView.register(
+      RecruitPostCell.self,
+      forCellWithReuseIdentifier: RecruitPostCell.id
+    )
+    
+    deadLineCollectionView.register(
+      DeadLineCell.self,
+      forCellWithReuseIdentifier: DeadLineCell.id
+    )
   }
   
   func setupBindings(){
@@ -277,18 +287,31 @@ final class HomeViewController: CommonNavi {
   func setupActions(){
     recrutingCollectionView.rx.modelSelected(Content.self)
       .subscribe(onNext: { [weak self] item in
-        print("Selected item: \(item)")
+        let postID = item.postID
+        self?.moveToPostedStudyVC(postID: postID)
       })
       .disposed(by: viewModel.disposeBag)
     
+    deadLineCollectionView.rx.modelSelected(Content.self)
+      .subscribe(onNext: { [weak self] item in
+        let postID = item.postID
+        self?.moveToPostedStudyVC(postID: postID)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    detailsButton.rx.tap
+      .subscribe(onNext: {[weak self] in
+        let detailsViewController = DetailsViewController()
+        detailsViewController.hidesBottomBarWhenPushed = true
+        self?.navigationController?.pushViewController(detailsViewController, animated: true)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
-  // MARK: - 알아보기로 이동하는 함수
-  
-  @objc func detailsButtonTapped() {
-    let detailsViewController = DetailsViewController()
-    detailsViewController.hidesBottomBarWhenPushed = true
-    navigationController?.pushViewController(detailsViewController, animated: true)
+  func moveToPostedStudyVC(postID: Int){
+    let postedStudyVC = PostedStudyViewController(postID: postID)
+    postedStudyVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(postedStudyVC, animated: true)
   }
   
   // MARK: -  북마크 버튼 탭
@@ -338,56 +361,6 @@ extension HomeViewController: UISearchBarDelegate {
   }
 }
 
-// MARK: - collectionView
-//extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
-//  
-//  func collectionView(_ collectionView: UICollectionView,
-//                      didSelectItemAt indexPath: IndexPath) {
-//    var postID: Int? = nil
-//    var username: String? = nil
-//    
-//    if collectionView.tag == 1 {
-//      guard let newPostID = newPostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
-//      postID = newPostID
-//    } else {
-//      guard let deadLinePostID = deadlinePostDatas?.postDataByInquiries.content[indexPath.row].postID else { return }
-//      postID = deadLinePostID
-//    }
-//    
-//    let postedVC = PostedStudyViewController(postID: postID)
-// 
-//    postedVC.previousHomeVC = self
-//    postedVC.hidesBottomBarWhenPushed = true
-//    
-//    commonNetworking.refreshAccessToken { loginStatus in
-//      self.detailPostDataManager.searchSinglePostData(postId: postID ?? 0,
-//                                                 loginStatus: loginStatus) {
-//        let cellData = self.detailPostDataManager.getPostDetailData()
-//        username = cellData?.postedUser.nickname
-//      
-//        postedVC.postedData = cellData
-//     
-//        if username == nil {
-//          self.showToast(message: "해당 post에 접근할 수 없습니다",imageCheck: false)
-//          return
-//        }
-//        
-//        self.navigationController?.pushViewController(postedVC, animated: true)
-//      }
-//    }
-//  }
-//
-//
-//// 셀을 클릭 -> 북마크 저장 삭제 -> 북마크 여부 조회 -> 결과에 따라 변경
-//// 셀을 슬라이드하면 데이터가 리로드되서 북마크 터치한 결과가 반영이 안된다.
-//  func reloadHomeVCCells(){
-//    self.recrutingCollectionView.reloadData()
-//    self.deadLineCollectionView.reloadData()
-//  }
-//}
-//
-//// 셀의 각각의 크기
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
@@ -402,15 +375,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
-//// MARK: - 북마크 관련
-//extension HomeViewController: BookMarkDelegate {
-//  func bookmarkTapped(postId: Int, userId: Int) {
-//    bookmarkButtonTapped(postId, userId) {
-//      self.fetchData(loginStatus: true)
-//    }
-//  }
-//}
-
 extension HomeViewController: CheckLoginDelegate {
   func checkLoginPopup(checkUser: Bool) {
 //    checkLoginStatus(checkUser: checkUser)
@@ -418,7 +382,5 @@ extension HomeViewController: CheckLoginDelegate {
 }
 
 extension HomeViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int, userId: Int) {
-    
-  }
+ 
 }

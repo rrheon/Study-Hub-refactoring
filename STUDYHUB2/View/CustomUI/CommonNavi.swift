@@ -5,6 +5,10 @@ class CommonNavi: UIViewController {
   
   init() {
     super.init(nibName: nil, bundle: .none)
+    
+    self.navigationController?.navigationBar.barTintColor = .black
+    self.navigationController?.navigationBar.backgroundColor = .black
+    self.navigationController?.navigationBar.isTranslucent = false
   }
   
   required init?(coder: NSCoder) {
@@ -50,9 +54,5 @@ class CommonNavi: UIViewController {
       NSAttributedString.Key.foregroundColor: UIColor.white,
       NSAttributedString.Key.font: UIFont(name: font, size: size)!
     ]
-    
-    self.navigationController?.navigationBar.barTintColor =  .black
-    self.navigationController?.navigationBar.backgroundColor = .black
-    self.navigationController?.navigationBar.isTranslucent = false
   }
 }
