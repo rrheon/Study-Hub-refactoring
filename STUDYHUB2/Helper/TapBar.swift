@@ -8,12 +8,24 @@
 import UIKit
 
 class TabBarController: UITabBarController {
+  var checkLoginStatus: Bool
+  
+  init(_ loginStatus: Bool) {
+    checkLoginStatus = loginStatus
+    
+    super.init(nibName: nil, bundle: .none)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     self.delegate = self
      
-    let homeVC = addViewController(vc: HomeViewController())
+    let homeVC = addViewController(vc: HomeViewController(checkLoginStatus))
     let studyVC = addViewController(vc: StudyViewController())
     let mypageVC = addViewController(vc: MyPageViewController())
 

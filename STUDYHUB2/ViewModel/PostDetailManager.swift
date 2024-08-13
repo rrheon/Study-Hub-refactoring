@@ -35,14 +35,9 @@ final class PostDetailInfoManager {
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-        //        let res = String(data: response.data, encoding: .utf8) ?? "No data"
-        //        print(res)
-        //        print(response)
-        
         completion()
       case .failure(let response):
         print(response)
-        
       }
     }
   }

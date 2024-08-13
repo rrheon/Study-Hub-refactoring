@@ -15,13 +15,11 @@ final class BookmarkManager {
   // MARK: - 북마크 버튼 눌렀을 때
   func bookmarkTapped(_ postId: Int,
                       completion: @escaping () -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .changeBookMarkStatus(postId) ,
+    commonNetworking.moyaNetworking(networkingChoice: .changeBookMarkStatus(postId),
                                     needCheckToken: true) { result in
       switch result {
       case .success(let response):
           completion()
-        
-        
       case .failure(let response):
         print(response.response)
       }
@@ -37,8 +35,7 @@ final class BookmarkManager {
       switch result {
       case .success(let response):
         do {
-          let searchResult = try JSONDecoder().decode(BookmarkDatas.self,
-                                                      from: response.data)
+          let searchResult = try JSONDecoder().decode(BookmarkDatas.self, from: response.data)
           completion(searchResult)
         } catch {
           print("Failed to decode JSON: \(error)")
@@ -52,8 +49,8 @@ final class BookmarkManager {
   func searchSingleBookmark(postId: Int,
                             userId: Int,
                             completion: @escaping (CheckSingleBookmark) -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .searchSingleBookMark(postId,
-                                                                            userId)) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .searchSingleBookMark(postId, userId)) { result in
       switch result {
       case .success(let response):
         print(response.response)

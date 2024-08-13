@@ -8,7 +8,6 @@
 import Foundation
 
 import Moya
-import UIKit
 
 protocol CheckLoginDelegate: AnyObject {
   func checkLoginPopup(checkUser: Bool)
@@ -23,7 +22,7 @@ class CommonNetworking {
   func moyaNetworking(networkingChoice: networkingAPI,
                       needCheckToken: Bool = false,
                       completion: @escaping (Result<Response, MoyaError>) -> Void) {
-  
+    
     if needCheckToken {
       checkingAccessToken { checkingToken in
         print("토큰 체크:\(checkingToken)")
@@ -43,10 +42,10 @@ class CommonNetworking {
   
   func checkingAccessToken(presentVC: UIViewController? = nil,
                            completion: @escaping (Bool) -> Void){
-  
+    
     let checkLogin = tokenManager.loadAccessToken() == nil ? false : true
     if checkLogin {
-     refreshAccessToken { result in
+      refreshAccessToken { result in
         switch result {
         case true:
           completion(true)
@@ -70,12 +69,16 @@ class CommonNetworking {
       case .success(let response):
         do {
           if response.statusCode == 200 {
-            let refreshResult = try JSONDecoder().decode(AccessTokenResponse.self,
-                                                         from: response.data)
+            let refreshResult = try JSONDecoder().decode(
+              AccessTokenResponse.self,
+              from: response.data
+            )
             self.tokenManager.deleteTokens()
             
-            let saveResult = self.tokenManager.saveTokens(accessToken: refreshResult.accessToken,
-                                                          refreshToken: refreshResult.refreshToken)
+            let saveResult = self.tokenManager.saveTokens(
+              accessToken: refreshResult.accessToken,
+              refreshToken: refreshResult.refreshToken
+            )
             completion(true)
           }
         } catch {
