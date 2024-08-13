@@ -291,7 +291,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
   
     guard let postID = myPostDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
-    postedVC.previousMyPostVC = self
+//    postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
     
     var username: String? = nil
@@ -300,7 +300,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
       self.detailPostDataManager.searchSinglePostData(postId: postID,
                                                  loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
+//        postedVC.postedData = cellData
         
         
         username = cellData?.postedUser.nickname

@@ -521,7 +521,7 @@ final class MyPageViewController: NaviHelper {
   
   // MARK: - 이용방법 버튼 탭
   func howToUseButtonTapped(){
-    let howtouseVC = DetailsViewController()
+    let howtouseVC = HowToUseViewController(loginStatus)
     howtouseVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(howtouseVC, animated: true)
   }

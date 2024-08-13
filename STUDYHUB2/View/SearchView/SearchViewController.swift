@@ -513,7 +513,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = totalDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postID)
-    postedVC.previousSearchVC = self
+//    postedVC.previousSearchVC = self
     postedVC.hidesBottomBarWhenPushed = true
     
     var username: String? = nil
@@ -521,7 +521,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     commonNetworking.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
+//        postedVC.postedData = cellData
         username = cellData?.postedUser.nickname
         
         if username == nil {

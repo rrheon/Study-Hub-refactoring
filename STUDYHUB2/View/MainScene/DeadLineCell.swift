@@ -3,13 +3,10 @@ import UIKit
 
 import SnapKit
 
-final class DeadLineCell: UICollectionViewCell {
+final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-  var delegate: BookMarkDelegate?
-  
   var model: Content? { didSet { bind() } }
-  var buttonAction: (() -> Void) = {}
   
   var checkBookmarked: Bool?
   var loginStatus: Bool = false
@@ -18,7 +15,6 @@ final class DeadLineCell: UICollectionViewCell {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "ProfileAvatar_change")
     imageView.clipsToBounds = true
-    
     return imageView
   }()
   
@@ -33,8 +29,6 @@ final class DeadLineCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                    userId: self.model?.userData.userID ?? 0)
       self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
@@ -138,8 +132,8 @@ final class DeadLineCell: UICollectionViewCell {
   }
   
   private func bookmarkTapped(){
-    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                  userId: self.model?.userData.userID ?? 0)
+    guard let postID = self.model?.postID else { return }
+    bookmarkTapped(postId: postID)
     
     if loginStatus {
       checkBookmarked = !(checkBookmarked ?? false)
@@ -154,15 +148,17 @@ final class DeadLineCell: UICollectionViewCell {
     var studyPersonCount = data.studyPerson - data.remainingSeat
     checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-
+    
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     titleLabel.text = data.title
     
     countLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
-    countLabel.changeColor(label: countLabel,
-                           wantToChange: "\(studyPersonCount)",
-                           color: .o50)
+    countLabel.changeColor(
+      label: countLabel,
+      wantToChange: "\(studyPersonCount)",
+      color: .o50
+    )
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요!"
     

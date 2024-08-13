@@ -6,9 +6,7 @@ import SnapKit
 final class RecruitPostCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
-  
-  var delegate: BookMarkDelegate?
-  
+  weak var delegate: BookMarkDelegate?
   var model: Content? { didSet { bind() } }
   var checkBookmarked: Bool?
   var loginStatus: Bool? = false
@@ -77,7 +75,6 @@ final class RecruitPostCell: UICollectionViewCell {
     label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
   }()
-  
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -149,7 +146,6 @@ final class RecruitPostCell: UICollectionViewCell {
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
-    
     backgroundColor = .white
     
     self.layer.borderWidth = 0.1
@@ -166,8 +162,8 @@ final class RecruitPostCell: UICollectionViewCell {
   }
 
   private func bookmarkTapped(){
-    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                  userId: self.model?.userData.userID ?? 0)
+    guard let postID = self.model?.postID else { return }
+    delegate?.bookmarkTapped(postId: postID)
     
     if loginStatus ?? false {
       checkBookmarked = !(checkBookmarked ?? false)
@@ -192,15 +188,18 @@ final class RecruitPostCell: UICollectionViewCell {
     fineCountLabel.text = "\(fineText)"
     
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
-
     
-    countMemeberLabel.changeColor(label: countMemeberLabel,
-                                  wantToChange: "\(studyPersonCount)",
-                                  color: .o50)
-    fineCountLabel.changeColor(label: fineCountLabel,
-                               wantToChange: "\(data.penalty)",
-                               color: .o50)
+    countMemeberLabel.changeColor(
+      label: countMemeberLabel,
+      wantToChange: "\(studyPersonCount)",
+      color: .o50
+    )
     
+    fineCountLabel.changeColor(
+      label: fineCountLabel,
+      wantToChange: "\(data.penalty)",
+      color: .o50
+    )
   }
 }
 

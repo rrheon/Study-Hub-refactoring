@@ -426,14 +426,14 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
     guard let postId = totalDatas?[indexPath.row].postID else { return }
     let postedVC = PostedStudyViewController(postID: postId)
     postedVC.hidesBottomBarWhenPushed = true
-    postedVC.previousStudyVC = self
+//    postedVC.previousStudyVC = self
 
     var username: String? = nil
 
     commonNetworking.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) {
         let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
+//        postedVC.postedData = cellData
 
         username = cellData?.postedUser.nickname
 
@@ -480,7 +480,7 @@ extension StudyViewController: AfterCreatePost {
     let postedVC = PostedStudyViewController()
     detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {
       let postData = self.detailPostDataManager.getPostDetailData()
-      postedVC.postedData = postData
+//      postedVC.postedData = postData
     }
     navigationController?.pushViewController(postedVC, animated: false)
     

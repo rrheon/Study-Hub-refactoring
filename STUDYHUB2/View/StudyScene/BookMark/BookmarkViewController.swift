@@ -253,9 +253,9 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
       if postData?.close == true { return }
       var username: String? = nil
 
-      let postedVC = PostedStudyViewController(postID: postID)
-      postedVC.previousBookMarkVC = self
-      postedVC.postedData = postData
+      let postedVC = PostedStudyViewController(postID)
+//      postedVC.previousBookMarkVC = self
+//      postedVC.postedData = postData
       
       username = postData?.postedUser.nickname
       

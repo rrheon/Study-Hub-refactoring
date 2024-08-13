@@ -78,5 +78,4 @@ final class PopupViewController: UIViewController {
       make.edges.equalToSuperview()
     }
   }
-  
 }

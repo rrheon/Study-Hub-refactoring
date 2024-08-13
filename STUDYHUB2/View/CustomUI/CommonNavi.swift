@@ -6,9 +6,10 @@ class CommonNavi: UIViewController {
   init() {
     super.init(nibName: nil, bundle: .none)
     
-    self.navigationController?.navigationBar.barTintColor = .black
-    self.navigationController?.navigationBar.backgroundColor = .black
-    self.navigationController?.navigationBar.isTranslucent = false
+    let navigationBarAppearance = UINavigationBarAppearance()
+    navigationBarAppearance.configureWithTransparentBackground()
+    UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+    UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
   }
   
   required init?(coder: NSCoder) {

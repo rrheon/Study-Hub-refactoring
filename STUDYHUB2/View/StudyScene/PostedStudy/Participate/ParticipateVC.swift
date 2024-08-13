@@ -177,7 +177,7 @@ final class ParticipateVC: NaviHelper {
             DispatchQueue.main.async {
               self.navigationController?.popViewController(animated: true)
               self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
-              self.beforeVC?.participateCheck = true
+//              self.beforeVC?.participateCheck = true
               self.beforeVC?.redrawUI()
             }
           }

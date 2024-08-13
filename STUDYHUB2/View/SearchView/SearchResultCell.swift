@@ -29,8 +29,7 @@ final class SearchResultCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                    userId: self.model?.userData.userID ?? 0)
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
       self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
@@ -298,8 +297,7 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   private func bookmarkTapped(){
-    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0,
-                                  userId: self.model?.userData.userID ?? 0)
+    self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
     
     if loginStatus {
       checkBookmarked = !(checkBookmarked ?? false)

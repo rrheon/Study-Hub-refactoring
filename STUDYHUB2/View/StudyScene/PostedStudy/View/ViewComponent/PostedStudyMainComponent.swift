@@ -7,10 +7,12 @@
 
 import UIKit
 
-final class PostedStudyMainComponent: UIViewController {
-
+final class PostedStudyMainComponent: UIView,
+                                      CreateLabel, CreateStackView {
+  let postedValues: PostDetailData
+  
   private lazy var postedDateLabel = createLabel(
-    title: "2023-10-31",
+    title: "\(postedValues.createdDate[0]). \(postedValues.createdDate[1]). \(postedValues.createdDate[2])",
     textColor: .g70,
     fontType: "Pretendard-Medium",
     fontSize: 12
@@ -18,7 +20,7 @@ final class PostedStudyMainComponent: UIViewController {
   
   private lazy var postedMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
-    label.text = "세무회계학과"
+    label.text = postedValues.major
     label.textColor = .o30
     label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     label.backgroundColor = .o60
@@ -30,7 +32,7 @@ final class PostedStudyMainComponent: UIViewController {
   private lazy var postedMajorStackView = createStackView(axis: .horizontal, spacing: 10)
   
   private lazy var postedTitleLabel = createLabel(
-    title: "전산세무 같이 준비해요",
+    title: postedValues.title,
     textColor: .white,
     fontType: "Pretendard-Bold",
     fontSize: 20
@@ -52,7 +54,7 @@ final class PostedStudyMainComponent: UIViewController {
   }()
   
   private lazy var memeberNumberCountLabel = createLabel(
-    title: "1" + "/30명",
+    title: "\(postedValues.studyPerson - postedValues.remainingSeat)" + "/\(postedValues.studyPerson)",
     textColor: .white,
     fontType: "Pretendard-SemiBold",
     fontSize: 16
@@ -74,7 +76,7 @@ final class PostedStudyMainComponent: UIViewController {
   }()
   
   private lazy var fineCountLabel = createLabel(
-    title: "1000"+"원",
+    title: "\(postedValues.penalty)"+"원",
     textColor: .white,
     fontType: "Pretendard-SemiBold",
     fontSize: 16
@@ -95,10 +97,11 @@ final class PostedStudyMainComponent: UIViewController {
   }()
   
   private lazy var fixedGenderLabel = createLabel(
-    title: "여자",
+    title: "\(postedValues.filteredGender)",
     textColor: .white,
     fontType: "Pretendard-SemiBold",
-    fontSize: 16)
+    fontSize: 16
+  )
   
   private lazy var genderStackView = createStackView(axis: .vertical, spacing: 8)
   
@@ -109,4 +112,119 @@ final class PostedStudyMainComponent: UIViewController {
   private lazy var coreInfoStackView = createStackView(axis: .horizontal, spacing: 10)
   private lazy var topInfoStackView = createStackView(axis: .vertical, spacing: 12)
   private lazy var spaceView = UIView()
+  
+  init(_ postedValues: PostDetailData) {
+    self.postedValues = postedValues
+    
+    super.init()
+    
+    self.setupLayout()
+    self.makeUI()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  func setupLayout(){
+    let spaceView9 = UIView()
+    
+    [
+      postedMajorLabel,
+      spaceView9
+    ].forEach {
+      postedMajorStackView.addArrangedSubview($0)
+    }
+    
+    let spaceViewUnderTitle = UIView()
+    
+    [
+      postedDateLabel,
+      postedMajorStackView,
+      postedTitleLabel,
+      spaceViewUnderTitle
+    ].forEach {
+      postedInfoStackView.addArrangedSubview($0)
+    }
+    
+    memberNumberStackView.alignment = .center
+    
+    [
+      memeberNumberLabel,
+      memberImageView,
+      memeberNumberCountLabel
+    ].forEach {
+      memberNumberStackView.addArrangedSubview($0)
+    }
+    
+    fineStackView.alignment = .center
+    
+    [
+      fineLabel,
+      fineImageView,
+      fineCountLabel
+    ].forEach {
+      fineStackView.addArrangedSubview($0)
+    }
+    
+    genderStackView.alignment = .center
+    
+    [
+      genderLabel,
+      genderImageView,
+      fixedGenderLabel
+    ].forEach {
+      genderStackView.addArrangedSubview($0)
+    }
+    
+    let spaceView12 = UIView()
+    
+    [
+      memberNumberStackView,
+      fineStackView,
+      genderStackView,
+      spaceView12
+    ].forEach {
+      coreInfoStackView.addArrangedSubview($0)
+    }
+    
+    [
+      spaceView4,
+      coreInfoStackView,
+      spaceView5
+    ].forEach {
+      redesignCoreInfoStackView.addArrangedSubview($0)
+    }
+    
+    [
+      postedInfoStackView,
+      redesignCoreInfoStackView,
+      spaceView
+    ].forEach {
+      topInfoStackView.addArrangedSubview($0)
+    }
+  }
+  
+  func makeUI(){
+    coreInfoStackView.distribution = .fillProportionally
+    coreInfoStackView.backgroundColor = .deepGray
+    
+    topInfoStackView.backgroundColor = .black
+    
+    postedMajorLabel.backgroundColor = .postedMajorBackGorund
+    
+    postedInfoStackView.layoutMargins = UIEdgeInsets(top: 50, left: 10, bottom: 0, right: 0)
+    postedInfoStackView.isLayoutMarginsRelativeArrangement = true
+    
+    coreInfoStackView.spacing = 10
+    coreInfoStackView.layer.cornerRadius = 10
+    coreInfoStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10)
+    coreInfoStackView.isLayoutMarginsRelativeArrangement = true
+    
+    redesignCoreInfoStackView.distribution = .fillProportionally
+    
+    spaceView.snp.makeConstraints { make in
+      make.height.equalTo(20)
+    }
+  }
 }
