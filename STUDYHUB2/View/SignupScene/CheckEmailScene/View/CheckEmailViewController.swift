@@ -2,12 +2,12 @@
 import UIKit
 
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class CheckEmailViewController: CommonNavi {
+  let viewModel = CheckEmailViewModel()
   
-  let editUserManager = EditUserInfoManager.shared
-  
-  var resend: Bool = false
   private lazy var mainTitleView = AuthTitleView(pageNumber: "2/5",
                                                  pageTitle: "이메일을 입력해주세요",
                                                  pageContent: nil)
@@ -16,8 +16,7 @@ final class CheckEmailViewController: CommonNavi {
   private lazy var emailTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "이메일",
     textFieldPlaceholder: "@inu.ac.kr",
-    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요",
-    type: true)
+    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요")
   
   private lazy var emailTextField = AuthTextField(setValue: emailTextFieldValue)
   
@@ -28,21 +27,17 @@ final class CheckEmailViewController: CommonNavi {
     validBtn.backgroundColor = .o60
     validBtn.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
     validBtn.layer.cornerRadius = 5
-//    validBtn.addAction(UIAction { _ in
-//      self.checkEmailDuplication()
-//    }, for: .touchUpInside)
     return validBtn
   }()
   
   private lazy var codeTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "인증코드",
     textFieldPlaceholder: "인증코드를 입력해주세요",
-    alertLabelTitle: "",
-    type: false)
+    alertLabelTitle: "")
   
   private lazy var codeTextField = AuthTextField(setValue: codeTextFieldValue)
   
-  private lazy var nextButton = StudyHubButton(title: "다음", actionDelegate: self)
+  private lazy var nextButton = StudyHubButton(title: "다음")
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -53,6 +48,9 @@ final class CheckEmailViewController: CommonNavi {
     
     setUpLayout()
     makeUI()
+    
+    setupBindings()
+    setupActions()
   }
   
   // MARK: - setUpLayout
@@ -89,7 +87,7 @@ final class CheckEmailViewController: CommonNavi {
       $0.height.equalTo(30)
     }
     
-    nextButton.unableButton(true)
+    nextButton.unableButton(false)
     nextButton.snp.makeConstraints {
       $0.centerX.equalTo(view)
       $0.bottom.equalToSuperview().offset(-50)
@@ -97,7 +95,7 @@ final class CheckEmailViewController: CommonNavi {
       $0.leading.trailing.equalTo(mainTitleView)
     }
     
-//    codeTextField.isHidden = true
+    codeTextField.isHidden = true
     codeTextField.snp.makeConstraints {
       $0.top.equalTo(emailTextField.snp.bottom).offset(60)
       $0.leading.trailing.equalTo(emailTextField)
@@ -111,101 +109,140 @@ final class CheckEmailViewController: CommonNavi {
     leftButtonSetting()
   }
   
-  // MARK: - 코드를 입력할 때
-  @objc func codeTextFieldDidChange(){
+  func handleTextFieldEvents(textField: AuthTextField) {
+    guard let text = textField.getTextFieldValue() else { return }
     
-    guard let code = codeTextField.getTextFieldValue()?.isEmpty,
-          let email = emailTextField.getTextFieldValue()?.isEmpty else { return }
-
-    nextButton.unableButton(false)
+    let isValid = textField.isValidEmail(text)
+    let invalidMessage = "잘못된 주소예요. 다시 입력해주세요"
+    if isValid {
+      textField.alertLabelSetting(hidden: true, title: "", textColor: .g60, underLineColor: .g60)
+      unableValidButton(true)
+    }else {
+      textField.alertLabelSetting(hidden: false, title: invalidMessage)
+    }
   }
   
- // MARK: - 코드입력이 끝났을 때
-//  @objc func codeTextFieldDidend(){
-//    codeTextField.textFieldEnd(.g100)
-//  }
+  private func setupBindings() {
+    emailTextField.textField.rx.text.orEmpty
+      .bind(to: viewModel.email)
+      .disposed(by: viewModel.disposeBag)
+    
+    codeTextField.textField.rx.text.orEmpty
+      .bind(to: viewModel.code)
+      .disposed(by: viewModel.disposeBag)
+    
+    emailTextField.textField.rx.controlEvent(.editingChanged)
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        handleTextFieldEvents(textField: emailTextField)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    codeTextField.textField.rx.controlEvent([.editingChanged, .editingDidEnd])
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        let color: UIColor = codeTextField.textField.isEditing ? .g60 : .g100
+          codeTextField.alertLabelSetting(hidden: true, title: "", textColor: color, underLineColor: color)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isEmailDuplication
+      .subscribe(onNext: { [weak self] result in
+        guard let self = self else { return }
+        if result {
+          self.emailTextField.alertLabelSetting(hidden: false, title: "이미 가입된 이메일 주소예요")
+        } else {
+          self.emailTextField.alertLabelSetting(hidden: true, underLineColor: .g100)
+          self.sendEmailCode()
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isValidCode
+      .subscribe(onNext: { [weak self] result in
+        guard let self = self,
+              let email = emailTextField.getTextFieldValue() else { return }
+        result == "true" ? self.goToPasswordVC(email) : self.showToast(message: "인증코드가 일치하지 않아요.",
+                                                                   alertCheck: false,
+                                                                   large: false)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.nextButtonStatus
+      .bind(to: nextButton.rx.isEnabled)
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.nextButtonStatus
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        self?.nextButton.unableButton($0)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setupActions(){
+    validButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        self?.checkEmailDuplication()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    nextButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        guard let code = self?.codeTextField.getTextFieldValue(),
+              let email = self?.emailTextField.getTextFieldValue() else { return }
+        self?.viewModel.checkValidCode(code: code, email: email)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
   
   // MARK: - 이메일 중복 확인
-//  @objc func checkEmailDuplication(){
-//    guard let email = emailTextField.text else { return }
-//  
-//    if isValidEmail(email) {
-//      editUserManager.checkEmailDuplication(email: email) { result in
-//        if result {
-//          DispatchQueue.main.async {
-//            self.emailStatusLabel.isHidden = false
-//            self.emailStatusLabel.text = "이미 가입된 이메일 주소예요"
-//            self.emailTextFielddividerLine.backgroundColor = .r50
-//          }
-//        } else {
-//          DispatchQueue.main.async {
-//            self.emailStatusLabel.isHidden = true
-//            self.emailTextFielddividerLine.backgroundColor = .g100
-//            
-//            self.sendEmailCode()
-//          }
-//        }
-//      }
-//    }
-//  }
+  @objc func checkEmailDuplication(){
+    guard let email = emailTextField.getTextFieldValue() else { return }
+    if emailTextField.isValidEmail(email) {
+      viewModel.checkEmailDuplication(email)
+    }
+  }
   
   // MARK: - 인증코드 전송
-//  func sendEmailCode(){
-//    guard let email = emailTextField.text else { return }
-//    editUserManager.sendEmailCode(email: email) {
-//      self.settingUIAfterSendCode()
-//
-//      if self.resend {
-//        self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
-//      }
-//    }
-//  }
+  func sendEmailCode(){
+    guard let email = emailTextField.getTextFieldValue() else { return }
+    
+    self.emailTextField.alertLabelSetting(hidden: false,
+                                          title: "이메일 코드를 메일로 보내드렸어요.",
+                                          textColor: .g80,
+                                          underLineColor: .g100)
+    if self.viewModel.resend {
+      self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
+    }
+    
+    self.viewModel.changeStatus()
+    
+    viewModel.sendEmailCode(email) {
+      self.settingUIAfterSendCode()
+    }
+  }
   
   // MARK: - 인증코드 전송 후 UI설정
-//  func settingUIAfterSendCode(){
-//    DispatchQueue.main.async {
-//      self.emailStatusLabel.isHidden = false
-//      self.emailStatusLabel.text = "인증코드를 메일로 보내드렸어요"
-//      self.emailStatusLabel.textColor = .g80
-//      
-//      self.validButton.setTitle("재전송", for: .normal)
-//      
-//      self.verificationLabel.isHidden = false
-//      self.codeTextField.isHidden = false
-//      self.verificationCodedividerLine.isHidden = false
-//      
-//      self.resend = true
-//    }
-//  }
+  func settingUIAfterSendCode(){
+    self.validButton.setTitle("재전송", for: .normal)
+    self.codeTextField.isHidden = false
+  }
   
-//  // MARK: - 인증코드 검증
-//  func nextButtonTapped(){
-//    guard let code = codeTextField.text,
-//          let email = emailTextField.text else { return }
-//    editUserManager.checkValidCode(code: code,
-//                                   email: email) { result in
-//      
-//      if result == "true" {
-//        self.goToPasswordVC(email)
-//      } else {
-//        self.showToast(message: "인증코드가 일치하지 않아요.",
-//                       alertCheck: false,
-//                       large: false)
-//      }
-//    }
-//  }
-//  
+  func unableValidButton(_ check: Bool){
+    validButton.isEnabled = check
+    validButton.backgroundColor = check ? .o50 : .o60
+    
+    let titleColor = check ? UIColor.white : UIColor.g70
+    validButton.setTitleColor(titleColor, for: .normal)
+  }
+  
   // MARK: - 비밀번호 설정화면으로 이동
   func goToPasswordVC(_ email: String){
-    let passwordVC = PasswordViewController()
-    passwordVC.email = email
+    let signupDatas = SignupDats(email: email)
+    let passwordVC = EnterPasswordViewController(signupDatas)
     navigationController?.pushViewController(passwordVC, animated: true)
-//    moveToOtherVC(vc: PasswordViewController(), naviCheck: true)
-  }
-}
-
-extension CheckEmailViewController: StudyHubButtonProtocol {
-  func buttonTapped() {
-    
   }
 }

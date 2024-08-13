@@ -7,14 +7,14 @@
 
 import Foundation
 
-import Moya
+import RxRelay
 
-class LoginViewModel: CommonNetworking {
-  static let loginViewModel = LoginViewModel()
+class LoginViewModel: CommonViewModel {
+  let tokenManager = TokenManager.shared
   
-  func login(email: String,
-             password: String,
-             completion: @escaping (Bool) -> Void){
+  let isValidAccount = PublishRelay<Bool>()
+  
+  func login(email: String, password: String){
     guard let loginURL = URL(string: "https://study-hub.site:443/api/v1/users/login") else {
       return
     }
@@ -46,12 +46,12 @@ class LoginViewModel: CommonNetworking {
               accessToken: accessTokenResponse.accessToken,
               refreshToken: accessTokenResponse.refreshToken) else { return }
             
-            completion(loginResult)
+            self?.isValidAccount.accept(loginResult)
           } catch {
             print("JSON Decoding Error: \(error)")
           }
         } else {
-          completion(false)
+          self?.isValidAccount.accept(false)
         }
       }
       task.resume()

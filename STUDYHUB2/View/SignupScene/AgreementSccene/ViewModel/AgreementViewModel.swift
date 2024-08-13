@@ -16,7 +16,7 @@ class AgreementViewModel: CommonViewModel {
     self.loadURLs()
   }
   
-  var checkStatus: Observable<Bool> {
+  var nextButtonStatus: Observable<Bool> {
     return Observable.combineLatest(agreeFirstCheckButtonState,
                                     agreeSecondCheckButtonState).map { $0 && $1 }
   }
@@ -34,7 +34,7 @@ class AgreementViewModel: CommonViewModel {
   }
   
   private func loadURLs() {
-    let urlData = URLLoader()
+    let urlData = DataLoaderFromPlist()
     if let serviceURLString = urlData.loadURLs()?["service"],
        let personalURLString = urlData.loadURLs()?["personal"] {
       serviceURL = serviceURLString

@@ -4,29 +4,26 @@ import SnapKit
 import Then
 
 struct SetAuthTextFieldValue {
-  var labelTitle: String
+  var labelTitle: String?
   var textFieldPlaceholder: String
   var alertLabelTitle: String?
-  var type: Bool
 }
 
-final class AuthTextField: UIView {
+class AuthTextField: UIView {
   private var setValues: SetAuthTextFieldValue
-
+  
   private lazy var label = UILabel().then{
     $0.text = setValues.labelTitle
     $0.textColor = .g50
     $0.font = UIFont(name: "Pretendard-Medium", size: 16)
   }
   
-  private let textField = UITextField().then {
+  lazy var textField = UITextField().then {
     $0.font = UIFont(name: "Pretendard-Medium", size: 14)
     $0.textColor = .white
     $0.backgroundColor = .black
     $0.autocorrectionType = .no
     $0.autocapitalizationType = .none
-    $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-    $0.addTarget(self, action: #selector(textFieldEnd), for: .editingDidEnd)
   }
   
   private let underlineView = UIView().then {
@@ -51,7 +48,7 @@ final class AuthTextField: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   private func setupLayout(){
     [
       label,
@@ -85,32 +82,12 @@ final class AuthTextField: UIView {
     }
   }
   
-  func checkTextField(context: String?, type: Bool, typing: Bool, chageColor: UIColor){
-    if let context = context, !context.isEmpty {
-       let checkValid = type ? isValidEmail(context) : isVaildPassword(password: context)
-      
-      underlineView.backgroundColor = checkValid ? .g100 : chageColor
-      alertLabel.isHidden = typing ? true : checkValid
-    }
-  }
-  
-  @objc private func textFieldDidChange() {
-    checkTextField(context: textField.text, type: setValues.type,
-                   typing: true, chageColor: .g60)
-  }
-  
-  @objc private func textFieldEnd() {
-    let color = setValues.labelTitle == "인증코드" ? UIColor.g100 : .r50
-    checkTextField(context: textField.text, type: setValues.type,
-                   typing: false, chageColor: color)
-  }
-  
   func isValidEmail(_ email: String) -> Bool {
-      let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-      return NSPredicate(format:"SELF MATCHES %@", regex).evaluate(with: email)
+    let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    return NSPredicate(format:"SELF MATCHES %@", regex).evaluate(with: email)
   }
   
-  func isVaildPassword(password: String) -> Bool {
+  func isValidPassword(_ password: String) -> Bool {
     let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
   }
@@ -128,7 +105,7 @@ final class AuthTextField: UIView {
   func setPasswordSecure(){
     textField.isSecureTextEntry = true
     textField.textContentType = .oneTimeCode
-
+    
     if #available(iOS 15.0, *) {
       textField.setPasswordToggleVisibilityButton()
     } else {
@@ -136,12 +113,14 @@ final class AuthTextField: UIView {
     }
   }
   
-  func failToLogin(){
-    underlineView.backgroundColor = .r50
-    alertLabel.isHidden = false
-  }
-  
-  func hideAlertLabel(){
-    alertLabel.isHidden = true
+  func alertLabelSetting(hidden: Bool,
+                         title: String = "",
+                         textColor: UIColor = .r50,
+                         underLineColor: UIColor = .r50){
+    alertLabel.isHidden = hidden
+    alertLabel.text = title
+    alertLabel.textColor = textColor
+    
+    underlineView.backgroundColor = underLineColor
   }
 }

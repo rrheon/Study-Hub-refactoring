@@ -6,23 +6,13 @@ import SnapKit
 final class CompleteViewController: UIViewController {
   
   // MARK: - 화면구성
-  private lazy var mainImageView: UIImageView = UIImageView(image: UIImage(named: "SingupCompleteImage"))
+  private lazy var mainImageView: UIImageView = UIImageView(
+    image: UIImage(named: "SingupCompleteImage"))
 
-  private lazy var underMainImageView: UIImageView = UIImageView(image: UIImage(named: "UnderSingupCompleteImage"))
+  private lazy var underMainImageView: UIImageView = UIImageView(
+    image: UIImage(named: "UnderSingupCompleteImage"))
   
-  private lazy var startButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setTitle("시작하기", for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.backgroundColor = .o50
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    button.layer.cornerRadius = 10
-    button.addAction(UIAction { _ in
-      self.startButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
-  
+  private lazy var startButton = StudyHubButton(title: "시작하기")
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -59,6 +49,9 @@ final class CompleteViewController: UIViewController {
       $0.centerX.equalTo(mainImageView)
     }
     
+    startButton.addAction(UIAction { _ in
+      self.startButtonTapped()
+    }, for: .touchUpInside)
     startButton.snp.makeConstraints {
       $0.leading.equalToSuperview().offset(20)
       $0.trailing.equalToSuperview().offset(-20)
@@ -69,9 +62,9 @@ final class CompleteViewController: UIViewController {
   
   // MARK: - 함수
   @objc func startButtonTapped() {
-    let ViewController = LoginViewController()
+    let viewController = LoginViewController()
     
-    let navigationController = UINavigationController(rootViewController: ViewController)
+    let navigationController = UINavigationController(rootViewController: viewController)
     navigationController.modalPresentationStyle = .fullScreen
     
     present(navigationController, animated: true, completion: nil)

@@ -2,6 +2,15 @@
 import UIKit
 
 class CommonNavi: UIViewController {
+  
+  init() {
+    super.init(nibName: nil, bundle: .none)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - navi 설정
   func leftButtonSetting() {
     let homeImg = UIImage(named: "LeftArrow")?.withRenderingMode(.alwaysOriginal)

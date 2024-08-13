@@ -30,11 +30,11 @@ final class AuthTitleView: UIView {
   private lazy var underTitleLabel = UILabel().then {
     $0.text = pageContent
     $0.textColor = .g40
-    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
   }
   
-  init(pageNumber: String, pageTitle: String, pageContent: String?) {
-    self.pageNumber = pageNumber
+  init(pageNumber: String?, pageTitle: String, pageContent: String?) {
+    self.pageNumber = pageNumber ?? ""
     self.pageTitle = pageTitle
     self.pageContent = pageContent ?? ""
     
