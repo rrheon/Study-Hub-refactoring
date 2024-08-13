@@ -355,8 +355,4 @@ extension CommentViewController: BottomSheetDelegate {
   }
 }
 
-extension CommentViewController: CheckLoginDelegate {
-  func checkLoginPopup(checkUser: Bool) {
-    checkLoginStatus(checkUser: checkUser)
-  }
-}
+extension CommentViewController: CheckLoginDelegate { }

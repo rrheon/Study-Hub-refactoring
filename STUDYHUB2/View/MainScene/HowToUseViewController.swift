@@ -2,7 +2,7 @@ import UIKit
 
 import SnapKit
 
-final class DetailsViewController: NaviHelper {
+final class HowToUseViewController: NaviHelper {
 
   // MARK: - 화면구성
   private let headerContentStackView: UIStackView = {

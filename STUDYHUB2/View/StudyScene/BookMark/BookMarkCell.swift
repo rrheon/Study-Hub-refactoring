@@ -8,12 +8,12 @@ import UIKit
 
 import SnapKit
 
-protocol BookMarkDelegate: CommonProtocol {
-  func bookmarkTapped(postId: Int, userId: Int)
+protocol BookMarkDelegate: CommonNetworkingProtocol {
+  func bookmarkTapped(postId: Int)
 }
 
 extension BookMarkDelegate {
-  func bookmarkTapped(postId: Int, userId: Int){
+  func bookmarkTapped(postId: Int){
     commonNetworking.moyaNetworking(
       networkingChoice: .changeBookMarkStatus(postId), needCheckToken: true
     ) {
@@ -50,7 +50,7 @@ final class BookMarkCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0, userId: 0)
+      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
     }, for: .touchUpInside)
     return button
   }()
