@@ -62,10 +62,8 @@ final class CommentCell: UITableViewCell {
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
-    
     addSubviews()
     configure()
-    
   }
   
   required init?(coder: NSCoder) {

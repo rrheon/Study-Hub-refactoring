@@ -8,16 +8,13 @@
 import UIKit
 
 import SnapKit
-import Kingfisher
-import Moya
+import RxCocoa
 
-
-final class PostedStudyViewController: NaviHelper,
-                                       CreateDividerLine {
+final class PostedStudyViewController: NaviHelper, CreateDividerLine {
   
   let viewModel: PostedStudyViewModel
-  
-  private lazy var mainComponent = PostedStudyMainComponent(<#PostDetailData#>)
+
+  private var mainComponent: PostedStudyMainComponent
   
   private lazy var aboutStudyLabel = createLabel(
     title: "소개",
@@ -34,8 +31,14 @@ final class PostedStudyViewController: NaviHelper,
   )
   
   private lazy var aboutStudyStackView = createStackView(axis: .vertical, spacing: 10)
-  private lazy var detailInfoComponent = PostedStudyDetailInfoConponent()
-    
+  private var detailInfoComponent: PostedStudyDetailInfoConponent
+  
+  private lazy var divideLineTopWriterInfo = createDividerLine(height: 8.0)
+  private lazy var divideLineUnderWriterInfo = createDividerLine(height: 8.0)
+  private var writerComponent: PostedStudyWriterComponent
+  
+  private lazy var commentComponent = PostedStudyCommentComponent()
+  
   private lazy var similarPostLabel = createLabel(
     title: "이 글과 비슷한 스터디예요",
     textColor: .black,
@@ -72,9 +75,16 @@ final class PostedStudyViewController: NaviHelper,
   private lazy var pageStackView = createStackView(axis: .vertical, spacing: 10)
   
   private lazy var scrollView: UIScrollView = UIScrollView()
-  
-  init(_ postedID: Int) {
-    self.viewModel = PostedStudyViewModel(postedID: postedID)
+  private let activityIndicator = UIActivityIndicatorView(style: .large)
+
+  init(_ postDatas: PostDetailData) {
+    self.viewModel = PostedStudyViewModel(postDatas)
+    
+    self.mainComponent = PostedStudyMainComponent(postDatas)
+    self.detailInfoComponent = PostedStudyDetailInfoConponent(postDatas)
+    self.writerComponent = PostedStudyWriterComponent(postDatas)
+    
+    super.init()
   }
   
   required init?(coder: NSCoder) {
@@ -85,40 +95,36 @@ final class PostedStudyViewController: NaviHelper,
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItemSetting()
-//
-//    DispatchQueue.main.async {
-//      self.getMyPostID {
-//        self.navigationItemSetting()
-//      }
-//    }
-//    
+
     view.backgroundColor = .white
     
+    setupBindings()
+
     setUpLayout()
     makeUI()
-    
+        
     setupDelegate()
     registerCell()
   }
   
   // MARK: - setUpLayout
   func setUpLayout(){
-    let grayDividerLine1 = createDividerLine(height: 1.0)
+    let grayDividerLine = createDividerLine(height: 1.0)
     
     [
       aboutStudyLabel,
       aboutStudyDeatilLabel,
-      grayDividerLine1
+      grayDividerLine
     ].forEach {
       aboutStudyStackView.addArrangedSubview($0)
     }
   
-    let spaceView11 = UIView()
+    let spaceView = UIView()
     
     [
       similarPostLabel,
       similarCollectionView,
-      spaceView11
+      spaceView
     ].forEach {
       similarPostStackView.addArrangedSubview($0)
     }
@@ -134,8 +140,12 @@ final class PostedStudyViewController: NaviHelper,
       mainComponent,
       aboutStudyStackView,
       detailInfoComponent,
+      divideLineTopWriterInfo,
+      writerComponent,
+      divideLineUnderWriterInfo,
+      commentComponent,
       similarPostStackView,
-      bottomButtonStackView
+//      bottomButtonStackView
     ].forEach {
       pageStackView.addArrangedSubview($0)
     }
@@ -149,7 +159,6 @@ final class PostedStudyViewController: NaviHelper,
   func makeUI(){
     mainComponent.snp.makeConstraints {
       $0.top.leading.trailing.equalToSuperview()
-      $0.height.equalTo(200)
     }
     
     aboutStudyStackView.backgroundColor = .white
@@ -157,9 +166,36 @@ final class PostedStudyViewController: NaviHelper,
     aboutStudyStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 10)
     aboutStudyStackView.isLayoutMarginsRelativeArrangement = true
     
-    similarPostStackView.backgroundColor = .white
-    similarPostStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 30, right: 10)
-    similarPostStackView.isLayoutMarginsRelativeArrangement = true
+    detailInfoComponent.snp.makeConstraints {
+      $0.top.equalTo(aboutStudyStackView.snp.bottom).offset(10)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    divideLineTopWriterInfo.snp.makeConstraints {
+      $0.top.equalTo(detailInfoComponent.snp.bottom).offset(10)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    writerComponent.snp.makeConstraints {
+      $0.top.equalTo(divideLineTopWriterInfo.snp.bottom).offset(20)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    divideLineUnderWriterInfo.snp.makeConstraints {
+      $0.top.equalTo(writerComponent.snp.bottom).offset(20)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    commentComponent.snp.makeConstraints {
+      $0.top.equalTo(divideLineUnderWriterInfo.snp.bottom).offset(10)
+      $0.leading.equalToSuperview().offset(20)
+      $0.trailing.equalToSuperview().offset(-20)
+    }
+    
+    similarPostStackView.snp.makeConstraints {
+      $0.top.equalTo(commentComponent.snp.bottom).offset(10)
+      $0.leading.equalToSuperview().offset(20)
+    }
     
     similarCollectionView.snp.makeConstraints { make in
       make.height.equalTo(171)
@@ -185,6 +221,23 @@ final class PostedStudyViewController: NaviHelper,
     }
   }
   
+  func setupBindings(){
+    viewModel.postDatas
+      .subscribe(onNext: {[weak self] in
+        self?.aboutStudyDeatilLabel.text = $0?.content
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.commentDatas
+      .asDriver(onErrorJustReturn: [])
+      .drive(commentComponent.commentTableView.rx.items(
+        cellIdentifier: CommentCell.cellId,
+        cellType: CommentCell.self)) { index, content, cell in
+          cell.model = content
+        }
+        .disposed(by: viewModel.disposeBag)
+  }
+  
   // MARK: - collectionview 관련
   private func setupDelegate() {
     //    similarCollectionView.delegate = self
@@ -196,8 +249,10 @@ final class PostedStudyViewController: NaviHelper,
   }
   
   private func registerCell() {
-    similarCollectionView.register(SimilarPostCell.self,
-                                   forCellWithReuseIdentifier: SimilarPostCell.id)
+    similarCollectionView.register(
+      SimilarPostCell.self,
+      forCellWithReuseIdentifier: SimilarPostCell.id
+    )
   }
   
   // MARK: - 데이터 받아오고 ui다시 그리는 함수

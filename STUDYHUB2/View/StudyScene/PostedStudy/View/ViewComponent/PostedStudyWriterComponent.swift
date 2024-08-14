@@ -7,8 +7,12 @@
 
 import UIKit
 
-final class PostedStudyWriterComponent: UIView,
-                                        CreateLabel, CreateStackView, CreateDividerLine{
+import SnapKit
+
+final class PostedStudyWriterComponent: UIView, CreateUIprotocol ,ConvertMajor{
+  
+  let postedValues: PostDetailData
+  
   private lazy var writerLabel = createLabel(
     title: "작성자",
     textColor: .black,
@@ -19,20 +23,20 @@ final class PostedStudyWriterComponent: UIView,
   private lazy var profileImageStackView = createStackView(axis: .vertical, spacing: 10)
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(named: "ProfileAvatar")
+    imageView.image = UIImage(named: "ProfileAvatar_change")
     imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
     return imageView
   }()
   
   private lazy var writerMajorLabel = createLabel(
-    title: "세무회계학과",
+    title: convertMajor(postedValues.postedUser.major, toEnglish: false) ?? "비어있음",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
   )
   
   private lazy var nickNameLabel = createLabel(
-    title: "비어있음",
+    title: postedValues.postedUser.nickname,
     textColor: .black,
     fontType: "Pretendard-Medium",
     fontSize: 16
@@ -47,10 +51,13 @@ final class PostedStudyWriterComponent: UIView,
   
   private lazy var grayDividerLine3 = createDividerLine(height: 8.0)
   
-  init(){
-    super.init(frame: .null)
-    setupLayout()
-    makeUI()
+  init(_ postedValues: PostDetailData) {
+    self.postedValues = postedValues
+    
+    super.init(frame: .zero)
+    
+    self.setupLayout()
+    self.makeUI()
   }
   
   required init?(coder: NSCoder) {
@@ -77,31 +84,28 @@ final class PostedStudyWriterComponent: UIView,
     ].forEach {
       writerInfoWithImageStackView.addArrangedSubview($0)
     }
+    
+    [
+      writerLabel,
+      writerInfoWithImageStackView
+    ].forEach {
+      totalWriterInfoStackView.addArrangedSubview($0)
+    }
+    
+    self.addSubview(totalWriterInfoStackView)
   }
   
   func makeUI(){
     writerInfoWithImageStackView.distribution = .fillProportionally
     
-    totalWriterInfoStackView.backgroundColor = .white
-    totalWriterInfoStackView.layoutMargins = UIEdgeInsets(
-      top: 20,
-      left: 20,
-      bottom: 20,
-      right: 10
-    )
-    totalWriterInfoStackView.isLayoutMarginsRelativeArrangement = true
-    
-    spaceView1.snp.makeConstraints { make in
-      make.width.equalTo(180)
+    profileImageView.snp.makeConstraints {
+      $0.height.width.equalTo(50)
     }
-    
-    let spaceView8 = UIView()
-    [
-      writerLabel,
-      writerInfoWithImageStackView,
-      spaceView8
-    ].forEach {
-      totalWriterInfoStackView.addArrangedSubview($0)
+        
+    totalWriterInfoStackView.snp.makeConstraints {
+      $0.top.bottom.equalToSuperview()
+      $0.leading.equalToSuperview().offset(20)
+      $0.trailing.equalToSuperview().offset(-20)
     }
   }
 }

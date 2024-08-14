@@ -85,7 +85,7 @@ final class ParticipateVC: NaviHelper {
     changeTitleLabelColor()
     
     postDeatilManager.searchSinglePostData(postId: postId,
-                                           loginStatus: true) {
+                                           loginStatus: true) {_ in 
       self.postData = self.postDeatilManager.getPostDetailData()
       
       self.setupLayout()
@@ -153,12 +153,8 @@ final class ParticipateVC: NaviHelper {
   
   // MARK: - 메인라벨 텍스트 색상 변경
   func changeTitleLabelColor(){
-    titleLabel.changeColor(label: titleLabel,
-                           wantToChange: "자기소개",
-                           color: .o50)
-    titleLabel.changeColor(label: titleLabel,
-                           wantToChange: "스터디에 대한 의지",
-                           color: .o50)
+    titleLabel.changeColor(wantToChange: "자기소개", color: .o50)
+    titleLabel.changeColor(wantToChange: "스터디에 대한 의지", color: .o50)
   }
   
   // MARK: - 완료버튼 tapped
@@ -228,9 +224,7 @@ extension ParticipateVC {
     let changedText = currentText.replacingCharacters(in: stringRange, with: text)
     
     countContentLabel.text = "\(changedText.count)/200"
-    countContentLabel.changeColor(label: countContentLabel,
-                                  wantToChange: "\(changedText.count)",
-                                  color: .black)
+    countContentLabel.changeColor(wantToChange: "\(changedText.count)", color: .black)
     return changedText.count <= 199
   }
 }

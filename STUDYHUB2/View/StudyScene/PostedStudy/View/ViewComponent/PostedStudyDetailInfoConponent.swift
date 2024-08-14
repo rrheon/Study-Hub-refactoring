@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class PostedStudyDetailInfoConponent: UIView,
-                                            CreateLabel, CreateStackView, CreateDividerLine {
+import SnapKit
+
+final class PostedStudyDetailInfoConponent: UIView, CreateUIprotocol, Convert{
+  let postedValues: PostDetailData
   
   private lazy var periodTitleLabel = createLabel(
     title: "기간",
@@ -18,7 +20,7 @@ final class PostedStudyDetailInfoConponent: UIView,
   )
   
   private lazy var periodLabel = createLabel(
-    title: "2023.9.12 ~ 2023.12.30",
+    title: "기간",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -32,7 +34,7 @@ final class PostedStudyDetailInfoConponent: UIView,
   )
   
   private lazy var fineAmountLabel = createLabel(
-    title: "결석비  " + "1000원",
+    title: "결석비  " + "\(postedValues.penalty)원",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -46,7 +48,7 @@ final class PostedStudyDetailInfoConponent: UIView,
   )
   
   private lazy var meetLabel = createLabel(
-    title: "혼합",
+    title: convertStudyWay(wayToStudy: postedValues.studyWay),
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -61,7 +63,7 @@ final class PostedStudyDetailInfoConponent: UIView,
   
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
-    label.text = "세무회계학과"
+    label.text = convertMajor(postedValues.major, toEnglish: false)
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     label.backgroundColor = .bg30
@@ -106,10 +108,13 @@ final class PostedStudyDetailInfoConponent: UIView,
   
   private lazy var grayDividerLine2 = createDividerLine(height: 8.0)
   
-  init(){
-    super.init(frame: .null)
-    setupLayout()
-    makeUI()
+  init(_ postedValues: PostDetailData) {
+    self.postedValues = postedValues
+    
+    super.init(frame: .zero)
+    
+    self.setupLayout()
+    self.makeUI()
   }
   
   required init?(coder: NSCoder) {
@@ -164,6 +169,8 @@ final class PostedStudyDetailInfoConponent: UIView,
     ].forEach {
       detailInfoStackView.addArrangedSubview($0)
     }
+    
+    self.addSubview(detailInfoStackView)
   }
   
   func makeUI(){
@@ -176,9 +183,18 @@ final class PostedStudyDetailInfoConponent: UIView,
       $0.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
       $0.isLayoutMarginsRelativeArrangement = true
     }
+       
+    detailInfoStackView.snp.makeConstraints {
+      $0.top.bottom.equalToSuperview()
+      $0.leading.equalToSuperview().offset(20)
+      $0.trailing.equalToSuperview().offset(-20)
+    }
     
-    detailInfoStackView.backgroundColor = .white
-    detailInfoStackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 10)
-    detailInfoStackView.isLayoutMarginsRelativeArrangement = true
+    let startDate = postedValues.studyStartDate
+    let convertedStartDate = "\(startDate[0]). \(startDate[1]). \(startDate[2])"
+    let endDate = postedValues.studyEndDate
+    let convertedEndDate = "\(endDate[0]). \(endDate[1]). \(endDate[2])"
+    
+    periodLabel.text = convertedStartDate + " ~ " + convertedEndDate
   }
 }

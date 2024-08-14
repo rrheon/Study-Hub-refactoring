@@ -173,9 +173,7 @@ final class MyPostViewController: NaviHelper {
       
       emptyLabel.setLineSpacing(spacing: 15)
       emptyLabel.textAlignment = .center
-      emptyLabel.changeColor(label: emptyLabel,
-                             wantToChange: "새로운 스터디 활동을 시작해 보세요!",
-                             color: .bg60)
+      emptyLabel.changeColor(wantToChange: "새로운 스터디 활동을 시작해 보세요!", color: .bg60)
       emptyLabel.snp.makeConstraints { make in
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
@@ -290,7 +288,6 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       didSelectItemAt indexPath: IndexPath) {
   
     guard let postID = myPostDatas?[indexPath.row].postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
 //    postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
     
@@ -298,7 +295,7 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     commonNetworking.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postID,
-                                                 loginStatus: loginStatus) {
+                                                      loginStatus: loginStatus) { _ in 
         let cellData = self.detailPostDataManager.getPostDetailData()
 //        postedVC.postedData = cellData
         
@@ -309,6 +306,9 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
           self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
           return
         }
+        guard let postDatas = cellData else { return }
+        let postedVC = PostedStudyViewController(postDatas)
+
         self.navigationController?.pushViewController(postedVC, animated: true)
       }
     }

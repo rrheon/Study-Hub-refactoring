@@ -24,7 +24,7 @@ final class PostDetailInfoManager {
   
   func searchSinglePostData(postId: Int,
                             loginStatus: Bool,
-                            completion: @escaping () -> Void){
+                            completion: @escaping (PostDetailData) -> Void){
     commonNetwork.moyaNetworking(networkingChoice: .searchSinglePost(_postId: postId),
                                  needCheckToken: loginStatus) { result in
       switch result {
@@ -32,10 +32,11 @@ final class PostDetailInfoManager {
         do {
           let postDataContent = try JSONDecoder().decode(PostDetailData.self, from: response.data)
           self.postDetailData = postDataContent
+          guard let postDetailData = self.postDetailData else { return }
+          completion(postDetailData)
         } catch {
           print("Failed to decode JSON: \(error)")
         }
-        completion()
       case .failure(let response):
         print(response)
       }

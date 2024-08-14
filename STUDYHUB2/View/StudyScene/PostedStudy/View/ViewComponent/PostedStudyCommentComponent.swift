@@ -7,11 +7,9 @@
 
 import UIKit
 
-final class PostedStudyCommonetComponent: UIView,
-                                          CreateLabel,
-                                          CreateStackView,
-                                          CreateTextField,
-                                          CreateDividerLine {
+import SnapKit
+
+final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   private lazy var countComment: Int = 0
   
   private lazy var commentLabel = createLabel(
@@ -29,9 +27,8 @@ final class PostedStudyCommonetComponent: UIView,
   }()
   
   private lazy var commentLabelStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var grayDividerLine4 = createDividerLine(height: 8.0)
   
-  private lazy var commentTableView: UITableView = {
+  lazy var commentTableView: UITableView = {
     let tableView = UITableView()
     tableView.register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellId)
     tableView.backgroundColor = .white
@@ -40,24 +37,13 @@ final class PostedStudyCommonetComponent: UIView,
   }()
   
   private lazy var commentStackView = createStackView(axis: .vertical, spacing: 10)
-  
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
-  
-  private lazy var commentButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("등록", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.backgroundColor = .o30
-    button.layer.cornerRadius = 10
-    return button
-  }()
-  
+  private lazy var commentButton = StudyHubButton(title: "등록")
   private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
-  
-  private lazy var grayDividerLine5 = createDividerLine(height: 8.0)
-  
+    
   init(){
-    super.init(frame: .null)
+    super.init(frame: .zero)
+    
     setupLayout()
     makeUI()
   }
@@ -86,6 +72,14 @@ final class PostedStudyCommonetComponent: UIView,
     ].forEach {
       commentButtonStackView.addArrangedSubview($0)
     }
+    
+    [
+      commentLabelStackView,
+      commentStackView,
+      commentButtonStackView
+    ].forEach {
+      self.addSubview($0)
+    }
   }
   
   func makeUI(){
@@ -94,22 +88,33 @@ final class PostedStudyCommonetComponent: UIView,
     commentTableView.snp.makeConstraints {
       $0.height.equalTo(tableViewHeight)
     }
-    
-    commentStackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 20)
-    commentStackView.isLayoutMarginsRelativeArrangement = true
-    
-    commentButton.isEnabled = false
-    
-    commentButtonStackView.distribution = .fillProportionally
-    commentButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-    commentButtonStackView.isLayoutMarginsRelativeArrangement = true
-    
-    commentTextField.snp.makeConstraints {
-      $0.height.equalTo(42)
+//    
+//    commentStackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 20)
+//    commentStackView.isLayoutMarginsRelativeArrangement = true
+//    
+//    commentButton.isEnabled = false
+//    
+//    commentButtonStackView.distribution = .fillProportionally
+//    commentButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+//    commentButtonStackView.isLayoutMarginsRelativeArrangement = true
+//    
+    commentLabelStackView.snp.makeConstraints {
+      $0.top.leading.trailing.equalToSuperview()
     }
     
-//    commentTextField.addTarget(self,
-//                               action: #selector(textFieldDidChange(_:)),
-//                               for: .editingDidBegin)
+    commentStackView.snp.makeConstraints {
+      $0.top.equalTo(commentLabelStackView.snp.bottom).offset(10)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    commentButton.snp.makeConstraints {
+      $0.height.equalTo(42)
+      $0.width.equalTo(65)
+    }
+    
+    commentButtonStackView.snp.makeConstraints {
+      $0.top.equalTo(commentStackView.snp.bottom).offset(10)
+      $0.leading.trailing.equalToSuperview()
+    }
   }
 }

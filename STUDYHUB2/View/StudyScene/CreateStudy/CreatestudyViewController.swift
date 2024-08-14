@@ -1071,7 +1071,7 @@ final class CreateStudyViewController: NaviHelper {
       NSAttributedString.Key.foregroundColor: UIColor.white
     ]
     
-    postInfoManager.searchSinglePostData(postId: postID, loginStatus: false) {
+    postInfoManager.searchSinglePostData(postId: postID, loginStatus: false) {_ in 
       
       let modifyData = self.postInfoManager.getPostDetailData()
       

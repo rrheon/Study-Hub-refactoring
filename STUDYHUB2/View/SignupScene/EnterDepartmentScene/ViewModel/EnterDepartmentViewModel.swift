@@ -10,7 +10,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-final class EnterDepartmentViewModel: SignupViewModel {
+final class EnterDepartmentViewModel: SignupViewModel, ConvertMajor {
   let createAccountManager = CreateAccountManager.shared
   
   let enteredMajor = PublishRelay<String>()
@@ -31,23 +31,13 @@ final class EnterDepartmentViewModel: SignupViewModel {
       matchedMajors.accept(filteredMajors.keys.map({ $0 }))
     }
   }
-  
-  private func convertMajorToEnglish(_ major: String) -> String? {
-    let majorDatas = DataLoaderFromPlist()
-    guard let majors = majorDatas.loadMajorsWithCodes() else { return nil }
-    let filteredMajors = majors.filter { (key, _) -> Bool in
-      key.contains(major)
-    }
-    
-    return filteredMajors.values.first
-  }
 
   func createAccount(_ major: String){
     guard let email = email,
           let gender = gender,
           let nickname = nickname,
           let password = password,
-          let major = convertMajorToEnglish(major) else { return }
+          let major = convertMajor(major, toEnglish: true) else { return }
     let userInfo = CreateAccount(email: email,
                                  gender: gender,
                                  major: major,

@@ -142,8 +142,7 @@ final class DeleteIDViewContoller: NaviHelper {
   // MARK: - makeUI
   func makeUI(){
     titleLabel.numberOfLines = 2
-    titleLabel.changeColor(label: titleLabel,
-                           wantToChange: "회원님이 떠나신다니 너무 아쉬워요😢",
+    titleLabel.changeColor(wantToChange: "회원님이 떠나신다니 너무 아쉬워요😢",
                            color: .bg80,
                            font: UIFont(name: "Pretendard", size: 14),
                            lineSpacing: 10)

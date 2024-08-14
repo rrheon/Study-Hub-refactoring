@@ -138,9 +138,7 @@ final class MyParticipateStudyVC: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
-    totalPostCountLabel.changeColor(label: totalPostCountLabel,
-                                    wantToChange: "\(countPostNumber)",
-                                    color: .black)
+    totalPostCountLabel.changeColor(wantToChange: "\(countPostNumber)", color: .black)
     totalPostCountLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.leading.equalToSuperview().offset(20)
@@ -172,9 +170,7 @@ final class MyParticipateStudyVC: NaviHelper {
       
       emptyLabel.setLineSpacing(spacing: 15)
       emptyLabel.textAlignment = .center
-      emptyLabel.changeColor(label: emptyLabel,
-                             wantToChange: "새로운 스터디 활동을 시작해 보세요!",
-                             color: .bg60)
+      emptyLabel.changeColor(wantToChange: "새로운 스터디 활동을 시작해 보세요!", color: .bg60)
       emptyLabel.snp.makeConstraints { make in
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
@@ -234,12 +230,12 @@ final class MyParticipateStudyVC: NaviHelper {
     }
     
     view.addSubview(emptyLabel)
-    emptyLabel.changeColor(label: emptyLabel,
-                           wantToChange: "참여한 스터디가 없어요",
-                           color: .bg60,
-                           font: UIFont(name: "Pretendard-Medium",
-                                        size: 16),
-                           lineSpacing: 5)
+    emptyLabel.changeColor(
+      wantToChange: "참여한 스터디가 없어요",
+      color: .bg60,
+      font: UIFont(name: "Pretendard-Medium", size: 16),
+      lineSpacing: 5
+    )
     emptyLabel.snp.makeConstraints {
       $0.top.equalTo(emptyImage.snp.bottom).offset(10)
       $0.centerX.equalToSuperview()

@@ -150,7 +150,7 @@ final class SearchResultCell: UICollectionViewCell {
     let label = UILabel()
     label.textColor = .bg90
     label.text = "0/14"
-    label.changeColor(label: label, wantToChange: "0", color: .changeInfo)
+    label.changeColor(wantToChange: "0", color: .changeInfo)
     return label
   }()
   
@@ -321,9 +321,7 @@ final class SearchResultCell: UICollectionViewCell {
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요"
     countMemeberLabel.text = "\(countMember) /\(data.studyPerson)명"
-    countMemeberLabel.changeColor(label: countMemeberLabel,
-                                  wantToChange: "\(countMember)",
-                                  color: .o50)
+    countMemeberLabel.changeColor(wantToChange: "\(countMember)", color: .o50)
     let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty)원"
     fineLabel.text = "\(fineText)"
     

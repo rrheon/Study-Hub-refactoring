@@ -16,6 +16,18 @@ protocol CreateLabel {
   ) -> UILabel
 }
 
+protocol CreateStackView {
+  func createStackView(axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView
+}
+
+protocol CreateDividerLine {
+  func createDividerLine(height: CGFloat) -> UIView
+}
+
+protocol CreateTextField {
+  func createTextField(title: String) -> UITextField
+}
+
 extension CreateLabel {
   func createLabel(
     title: String,
@@ -31,10 +43,6 @@ extension CreateLabel {
   }
 }
 
-protocol CreateStackView {
-  func createStackView(axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView
-}
-
 extension CreateStackView {
   func createStackView(axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView {
     let stackView = UIStackView()
@@ -42,10 +50,6 @@ extension CreateStackView {
     stackView.spacing = spacing
     return stackView
   }
-}
-
-protocol CreateDividerLine {
-  func createDividerLine(height: CGFloat) -> UIView
 }
 
 extension CreateDividerLine {
@@ -57,10 +61,6 @@ extension CreateDividerLine {
   }
 }
 
-protocol CreateTextField {
-  func createTextField(title: String) -> UITextField
-}
-
 extension CreateTextField {
   func createTextField(title: String) -> UITextField {
     let textField = UITextField()
@@ -69,8 +69,10 @@ extension CreateTextField {
       .font: UIFont(name: "Pretendard-Medium", size: 14)
     ]
     
-    textField.attributedPlaceholder = NSAttributedString(string: title,
-                                                         attributes: placeholderTextAttributes)
+    textField.attributedPlaceholder = NSAttributedString(
+      string: title,
+      attributes: placeholderTextAttributes
+    )
     
     textField.backgroundColor = .white
     textField.textColor = .black
@@ -79,8 +81,9 @@ extension CreateTextField {
     textField.layer.cornerRadius = 5
     textField.layer.borderColor = UIColor.bg50.cgColor
     textField.layer.borderWidth = 0.5
-    textField.delegate = self as! any UITextFieldDelegate
+//    textField.delegate = self as! any UITextFieldDelegate
     return textField
   }
 }
 
+protocol CreateUIprotocol: CreateLabel, CreateStackView, CreateTextField, CreateDividerLine {}

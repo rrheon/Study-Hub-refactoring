@@ -190,13 +190,11 @@ final class RecruitPostCell: UICollectionViewCell {
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     countMemeberLabel.changeColor(
-      label: countMemeberLabel,
       wantToChange: "\(studyPersonCount)",
       color: .o50
     )
     
     fineCountLabel.changeColor(
-      label: fineCountLabel,
       wantToChange: "\(data.penalty)",
       color: .o50
     )

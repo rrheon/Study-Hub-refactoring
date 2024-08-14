@@ -11,12 +11,14 @@ import RxRelay
 
 final class HomeViewModel: CommonViewModel {
   let postDataManager = PostDataManager.shared
+  let detailPostDataManager = PostDetailInfoManager.shared
   
   var newPostDatas = PublishRelay<[Content]>()
   var deadlinePostDatas = PublishRelay<[Content]>()
   
   var userInfo = PublishRelay<UserDetailData>()
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
+  var singlePostData = PublishRelay<PostDetailData>()
   
   init(loginStatus: Bool) {
     checkLoginStatus.accept(loginStatus)
@@ -38,5 +40,13 @@ final class HomeViewModel: CommonViewModel {
     postDataManager.getDeadLinePostData(loginStatus) { datas in
       self.deadlinePostDatas.accept(datas.postDataByInquiries.content)
     }
+  }
+  
+  func fectchSinglePostDatas(_ postID: Int){
+    detailPostDataManager.searchSinglePostData(
+      postId: postID,
+      loginStatus: false) {
+        self.singlePostData.accept($0)
+      }
   }
 }

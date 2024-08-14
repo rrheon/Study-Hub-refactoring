@@ -191,9 +191,10 @@ final class StudyViewController: NaviHelper {
       }
       
       describeLabel.numberOfLines = 3
-      describeLabel.changeColor(label: describeLabel,
-                                wantToChange: "지금 스터디를 만들어\n  팀원을 구해보세요!",
-                                color: .changeInfo)
+      describeLabel.changeColor(
+        wantToChange: "지금 스터디를 만들어\n  팀원을 구해보세요!",
+        color: .changeInfo
+      )
       describeLabel.snp.makeConstraints { make in
         make.top.equalTo(emptyImageView.snp.bottom).offset(10)
         make.centerX.equalTo(emptyImageView)
@@ -424,14 +425,13 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
     guard let postId = totalDatas?[indexPath.row].postID else { return }
-    let postedVC = PostedStudyViewController(postID: postId)
-    postedVC.hidesBottomBarWhenPushed = true
+
 //    postedVC.previousStudyVC = self
 
     var username: String? = nil
 
     commonNetworking.refreshAccessToken { loginStatus in
-      self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) {
+      self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) { _ in
         let cellData = self.detailPostDataManager.getPostDetailData()
 //        postedVC.postedData = cellData
 
@@ -441,6 +441,9 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
           self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
           return
         }
+        guard let postDatas = cellData else { return }
+        let postedVC = PostedStudyViewController(postDatas)
+        postedVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(postedVC, animated: true)
 
       }
@@ -477,14 +480,16 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
 
 extension StudyViewController: AfterCreatePost {
   func afterCreatePost(postId: Int) {
-    let postedVC = PostedStudyViewController()
-    detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {
-      let postData = self.detailPostDataManager.getPostDetailData()
+    detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {_ in
+      guard let postData = self.detailPostDataManager.getPostDetailData() else { return }
 //      postedVC.postedData = postData
+      let postedVC = PostedStudyViewController(postData)
+
+      self.navigationController?.pushViewController(postedVC, animated: false)
+      
+      self.showToast(message: "글 작성이 완료됐어요",imageCheck: true, alertCheck: true)
     }
-    navigationController?.pushViewController(postedVC, animated: false)
-    
-    showToast(message: "글 작성이 완료됐어요",imageCheck: true, alertCheck: true)
+
   }
 }
 

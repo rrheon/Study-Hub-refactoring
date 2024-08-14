@@ -7,6 +7,8 @@
 
 import Foundation
 
+import RxRelay
+
 final class PostedStudyViewModel: CommonViewModel {
   let detailPostDataManager = PostDetailInfoManager.shared
   let myPostDataManager = MyPostInfoManager.shared
@@ -14,9 +16,19 @@ final class PostedStudyViewModel: CommonViewModel {
   let userDataManager = UserInfoManager.shared
   let commentManager = CommentManager.shared
   
-  let postedID: Int
+  var postDatas = BehaviorRelay<PostDetailData?>(value: nil)
+  var commentDatas = PublishRelay<[CommentConetent]>()
   
-  init(postedID: Int) {
-    self.postedID = postedID
+  init(_ postDatas: PostDetailData) {
+    super.init()
+    self.postDatas.accept(postDatas)
+    fetchCommentDatas()
+  }
+  
+  func fetchCommentDatas(){
+    guard let postID = postDatas.value?.postID else { return }
+    detailPostDataManager.getCommentPreview(postId: postID) {
+      self.commentDatas.accept($0)
+    }
   }
 }

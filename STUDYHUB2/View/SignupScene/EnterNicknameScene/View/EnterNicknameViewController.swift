@@ -298,9 +298,7 @@ extension EnterNicknameViewController {
     let changedText = currentText.replacingCharacters(in: stringRange, with: string)
     
     characterCountLabel.text = "\(changedText.count)/10"
-    characterCountLabel.changeColor(label: characterCountLabel,
-                                    wantToChange: "\(changedText.count)",
-                                    color: .white)
+    characterCountLabel.changeColor(wantToChange: "\(changedText.count)", color: .white)
     return changedText.count <= 9
   }
 }

@@ -174,8 +174,7 @@ final class BookmarkViewController: NaviHelper {
     view.addSubview(emptyMainLabel)
     emptyMainLabel.numberOfLines = 2
     emptyMainLabel.textAlignment = .center
-    emptyMainLabel.changeColor(label: emptyMainLabel,
-                               wantToChange: "관심있는 스터디를 저장해 보세요!", color: .bg60)
+    emptyMainLabel.changeColor(wantToChange: "관심있는 스터디를 저장해 보세요!", color: .bg60)
     emptyMainLabel.snp.makeConstraints { make in
       make.top.equalTo(emptyMainImageView.snp.bottom)
       make.centerX.equalTo(emptyMainImageView)
@@ -248,16 +247,16 @@ extension BookmarkViewController: UICollectionViewDelegate, UICollectionViewData
     guard let postID = bookmarkDatas?.getBookmarkedPostsData.content[indexPath.row].postID else { return }
     
     detailPostDataManager.searchSinglePostData(postId: postID,
-                                               loginStatus: true) {
-      let postData = self.detailPostDataManager.getPostDetailData()
-      if postData?.close == true { return }
+                                               loginStatus: true) { _ in 
+      guard let postData = self.detailPostDataManager.getPostDetailData() else { return }
+      if postData.close == true { return }
       var username: String? = nil
 
-      let postedVC = PostedStudyViewController(postID)
+      let postedVC = PostedStudyViewController(postData)
 //      postedVC.previousBookMarkVC = self
 //      postedVC.postedData = postData
       
-      username = postData?.postedUser.nickname
+      username = postData.postedUser.nickname
       
       if username == nil {
         self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
@@ -309,7 +308,7 @@ extension BookmarkViewController: BookMarkDelegate {
 extension BookmarkViewController: ParticipatePostDelegate{
   func participateButtonTapped(studyId: Int, postId: Int) {
     detailPostDataManager.searchSinglePostData(postId: postId,
-                                               loginStatus: true) {
+                                               loginStatus: true) { _ in 
       let checkApply = self.detailPostDataManager.getPostDetailData()?.apply
 
       if checkApply ?? false {

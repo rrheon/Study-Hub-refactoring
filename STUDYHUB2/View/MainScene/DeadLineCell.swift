@@ -44,7 +44,7 @@ final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
     let label = UILabel()
     label.text = "29/30명"
     label.textColor = .bg90
-    label.changeColor(label: label, wantToChange: "29", color: .changeInfo)
+    label.changeColor(wantToChange: "29", color: .changeInfo)
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
   }()
@@ -155,7 +155,6 @@ final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
     
     countLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
     countLabel.changeColor(
-      label: countLabel,
       wantToChange: "\(studyPersonCount)",
       color: .o50
     )

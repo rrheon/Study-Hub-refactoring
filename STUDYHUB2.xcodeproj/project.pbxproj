@@ -108,7 +108,8 @@
 		EEDDDD112C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */; };
 		EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */; };
 		EEDDDD152C6B4D8800FA347D /* PostedStudyWriterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */; };
-		EEDDDD172C6B4F2F00FA347D /* PostedStudyCommonetComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* PostedStudyCommonetComponent.swift */; };
+		EEDDDD172C6B4F2F00FA347D /* PostedStudyCommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */; };
+		EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Convert.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
@@ -255,7 +256,8 @@
 		EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyDetailInfoConponent.swift; sourceTree = "<group>"; };
 		EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUIModel.swift; sourceTree = "<group>"; };
 		EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyWriterComponent.swift; sourceTree = "<group>"; };
-		EEDDDD162C6B4F2F00FA347D /* PostedStudyCommonetComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyCommonetComponent.swift; sourceTree = "<group>"; };
+		EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyCommentComponent.swift; sourceTree = "<group>"; };
+		EEDDDD1A2C6CA05900FA347D /* Convert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convert.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
@@ -340,6 +342,9 @@
 				EE07ADC42AF2414C0096890F /* PopUpViewController.swift */,
 				EE07ADC62AF241A30096890F /* PopUpView.swift */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
+				EEDDDD1A2C6CA05900FA347D /* Convert.swift */,
+				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
+				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -516,10 +521,8 @@
 		EE3AD8B42C467E62000A8CCA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
 				EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */,
 				EEDDDD062C69F4FD00FA347D /* CommonModel.swift */,
-				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -788,7 +791,7 @@
 				EEDDDD0D2C6B452E00FA347D /* PostedStudyMainComponent.swift */,
 				EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */,
 				EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */,
-				EEDDDD162C6B4F2F00FA347D /* PostedStudyCommonetComponent.swift */,
+				EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -1074,6 +1077,7 @@
 				EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
+				EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				EEDDDD152C6B4D8800FA347D /* PostedStudyWriterComponent.swift in Sources */,
@@ -1111,7 +1115,7 @@
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				EEDDDD072C69F4FD00FA347D /* CommonModel.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
-				EEDDDD172C6B4F2F00FA347D /* PostedStudyCommonetComponent.swift in Sources */,
+				EEDDDD172C6B4F2F00FA347D /* PostedStudyCommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,

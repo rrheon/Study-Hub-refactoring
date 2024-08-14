@@ -1,14 +1,9 @@
-//
-//  PostedStudyMainComponent.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/13/24.
-//
 
 import UIKit
 
-final class PostedStudyMainComponent: UIView,
-                                      CreateLabel, CreateStackView {
+import SnapKit
+
+final class PostedStudyMainComponent: UIView, CreateUIprotocol, Convert{
   let postedValues: PostDetailData
   
   private lazy var postedDateLabel = createLabel(
@@ -20,7 +15,7 @@ final class PostedStudyMainComponent: UIView,
   
   private lazy var postedMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
-    label.text = postedValues.major
+    label.text = convertMajor(postedValues.major, toEnglish: false)
     label.textColor = .o30
     label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     label.backgroundColor = .o60
@@ -53,8 +48,9 @@ final class PostedStudyMainComponent: UIView,
     return imageView
   }()
   
+  private lazy var availablePersonNum = postedValues.studyPerson - postedValues.remainingSeat
   private lazy var memeberNumberCountLabel = createLabel(
-    title: "\(postedValues.studyPerson - postedValues.remainingSeat)" + "/\(postedValues.studyPerson)",
+    title: "\(availablePersonNum)" + " /\(postedValues.studyPerson)명",
     textColor: .white,
     fontType: "Pretendard-SemiBold",
     fontSize: 16
@@ -97,7 +93,7 @@ final class PostedStudyMainComponent: UIView,
   }()
   
   private lazy var fixedGenderLabel = createLabel(
-    title: "\(postedValues.filteredGender)",
+    title: convertGender(gender: postedValues.filteredGender),
     textColor: .white,
     fontType: "Pretendard-SemiBold",
     fontSize: 16
@@ -116,7 +112,7 @@ final class PostedStudyMainComponent: UIView,
   init(_ postedValues: PostDetailData) {
     self.postedValues = postedValues
     
-    super.init()
+    super.init(frame: .zero)
     
     self.setupLayout()
     self.makeUI()
@@ -178,12 +174,11 @@ final class PostedStudyMainComponent: UIView,
     }
     
     let spaceView12 = UIView()
-    
+
     [
       memberNumberStackView,
       fineStackView,
-      genderStackView,
-      spaceView12
+      genderStackView
     ].forEach {
       coreInfoStackView.addArrangedSubview($0)
     }
@@ -203,18 +198,30 @@ final class PostedStudyMainComponent: UIView,
     ].forEach {
       topInfoStackView.addArrangedSubview($0)
     }
+    
+    self.addSubview(topInfoStackView)
   }
   
   func makeUI(){
-    coreInfoStackView.distribution = .fillProportionally
+    coreInfoStackView.distribution = .fillEqually
+    coreInfoStackView.alignment = .center
     coreInfoStackView.backgroundColor = .deepGray
     
     topInfoStackView.backgroundColor = .black
     
     postedMajorLabel.backgroundColor = .postedMajorBackGorund
-    
+        
     postedInfoStackView.layoutMargins = UIEdgeInsets(top: 50, left: 10, bottom: 0, right: 0)
     postedInfoStackView.isLayoutMarginsRelativeArrangement = true
+    
+    memberNumberStackView.layoutMargins = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+    memberNumberStackView.isLayoutMarginsRelativeArrangement = true
+ 
+    fineStackView.layoutMargins = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+    fineStackView.isLayoutMarginsRelativeArrangement = true
+    
+    genderStackView.layoutMargins = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+    genderStackView.isLayoutMarginsRelativeArrangement = true
     
     coreInfoStackView.spacing = 10
     coreInfoStackView.layer.cornerRadius = 10
@@ -226,5 +233,12 @@ final class PostedStudyMainComponent: UIView,
     spaceView.snp.makeConstraints { make in
       make.height.equalTo(20)
     }
+    
+    topInfoStackView.snp.makeConstraints {
+      $0.edges.equalToSuperview()
+    }
+    
+    memeberNumberCountLabel.changeColor(wantToChange: "\(availablePersonNum)", color: .o50)
+    fineCountLabel.changeColor(wantToChange: "\(postedValues.penalty)", color: .o50)
   }
 }

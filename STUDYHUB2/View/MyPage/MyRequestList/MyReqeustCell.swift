@@ -160,11 +160,11 @@ final class MyRequestCell: UICollectionViewCell {
   
     titleLabel.text = model.studyTitle
     infoLabel.text = "신청 내용\n\(model.introduce)"
-    infoLabel.changeColor(label: infoLabel,
-                          wantToChange: "신청 내용",
-                          color: .bg60,
-                          font: UIFont(name: "Pretendard-SemiBold",
-                                                    size: 12))
+    infoLabel.changeColor(
+      wantToChange: "신청 내용",
+      color: .bg60,
+      font: UIFont(name: "Pretendard-SemiBold", size: 12)
+    )
   }
 }
 

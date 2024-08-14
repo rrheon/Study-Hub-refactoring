@@ -117,9 +117,7 @@ final class MyRequestListViewController: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
-    totalPostCountLabel.changeColor(label: totalPostCountLabel,
-                                    wantToChange: "\(countPostNumber)",
-                                    color: .black)
+    totalPostCountLabel.changeColor(wantToChange: "\(countPostNumber)", color: .black)
     totalPostCountLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(20)
@@ -161,12 +159,13 @@ final class MyRequestListViewController: NaviHelper {
     }
     
     view.addSubview(emptyLabel)
-    emptyLabel.changeColor(label: emptyLabel,
-                           wantToChange: "지금 스터디에 참여해보세요!",
-                           color: .bg60,
-                           font: UIFont(name: "Pretendard-Medium",
-                                        size: 16),
-                           lineSpacing: 5)
+    emptyLabel.changeColor(
+      wantToChange: "지금 스터디에 참여해보세요!",
+      color: .bg60,
+      font: UIFont(name: "Pretendard-Medium",
+                   size: 16),
+      lineSpacing: 5
+    )
     emptyLabel.snp.makeConstraints {
       $0.top.equalTo(emptyImage.snp.bottom).offset(10)
       $0.centerX.equalToSuperview()

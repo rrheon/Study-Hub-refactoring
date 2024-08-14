@@ -512,22 +512,23 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = totalDatas?[indexPath.row].postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
-//    postedVC.previousSearchVC = self
-    postedVC.hidesBottomBarWhenPushed = true
     
     var username: String? = nil
     
     commonNetworking.refreshAccessToken { loginStatus in
-      self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) {
-        let cellData = self.detailPostDataManager.getPostDetailData()
+      self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) { _ in
+        guard let cellData = self.detailPostDataManager.getPostDetailData() else { return }
 //        postedVC.postedData = cellData
-        username = cellData?.postedUser.nickname
+        username = cellData.postedUser.nickname
         
         if username == nil {
           self.showToast(message: "해당 post에 접근할 수 없습니다",imageCheck: false)
           return
         }
+        let postedVC = PostedStudyViewController(cellData)
+    //    postedVC.previousSearchVC = self
+        postedVC.hidesBottomBarWhenPushed = true
+
         self.navigationController?.pushViewController(postedVC, animated: true)
 
       }

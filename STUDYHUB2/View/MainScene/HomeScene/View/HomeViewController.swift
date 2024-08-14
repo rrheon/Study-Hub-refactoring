@@ -279,20 +279,26 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
           cell.loginStatus = self.viewModel.checkLoginStatus.value
         }
         .disposed(by: viewModel.disposeBag)
+    
+    viewModel.singlePostData
+      .subscribe(onNext: {[weak self] in
+        self?.moveToPostedStudyVC(postData: $0)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
     recrutingCollectionView.rx.modelSelected(Content.self)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
-        self?.moveToPostedStudyVC(postID: postID)
+        self?.viewModel.fectchSinglePostDatas(postID)
       })
       .disposed(by: viewModel.disposeBag)
     
     deadLineCollectionView.rx.modelSelected(Content.self)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
-        self?.moveToPostedStudyVC(postID: postID)
+        self?.viewModel.fectchSinglePostDatas(postID)
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -314,8 +320,8 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
       .disposed(by: viewModel.disposeBag)
   }
   
-  func moveToPostedStudyVC(postID: Int){
-    let postedStudyVC = PostedStudyViewController(postID)
+  func moveToPostedStudyVC(postData: PostDetailData){
+    let postedStudyVC = PostedStudyViewController(postData)
     postedStudyVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(postedStudyVC, animated: true)
   }
