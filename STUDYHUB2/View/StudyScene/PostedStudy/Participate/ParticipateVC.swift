@@ -154,7 +154,7 @@ final class ParticipateVC: NaviHelper {
   // MARK: - 메인라벨 텍스트 색상 변경
   func changeTitleLabelColor(){
     titleLabel.changeColor(wantToChange: "자기소개", color: .o50)
-    titleLabel.changeColor(wantToChange: "스터디에 대한 의지", color: .o50)
+    titleLabel.changeColor(wantToChange: "스터디에 대한 의지",color: .o50)
   }
   
   // MARK: - 완료버튼 tapped
@@ -174,7 +174,7 @@ final class ParticipateVC: NaviHelper {
               self.navigationController?.popViewController(animated: true)
               self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
 //              self.beforeVC?.participateCheck = true
-              self.beforeVC?.redrawUI()
+//              self.beforeVC?.redrawUI()
             }
           }
         } else {

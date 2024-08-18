@@ -13,8 +13,8 @@ final class HomeViewModel: CommonViewModel {
   let postDataManager = PostDataManager.shared
   let detailPostDataManager = PostDetailInfoManager.shared
   
-  var newPostDatas = PublishRelay<[Content]>()
-  var deadlinePostDatas = PublishRelay<[Content]>()
+  var newPostDatas = BehaviorRelay<[Content]>(value: [])
+  var deadlinePostDatas = BehaviorRelay<[Content]>(value: [])
   
   var userInfo = PublishRelay<UserDetailData>()
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)

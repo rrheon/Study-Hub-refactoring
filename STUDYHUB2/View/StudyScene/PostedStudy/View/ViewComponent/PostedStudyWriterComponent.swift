@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class PostedStudyWriterComponent: UIView, CreateUIprotocol ,ConvertMajor{
+final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor{
   
   let postedValues: PostDetailData
   

@@ -12,8 +12,7 @@ final class CommentCell: UITableViewCell {
   
   let userDataManager = UserInfoManager.shared
   
-  static let cellId = "CellId"
-  
+  static let cellId = "CommentCell"
   var model: CommentConetent? { didSet { bind() } }
   var commentId: Int?
   var userNickname: String?

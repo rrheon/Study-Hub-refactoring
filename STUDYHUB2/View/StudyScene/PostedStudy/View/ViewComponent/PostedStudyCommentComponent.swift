@@ -10,7 +10,15 @@ import UIKit
 import SnapKit
 
 final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
-  private lazy var countComment: Int = 0
+
+  lazy var countComment: Int = 0 {
+    didSet {
+      setupLayout()
+      makeUI()
+      
+      commentLabel.text = "댓글 \(countComment)"
+    }
+  }
   
   private lazy var commentLabel = createLabel(
     title: "댓글 0",
@@ -43,9 +51,7 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     
   init(){
     super.init(frame: .zero)
-    
-    setupLayout()
-    makeUI()
+  
   }
   
   required init?(coder: NSCoder) {
@@ -87,19 +93,11 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     
     commentTableView.snp.makeConstraints {
       $0.height.equalTo(tableViewHeight)
+      $0.leading.equalToSuperview().inset(10)
     }
-//    
-//    commentStackView.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 20)
-//    commentStackView.isLayoutMarginsRelativeArrangement = true
-//    
-//    commentButton.isEnabled = false
-//    
-//    commentButtonStackView.distribution = .fillProportionally
-//    commentButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-//    commentButtonStackView.isLayoutMarginsRelativeArrangement = true
-//    
+    
     commentLabelStackView.snp.makeConstraints {
-      $0.top.leading.trailing.equalToSuperview()
+      $0.top.leading.trailing.equalToSuperview().inset(20)
     }
     
     commentStackView.snp.makeConstraints {
@@ -114,7 +112,7 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     
     commentButtonStackView.snp.makeConstraints {
       $0.top.equalTo(commentStackView.snp.bottom).offset(10)
-      $0.leading.trailing.equalToSuperview()
+      $0.leading.trailing.equalToSuperview().inset(20)
     }
   }
 }

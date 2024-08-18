@@ -40,6 +40,7 @@ final class SimilarPostCell: UICollectionViewCell {
       remainMemeber.text = "\(remainMemberNum)자리 남았어요"
     }
   }
+  
   private lazy var remainMemeber: UILabel = {
     let label = UILabel()
     label.textColor = .bg80
