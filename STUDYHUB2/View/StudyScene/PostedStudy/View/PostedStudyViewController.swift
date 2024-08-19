@@ -1,16 +1,11 @@
-//
-//  PostedStudyViewController.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 2023/10/30.
-//
 
 import UIKit
 
 import SnapKit
 import RxCocoa
 
-final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCellDelegate {
+final class PostedStudyViewController: CommonNavi{
+  
   func menuButtonTapped(in cell: CommentCell, commentId: Int) {
     print("test")
   }
@@ -65,21 +60,15 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
   private lazy var bookmarkButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
-    //    button.addAction(UIAction { _ in
-    //      self.bookmarkButtonTappedAtPostedVC()
-    //    } , for: .touchUpInside)
     return button
   }()
   
   private lazy var participateButton = StudyHubButton(title: "참여하기")
-  
   private lazy var bottomButtonStackView = createStackView(axis: .horizontal, spacing: 10)
   
-  // 전체 요소를 담는 스택
   private lazy var pageStackView = createStackView(axis: .vertical, spacing: 10)
   
   private lazy var scrollView: UIScrollView = UIScrollView()
-  private let activityIndicator = UIActivityIndicatorView(style: .large)
   
   init(_ postDatas: PostDetailData) {
     self.viewModel = PostedStudyViewModel(postDatas)
@@ -96,20 +85,28 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
   }
   
   // MARK: - viewDidLoad
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    navigationItemSetting()
+    setupNavigation()
     
     view.backgroundColor = .white
-
+    
     setupDelegate()
     setupBindings()
+    addActions()
     
     setUpLayout()
     makeUI()
   }
   
+  func setupNavigation(){
+    leftButtonSetting()
+    rightButtonSetting(imgName: "RightButtonImg")
+  }
+  
   // MARK: - setUpLayout
+  
   func setUpLayout(){
     let grayDividerLine = createDividerLine(height: 1.0)
     
@@ -120,7 +117,7 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
     ].forEach {
       aboutStudyStackView.addArrangedSubview($0)
     }
-        
+    
     [
       similarPostLabel,
       similarCollectionView
@@ -155,6 +152,7 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
   }
   
   // MARK: - makeUI
+  
   private func makeUI() {
     mainComponent.snp.makeConstraints {
       $0.top.leading.trailing.equalToSuperview()
@@ -190,7 +188,7 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
       $0.leading.trailing.equalToSuperview()
     }
     
-    similarPostStackView.layoutMargins = UIEdgeInsets(top: 40, left: 20, bottom: 30, right: 10)
+    similarPostStackView.layoutMargins = UIEdgeInsets(top: 100, left: 20, bottom: 30, right: 10)
     similarPostStackView.isLayoutMarginsRelativeArrangement = true
     
     similarCollectionView.snp.makeConstraints {
@@ -216,10 +214,16 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
     }
   }
   
+  // MARK: - setupBindings
+  
+  
   func setupBindings(){
     viewModel.postDatas
       .subscribe(onNext: { [weak self] in
         self?.aboutStudyDeatilLabel.text = $0?.content
+        if $0?.usersPost == false {
+          self?.navigationItem.rightBarButtonItem = nil
+        }
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -242,7 +246,7 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
           cell.delegate = self
         }
         .disposed(by: viewModel.disposeBag)
-
+    
     viewModel.relatedPostDatas
       .map { Array($0.prefix(3)) }
       .bind(to: similarCollectionView.rx.items(
@@ -251,9 +255,35 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
           cell.model = content
         }
         .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isBookmarked
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        let bookmarkImg = $0 ? "BookMarkChecked" : "BookMarkLightImg"
+        self?.bookmarkButton.setImage(UIImage(named: bookmarkImg), for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.dataFromPopupView
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        $0 == "삭제" ? deleteMyPost() : showModifyView(vc: self)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
-  // MARK: - collectionview 관련
+  // MARK: - addActions
+  
+  func addActions(){
+    bookmarkButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
+        self?.viewModel.bookmarkTapped(postId: postID)
+        self?.viewModel.bookmarkToggle()
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
   private func setupDelegate() {
     commentComponent.commentTableView.rx.setDelegate(self)
       .disposed(by: viewModel.disposeBag)
@@ -271,6 +301,28 @@ final class PostedStudyViewController: NaviHelper, CreateDividerLine, CommentCel
       forCellReuseIdentifier: CommentCell.cellId
     )
   }
+  
+  override func rightButtonTapped(_ sender: UIBarButtonItem) {
+    guard let postID = viewModel.postDatas.value?.postID else { return }
+    let bottomSheetVC = BottomSheet(
+      postID: postID,
+      checkMyPost: true,
+      firstButtonTitle: "삭제하기",
+      secondButtonTitle: "수정하기"
+    )
+    bottomSheetVC.delegate = self
+    
+    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
+    present(bottomSheetVC, animated: true, completion: nil)
+  }
+  
+  func deleteMyPost(){
+    guard let postID = self.viewModel.postDatas.value?.postID else { return }
+    
+    deleteMyPost(postID) { _ in
+      self.dismiss(animated: true)
+    }
+  }
 }
 
 extension PostedStudyViewController: UICollectionViewDelegateFlowLayout {
@@ -286,3 +338,30 @@ extension PostedStudyViewController: UITableViewDelegate  {
     return 86
   }
 }
+
+extension PostedStudyViewController: BottomSheetDelegate {
+  func firstButtonTapped(postID: Int) {
+    let popupVC = PopupViewController(
+      title: "글을 삭제할까요?",
+      dataStream: viewModel.dataFromPopupView)
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    
+    self.present(popupVC, animated: true)
+  }
+  
+  func secondButtonTapped(postID: Int){
+    let popupVC = PopupViewController(
+      title: "글을 수정할까요?",
+      leftButtonTitle: "아니요",
+      rightButtonTilte: "네",
+      dataStream: viewModel.dataFromPopupView)
+    popupVC.modalPresentationStyle = .overFullScreen
+    
+    self.present(popupVC, animated: true)
+  }
+}
+
+extension PostedStudyViewController: CreateDividerLine {}
+extension PostedStudyViewController: ShowBottomSheet, StudyBottomSheet {}
+extension PostedStudyViewController: CommentCellDelegate {}

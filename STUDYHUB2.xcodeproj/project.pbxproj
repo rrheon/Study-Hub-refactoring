@@ -110,6 +110,11 @@
 		EEDDDD152C6B4D8800FA347D /* PostedStudyWriterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */; };
 		EEDDDD172C6B4F2F00FA347D /* PostedStudyCommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */; };
 		EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Convert.swift */; };
+		EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */; };
+		EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD212C71EEF300FA347D /* ManagementPost.swift */; };
+		EEDDDD242C71EF3600FA347D /* ManagementBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */; };
+		EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD282C7313EE00FA347D /* PopupViewModel.swift */; };
+		EEDDDD2B2C7340B300FA347D /* StudyBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD2A2C7340B300FA347D /* StudyBottomSheet.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
 		EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
@@ -258,6 +263,11 @@
 		EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyWriterComponent.swift; sourceTree = "<group>"; };
 		EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyCommentComponent.swift; sourceTree = "<group>"; };
 		EEDDDD1A2C6CA05900FA347D /* Convert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convert.swift; sourceTree = "<group>"; };
+		EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowBottomSheet.swift; sourceTree = "<group>"; };
+		EEDDDD212C71EEF300FA347D /* ManagementPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementPost.swift; sourceTree = "<group>"; };
+		EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementBookmark.swift; sourceTree = "<group>"; };
+		EEDDDD282C7313EE00FA347D /* PopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewModel.swift; sourceTree = "<group>"; };
+		EEDDDD2A2C7340B300FA347D /* StudyBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyBottomSheet.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
 		EEFD5D202B5F67B400D1CE00 /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenDTO.swift; sourceTree = "<group>"; };
@@ -337,14 +347,15 @@
 				EE07ADCA2AF25F440096890F /* SearchBarHelper.swift */,
 				EE271F272AD7852900190E7A /* TapBar.swift */,
 				EE07ADCE2AF325F80096890F /* UILabelPadding.swift */,
+				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
 				EE07ADBC2AEFF7BD0096890F /* ConvertMajor.swift */,
-				EE07ADC22AF236260096890F /* BottomSheet.swift */,
-				EE07ADC42AF2414C0096890F /* PopUpViewController.swift */,
-				EE07ADC62AF241A30096890F /* PopUpView.swift */,
+				EEDDDD202C71EE8900FA347D /* BottomSheet */,
+				EEDDDD252C72EC8D00FA347D /* PopupView */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
 				EEDDDD1A2C6CA05900FA347D /* Convert.swift */,
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
-				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
+				EEDDDD212C71EEF300FA347D /* ManagementPost.swift */,
+				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -796,6 +807,42 @@
 			path = ViewComponent;
 			sourceTree = "<group>";
 		};
+		EEDDDD202C71EE8900FA347D /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				EE07ADC22AF236260096890F /* BottomSheet.swift */,
+				EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */,
+				EEDDDD2A2C7340B300FA347D /* StudyBottomSheet.swift */,
+			);
+			path = BottomSheet;
+			sourceTree = "<group>";
+		};
+		EEDDDD252C72EC8D00FA347D /* PopupView */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDDD262C73136900FA347D /* View */,
+				EEDDDD272C73137500FA347D /* ViewModel */,
+			);
+			path = PopupView;
+			sourceTree = "<group>";
+		};
+		EEDDDD262C73136900FA347D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE07ADC42AF2414C0096890F /* PopUpViewController.swift */,
+				EE07ADC62AF241A30096890F /* PopUpView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEDDDD272C73137500FA347D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDDD282C7313EE00FA347D /* PopupViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EEFD5D222B5F67C300D1CE00 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
@@ -1090,6 +1137,7 @@
 				EE0A8B852B0A22F7001C3F41 /* PostDetailManager.swift in Sources */,
 				F873775B2AACD41D0055B041 /* BookmarkViewController.swift in Sources */,
 				EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */,
+				EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */,
 				EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */,
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
 				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
@@ -1097,6 +1145,7 @@
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
 				EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */,
 				EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */,
+				EEDDDD2B2C7340B300FA347D /* StudyBottomSheet.swift in Sources */,
 				EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */,
 				EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */,
 				EEFD5D212B5F67B400D1CE00 /* CommentDTO.swift in Sources */,
@@ -1126,7 +1175,9 @@
 				EEDD81142B7DFCC30022302E /* MyRequestManager.swift in Sources */,
 				EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */,
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
+				EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
+				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */,
@@ -1148,6 +1199,7 @@
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
 				EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */,
 				EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */,
+				EEDDDD242C71EF3600FA347D /* ManagementBookmark.swift in Sources */,
 				EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */,
 				F87377592AA850940055B041 /* DepartmentselectViewController.swift in Sources */,
 				EED00B832C54D622000D2E23 /* CheckEmailViewModel.swift in Sources */,

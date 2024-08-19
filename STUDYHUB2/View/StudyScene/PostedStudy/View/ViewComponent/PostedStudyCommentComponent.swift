@@ -45,13 +45,14 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   }()
   
   private lazy var commentStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var divideLineTopTextField = createDividerLine(height: 1.0)
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
   private lazy var commentButton = StudyHubButton(title: "등록")
+  private lazy var divideLineUnderTextField = createDividerLine(height: 8.0)
   private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
     
   init(){
     super.init(frame: .zero)
-  
   }
   
   required init?(coder: NSCoder) {
@@ -82,7 +83,9 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     [
       commentLabelStackView,
       commentStackView,
-      commentButtonStackView
+      divideLineTopTextField,
+      commentButtonStackView,
+      divideLineUnderTextField
     ].forEach {
       self.addSubview($0)
     }
@@ -110,9 +113,19 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
       $0.width.equalTo(65)
     }
     
+    divideLineTopTextField.snp.makeConstraints {
+      $0.top.equalTo(commentTableView.snp.bottom).offset(20)
+      $0.leading.trailing.equalToSuperview()
+    }
+    
     commentButtonStackView.snp.makeConstraints {
-      $0.top.equalTo(commentStackView.snp.bottom).offset(10)
+      $0.top.equalTo(divideLineTopTextField.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview().inset(20)
+    }
+    
+    divideLineUnderTextField.snp.makeConstraints {
+      $0.top.equalTo(commentButtonStackView.snp.bottom).offset(20)
+      $0.leading.trailing.equalToSuperview()
     }
   }
 }

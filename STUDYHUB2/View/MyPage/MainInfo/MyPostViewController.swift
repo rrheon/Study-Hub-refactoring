@@ -230,11 +230,11 @@ final class MyPostViewController: NaviHelper {
     let popupVC = PopupViewController(title: "글을 모두 삭제할까요?",
                                       desc: "삭제한 글과 참여자는 다시 볼 수 없어요")
     
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-      popupVC.dismiss(animated: true)
-      self.deleteAllPost()
-    }
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      guard let self = self else { return }
+//      popupVC.dismiss(animated: true)
+//      self.deleteAllPost()
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
@@ -250,10 +250,10 @@ final class MyPostViewController: NaviHelper {
           dispatchGroup.leave() // 완료되면 나가기
         }
         switch result{
-        case .success(let response):
-          print(response)
-        case .failure(let response):
-          print(response)
+        case true:
+          print("삭제")
+        case false:
+          print("실패")
         }
       }
     })
@@ -350,7 +350,6 @@ extension MyPostViewController: MyPostCellDelegate {
   // 메뉴버튼
   func menuButtonTapped(in cell: MyPostCell, postID: Int) {
     let bottomSheetVC = BottomSheet(postID: postID)
-    bottomSheetVC.delegate = self
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -382,22 +381,22 @@ extension MyPostViewController: MyPostCellDelegate {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
     
-    popupVC.popupView.rightButtonAction = {
-      self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
-        switch result {
-        case .success(let response):
-          print(response.response)
-          if response.statusCode == 200 {
-            self.getMyPostData(size: 5) {
-              print("데이터리로드")
-            }
-            self.dismiss(animated: true)
-          }
-        case .failure(let response):
-          print(response.response)
-        }
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
+//        switch result {
+//        case .success(let response):
+//          print(response.response)
+//          if response.statusCode == 200 {
+//            self.getMyPostData(size: 5) {
+//              print("데이터리로드")
+//            }
+//            self.dismiss(animated: true)
+//          }
+//        case .failure(let response):
+//          print(response.response)
+//        }
+//      }
+//    }
   }
   
   // MARK: - 스크롤해서 데이터 가져오기
@@ -419,17 +418,15 @@ extension MyPostViewController: MyPostCellDelegate {
 // 삭제하고 뒤로가면 마이페이지인데 이거 데이터도 다시 잡아줘야함, 게시글 상세조회에서 할때도
 extension MyPostViewController: BottomSheetDelegate {
   // 수정해야할수도
-  func firstButtonTapped(postID: Int?) {
+  func firstButtonTapped(postID: Int) {
     let popupVC = PopupViewController(title: "이 글을 삭제할까요?",
-                                      desc: "삭제한 글과 참여자는 다시 볼 수 없어요",
-                                      postID: postID ?? 0)
-    popupVC.delegate = self
+                                      desc: "삭제한 글과 참여자는 다시 볼 수 없어요")
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
   
   // BottomSheet에서 화면을 전환할 때
-  func secondButtonTapped(postID: Int?) {
+  func secondButtonTapped(postID: Int) {
     self.dismiss(animated: true) {
       let createVC = CreateStudyViewController()
       createVC.modifyPostID = postID
@@ -454,10 +451,10 @@ extension MyPostViewController {
   }
 }
 
-extension MyPostViewController: PopupViewDelegate {
-  func afterDeletePost(completion: @escaping () -> Void) {
-    getMyPostData(size: 5) {
-      self.myPostCollectionView.reloadData()
-    }
-  }
-}
+//extension MyPostViewController: PopupViewDelegate {
+//  func afterDeletePost(completion: @escaping () -> Void) {
+//    getMyPostData(size: 5) {
+//      self.myPostCollectionView.reloadData()
+//    }
+////  }
+//}

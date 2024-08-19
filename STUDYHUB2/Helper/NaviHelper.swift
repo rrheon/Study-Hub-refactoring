@@ -72,17 +72,17 @@ class NaviHelper: UIViewController {
                                     firstButtonTitle: "삭제하기",
                                     secondButtonTitle: "수정하기")
     // 네비게이션바에서 바텀시트 열고 첫번째 버튼 누르면 postid전달이 안된다
-    bottomSheetVC.deletePostButtonAction = { [weak self] in
-      bottomSheetVC.dismiss(animated: true) {
-        self?.deletePost()
-      }
-    }
-    
-    bottomSheetVC.modifyPostButtonAction = { [weak self] in
-      bottomSheetVC.dismiss(animated: true) {
-        self?.modifyPost()
-      }
-    }
+//    bottomSheetVC.deletePostButtonAction = { [weak self] in
+//      bottomSheetVC.dismiss(animated: true) {
+//        self?.deletePost()
+//      }
+//    }
+//    
+//    bottomSheetVC.modifyPostButtonAction = { [weak self] in
+//      bottomSheetVC.dismiss(animated: true) {
+//        self?.modifyPost()
+//      }
+//    }
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -158,12 +158,12 @@ class NaviHelper: UIViewController {
       desc: desc,
       leftButtonTitle: leftButtonTitle,
       rightButtonTilte: "로그인")
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        self.dismiss(animated: true)
-      }
-    }
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true) {
+//        self.dismiss(animated: true)
+//      }
+//    }
 
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

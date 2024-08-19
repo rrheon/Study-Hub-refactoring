@@ -198,29 +198,29 @@ final class MyParticipateStudyVC: NaviHelper {
   func confirmDeleteAll(){
     let popupVC = PopupViewController(title: "스터디를 모두 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      self.participateInfo?.participateStudyData.content.map({ participateDatas in
-        self.myRequestListManger.deleteRequestStudy(studyId: participateDatas.studyID) {
-          print("전체삭제")
-        }
-      })
-      self.getRequestList {
-        self.myPostCollectionView.reloadData()
-        
-        if self.countPostNumber == 0 {
-          self.myPostCollectionView.isHidden = true
-          self.noDataUI()
-        }
-      }
-      self.showToast(message: "삭제가 완료됐어요.",
-                     imageCheck: true,
-                     alertCheck: true)
-      }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      self.participateInfo?.participateStudyData.content.map({ participateDatas in
+//        self.myRequestListManger.deleteRequestStudy(studyId: participateDatas.studyID) {
+//          print("전체삭제")
+//        }
+//      })
+//      self.getRequestList {
+//        self.myPostCollectionView.reloadData()
+//        
+//        if self.countPostNumber == 0 {
+//          self.myPostCollectionView.isHidden = true
+//          self.noDataUI()
+//        }
+//      }
+//      self.showToast(message: "삭제가 완료됐어요.",
+//                     imageCheck: true,
+//                     alertCheck: true)
+//      }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
   
   func noDataUI(){
@@ -297,24 +297,24 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-
-      self.myRequestListManger.deleteRequestStudy(studyId: postID) {
-
-        self.getRequestList {
-          self.myPostCollectionView.reloadData()
-
-          if self.countPostNumber == 0 {
-            self.myPostCollectionView.isHidden = true
-            self.noDataUI()
-          }
-        }
-        self.showToast(message: "삭제가 완료됐어요.",
-                  imageCheck: true,
-                  alertCheck: true)
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//
+//      self.myRequestListManger.deleteRequestStudy(studyId: postID) {
+//
+//        self.getRequestList {
+//          self.myPostCollectionView.reloadData()
+//
+//          if self.countPostNumber == 0 {
+//            self.myPostCollectionView.isHidden = true
+//            self.noDataUI()
+//          }
+//        }
+//        self.showToast(message: "삭제가 완료됐어요.",
+//                  imageCheck: true,
+//                  alertCheck: true)
+//      }
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

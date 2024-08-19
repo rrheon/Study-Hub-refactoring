@@ -9,7 +9,7 @@ import Foundation
 
 import RxRelay
 
-final class PostedStudyViewModel: CommonViewModel {
+final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, DeletePost {
   let detailPostDataManager = PostDetailInfoManager.shared
   let myPostDataManager = MyPostInfoManager.shared
   let createPostManager = PostManager.shared
@@ -20,13 +20,18 @@ final class PostedStudyViewModel: CommonViewModel {
   var commentDatas = PublishRelay<[CommentConetent]>()
   var relatedPostDatas = BehaviorRelay<[RelatedPost]>(value: [])
   var countComment = PublishRelay<Int>()
-  
+  var isBookmarked = BehaviorRelay<Bool>(value: false)
+  var isMyPost = PublishRelay<Bool>()
+  let dataFromPopupView = PublishRelay<String>()
+
   init(_ postDatas: PostDetailData) {
     super.init()
     
     self.postDatas.accept(postDatas)
+    self.isMyPost.accept(postDatas.usersPost)
     self.relatedPostDatas.accept(postDatas.relatedPost)
-
+    self.isBookmarked.accept(postDatas.bookmarked)
+    
     fetchCommentDatas()
   }
   
@@ -38,5 +43,10 @@ final class PostedStudyViewModel: CommonViewModel {
       let commentCount = comments.filter { $0.commentID != nil }.count
       self?.countComment.accept(commentCount)
     }
+  }
+  
+  func bookmarkToggle(){
+    var toggledBookmark = isBookmarked.value ? false : true
+    isBookmarked.accept(toggledBookmark)
   }
 }

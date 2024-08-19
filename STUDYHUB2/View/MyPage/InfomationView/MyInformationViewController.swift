@@ -348,7 +348,6 @@ final class MyInformViewController: NaviHelper {
     let bottomSheetVC = BottomSheet(postID: 0,
                                     firstButtonTitle: "사진 촬영하기" ,
                                     secondButtonTitle: "앨범에서 선택하기")
-    bottomSheetVC.delegate = self
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -405,18 +404,18 @@ final class MyInformViewController: NaviHelper {
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      self?.tokenManager.deleteTokens()
-      
-      self?.dismiss(animated: true) {
-        self?.bookmarkList.removeAll()
-        
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .overFullScreen
-        self?.present(loginVC, animated: true, completion: nil)
-      }
-    }
+//    
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      self?.tokenManager.deleteTokens()
+//      
+//      self?.dismiss(animated: true) {
+//        self?.bookmarkList.removeAll()
+//        
+//        let loginVC = LoginViewController()
+//        loginVC.modalPresentationStyle = .overFullScreen
+//        self?.present(loginVC, animated: true, completion: nil)
+//      }
+//    }
   }
   
   // MARK: - 탈퇴하기
@@ -429,6 +428,7 @@ final class MyInformViewController: NaviHelper {
 
 // MARK: - bottomSheet Delegate
 extension MyInformViewController: BottomSheetDelegate {
+  
   // 프로필 이미지 변경
   func changeProfileImage(type: UIImagePickerController.SourceType){
     self.dismiss(animated: true)
@@ -440,17 +440,12 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
-  func firstButtonTapped(postID: Int?) {
-//    changeProfileImage(type: .camera)
+  func firstButtonTapped(postID: Int) {
     requestCameraAccess()
-
   }
   
-  // 앨범에서 선택하기
-  func secondButtonTapped(postID: Int?) {
-//    changeProfileImage(type: .photoLibrary)
+  func secondButtonTapped(postID: Int) {
     requestPhotoLibraryAccess()
-
   }
   
   func requestCameraAccess() {
@@ -494,16 +489,16 @@ extension MyInformViewController: BottomSheetDelegate {
       rightButtonTilte: "설정"
     )
     
-    popupVC.popupView.leftButtonAction = {
-      self.dismiss(animated: true, completion: nil)
-    }
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(settingsURL)
-      }
-    }
+//    popupVC.popupView.leftButtonAction = {
+//      self.dismiss(animated: true, completion: nil)
+//    }
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true) {
+//        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+//        UIApplication.shared.open(settingsURL)
+//      }
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

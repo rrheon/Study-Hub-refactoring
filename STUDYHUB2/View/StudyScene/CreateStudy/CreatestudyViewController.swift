@@ -916,7 +916,7 @@ final class CreateStudyViewController: NaviHelper {
       commonNetworking.refreshAccessToken { result in
         switch result {
         case true:
-          self.postManager.modifyPost(data: updatePostData) {
+          self.postManager.modifyPost(data: updatePostData) { _ in 
             self.navigationController?.popViewController(animated: true)
             self.showToast(message: "글이 수정됐어요.", alertCheck: true)
           }

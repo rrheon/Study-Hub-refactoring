@@ -258,32 +258,36 @@ final class EnterNicknameViewController: CommonNavi {
           email: self?.viewModel.email,
           password: self?.viewModel.password,
           gender: self?.viewModel.selectedGender,
-          nickname: self?.nicknameTextField.getTextFieldValue())
+          nickname: self?.nicknameTextField.getTextFieldValue()
+        )
         let departmentVC = DepartmentViewController(signupDatas)
         self?.navigationController?.pushViewController(departmentVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
   }
 
-  func genderButtonSetting(button: UIButton,
-                           backgroundColor: UIColor,
-                           titleColor: UIColor,
-                           borderColor: UIColor) {
+  func genderButtonSetting(
+    button: UIButton,
+    backgroundColor: UIColor,
+    titleColor: UIColor,
+    borderColor: UIColor) {
       button.backgroundColor = backgroundColor
       button.setTitleColor(titleColor, for: .normal)
       button.layer.borderColor = borderColor.cgColor
-  }
+    }
   
   // MARK: - 중복 확인에 실패
   
   func failToCheckDuplicaiton(content: String){
     self.characterCountLabel.isHidden = true
     
-    nicknameTextField.alertLabelSetting(hidden: false,
-                                        title: content,
-                                        textColor: .r50,
-                                        underLineColor: .r50)
-
+    nicknameTextField.alertLabelSetting(
+      hidden: false,
+      title: content,
+      textColor: .r50,
+      underLineColor: .r50
+    )
+    
     self.nextButton.backgroundColor = .o60
     self.nextButton.setTitleColor(.g90, for: .normal)
   }

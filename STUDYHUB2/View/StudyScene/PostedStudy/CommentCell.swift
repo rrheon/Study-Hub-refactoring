@@ -57,7 +57,7 @@ final class CommentCell: UITableViewCell {
     return label
   }()
   
-
+  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
@@ -121,9 +121,9 @@ final class CommentCell: UITableViewCell {
     getUserData {
       DispatchQueue.main.async {
         self.commentId = self.model?.commentID
-
+        
         self.nickNameLabel.text = self.model?.commentedUserData.nickname
-    
+        
         if self.userNickname != self.nickNameLabel.text {
           self.menuButton.isHidden = true
         }
@@ -132,7 +132,7 @@ final class CommentCell: UITableViewCell {
         
         guard let createeData = self.model?.createdDate else { return }
         self.postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
-
+        
         
         if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
           let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
@@ -151,9 +151,9 @@ final class CommentCell: UITableViewCell {
               print("Image download failed: \(error)")
             }
           }
+        }
       }
-    }
- 
+      
     }
   }
   

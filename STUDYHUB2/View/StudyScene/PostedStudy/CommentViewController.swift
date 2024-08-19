@@ -300,7 +300,6 @@ extension CommentViewController {
 extension CommentViewController: CommentCellDelegate {
   func menuButtonTapped(in cell: CommentCell, commentId: Int) {
     let bottomSheetVC = BottomSheet(postID: commentId)
-    bottomSheetVC.delegate = self
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -325,7 +324,7 @@ extension CommentViewController: CommentCellDelegate {
 }
 
 extension CommentViewController: BottomSheetDelegate {
-  func firstButtonTapped(postID: Int?) {
+  func firstButtonTapped(postID: Int) {
     self.commentTextField.text = nil
     self.commentTextField.resignFirstResponder()
     let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
@@ -334,22 +333,22 @@ extension CommentViewController: BottomSheetDelegate {
 
     self.present(popupVC, animated: true)
     
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        DispatchQueue.main.async {
-          self.deleteComment(commentId: postID ?? 0) {
-            self.getCommentList {
-              self.showToast(message: "댓글이 삭제됐어요.",
-                             imageCheck: false)
-              self.tableViewResizing()
-            }
-          }
-        }
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true) {
+//        DispatchQueue.main.async {
+//          self.deleteComment(commentId: postID ?? 0) {
+//            self.getCommentList {
+//              self.showToast(message: "댓글이 삭제됐어요.",
+//                             imageCheck: false)
+//              self.tableViewResizing()
+//            }
+//          }
+//        }
+//      }
+//    }
   }
   
-  func secondButtonTapped(postID: Int?) {
+  func secondButtonTapped(postID: Int) {
     commentButton.setTitle("수정", for: .normal)
     commentId = postID
   }

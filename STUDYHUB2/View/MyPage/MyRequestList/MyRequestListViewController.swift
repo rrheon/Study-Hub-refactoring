@@ -221,23 +221,23 @@ extension MyRequestListViewController: MyRequestCellDelegate {
                                       desc: "")
     
     popupVC.modalPresentationStyle = .overFullScreen
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-
-      self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
-        self.getRequestList {
-          self.myStudyRequestCollectionView.reloadData()
-
-          if self.countPostNumber == 0 {
-            self.myStudyRequestCollectionView.isHidden = true
-            self.noDataUI()
-          }
-        }
-        self.showToast(message: "삭제가 완료됐어요.",
-                  imageCheck: true,
-                  alertCheck: true)
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//
+//      self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
+//        self.getRequestList {
+//          self.myStudyRequestCollectionView.reloadData()
+//
+//          if self.countPostNumber == 0 {
+//            self.myStudyRequestCollectionView.isHidden = true
+//            self.noDataUI()
+//          }
+//        }
+//        self.showToast(message: "삭제가 완료됐어요.",
+//                  imageCheck: true,
+//                  alertCheck: true)
+//      }
+//    }
     
     self.present(popupVC, animated: false)
   }

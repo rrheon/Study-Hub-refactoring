@@ -192,22 +192,20 @@ final class BookmarkViewController: NaviHelper {
   // MARK: - 북마크 전체 삭제
   @objc func deleteAllButtonTapped(){
     // postID 수정 필요
-    let popupVC = PopupViewController(title: "",
-                                      desc: "북마크를 모두 삭제할까요?",
-                                      postID: 1, bottomeSheet: nil)
+    let popupVC = PopupViewController(title: "", desc: "북마크를 모두 삭제할까요?")
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
     
-    popupVC.popupView.rightButtonAction = {
-      self.bookmarkManager.deleteAllBookmark {
-        self.dismiss(animated: true)
-        self.getBookmarkList(requestNum: self.defaultRequestNum) {
-          self.bookMarkCollectionView.reloadData()
-        }
-      }
-      self.bookMarkCollectionView.isHidden = true
-      self.noDataUI(loginStatus: true)
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.bookmarkManager.deleteAllBookmark {
+//        self.dismiss(animated: true)
+//        self.getBookmarkList(requestNum: self.defaultRequestNum) {
+//          self.bookMarkCollectionView.reloadData()
+//        }
+//      }
+//      self.bookMarkCollectionView.isHidden = true
+//      self.noDataUI(loginStatus: true)
+//    }
   }
   
   // MARK: - 북마크 리스트 조회, 스크롤 말고 애초에 다 가져오자

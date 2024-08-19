@@ -45,17 +45,14 @@ final class MyPostInfoManager {
   }
   
   // MARK: - 내가 쓴 게시글 삭제
-  func deleteMyPost(postId: Int,
-                    completion: @escaping (Result<Void, Error>) -> Void) {
+  func deleteMyPost(postId: Int, completion: @escaping (Bool) -> Void) {
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.deleteMyPost(_postId: postId)) {
       switch $0 {
       case .success(let response):
-        print(response.response)
-        completion(.success(()))
+        completion(true)
       case .failure(let response):
-        print(response.response)
-        completion(.failure(response))
+        completion(false)
       }
     }
   }

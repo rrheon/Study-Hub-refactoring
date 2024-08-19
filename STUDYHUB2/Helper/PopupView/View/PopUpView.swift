@@ -95,12 +95,20 @@ final class PopupView: UIView {
     super.init(frame: .zero)
     
     self.backgroundColor = .clear
-    
+  
+    setupLayout()
+    self.setupConstraints()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func setupLayout(){
     self.addSubview(self.popupView)
     
     if checkEndButton {
       self.checkEndButton = true
-      
       self.buttonStack.addArrangedSubview(self.endButton)
     } else {
       self.buttonStack.addArrangedSubview(self.leftButton)
@@ -110,14 +118,8 @@ final class PopupView: UIView {
     self.popupView.addSubview(self.titleLabel)
     self.popupView.addSubview(self.descLabel)
     self.popupView.addSubview(self.buttonStack)
-    
-    self.setupConstraints()
   }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
+
   private func setupConstraints() {
     self.popupView.snp.makeConstraints { make in
       make.center.equalToSuperview()

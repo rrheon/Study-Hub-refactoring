@@ -1,32 +1,21 @@
-//
-//  BottomSheet.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 2023/11/01.
-//
 
 import UIKit
 
 import SnapKit
 
-// 이걸 다 바꿔야하나, 버튼 2개 다 delegate로 받고 쓸 때 함수 선언, 초기화 할 때 버튼 이름 받기
-protocol BottomSheetDelegate: AnyObject {
-  func firstButtonTapped(postID: Int?)
-  func secondButtonTapped(postID: Int?)
+protocol BottomSheetDelegate {
+  func firstButtonTapped(postID: Int)
+  func secondButtonTapped(postID: Int)
 }
 
 final class BottomSheet: UIViewController {
-  weak var delegate: BottomSheetDelegate?
-  
   private let postID: Int
   private let firstButtonTitle: String
   private let secondButtonTitle: String
   private let checkMyPost: Bool
   
-  let detailPostDataManager = PostDetailInfoManager.shared
-  var deletePostButtonAction: (() -> Void)?
-  var modifyPostButtonAction: (() -> Void)?
-
+  var delegate: BottomSheetDelegate?
+  
   init(postID: Int,
        checkMyPost: Bool = false,
        firstButtonTitle: String = "삭제하기",
@@ -50,11 +39,7 @@ final class BottomSheet: UIViewController {
     let buttonColor = firstButtonTitle == "삭제하기" ? UIColor.o50 : UIColor.bg80
     button.setTitleColor(buttonColor, for: .normal)
     button.addAction(UIAction { _ in
-      if self.checkMyPost {
-        self.deletePostButtonTapped()
-      }else{
-        self.firstButtonTapped()
-      }
+      self.firstButtonTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -64,11 +49,7 @@ final class BottomSheet: UIViewController {
     button.setTitle(secondButtonTitle, for: .normal)
     button.setTitleColor(.bg80, for: .normal)
     button.addAction(UIAction { _ in
-      if self.checkMyPost {
-        self.modifyPostButtonTapped()
-      }else{
-        self.secondButtonTapped()
-      }
+      self.secondButtonTapped()
     }, for: .touchUpInside)
     return button
   }()
@@ -89,7 +70,6 @@ final class BottomSheet: UIViewController {
     
     setUpLayout()
     makeUI()
-    
   }
   
   func setUpLayout(){
@@ -114,7 +94,6 @@ final class BottomSheet: UIViewController {
       make.top.equalTo(deleteButton.snp.bottom).offset(10)
       make.centerX.equalToSuperview()
       make.height.equalTo(50)
-      
     }
     
     dismissButton.snp.makeConstraints { make in
@@ -139,15 +118,5 @@ final class BottomSheet: UIViewController {
     dismiss(animated: true) {
       self.delegate?.secondButtonTapped(postID: self.postID)
     }
-  }
-  
-  func deletePostButtonTapped(){
-    deletePostButtonAction?()
-    print("Hhh")
-  }
-  
-  func modifyPostButtonTapped(){
-    modifyPostButtonAction?()
-    print("게시글 수정하기")
   }
 }

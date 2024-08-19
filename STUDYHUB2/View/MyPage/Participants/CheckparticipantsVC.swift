@@ -422,17 +422,17 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
     
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-    
-      let personData = AcceptStudy(rejectedUserId: userId,
-                                   studyId: self.studyID)
-      self.participateManager.acceptApplyUser(personData: personData) {
-        popupVC.dismiss(animated: true)
-        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
-        self.waitButtonTapped()
-      }
-    }
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      guard let self = self else { return }
+//    
+//      let personData = AcceptStudy(rejectedUserId: userId,
+//                                   studyId: self.studyID)
+//      self.participateManager.acceptApplyUser(personData: personData) {
+//        popupVC.dismiss(animated: true)
+//        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+//        self.waitButtonTapped()
+//      }
+//    }
   }
 }
 

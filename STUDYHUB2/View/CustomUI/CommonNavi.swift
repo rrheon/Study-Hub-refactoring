@@ -32,15 +32,15 @@ class CommonNavi: UIViewController {
   }
   
   func rightButtonSetting(imgName: String){
-    let bookMarkImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
-    lazy var bookMark = UIBarButtonItem(
-      image: bookMarkImg,
+    let rightButtonImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
+    lazy var rightButton = UIBarButtonItem(
+      image: rightButtonImg,
       style: .plain,
       target: self,
       action: #selector(rightButtonTapped(_:)))
-    bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+    rightButton.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
-    navigationItem.rightBarButtonItem = bookMark
+    self.navigationItem.rightBarButtonItem = rightButton
   }
   
   @objc func rightButtonTapped(_ sender: UIBarButtonItem) {}
