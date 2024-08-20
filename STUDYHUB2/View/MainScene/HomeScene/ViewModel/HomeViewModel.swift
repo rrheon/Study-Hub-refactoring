@@ -43,10 +43,8 @@ final class HomeViewModel: CommonViewModel {
   }
   
   func fectchSinglePostDatas(_ postID: Int){
-    detailPostDataManager.searchSinglePostData(
-      postId: postID,
-      loginStatus: false) {
-        self.singlePostData.accept($0)
-      }
+    detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: false) {
+      self.singlePostData.accept($0)
+    }
   }
 }

@@ -4,8 +4,8 @@ import UIKit
 import SnapKit
 
 protocol BottomSheetDelegate {
-  func firstButtonTapped(postID: Int)
-  func secondButtonTapped(postID: Int)
+  func firstButtonTapped(postID: Int, checkPost: Bool)
+  func secondButtonTapped(postID: Int, checkPost: Bool)
 }
 
 final class BottomSheet: UIViewController {
@@ -13,17 +13,20 @@ final class BottomSheet: UIViewController {
   private let firstButtonTitle: String
   private let secondButtonTitle: String
   private let checkMyPost: Bool
+  private let checkPost: Bool
   
   var delegate: BottomSheetDelegate?
   
   init(postID: Int,
        checkMyPost: Bool = false,
        firstButtonTitle: String = "삭제하기",
-       secondButtonTitle: String = "수정하기") {
+       secondButtonTitle: String = "수정하기",
+       checkPost: Bool = false) {
     self.postID = postID
     self.firstButtonTitle = firstButtonTitle
     self.secondButtonTitle = secondButtonTitle
     self.checkMyPost = checkMyPost
+    self.checkPost = checkPost
     
     super.init(nibName: nil, bundle: nil)
   }
@@ -106,7 +109,7 @@ final class BottomSheet: UIViewController {
   
   func firstButtonTapped(){
     dismiss(animated: true) {
-      self.delegate?.firstButtonTapped(postID: self.postID)
+      self.delegate?.firstButtonTapped(postID: self.postID, checkPost: self.checkPost)
     }
   }
   
@@ -116,7 +119,7 @@ final class BottomSheet: UIViewController {
   
   func secondButtonTapped(){
     dismiss(animated: true) {
-      self.delegate?.secondButtonTapped(postID: self.postID)
+      self.delegate?.secondButtonTapped(postID: self.postID, checkPost: self.checkPost)
     }
   }
 }

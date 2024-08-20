@@ -3,23 +3,33 @@ import RxRelay
 
 import SnapKit
 
+enum PopupActionType {
+  case editPost
+  case deletePost
+  case editComment
+  case deleteComment
+}
+
+// 글을 삭제할까요? , 글을 수정할까요? , 댓글을 삭제할까요?, 댓글 수정-> 다른걸 받아야할듯
 final class PopupViewController: UIViewController {
   let popupView: PopupView
   let viewModel: PopupViewModel
-  let rightButtonTitle: String
+  
+  let selectedAction: PopupActionType?
   
   init(title: String,
        desc: String = "",
        leftButtonTitle: String = "취소",
        rightButtonTilte: String = "삭제",
        checkEndButton: Bool = false,
-       dataStream: PublishRelay<String>? = nil
-  ) {
-    self.rightButtonTitle = rightButtonTilte
+       dataStream: PublishRelay<PopupActionType>? = nil,
+       selectAction: PopupActionType? = nil
+  ){
+    self.selectedAction = selectAction
     
     self.viewModel = PopupViewModel(
       isActivateEndButton: checkEndButton,
-      dataStrem: dataStream ?? PublishRelay<String>()
+      dataStrem: dataStream ?? PublishRelay<PopupActionType>()
     )
     
     self.popupView = PopupView(
@@ -49,14 +59,28 @@ final class PopupViewController: UIViewController {
     }
   }
   
+  func handlePopupAction(_ action: PopupActionType) -> PopupActionType {
+    switch action {
+    case .editPost:
+      return .editPost
+    case .deletePost:
+      return .deletePost
+    case .editComment:
+      return .editComment
+    case .deleteComment:
+      return .deleteComment
+    }
+  }
+  
   func buttonActions(){
     self.popupView.leftButtonAction = { [weak self] in
       self?.dismiss(animated: true, completion: nil)
     }
     
     self.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-      self.viewModel.dataSubject.accept(rightButtonTitle)
+      guard let self = self,
+            let selectedAction = selectedAction else { return }
+      viewModel.dataSubject.accept(selectedAction)
       self.dismiss(animated: true, completion: nil)
     }
     

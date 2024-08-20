@@ -20,8 +20,10 @@ final class PostManager {
   // 게시글 생성, 반환값 나중에 스웨거보고 확인하기
   func createPost(createPostDatas: CreateStudyRequest,
                   completion: @escaping (String) -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .createMyPost(createPostDatas),
-                                    needCheckToken: true) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .createMyPost(createPostDatas),
+      needCheckToken: true
+    ) { result in
       switch result {
       case .success(let response):
         print(response.response)

@@ -138,7 +138,7 @@ final class PopupView: UIView {
     
     leftButton.snp.makeConstraints { make in
       make.height.equalTo(47)
-      make.width.equalTo(rightButton) // 좌우 버튼의 크기를 같게 설정
+      make.width.equalTo(rightButton)
     }
     
     rightButton.snp.makeConstraints { make in

@@ -50,26 +50,26 @@ final class PostDetailInfoManager {
   }
   
   func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping () -> Void) {
-    commonNetwork.moyaNetworking(networkingChoice: .getCommentList(_postId: postId,
-                                                                   _page: page,
-                                                                   _size: size)) { result in
-      switch result {
-      case .success(let response):
-        do {
-          let commentContent = try JSONDecoder().decode(GetCommentList.self, from: response.data)
-          self.commentList = commentContent
-        } catch {
-          print("Failed to decode JSON: \(error)")
+    commonNetwork.moyaNetworking(networkingChoice: .getCommentList(
+      _postId: postId,
+      _page: page,
+      _size: size)) { result in
+        switch result {
+        case .success(let response):
+          do {
+            let commentContent = try JSONDecoder().decode(GetCommentList.self, from: response.data)
+            self.commentList = commentContent
+          } catch {
+            print("Failed to decode JSON: \(error)")
+          }
+          completion()
+        case .failure(let response):
+          print(response)
         }
-        completion()
-      case .failure(let response):
-        print(response)
       }
-    }
   }
   
-  func getCommentPreview(postId: Int,
-                         completion: @escaping ([CommentConetent]) -> Void){
+  func getCommentPreview(postId: Int, completion: @escaping ([CommentConetent]) -> Void){
     commonNetwork.moyaNetworking(networkingChoice: .getPreviewCommentList(_postid: postId)) { result in
       switch result {
       case .success(let response):

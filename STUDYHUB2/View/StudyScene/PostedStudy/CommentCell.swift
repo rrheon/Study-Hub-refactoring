@@ -10,8 +10,6 @@ protocol CommentCellDelegate: AnyObject {
 final class CommentCell: UITableViewCell {
   weak var delegate: CommentCellDelegate?
   
-  let userDataManager = UserInfoManager.shared
-  
   static let cellId = "CommentCell"
   var model: CommentConetent? { didSet { bind() } }
   var commentId: Int?
@@ -27,7 +25,7 @@ final class CommentCell: UITableViewCell {
   private lazy var nickNameLabel: UILabel = {
     let label = UILabel()
     label.textColor = .bg90
-    label.text = "비어있음"
+    label.text = model?.commentedUserData.nickname
     label.font = UIFont(name: "Pretendard", size: 16)
     return label
   }()
@@ -57,7 +55,6 @@ final class CommentCell: UITableViewCell {
     return label
   }()
   
-  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
@@ -69,12 +66,7 @@ final class CommentCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func getUserData(completion: @escaping () -> Void){
-    userDataManager.getUserInfo { result in
-      self.userNickname = result?.nickname
-      completion()
-    }
-  }
+  
   private func addSubviews() {
     [
       profileImageView,
@@ -118,42 +110,39 @@ final class CommentCell: UITableViewCell {
   }
   
   private func bind() {
-    getUserData {
-      DispatchQueue.main.async {
-        self.commentId = self.model?.commentID
+    DispatchQueue.main.async {
+      self.commentId = self.model?.commentID
+      
+      self.nickNameLabel.text = self.model?.commentedUserData.nickname
+      
+      if self.nickNameLabel.text != self.userNickname {
+        self.menuButton.isHidden = true
+      }
+      
+      self.commentLabel.text = self.model?.content
+      
+      guard let createeData = self.model?.createdDate else { return }
+      self.postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
+      
+      
+      if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
+        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
         
-        self.nickNameLabel.text = self.model?.commentedUserData.nickname
+        KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
         
-        if self.userNickname != self.nickNameLabel.text {
-          self.menuButton.isHidden = true
-        }
-        
-        self.commentLabel.text = self.model?.content
-        
-        guard let createeData = self.model?.createdDate else { return }
-        self.postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
-        
-        
-        if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
-          let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
-          
-          KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
-          
-          self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
-            switch result {
-            case .success(let value):
-              DispatchQueue.main.async {
-                self.profileImageView.image = value.image
-                self.profileImageView.layer.cornerRadius = 12
-                self.profileImageView.clipsToBounds = true
-              }
-            case .failure(let error):
-              print("Image download failed: \(error)")
+        self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+          switch result {
+          case .success(let value):
+            DispatchQueue.main.async {
+              self.profileImageView.image = value.image
+              self.profileImageView.layer.cornerRadius = 12
+              self.profileImageView.clipsToBounds = true
             }
+          case .failure(let error):
+            print("Image download failed: \(error)")
           }
         }
       }
-      
     }
   }
   

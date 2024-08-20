@@ -418,7 +418,7 @@ extension MyPostViewController: MyPostCellDelegate {
 // 삭제하고 뒤로가면 마이페이지인데 이거 데이터도 다시 잡아줘야함, 게시글 상세조회에서 할때도
 extension MyPostViewController: BottomSheetDelegate {
   // 수정해야할수도
-  func firstButtonTapped(postID: Int) {
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
     let popupVC = PopupViewController(title: "이 글을 삭제할까요?",
                                       desc: "삭제한 글과 참여자는 다시 볼 수 없어요")
     popupVC.modalPresentationStyle = .overFullScreen
@@ -426,7 +426,7 @@ extension MyPostViewController: BottomSheetDelegate {
   }
   
   // BottomSheet에서 화면을 전환할 때
-  func secondButtonTapped(postID: Int) {
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
     self.dismiss(animated: true) {
       let createVC = CreateStudyViewController()
       createVC.modifyPostID = postID

@@ -250,10 +250,7 @@ final class CommentViewController: NaviHelper {
   
   // MARK: - 댓글 리스트 가져오기
   func getCommentList(completion: @escaping () -> Void){
-    detailPostDataManager.getCommentList(postId: postId,
-                                         page: 0,
-                                         size: 100) {
-      
+    detailPostDataManager.getCommentList(postId: postId, page: 0, size: 100) {
       self.commentData = self.detailPostDataManager.getCommentList()
       self.countComment = self.commentData?.content.count ?? 0
       self.commentTableView.reloadData()
@@ -299,7 +296,7 @@ extension CommentViewController {
 // MARK: - cell에 메뉴버튼 눌렀을 때
 extension CommentViewController: CommentCellDelegate {
   func menuButtonTapped(in cell: CommentCell, commentId: Int) {
-    let bottomSheetVC = BottomSheet(postID: commentId)
+    let bottomSheetVC = BottomSheet(postID: commentId, checkPost: false)
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -324,7 +321,7 @@ extension CommentViewController: CommentCellDelegate {
 }
 
 extension CommentViewController: BottomSheetDelegate {
-  func firstButtonTapped(postID: Int) {
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
     self.commentTextField.text = nil
     self.commentTextField.resignFirstResponder()
     let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
@@ -348,7 +345,7 @@ extension CommentViewController: BottomSheetDelegate {
 //    }
   }
   
-  func secondButtonTapped(postID: Int) {
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
     commentButton.setTitle("수정", for: .normal)
     commentId = postID
   }

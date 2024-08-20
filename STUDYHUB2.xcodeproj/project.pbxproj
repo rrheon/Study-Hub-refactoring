@@ -46,6 +46,7 @@
 		EE0A8B822B089729001C3F41 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE0A8B792B089729001C3F41 /* Pretendard-ExtraBold.otf */; };
 		EE0A8B832B089729001C3F41 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE0A8B7A2B089729001C3F41 /* Pretendard-Black.otf */; };
 		EE0A8B852B0A22F7001C3F41 /* PostDetailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0A8B842B0A22F7001C3F41 /* PostDetailManager.swift */; };
+		EE0B6D102C74759E00FEFEBA /* ManagementComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */; };
 		EE1E44112B17222200223436 /* MyPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44102B17222200223436 /* MyPostCell.swift */; };
 		EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44152B172ACB00223436 /* MyPostViewController.swift */; };
 		EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */; };
@@ -187,6 +188,7 @@
 		EE0A8B792B089729001C3F41 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		EE0A8B7A2B089729001C3F41 /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.otf"; sourceTree = "<group>"; };
 		EE0A8B842B0A22F7001C3F41 /* PostDetailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailManager.swift; sourceTree = "<group>"; };
+		EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementComment.swift; sourceTree = "<group>"; };
 		EE1E44102B17222200223436 /* MyPostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostCell.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPostCell.swift; sourceTree = SOURCE_ROOT; };
 		EE1E44152B172ACB00223436 /* MyPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostViewController.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPostViewController.swift; sourceTree = SOURCE_ROOT; };
 		EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipataeStudyVC.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
 				EEDDDD212C71EEF300FA347D /* ManagementPost.swift */,
 				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
+				EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1183,6 +1186,7 @@
 				EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
+				EE0B6D102C74759E00FEFEBA /* ManagementComment.swift in Sources */,
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,
 				EED00B7E2C539D51000D2E23 /* CommonViewModel.swift in Sources */,
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,

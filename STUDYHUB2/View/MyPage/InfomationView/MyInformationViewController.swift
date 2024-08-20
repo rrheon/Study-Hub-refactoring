@@ -347,7 +347,8 @@ final class MyInformViewController: NaviHelper {
   func editProfileButtonTapped(){
     let bottomSheetVC = BottomSheet(postID: 0,
                                     firstButtonTitle: "사진 촬영하기" ,
-                                    secondButtonTitle: "앨범에서 선택하기")
+                                    secondButtonTitle: "앨범에서 선택하기",
+                                    checkPost: false)
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -430,7 +431,7 @@ final class MyInformViewController: NaviHelper {
 extension MyInformViewController: BottomSheetDelegate {
   
   // 프로필 이미지 변경
-  func changeProfileImage(type: UIImagePickerController.SourceType){
+  func changeProfileImage(type: UIImagePickerController.SourceType, checkPost: Bool){
     self.dismiss(animated: true)
     
     let picker = UIImagePickerController()
@@ -440,11 +441,11 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
-  func firstButtonTapped(postID: Int) {
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
     requestCameraAccess()
   }
   
-  func secondButtonTapped(postID: Int) {
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
     requestPhotoLibraryAccess()
   }
   
@@ -452,7 +453,7 @@ extension MyInformViewController: BottomSheetDelegate {
     AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
       if granted {
         DispatchQueue.main.async {
-          self?.changeProfileImage(type: .camera)
+          self?.changeProfileImage(type: .camera, checkPost: false)
         }
       } else {
         DispatchQueue.main.async {
@@ -467,7 +468,7 @@ extension MyInformViewController: BottomSheetDelegate {
       switch status {
       case .authorized:
         DispatchQueue.main.async {
-          self?.changeProfileImage(type: .photoLibrary)
+          self?.changeProfileImage(type: .photoLibrary, checkPost: false)
         }
       case .denied, .restricted:
         DispatchQueue.main.async {

@@ -10,12 +10,12 @@ import UIKit
 import SnapKit
 
 final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
-
+  
   lazy var countComment: Int = 0 {
     didSet {
       setupLayout()
       makeUI()
-      
+      tableViewResizing()
       commentLabel.text = "댓글 \(countComment)"
     }
   }
@@ -27,7 +27,7 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     fontSize: 16
   )
   
-  private lazy var moveToCommentViewButton: UIButton = {
+  lazy var moveToCommentViewButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
     button.tintColor = .black
@@ -46,11 +46,11 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   
   private lazy var commentStackView = createStackView(axis: .vertical, spacing: 10)
   private lazy var divideLineTopTextField = createDividerLine(height: 1.0)
-  private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
-  private lazy var commentButton = StudyHubButton(title: "등록")
+  lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
+  lazy var commentButton = StudyHubButton(title: "등록")
   private lazy var divideLineUnderTextField = createDividerLine(height: 8.0)
   private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
-    
+  
   init(){
     super.init(frame: .zero)
   }
@@ -91,12 +91,12 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     }
   }
   
-  func makeUI(){
+  func makeUI() {
     let tableViewHeight = 86 * countComment
     
     commentTableView.snp.makeConstraints {
       $0.height.equalTo(tableViewHeight)
-      $0.leading.equalToSuperview().inset(10)
+      $0.leading.trailing.equalToSuperview().inset(10)
     }
     
     commentLabelStackView.snp.makeConstraints {
@@ -107,17 +107,23 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
       $0.top.equalTo(commentLabelStackView.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
     }
-    
-    commentButton.snp.makeConstraints {
-      $0.height.equalTo(42)
-      $0.width.equalTo(65)
-    }
-    
+
     divideLineTopTextField.snp.makeConstraints {
       $0.top.equalTo(commentTableView.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview()
     }
     
+    commentTextField.snp.makeConstraints {
+      $0.leading.equalToSuperview().offset(10)
+      $0.trailing.equalTo(commentButton.snp.leading).offset(-10)
+      $0.height.equalTo(42)
+    }
+    
+    commentButton.snp.makeConstraints {
+      $0.height.equalTo(42)
+      $0.width.equalTo(65)
+    }
+
     commentButtonStackView.snp.makeConstraints {
       $0.top.equalTo(divideLineTopTextField.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview().inset(20)
@@ -126,6 +132,13 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     divideLineUnderTextField.snp.makeConstraints {
       $0.top.equalTo(commentButtonStackView.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview()
+    }
+  }
+  
+  func tableViewResizing(){
+    let tableViewHeight = 86 * countComment
+    self.commentTableView.snp.updateConstraints {
+      $0.height.equalTo(tableViewHeight)
     }
   }
 }

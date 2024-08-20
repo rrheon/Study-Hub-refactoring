@@ -5,11 +5,6 @@ import SnapKit
 import RxCocoa
 
 final class PostedStudyViewController: CommonNavi{
-  
-  func menuButtonTapped(in cell: CommentCell, commentId: Int) {
-    print("test")
-  }
-  
   let viewModel: PostedStudyViewModel
   
   private var mainComponent: PostedStudyMainComponent
@@ -188,7 +183,7 @@ final class PostedStudyViewController: CommonNavi{
       $0.leading.trailing.equalToSuperview()
     }
     
-    similarPostStackView.layoutMargins = UIEdgeInsets(top: 100, left: 20, bottom: 30, right: 10)
+    similarPostStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 30, right: 10)
     similarPostStackView.isLayoutMarginsRelativeArrangement = true
     
     similarCollectionView.snp.makeConstraints {
@@ -196,21 +191,31 @@ final class PostedStudyViewController: CommonNavi{
     }
     
     bottomButtonStackView.distribution = .fillProportionally
-    bottomButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    bottomButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
     bottomButtonStackView.isLayoutMarginsRelativeArrangement = true
     
-    participateButton.snp.makeConstraints {
+    bookmarkButton.snp.makeConstraints {
+      $0.top.equalToSuperview().offset(8)
+      $0.leading.equalToSuperview().offset(20)
+      $0.width.equalTo(45)
       $0.height.equalTo(55)
     }
     
-    pageStackView.snp.makeConstraints { make in
-      make.top.equalTo(scrollView.contentLayoutGuide)
-      make.leading.trailing.bottom.equalTo(scrollView.contentLayoutGuide)
-      make.width.equalTo(view.safeAreaLayoutGuide)
+    participateButton.snp.makeConstraints {
+      $0.top.equalTo(bookmarkButton)
+      $0.leading.equalTo(bookmarkButton.snp.trailing).offset(40)
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.height.equalTo(55)
     }
     
-    scrollView.snp.makeConstraints { make in
-      make.edges.equalTo(view)
+    pageStackView.snp.makeConstraints {
+      $0.top.equalTo(scrollView.contentLayoutGuide)
+      $0.leading.trailing.bottom.equalTo(scrollView.contentLayoutGuide)
+      $0.width.equalTo(view.safeAreaLayoutGuide)
+    }
+    
+    scrollView.snp.makeConstraints {
+      $0.edges.equalTo(view)
     }
   }
   
@@ -230,20 +235,28 @@ final class PostedStudyViewController: CommonNavi{
     viewModel.countComment
       .asDriver(onErrorJustReturn: 0)
       .drive(onNext: { [weak self] count in
-        self?.commentComponent.snp.makeConstraints {
-          $0.height.equalTo(count * 86 + 74)
+        let value = count <= 8 ? count : 8
+        self?.commentComponent.snp.remakeConstraints {
+          $0.height.equalTo(value * 86 + 160)
+        }
+        
+        self?.commentComponent.commentTableView.snp.remakeConstraints {
+          $0.height.equalTo(value * 86)
         }
         
         self?.commentComponent.countComment = count
       })
       .disposed(by: viewModel.disposeBag)
-    
+
     viewModel.commentDatas
       .bind(to: commentComponent.commentTableView.rx.items(
         cellIdentifier: CommentCell.cellId,
         cellType: CommentCell.self)) { index, content, cell in
           cell.model = content
           cell.delegate = self
+          cell.userNickname = self.viewModel.userNickanme
+          cell.selectionStyle = .none
+          cell.contentView.isUserInteractionEnabled = false
         }
         .disposed(by: viewModel.disposeBag)
     
@@ -256,6 +269,14 @@ final class PostedStudyViewController: CommonNavi{
         }
         .disposed(by: viewModel.disposeBag)
     
+    viewModel.countRelatedPost
+      .subscribe(onNext: { [weak self] in
+        if $0 == 0 {
+          self?.similarPostStackView.isHidden = true
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
     viewModel.isBookmarked
       .asDriver()
       .drive(onNext: { [weak self] in
@@ -265,9 +286,44 @@ final class PostedStudyViewController: CommonNavi{
       .disposed(by: viewModel.disposeBag)
     
     viewModel.dataFromPopupView
-      .subscribe(onNext: { [weak self] in
+      .subscribe(onNext: { [weak self] action in
         guard let self = self else { return }
-        $0 == "삭제" ? deleteMyPost() : showModifyView(vc: self)
+        switch action {
+        case .deletePost:
+          // 게시글 삭제 후 나가고 토스트 팝업 띄우면 될듯
+          guard let postID = viewModel.postDatas.value?.postID else { return }
+          viewModel.deleteMyPost(postID) {
+            print($0)
+          }
+        case .editPost:
+          guard let postID = viewModel.postDatas.value?.postID else { return }
+          let modifyVC = CreateStudyViewController(postID: postID)
+          modifyVC.hidesBottomBarWhenPushed = true
+          navigationController?.pushViewController(modifyVC, animated: true)
+          
+        case .deleteComment:
+          viewModel.commentManager.deleteComment(commentID: viewModel.postOrCommentID) {
+            if $0 {
+              self.viewModel.fetchCommentDatas()
+            }
+          }
+        case .editComment:
+          commentComponent.commentButton.setTitle("수정", for: .normal)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    commentComponent.commentTextField.rx.text.orEmpty
+      .bind(to: viewModel.commentTextFieldValue)
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.commentTextFieldValue
+      .subscribe(onNext: { [weak self] in
+        self?.commentComponent.commentButton.unableButton(
+          !$0.isEmpty,
+          backgroundColor: .o30,
+          titleColor: .white
+        )
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -280,6 +336,35 @@ final class PostedStudyViewController: CommonNavi{
         guard let postID = self?.viewModel.postDatas.value?.postID else { return }
         self?.viewModel.bookmarkTapped(postId: postID)
         self?.viewModel.bookmarkToggle()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    commentComponent.commentButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let postID = self?.viewModel.postDatas.value?.postID,
+              let content = self?.viewModel.commentTextFieldValue.value,
+              let commentID = self?.viewModel.postOrCommentID else { return }
+        let title = self?.commentComponent.commentButton.currentTitle
+        
+        switch title {
+        case "수정":
+          self?.modifyComment(content: content, commentID: commentID)
+        case "등록":
+          self?.createComment(content: content, postID: postID)
+        case .none:
+          return
+        case .some(_):
+          return
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    commentComponent.moveToCommentViewButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
+        let commentVC = CommentViewController(postID: postID)
+        commentVC.hidesBottomBarWhenPushed = true
+        self?.navigationController?.pushViewController(commentVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -308,7 +393,8 @@ final class PostedStudyViewController: CommonNavi{
       postID: postID,
       checkMyPost: true,
       firstButtonTitle: "삭제하기",
-      secondButtonTitle: "수정하기"
+      secondButtonTitle: "수정하기",
+      checkPost: true
     )
     bottomSheetVC.delegate = self
     
@@ -318,12 +404,38 @@ final class PostedStudyViewController: CommonNavi{
   
   func deleteMyPost(){
     guard let postID = self.viewModel.postDatas.value?.postID else { return }
-    
-    deleteMyPost(postID) { _ in
+    viewModel.deleteMyPost(postID) { _ in
       self.dismiss(animated: true)
     }
   }
+  
+  func createComment(content: String, postID: Int){
+    viewModel.commentManager.createComment(content: content, postID: postID) {
+      if $0 {
+        self.settingComment(mode: "생성")
+      }
+    }
+  }
+  
+  func modifyComment(content: String, commentID: Int) {
+    viewModel.commentManager.modifyComment(content: content, commentID: commentID) {
+      if $0 {
+        self.settingComment(mode: "수정")
+      }
+    }
+  }
+  func settingComment(mode: String){
+    viewModel.fetchCommentDatas()
+    let message = mode == "생성" ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
+    self.showToast(message: message,imageCheck: false)
+    
+    commentComponent.commentButton.setTitle("등록", for: .normal)
+    commentComponent.commentTextField.text = nil
+    commentComponent.commentTextField.resignFirstResponder()
+  }
 }
+
+// MARK: - extension
 
 extension PostedStudyViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
@@ -340,28 +452,47 @@ extension PostedStudyViewController: UITableViewDelegate  {
 }
 
 extension PostedStudyViewController: BottomSheetDelegate {
-  func firstButtonTapped(postID: Int) {
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
+    viewModel.postOrCommentID = postID
+    let action: PopupActionType = checkPost ? .deletePost : .deleteComment
+    let title = action == .deletePost ? "글을 삭제할까요?" : "댓글을 삭제할까요?"
     let popupVC = PopupViewController(
-      title: "글을 삭제할까요?",
-      dataStream: viewModel.dataFromPopupView)
+      title: title,
+      dataStream: viewModel.dataFromPopupView,
+      selectAction: action)
     
     popupVC.modalPresentationStyle = .overFullScreen
     
     self.present(popupVC, animated: true)
   }
   
-  func secondButtonTapped(postID: Int){
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
+    viewModel.postOrCommentID = postID
+    let action: PopupActionType = checkPost ? .editPost : .editComment
+    if action == .editPost {
     let popupVC = PopupViewController(
       title: "글을 수정할까요?",
       leftButtonTitle: "아니요",
       rightButtonTilte: "네",
-      dataStream: viewModel.dataFromPopupView)
+      dataStream: viewModel.dataFromPopupView,
+      selectAction: .editPost)
     popupVC.modalPresentationStyle = .overFullScreen
     
     self.present(popupVC, animated: true)
+    } else {
+      commentComponent.commentButton.setTitle("수정", for: .normal)
+    }
   }
 }
 
 extension PostedStudyViewController: CreateDividerLine {}
-extension PostedStudyViewController: ShowBottomSheet, StudyBottomSheet {}
-extension PostedStudyViewController: CommentCellDelegate {}
+extension PostedStudyViewController: ShowBottomSheet {}
+extension PostedStudyViewController: CommentCellDelegate {
+  func menuButtonTapped(in cell: CommentCell, commentId: Int) {
+    let bottomSheetVC = BottomSheet(postID: commentId, checkPost: false)
+    bottomSheetVC.delegate = self
+    
+    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
+    present(bottomSheetVC, animated: true, completion: nil)
+  }
+}

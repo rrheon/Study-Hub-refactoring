@@ -10,10 +10,10 @@ import Foundation
 import RxRelay
 
 final class PopupViewModel: CommonViewModel{
-  var dataSubject: PublishRelay<String>
+  var dataSubject: PublishRelay<PopupActionType>
   let isActivateEndButton: Bool
   
-  init(isActivateEndButton: Bool, dataStrem: PublishRelay<String>) {
+  init(isActivateEndButton: Bool, dataStrem: PublishRelay<PopupActionType>) {
     self.isActivateEndButton = isActivateEndButton
     self.dataSubject = dataStrem
   }
