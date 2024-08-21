@@ -281,14 +281,25 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
         .disposed(by: viewModel.disposeBag)
     
     viewModel.singlePostData
-      .subscribe(onNext: {[weak self] in
+      .subscribe(onNext: { [weak self] in
         self?.moveToPostedStudyVC(postData: $0)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isNeedFetchDatas
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        if $0 {
+          self?.viewModel.fetchNewPostDatas()
+          self?.viewModel.fetchDeadLinePostDatas()
+        }
       })
       .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
     recrutingCollectionView.rx.modelSelected(Content.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
         self?.viewModel.fectchSinglePostDatas(postID)
@@ -296,6 +307,7 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
       .disposed(by: viewModel.disposeBag)
     
     deadLineCollectionView.rx.modelSelected(Content.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
         self?.viewModel.fectchSinglePostDatas(postID)
@@ -303,6 +315,7 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
       .disposed(by: viewModel.disposeBag)
     
     detailsButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: {[weak self] in
         guard let loginStatus = self?.viewModel.checkLoginStatus.value else { return }
         let detailsViewController = HowToUseViewController(loginStatus)
@@ -321,6 +334,11 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
   }
   
   func moveToPostedStudyVC(postData: PostDetailData){
+    let postData = PostedStudyData(
+      isUserLogin: viewModel.checkLoginStatus.value,
+      postDetailData: postData,
+      isNeedFechData: viewModel.isNeedFetchDatas
+    )
     let postedStudyVC = PostedStudyViewController(postData)
     postedStudyVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(postedStudyVC, animated: true)
@@ -329,12 +347,7 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
   // MARK: -  북마크 버튼 탭
   
   override func rightButtonTapped(_ sender: UIBarButtonItem) {
-    let bookmarkViewController = BookmarkViewController()
-    bookmarkViewController.navigationItem.title = "북마크"
-   
-    self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    bookmarkViewController.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(bookmarkViewController, animated: true)
+    moveToBookmarkView(sender)
   }
   
   // MARK: - 서치바 재설정
@@ -378,3 +391,5 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     }
   }
 }
+
+extension HomeViewController: MoveToBookmarkView {}

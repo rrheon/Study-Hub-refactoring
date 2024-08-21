@@ -226,6 +226,7 @@ final class AgreementViewController: CommonNavi {
       }.disposed(by: viewModel.disposeBag)
     
     nextButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .bind { [weak self] in
         let signUpVC = CheckEmailViewController()
         self?.navigationController?.pushViewController(signUpVC, animated: true)

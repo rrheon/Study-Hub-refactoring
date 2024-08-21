@@ -19,7 +19,8 @@ final class HomeViewModel: CommonViewModel {
   var userInfo = PublishRelay<UserDetailData>()
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var singlePostData = PublishRelay<PostDetailData>()
-  
+  var isNeedFetchDatas = PublishRelay<Bool>()
+
   init(loginStatus: Bool) {
     checkLoginStatus.accept(loginStatus)
     super.init()
@@ -48,3 +49,4 @@ final class HomeViewModel: CommonViewModel {
     }
   }
 }
+

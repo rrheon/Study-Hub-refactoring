@@ -39,6 +39,11 @@ final class EnterPasswordTextField: AuthTextField {
     let content = isPasswordValid ? successContent : nil
     let alertLabelHidden = isPasswordValid
     
-    super.alertLabelSetting(hidden: alertLabelHidden, title: content ?? "", textColor: color, underLineColor: color)
+    super.alertLabelSetting(
+      hidden: alertLabelHidden,
+      title: content ?? "",
+      textColor: color,
+      underLineColor: color
+    )
   }
 }

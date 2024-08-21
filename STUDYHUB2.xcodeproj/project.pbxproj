@@ -47,6 +47,7 @@
 		EE0A8B832B089729001C3F41 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE0A8B7A2B089729001C3F41 /* Pretendard-Black.otf */; };
 		EE0A8B852B0A22F7001C3F41 /* PostDetailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0A8B842B0A22F7001C3F41 /* PostDetailManager.swift */; };
 		EE0B6D102C74759E00FEFEBA /* ManagementComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */; };
+		EE0B6D122C74E43000FEFEBA /* PopUpViewActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0B6D112C74E43000FEFEBA /* PopUpViewActions.swift */; };
 		EE1E44112B17222200223436 /* MyPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44102B17222200223436 /* MyPostCell.swift */; };
 		EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44152B172ACB00223436 /* MyPostViewController.swift */; };
 		EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */; };
@@ -64,6 +65,8 @@
 		EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */; };
 		EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */; };
 		EE27B44E2C5B70B700057475 /* EnterDepartmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */; };
+		EE2908042C75D3E2006B28A7 /* FetchDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908032C75D3E2006B28A7 /* FetchDatas.swift */; };
+		EE2908062C7600D9006B28A7 /* ShowToastPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -189,6 +192,7 @@
 		EE0A8B7A2B089729001C3F41 /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.otf"; sourceTree = "<group>"; };
 		EE0A8B842B0A22F7001C3F41 /* PostDetailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailManager.swift; sourceTree = "<group>"; };
 		EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementComment.swift; sourceTree = "<group>"; };
+		EE0B6D112C74E43000FEFEBA /* PopUpViewActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewActions.swift; sourceTree = "<group>"; };
 		EE1E44102B17222200223436 /* MyPostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostCell.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPostCell.swift; sourceTree = SOURCE_ROOT; };
 		EE1E44152B172ACB00223436 /* MyPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostViewController.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPostViewController.swift; sourceTree = SOURCE_ROOT; };
 		EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipataeStudyVC.swift; sourceTree = "<group>"; };
@@ -206,6 +210,8 @@
 		EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordTextField.swift; sourceTree = "<group>"; };
 		EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameViewModel.swift; sourceTree = "<group>"; };
 		EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterDepartmentViewModel.swift; sourceTree = "<group>"; };
+		EE2908032C75D3E2006B28A7 /* FetchDatas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchDatas.swift; sourceTree = "<group>"; };
+		EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowToastPopup.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -334,9 +340,6 @@
 			children = (
 				EEDDDD092C6B3A5700FA347D /* View */,
 				EEDDDD0A2C6B3A5E00FA347D /* ViewModel */,
-				EE07ADC02AF0D5A40096890F /* SimilarPostCell.swift */,
-				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
-				EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */,
 				EEFD5D312B654A5900D1CE00 /* Participate */,
 			);
 			path = PostedStudy;
@@ -359,6 +362,8 @@
 				EEDDDD212C71EEF300FA347D /* ManagementPost.swift */,
 				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
 				EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */,
+				EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */,
+				EE2908032C75D3E2006B28A7 /* FetchDatas.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -786,6 +791,9 @@
 			isa = PBXGroup;
 			children = (
 				EE07ADB82AEFE6730096890F /* PostedStudyViewController.swift */,
+				EE07ADC02AF0D5A40096890F /* SimilarPostCell.swift */,
+				EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */,
+				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
 				EEDDDD0F2C6B45A500FA347D /* ViewComponent */,
 			);
 			path = View;
@@ -823,6 +831,7 @@
 		EEDDDD252C72EC8D00FA347D /* PopupView */ = {
 			isa = PBXGroup;
 			children = (
+				EE0B6D112C74E43000FEFEBA /* PopUpViewActions.swift */,
 				EEDDDD262C73136900FA347D /* View */,
 				EEDDDD272C73137500FA347D /* ViewModel */,
 			);
@@ -1159,6 +1168,7 @@
 				EEDDDD112C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift in Sources */,
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
 				EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */,
+				EE0B6D122C74E43000FEFEBA /* PopUpViewActions.swift in Sources */,
 				EE07ADBF2AF0BB360096890F /* NaviHelper.swift in Sources */,
 				F86E03212A8BFC8000164976 /* HowToUseViewController.swift in Sources */,
 				EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */,
@@ -1190,6 +1200,7 @@
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,
 				EED00B7E2C539D51000D2E23 /* CommonViewModel.swift in Sources */,
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,
+				EE2908062C7600D9006B28A7 /* ShowToastPopup.swift in Sources */,
 				EEFD5D262B5F6C4D00D1CE00 /* CommonNetworking.swift in Sources */,
 				EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */,
 				EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */,
@@ -1203,6 +1214,7 @@
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
 				EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */,
 				EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */,
+				EE2908042C75D3E2006B28A7 /* FetchDatas.swift in Sources */,
 				EEDDDD242C71EF3600FA347D /* ManagementBookmark.swift in Sources */,
 				EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */,
 				F87377592AA850940055B041 /* DepartmentselectViewController.swift in Sources */,

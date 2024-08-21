@@ -16,7 +16,6 @@ final class ParticipateVC: NaviHelper {
   let userDataManager = UserInfoManager.shared
   
   var beforeVC: PostedStudyViewController?
-  var postData: PostDetailData? = nil
   
   var studyId: Int = 0
   var postId: Int = 0
@@ -74,6 +73,7 @@ final class ParticipateVC: NaviHelper {
     
   }
   
+  
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -81,16 +81,11 @@ final class ParticipateVC: NaviHelper {
     view.backgroundColor = .white
     
     navigationItemSetting()
-  
+    
     changeTitleLabelColor()
     
-    postDeatilManager.searchSinglePostData(postId: postId,
-                                           loginStatus: true) {_ in 
-      self.postData = self.postDeatilManager.getPostDetailData()
-      
-      self.setupLayout()
-      self.makeUI()
-    }
+    setupLayout()
+    makeUI()
   }
   
   // MARK: - setupLayout
@@ -160,28 +155,17 @@ final class ParticipateVC: NaviHelper {
   // MARK: - 완료버튼 tapped
   func completeButtonTapped(){
     guard let text = reasonTextView.text else { return }
-
+    
     if text.count < 10 {
       showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
     } else {
-      userDataManager.getUserInfo { userData in
-        let postedGender = self.postData?.filteredGender
-        if userData?.gender == postedGender || postedGender == "NULL" {
-          self.participateManager.participateStudy(introduce: text,
-                                                   studyId: self.studyId) {
-            
-            DispatchQueue.main.async {
-              self.navigationController?.popViewController(animated: true)
-              self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
-//              self.beforeVC?.participateCheck = true
-//              self.beforeVC?.redrawUI()
-            }
-          }
-        } else {
-          DispatchQueue.main.async {
-            self.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요.", alertCheck: false)
-            return
-          }
+      self.participateManager.participateStudy(introduce: text, studyId: self.studyId) {
+        
+        DispatchQueue.main.async {
+          self.navigationController?.popViewController(animated: true)
+          self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+          //              self.beforeVC?.participateCheck = true
+          //              self.beforeVC?.redrawUI()
         }
       }
     }
@@ -195,16 +179,13 @@ extension ParticipateVC {
       textView.text = nil
       textView.textColor = UIColor.black
       textView.layer.borderColor = UIColor.black.cgColor
-      
-      if self.postData?.apply == false {
-        completeButton.isEnabled = true
-        completeButton.backgroundColor = .o50
-      }
+            
+      completeButton.isEnabled = true
+      completeButton.backgroundColor = .o50
     }
   }
   
   override func textViewDidEndEditing(_ textView: UITextView) {
-    
     if textView.text.isEmpty {
       textView.text = "ex) 욕설 등의 부적절한 말을 사용했습니다, 저희 스터디와 맞지 않습니다"
       textView.textColor = UIColor.bg70

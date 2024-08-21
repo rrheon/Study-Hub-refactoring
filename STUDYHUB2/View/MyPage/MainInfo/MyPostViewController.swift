@@ -307,7 +307,8 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
           return
         }
         guard let postDatas = cellData else { return }
-        let postedVC = PostedStudyViewController(postDatas)
+        let postedData = PostedStudyData(isUserLogin: loginStatus, postDetailData: postDatas)
+        let postedVC = PostedStudyViewController(postedData)
 
         self.navigationController?.pushViewController(postedVC, animated: true)
       }

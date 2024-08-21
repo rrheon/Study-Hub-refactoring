@@ -3,7 +3,9 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+import RxSwift
 
+// 해야할 거 -> 수정하기 이동 시 데이터 안받아짐, 삭제하기 북마크 작동 후 이전페이지 작업, 댓글페이지
 final class PostedStudyViewController: CommonNavi{
   let viewModel: PostedStudyViewModel
   
@@ -65,18 +67,22 @@ final class PostedStudyViewController: CommonNavi{
   
   private lazy var scrollView: UIScrollView = UIScrollView()
   
-  init(_ postDatas: PostDetailData) {
-    self.viewModel = PostedStudyViewModel(postDatas)
+  init(_ data: PostedStudyViewData) {
+    self.viewModel = PostedStudyViewModel(data)
     
-    self.mainComponent = PostedStudyMainComponent(postDatas)
-    self.detailInfoComponent = PostedStudyDetailInfoConponent(postDatas)
-    self.writerComponent = PostedStudyWriterComponent(postDatas)
+    mainComponent = PostedStudyMainComponent(data.postDetailData)
+    detailInfoComponent = PostedStudyDetailInfoConponent(data.postDetailData)
+    writerComponent = PostedStudyWriterComponent(data.postDetailData)
     
     super.init()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    viewModel.isNeedFetch?.accept(true)
   }
   
   // MARK: - viewDidLoad
@@ -229,6 +235,16 @@ final class PostedStudyViewController: CommonNavi{
         if $0?.usersPost == false {
           self?.navigationItem.rightBarButtonItem = nil
         }
+        
+        if $0?.close == true {
+          self?.participateButton.unableButton(false, backgroundColor: .o30 ,titleColor: .white)
+          self?.participateButton.setTitle("마감된 스터디에요", for: .normal)
+        }
+        
+        if $0?.apply == true {
+          self?.participateButton.unableButton(false, backgroundColor: .o30 ,titleColor: .white)
+          self?.participateButton.setTitle("수락 대기 중", for: .normal)
+        }
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -284,23 +300,22 @@ final class PostedStudyViewController: CommonNavi{
         self?.bookmarkButton.setImage(UIImage(named: bookmarkImg), for: .normal)
       })
       .disposed(by: viewModel.disposeBag)
-    
+
+    // 게시글 삭제 후 나가고 토스트 팝업 띄우면 될듯 어떻게하실?
+
     viewModel.dataFromPopupView
       .subscribe(onNext: { [weak self] action in
         guard let self = self else { return }
         switch action {
         case .deletePost:
-          // 게시글 삭제 후 나가고 토스트 팝업 띄우면 될듯
-          guard let postID = viewModel.postDatas.value?.postID else { return }
-          viewModel.deleteMyPost(postID) {
-            print($0)
+          viewModel.deleteMyPost {
+            self.navigationController?.popViewController(animated: true)
           }
         case .editPost:
           guard let postID = viewModel.postDatas.value?.postID else { return }
           let modifyVC = CreateStudyViewController(postID: postID)
           modifyVC.hidesBottomBarWhenPushed = true
           navigationController?.pushViewController(modifyVC, animated: true)
-          
         case .deleteComment:
           viewModel.commentManager.deleteComment(commentID: viewModel.postOrCommentID) {
             if $0 {
@@ -326,6 +341,23 @@ final class PostedStudyViewController: CommonNavi{
         )
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.singlePostData
+      .subscribe(onNext: { [weak self] in
+        let loginStatus = self?.viewModel.isUserLogined
+        let postData = PostedStudyData(isUserLogin: loginStatus ?? false, postDetailData: $0)
+        let postedStudyVC = PostedStudyViewController(postData)
+        postedStudyVC.hidesBottomBarWhenPushed = true
+        self?.navigationController?.pushViewController(postedStudyVC, animated: true)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isActivateParticipate
+      .subscribe(onNext: { [weak self] in
+        guard let studyID = self?.viewModel.postedStudyData.postDetailData.studyID else { return }
+        $0 ? self?.goToParticipateVC(studyID: studyID) : self?.goToLoginVC()
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   // MARK: - addActions
@@ -339,6 +371,14 @@ final class PostedStudyViewController: CommonNavi{
       })
       .disposed(by: viewModel.disposeBag)
     
+    similarCollectionView.rx.modelSelected(RelatedPost.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
+      .subscribe(onNext: { [weak self] item in
+        let postID = item.postID
+        self?.viewModel.similarCellTapped(postID)
+      })
+      .disposed(by: viewModel.disposeBag)
+
     commentComponent.commentButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let postID = self?.viewModel.postDatas.value?.postID,
@@ -367,8 +407,31 @@ final class PostedStudyViewController: CommonNavi{
         self?.navigationController?.pushViewController(commentVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    participateButton.rx.tap
+      .asDriver()
+      .throttle(.seconds(1))
+      .drive(onNext: { [weak self] in
+        self?.viewModel.participateButtonTapped(completion: { action in
+          DispatchQueue.main.async {
+            switch action {
+            case .closed:
+              self?.showToast(message: "이미 마감된 스터디예요", alertCheck: false)
+            case .goToLoginVC:
+              self?.goToLoginVC()
+            case .goToParticipateVC:
+              guard let studyID = self?.viewModel.postedStudyData.postDetailData.studyID else { return }
+              self?.goToParticipateVC(studyID: studyID)
+            case .limitedGender:
+              self?.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요", alertCheck: false)
+            }
+          }
+        })
+      })
+      .disposed(by: viewModel.disposeBag)
+    
   }
-  
+
   private func setupDelegate() {
     commentComponent.commentTableView.rx.setDelegate(self)
       .disposed(by: viewModel.disposeBag)
@@ -409,21 +472,25 @@ final class PostedStudyViewController: CommonNavi{
     }
   }
   
-  func createComment(content: String, postID: Int){
-    viewModel.commentManager.createComment(content: content, postID: postID) {
-      if $0 {
-        self.settingComment(mode: "생성")
-      }
+  func createComment(content: String, postID: Int) {
+    viewModel.commentManager.createComment(
+      content: content,
+      postID: postID
+    ) { [weak self] success in
+      guard success else { return }
+      self?.settingComment(mode: "생성")
     }
   }
   
   func modifyComment(content: String, commentID: Int) {
-    viewModel.commentManager.modifyComment(content: content, commentID: commentID) {
-      if $0 {
-        self.settingComment(mode: "수정")
-      }
+    viewModel.commentManager.modifyComment(
+      content: content,
+      commentID: commentID
+    ) { [weak self] success in
+      self?.settingComment(mode: "수정")
     }
   }
+  
   func settingComment(mode: String){
     viewModel.fetchCommentDatas()
     let message = mode == "생성" ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
@@ -483,6 +550,35 @@ extension PostedStudyViewController: BottomSheetDelegate {
       commentComponent.commentButton.setTitle("수정", for: .normal)
     }
   }
+  
+  func goToParticipateVC(studyID: Int){
+    let participateVC = ParticipateVC()
+    participateVC.studyId = studyID
+    participateVC.beforeVC = self
+    self.navigationController?.pushViewController(participateVC, animated: true)
+  }
+  
+  func goToLoginVC(){
+    DispatchQueue.main.async {
+        let popupVC = PopupViewController(title: "로그인이 필요해요",
+                                          desc: "계속하려면 로그인을 해주세요!",
+                                          rightButtonTilte: "로그인")
+        self.present(popupVC, animated: true)
+       
+        popupVC.popupView.rightButtonAction = {
+          self.dismiss(animated: true) {
+            if let navigationController = self.navigationController {
+              navigationController.popToRootViewController(animated: false)
+              
+              let loginVC = LoginViewController()
+              
+              loginVC.modalPresentationStyle = .overFullScreen
+              navigationController.present(loginVC, animated: true, completion: nil)
+            }
+          }
+        }
+      }
+  }
 }
 
 extension PostedStudyViewController: CreateDividerLine {}
@@ -496,3 +592,5 @@ extension PostedStudyViewController: CommentCellDelegate {
     present(bottomSheetVC, animated: true, completion: nil)
   }
 }
+
+

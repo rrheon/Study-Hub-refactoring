@@ -112,6 +112,7 @@ final class EnterPasswordViewController: CommonNavi {
   
   func setupActions(){
     nextButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
         let signupDatas = SignupDats(email: viewModel.email,

@@ -442,7 +442,8 @@ extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSou
           return
         }
         guard let postDatas = cellData else { return }
-        let postedVC = PostedStudyViewController(postDatas)
+        let postData = PostedStudyData(isUserLogin: loginStatus, postDetailData: postDatas)
+        let postedVC = PostedStudyViewController(postData)
         postedVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(postedVC, animated: true)
 
@@ -483,7 +484,9 @@ extension StudyViewController: AfterCreatePost {
     detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {_ in
       guard let postData = self.detailPostDataManager.getPostDetailData() else { return }
 //      postedVC.postedData = postData
-      let postedVC = PostedStudyViewController(postData)
+      let postedData = PostedStudyData(isUserLogin: self.loginStatus, postDetailData: postData)
+
+      let postedVC = PostedStudyViewController(postedData)
 
       self.navigationController?.pushViewController(postedVC, animated: false)
       

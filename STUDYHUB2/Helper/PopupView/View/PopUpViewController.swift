@@ -1,16 +1,8 @@
 import UIKit
-import RxRelay
 
 import SnapKit
+import RxRelay
 
-enum PopupActionType {
-  case editPost
-  case deletePost
-  case editComment
-  case deleteComment
-}
-
-// 글을 삭제할까요? , 글을 수정할까요? , 댓글을 삭제할까요?, 댓글 수정-> 다른걸 받아야할듯
 final class PopupViewController: UIViewController {
   let popupView: PopupView
   let viewModel: PopupViewModel
@@ -56,19 +48,6 @@ final class PopupViewController: UIViewController {
     
     self.popupView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
-    }
-  }
-  
-  func handlePopupAction(_ action: PopupActionType) -> PopupActionType {
-    switch action {
-    case .editPost:
-      return .editPost
-    case .deletePost:
-      return .deletePost
-    case .editComment:
-      return .editComment
-    case .deleteComment:
-      return .deleteComment
     }
   }
   

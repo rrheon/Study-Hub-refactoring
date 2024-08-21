@@ -3,6 +3,7 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+import RxSwift
 
 final class EnterNicknameViewController: CommonNavi {
   
@@ -253,6 +254,7 @@ final class EnterNicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     nextButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         let signupDatas = SignupDats(
           email: self?.viewModel.email,

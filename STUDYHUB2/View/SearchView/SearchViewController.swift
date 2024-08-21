@@ -525,7 +525,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
           self.showToast(message: "해당 post에 접근할 수 없습니다",imageCheck: false)
           return
         }
-        let postedVC = PostedStudyViewController(cellData)
+        let postData = PostedStudyData(isUserLogin: loginStatus, postDetailData: cellData)
+        let postedVC = PostedStudyViewController(postData)
     //    postedVC.previousSearchVC = self
         postedVC.hidesBottomBarWhenPushed = true
 
