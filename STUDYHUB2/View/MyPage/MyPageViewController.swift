@@ -373,7 +373,7 @@ final class MyPageViewController: NaviHelper {
       image: alertBellImg,
       style: .plain,
       target: self,
-      action: #selector(bookMarkPageButtonTapped))
+      action: nil)
     alertBell.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
     navigationItem.leftBarButtonItem = myPage
@@ -446,11 +446,11 @@ final class MyPageViewController: NaviHelper {
   }
   
   // MARK: - 북마크 버튼 탭
-  @objc func bookMarkPageButtonTapped() {
-    let bookMarkVC = BookmarkViewController()
-    bookMarkVC.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(bookMarkVC, animated: true)
-  }
+//  @objc func bookMarkPageButtonTapped() {
+//    let bookMarkVC = BookmarkViewController(loginStatus: loginStatus)
+//    bookMarkVC.hidesBottomBarWhenPushed = true
+//    self.navigationController?.pushViewController(bookMarkVC, animated: true)
+//  }
   
   @objc func myRequestPageButtonTapped() {
     let myRequestVC = MyRequestListViewController()

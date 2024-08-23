@@ -157,15 +157,19 @@ final class EnterNicknameViewController: CommonNavi {
   }
   
   func changeButtonUI(selet button: UIButton, deselect otherButton: UIButton){
-    genderButtonSetting(button: button,
-                        backgroundColor: .o60,
-                        titleColor: .o20,
-                        borderColor: .o50)
+    genderButtonSetting(
+      button: button,
+      backgroundColor: .o60,
+      titleColor: .o20,
+      borderColor: .o50
+    )
     
-    genderButtonSetting(button: otherButton,
-                        backgroundColor: .g100,
-                        titleColor: .g60,
-                        borderColor: .g80)
+    genderButtonSetting(
+      button: otherButton,
+      backgroundColor: .g100,
+      titleColor: .g60,
+      borderColor: .g80
+    )
   }
   
   func setupBindings(){

@@ -152,7 +152,7 @@ final class PostDataManager {
   func getRecentPostDatas(hotType: String,
                           page: Int = 0,
                           size: Int = 5,
-                          completion: @escaping () -> Void) {
+                          completion: @escaping (PostDataContent) -> Void) {
     let queryItems = [URLQueryItem(name: "hot", value: hotType),
                       URLQueryItem(name: "page", value: "\(page)"),
                       URLQueryItem(name: "size", value: "\(size)"),
@@ -167,7 +167,7 @@ final class PostDataManager {
       switch result {
       case .success(let postData):
         self?.newPostDatas = postData
-        completion()
+        completion(postData)
         
       case .failure(let error):
         print("에러:", error)

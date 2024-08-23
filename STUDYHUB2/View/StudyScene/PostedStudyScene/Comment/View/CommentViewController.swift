@@ -9,8 +9,10 @@ import UIKit
 
 import SnapKit
 import Moya
+import RxRelay
 
 final class CommentViewController: NaviHelper {
+  let viewModel: CommentViewModel
   let detailPostDataManager = PostDetailInfoManager.shared
   
   var previousVC: PostedStudyViewController?
@@ -21,7 +23,8 @@ final class CommentViewController: NaviHelper {
       self.navigationItem.title = "댓글 \(countComment)"
     }
   }
-  var postId: Int = 0
+  var postId: Int
+  var userNickname: String?
   
   private lazy var commentTableView: UITableView = {
     let tableView = UITableView()
@@ -35,8 +38,7 @@ final class CommentViewController: NaviHelper {
     return tableView
   }()
 
-  private lazy var commentTableStackView = createStackView(axis: .horizontal,
-                                                           spacing: 10)
+  private lazy var commentTableStackView = createStackView(axis: .horizontal, spacing: 10)
   
   private lazy var commentTextField = createTextField(title: "댓글을 입력해주세요")
   
@@ -70,11 +72,23 @@ final class CommentViewController: NaviHelper {
                                                    spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
   
+  init(postId: Int, nickname: String?, isNeedFetch: PublishRelay<Bool>?) {
+    self.postId = postId
+    self.userNickname = nickname
+    self.viewModel = CommentViewModel(isNeedFetch: isNeedFetch ?? nil)
+    
+    super.init()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - 이전페이지로 넘어갈 때
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-//    if self.isMovingFromParent { previousVC?.tableViewReload() }
+    viewModel.isNeedFetch?.accept(true)
   }
   
   // MARK: - viewDidLoad
@@ -184,7 +198,6 @@ final class CommentViewController: NaviHelper {
       case .failure(let response):
         return print(response)
       }
-      
     }
   }
   
@@ -272,6 +285,7 @@ extension CommentViewController: UITableViewDelegate, UITableViewDataSource  {
                                                     for: indexPath) as! CommentCell
     cell.delegate = self
     cell.model = commentData?.content[indexPath.row]
+    cell.userNickname = userNickname
     cell.selectionStyle = .none
     cell.contentView.isUserInteractionEnabled = false
     
@@ -297,25 +311,8 @@ extension CommentViewController {
 extension CommentViewController: CommentCellDelegate {
   func menuButtonTapped(in cell: CommentCell, commentId: Int) {
     let bottomSheetVC = BottomSheet(postID: commentId, checkPost: false)
-    
-    if #available(iOS 15.0, *) {
-      if let sheet = bottomSheetVC.sheetPresentationController {
-        if #available(iOS 16.0, *) {
-          sheet.detents = [.custom(resolver: { context in
-            return 228.0
-          })]
-        } else {
-          // Fallback on earlier versions
-        }
-        sheet.largestUndimmedDetentIdentifier = nil
-        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        sheet.prefersEdgeAttachedInCompactHeight = true
-        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-        sheet.preferredCornerRadius = 20
-      }
-    } else {
-      // Fallback on earlier versions
-    }
+    bottomSheetVC.delegate = self
+    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
     present(bottomSheetVC, animated: true, completion: nil)
   }
 }
@@ -324,25 +321,23 @@ extension CommentViewController: BottomSheetDelegate {
   func firstButtonTapped(postID: Int, checkPost: Bool) {
     self.commentTextField.text = nil
     self.commentTextField.resignFirstResponder()
-    let popupVC = PopupViewController(title: "댓글을 삭제할까요?",
-                                      desc: "")
+    let popupVC = PopupViewController(title: "댓글을 삭제할까요?", desc: "")
     popupVC.modalPresentationStyle = .overFullScreen
 
     self.present(popupVC, animated: true)
     
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true) {
-//        DispatchQueue.main.async {
-//          self.deleteComment(commentId: postID ?? 0) {
-//            self.getCommentList {
-//              self.showToast(message: "댓글이 삭제됐어요.",
-//                             imageCheck: false)
-//              self.tableViewResizing()
-//            }
-//          }
-//        }
-//      }
-//    }
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true) {
+        DispatchQueue.main.async {
+          self.deleteComment(commentId: postID) {
+            self.getCommentList {
+              self.showToast(message: "댓글이 삭제됐어요.", imageCheck: false)
+              self.tableViewResizing()
+            }
+          }
+        }
+      }
+    }
   }
   
   func secondButtonTapped(postID: Int, checkPost: Bool) {
@@ -352,3 +347,5 @@ extension CommentViewController: BottomSheetDelegate {
 }
 
 extension CommentViewController: CheckLoginDelegate { }
+extension CommentViewController: ShowBottomSheet { }
+

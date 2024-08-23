@@ -1,6 +1,8 @@
 import UIKit
 
 import SnapKit
+import RxSwift
+import RxCocoa
 
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
@@ -8,6 +10,8 @@ protocol AfterCreatePost: AnyObject {
 
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
 final class CreateStudyViewController: NaviHelper {
+  let viewModel: CreateStudyViewModel
+  
   let tokenManager = TokenManager.shared
   let postInfoManager = PostDetailInfoManager.shared
   let postManager = PostManager.shared
@@ -55,7 +59,6 @@ final class CreateStudyViewController: NaviHelper {
       checkButtonActivation()
     }
   }
-  
   
   // MARK: - UI설정
   // 채팅방 링크
@@ -322,7 +325,7 @@ final class CreateStudyViewController: NaviHelper {
                                             fontSize: 16)
   
   private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
-
+  
   
   private lazy var endLabel = createLabel(title: "종료하는 날",
                                           textColor: .black,
@@ -349,21 +352,31 @@ final class CreateStudyViewController: NaviHelper {
   
   let scrollView = UIScrollView()
   
+  init(_ postedData: PostDetailData? = nil){
+    self.viewModel = CreateStudyViewModel(postedData)
+    super.init()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - viewDidLoad
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     
     navigationItemSetting()
-    
+        
     setUpLayout()
     makeUI()
     
-    postModify()
+    setupBinding()
+
     compleButtonCheck()
     
     setScrollViewSingTap()
- 
+    
   }
   
   func setScrollViewSingTap(){
@@ -721,9 +734,22 @@ final class CreateStudyViewController: NaviHelper {
     self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
   }
   
+  // MARK: - setupBinding
+  
+  func setupBinding() {
+    viewModel.postedData
+      .asDriver(onErrorDriveWith: .empty())
+      .drive(onNext: { [weak self] postData in
+        guard let data = postData else { return }
+        self?.postModify(data)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+
+  
   // MARK: - 수정 시 뒤로가기 눌렀을 때
   @objc override func leftButtonTapped(_ sender: UIBarButtonItem) {
-//    textViewContent.text = nil
+    //    textViewContent.text = nil
     studyProduceTextView.resignFirstResponder()
     
     guard let postID = modifyPostID else {
@@ -879,7 +905,7 @@ final class CreateStudyViewController: NaviHelper {
   // MARK: - 완료버튼 누를 때 함수
   @objc func completeButtonTapped() {
     // 수정하려면 postid도 넣어야함
-    let test = (modifyPostID == nil) ? "POST" : "PUT"
+    let test = (viewModel.postedData.value == nil) ? "POST" : "PUT"
     print(test)
     if test == "PUT" {
       let chatUrl = chatLinkTextField.text ?? ""
@@ -916,7 +942,7 @@ final class CreateStudyViewController: NaviHelper {
       commonNetworking.refreshAccessToken { result in
         switch result {
         case true:
-          self.postManager.modifyPost(data: updatePostData) { _ in 
+          self.postManager.modifyPost(data: updatePostData) { _ in
             self.navigationController?.popViewController(animated: true)
             self.showToast(message: "글이 수정됐어요.", alertCheck: true)
           }
@@ -1063,83 +1089,76 @@ final class CreateStudyViewController: NaviHelper {
   }
   
   // MARK: - 수정하기눌렀을 때 데이터 가져옴
-  func postModify(){
-    guard let postID = modifyPostID else { return }
+  func postModify(_ postData: PostDetailData){
     
     self.navigationItem.title = "수정하기"
     self.navigationController?.navigationBar.titleTextAttributes = [
       NSAttributedString.Key.foregroundColor: UIColor.white
     ]
     
-    postInfoManager.searchSinglePostData(postId: postID, loginStatus: false) {_ in 
+    DispatchQueue.main.async {
       
-      let modifyData = self.postInfoManager.getPostDetailData()
+      self.chatLinkTextField.text = postData.chatURL
+      self.studyProduceTextView.text = postData.content
+      self.studyProduceTextView.textColor = .black
       
-      DispatchQueue.main.async {
-        modifyData.map {
-          self.chatLinkTextField.text = $0.chatURL
-          self.studyProduceTextView.text = $0.content
-          self.studyProduceTextView.textColor = .black
-
-          self.studytitleTextField.text = $0.title
-          
-          self.selectedMajor = self.convertMajor($0.major, isEnglish: false)
-          self.addDepartmentButton(self.convertMajor($0.major, isEnglish: false))
-          
-          self.studymemberTextField.text = String($0.studyPerson)
-          
-          self.genderType = $0.filteredGender
-          if self.genderType == "FEMALE" {
-            self.femaleOnlyButton.isSelected = true
-            self.genderButtonTapped(self.femaleOnlyButton)
-          } else if self.genderType == "MALE" {
-            self.maleOnlyButton.isSelected = true
-            self.genderButtonTapped(self.maleOnlyButton)
-          } else {
-            self.allGenderButton.isSelected = true
-            self.genderButtonTapped(self.allGenderButton)
-          }
-          
-          self.contactMethod = $0.studyWay
-          if self.contactMethod == "CONTACT" {
-            self.contactButton.isSelected = true
-            self.meetButtonTapped(self.contactButton)
-          } else if self.contactMethod == "MIX" {
-            self.mixmeetButton.isSelected = true
-            self.meetButtonTapped(self.mixmeetButton)
-          } else {
-            self.untactButton.isSelected = true
-            self.meetButtonTapped(self.untactButton)
-          }
-          
-          if $0.penalty == 0 {
-            self.noFineButtonTapped(self.noFineButton)
-          } else {
-            self.haveFineButtonTapped(self.haveFineButton)
-            self.fineTypesTextField.text = $0.penaltyWay
-            self.fineAmountTextField.text = String($0.penalty)
-          }
-          
-          // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
-          
-          let startDate = "\($0.studyStartDate[0])-\($0.studyStartDate[1])-\($0.studyStartDate[2])"
-          //          let startDate = ""
-          let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          self.startDateButton.setTitle(changedStartDate, for: .normal)
-          
-          let endDate = "\($0.studyEndDate[0])-\($0.studyEndDate[1])-\($0.studyEndDate[2])"
-          //          let endDate = ""
-          let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
-          self.endDateButton.setTitle(changedEndDate, for: .normal)
-        }
+      self.studytitleTextField.text = postData.title
+      
+      self.selectedMajor = self.convertMajor(postData.major, isEnglish: false)
+      self.addDepartmentButton(self.convertMajor(postData.major, isEnglish: false))
+      
+      self.studymemberTextField.text = String(postData.studyPerson)
+      
+      self.genderType = postData.filteredGender
+      if self.genderType == "FEMALE" {
+        self.femaleOnlyButton.isSelected = true
+        self.genderButtonTapped(self.femaleOnlyButton)
+      } else if self.genderType == "MALE" {
+        self.maleOnlyButton.isSelected = true
+        self.genderButtonTapped(self.maleOnlyButton)
+      } else {
+        self.allGenderButton.isSelected = true
+        self.genderButtonTapped(self.allGenderButton)
       }
       
+      self.contactMethod = postData.studyWay
+      if self.contactMethod == "CONTACT" {
+        self.contactButton.isSelected = true
+        self.meetButtonTapped(self.contactButton)
+      } else if self.contactMethod == "MIX" {
+        self.mixmeetButton.isSelected = true
+        self.meetButtonTapped(self.mixmeetButton)
+      } else {
+        self.untactButton.isSelected = true
+        self.meetButtonTapped(self.untactButton)
+      }
+      
+      if postData.penalty == 0 {
+        self.noFineButtonTapped(self.noFineButton)
+      } else {
+        self.haveFineButtonTapped(self.haveFineButton)
+        self.fineTypesTextField.text = postData.penaltyWay
+        self.fineAmountTextField.text = String(postData.penalty)
+      }
+      
+      // 날짜 형식을 변경할것 - 2023.1.19 -> 2023.01.19이런식으로
+      
+      let startDate = "\(postData.studyStartDate[0])-\(postData.studyStartDate[1])-\(postData.studyStartDate[2])"
+      //          let startDate = ""
+      let changedStartDate = startDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+      self.startDateButton.setTitle(changedStartDate, for: .normal)
+      
+      let endDate = "\(postData.studyEndDate[0])-\(postData.studyEndDate[1])-\(postData.studyEndDate[2])"
+      //          let endDate = ""
+      let changedEndDate = endDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+      self.endDateButton.setTitle(changedEndDate, for: .normal)
     }
+    
   }
+  
   
   func compleButtonCheck(){
     chatLinkTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-    
   }
   
 }
@@ -1179,13 +1198,13 @@ extension CreateStudyViewController {
       checkButtonActivation()
     }
   }
-
-
+  
+  
   func checkButtonActivation() {
     if chatLinkTextField.text?.isEmpty == false &&
         studytitleTextField.text?.isEmpty == false &&
         studymemberTextField.text?.isEmpty == false &&
-        studyProduceTextView.text != textViewContent &&
+        studyProduceTextView.text.isEmpty == false &&
         selectedMajor != nil &&
         genderCheck == true &&
         contactMethod != nil &&
@@ -1205,7 +1224,7 @@ extension CreateStudyViewController {
     }
   }
   
-
+  
   override func textFieldDidEndEditing(_ textField: UITextField) {
     if textField == fineAmountTextField {
       if let text = fineAmountTextField.text,

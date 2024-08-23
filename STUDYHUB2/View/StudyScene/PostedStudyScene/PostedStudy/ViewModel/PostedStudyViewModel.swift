@@ -9,6 +9,13 @@ import Foundation
 
 import RxRelay
 
+enum ParticipateAction {
+  case goToLoginVC
+  case limitedGender
+  case closed
+  case goToParticipateVC
+}
+
 protocol PostedStudyViewData {
   var isUserLogin: Bool { get }
   var postDetailData: PostDetailData { get }
@@ -115,20 +122,16 @@ final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottom
   
   func participateButtonTapped(completion: @escaping (ParticipateAction) -> Void) {
     userInfoManager.getUserInfo { [weak self] userData in
-      // 처리 -> 데이터 없으면 goToLoginVC, 성별제한, 마감
-      let postedData = self?.postedStudyData.postDetailData 
+      let postedData = self?.postedStudyData.postDetailData
 
       if userData?.nickname == nil {
-//        self?.handleParticipateAction(action: .goToLoginVC, completion: {
-//          self?.isActivateParticipate.accept($0)
-//        })
         completion(.goToLoginVC)
         return
       }
+      
       if postedData?.filteredGender != userData?.gender && postedData?.filteredGender != "NULL" {
         completion(.limitedGender)
         return
-
       }
       
       if postedData?.close == true {
@@ -142,31 +145,4 @@ final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottom
 }
 
 extension PostedStudyViewModel: PostDataFetching {}
-//extension PostedStudyViewModel: ParticipateActionHandler {}
 
-enum ParticipateAction {
-  case goToLoginVC
-  case limitedGender
-  case closed
-  case goToParticipateVC
-}
-
-//protocol ParticipateActionHandler: ShowToastPopup {
-//  func handleParticipateAction(action: ParticipateAction, completion: @escaping (Bool) -> Void)
-//}
-//
-//extension ParticipateActionHandler {
-//  func handleParticipateAction(action: ParticipateAction, completion: @escaping (Bool) -> Void){
-//    switch action {
-//    case .goToLoginVC:
-//      completion(false)
-//      return
-//    case .limitedGender:
-//      showToast(message: "이 스터디는 성별 제한이 있는 스터디예요", alertCheck: false)
-//      return
-//    case .closed:
-//      showToast(message: "이 스터디는 성별 제한이 있는 스터디예요", alertCheck: false)
-//      return
-//    }
-//  }
-//}

@@ -65,6 +65,12 @@ final class StudyViewController: NaviHelper {
     return view
   }()
   
+  private let scrollView: UIScrollView = {
+    let scrollView = UIScrollView()
+    scrollView.backgroundColor = .bg30
+    return scrollView
+  }()
+
   private lazy var addButton: UIButton = {
     let addButton = UIButton(type: .system)
     addButton.setTitle("+", for: .normal)
@@ -90,14 +96,9 @@ final class StudyViewController: NaviHelper {
     redesignNavigationbar()
     
     setupCollectionView()
-    
-    self.postDataManager.getRecentPostDatas(hotType: "false") {
-      self.recentDatas = self.postDataManager.getRecentPostDatas()
-      
-      guard let recentData = self.recentDatas else { return }
-      
-      
-      self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
+
+    self.postDataManager.getRecentPostDatas(hotType: "false") { result in
+      self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
       
       DispatchQueue.main.async {
         self.activityIndicator.stopAnimating()
@@ -120,18 +121,16 @@ final class StudyViewController: NaviHelper {
   // MARK: - setupLayout
   func setupLayout(){
     if studyCount > 0 {
-      testStackView.addArrangedSubview(resultCollectionView)
 
       [
-        testStackView,
         recentButton,
         popularButton,
-        //        scrollView
+        scrollView,
         addButton
       ].forEach {
         view.addSubview($0)
       }
-      //      scrollView.addSubview(contentView)
+            scrollView.addSubview(resultCollectionView)
       //      contentView.addSubview(resultCollectionView)
       //      contentView.addSubview(addButton)
     }else {
@@ -151,7 +150,7 @@ final class StudyViewController: NaviHelper {
     resultCollectionView.delegate = self
     resultCollectionView.dataSource = self
     
-        resultCollectionView.register(SearchResultCell.self,
+    resultCollectionView.register(SearchResultCell.self,
                                       forCellWithReuseIdentifier: SearchResultCell.id)
   }
   
@@ -172,11 +171,20 @@ final class StudyViewController: NaviHelper {
     }
     
     if studyCount > 0 {
-      testStackView.snp.makeConstraints { make in
+//      resultCollectionView.snp.makeConstraints { make in
+//        make.top.equalTo(recentButton.snp.bottom).offset(20)
+//        make.leading.equalToSuperview().offset(10)
+//        make.trailing.equalToSuperview().offset(-10)
+//        make.bottom.equalTo(view.safeAreaLayoutGuide)
+//      }
+      resultCollectionView.snp.makeConstraints { make in
+        make.width.equalToSuperview()
+        make.height.equalTo(scrollView.snp.height)
+      }
+      
+      scrollView.snp.makeConstraints { make in
         make.top.equalTo(recentButton.snp.bottom).offset(20)
-        make.leading.equalToSuperview().offset(10)
-        make.trailing.equalToSuperview().offset(-10)
-        make.bottom.equalTo(view.safeAreaLayoutGuide)
+        make.leading.trailing.bottom.equalTo(view)
       }
       
       addButton.snp.makeConstraints { make in
@@ -195,6 +203,7 @@ final class StudyViewController: NaviHelper {
         wantToChange: "지금 스터디를 만들어\n  팀원을 구해보세요!",
         color: .changeInfo
       )
+      
       describeLabel.snp.makeConstraints { make in
         make.top.equalTo(emptyImageView.snp.bottom).offset(10)
         make.centerX.equalTo(emptyImageView)
@@ -265,7 +274,7 @@ final class StudyViewController: NaviHelper {
   @objc func recentButtonTapped(){
     activityIndicator.startAnimating()
     
-    postDataManager.getRecentPostDatas(hotType: "false") {
+    postDataManager.getRecentPostDatas(hotType: "false") { _ in
       self.searchType = "false"
       self.recentDatas = self.postDataManager.getRecentPostDatas()
       
@@ -292,7 +301,7 @@ final class StudyViewController: NaviHelper {
   @objc func popularButtonTapped(){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
     
-    postDataManager.getRecentPostDatas(hotType: "true") {
+    postDataManager.getRecentPostDatas(hotType: "true") { _ in
       self.searchType = "true"
       
       self.recentDatas = self.postDataManager.getRecentPostDatas()
@@ -339,13 +348,9 @@ final class StudyViewController: NaviHelper {
       self.waitingNetworking()
       self.postDataManager.getRecentPostDatas(hotType: hotType,
                                               page: pageCount,
-                                              size: 5) {
+                                              size: 5) { result in
         
-        guard let recentData = self.recentDatas else { return }
-        
-        self.recentDatas = self.postDataManager.getRecentPostDatas()
-        
-        self.totalDatas?.append(contentsOf: recentData.postDataByInquiries.content)
+        self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
         
         DispatchQueue.main.async {
           DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {

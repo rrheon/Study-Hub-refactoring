@@ -347,7 +347,11 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
   // MARK: -  북마크 버튼 탭
   
   override func rightButtonTapped(_ sender: UIBarButtonItem) {
-    moveToBookmarkView(sender)
+    let data = BookMarkData(
+      loginStatus: viewModel.checkLoginStatus.value,
+      isNeedFetch: viewModel.isNeedFetchDatas
+    )
+    moveToBookmarkView(sender, data: data)
   }
   
   // MARK: - 서치바 재설정

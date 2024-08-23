@@ -9,7 +9,6 @@ protocol MyPostCellDelegate: AnyObject {
   func acceptButtonTapped(in cell: MyPostCell, studyID: Int)
 }
 
-
 final class MyPostCell: UICollectionViewCell {
   weak var delegate: MyPostCellDelegate?
 

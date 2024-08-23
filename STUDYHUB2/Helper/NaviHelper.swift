@@ -134,9 +134,7 @@ class NaviHelper: UIViewController {
     }
   }
   
-  func bookmarkButtonTapped(_ postId: Int,
-                            _ userId: Int,
-                            completion: @escaping () -> Void){
+  func bookmarkButtonTapped(_ postId: Int, _ userId: Int, completion: @escaping () -> Void){
     bookmarkManager.bookmarkTapped(postId) {
       completion()
     }

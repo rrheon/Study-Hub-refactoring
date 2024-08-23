@@ -261,6 +261,9 @@ final class PostedStudyViewController: CommonNavi{
         }
         
         self?.commentComponent.countComment = count
+        
+        let hideButton = count == 0 ? true : false
+        self?.commentComponent.moveToCommentViewButton.isHidden = hideButton
       })
       .disposed(by: viewModel.disposeBag)
 
@@ -312,8 +315,8 @@ final class PostedStudyViewController: CommonNavi{
             self.navigationController?.popViewController(animated: true)
           }
         case .editPost:
-          guard let postID = viewModel.postDatas.value?.postID else { return }
-          let modifyVC = CreateStudyViewController(postID: postID)
+          guard let postData = viewModel.postDatas.value else { return }
+          let modifyVC = CreateStudyViewController(postData)
           modifyVC.hidesBottomBarWhenPushed = true
           navigationController?.pushViewController(modifyVC, animated: true)
         case .deleteComment:
@@ -356,6 +359,15 @@ final class PostedStudyViewController: CommonNavi{
       .subscribe(onNext: { [weak self] in
         guard let studyID = self?.viewModel.postedStudyData.postDetailData.studyID else { return }
         $0 ? self?.goToParticipateVC(studyID: studyID) : self?.goToLoginVC()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isNeedFetch?
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        if $0 {
+          self?.viewModel.fetchCommentDatas()
+        }
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -402,7 +414,11 @@ final class PostedStudyViewController: CommonNavi{
     commentComponent.moveToCommentViewButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let postID = self?.viewModel.postDatas.value?.postID else { return }
-        let commentVC = CommentViewController(postID: postID)
+        let commentVC = CommentViewController(
+          postId: postID,
+          nickname: self?.viewModel.userNickanme,
+          isNeedFetch: self?.viewModel.isNeedFetch ?? nil
+        )
         commentVC.hidesBottomBarWhenPushed = true
         self?.navigationController?.pushViewController(commentVC, animated: true)
       })

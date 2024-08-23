@@ -23,7 +23,6 @@ final class BookMarkCell: UICollectionViewCell {
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = "세무회계학과"
     label.textColor = .o50
     label.layer.cornerRadius = 5
     label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
@@ -41,7 +40,6 @@ final class BookMarkCell: UICollectionViewCell {
   
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "단기 스터디원 구해요!"
     label.textColor = .black
     label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
@@ -49,7 +47,6 @@ final class BookMarkCell: UICollectionViewCell {
   
   private lazy var infoLabel: UILabel = {
     let label = UILabel()
-    label.text = "내용내용내용"
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
@@ -73,8 +70,10 @@ final class BookMarkCell: UICollectionViewCell {
     button.layer.borderColor = UIColor.o40.cgColor
     button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     button.addAction(UIAction { _ in
-      self.postDelegate?.participateButtonTapped(studyId: self.model?.studyID ?? 0,
-                                                 postId: self.model?.postID ?? 0)
+      self.postDelegate?.participateButtonTapped(
+        studyId: self.model?.studyID ?? 0,
+        postId: self.model?.postID ?? 0
+      )
     }, for: .touchUpInside)
     return button
   }()
@@ -149,8 +148,7 @@ final class BookMarkCell: UICollectionViewCell {
   }
   
   private func bind() {
-    majorLabel.text = model?.major.convertMajor(model?.major ?? "",
-                                                isEnglish: false)
+    majorLabel.text = model?.major.convertMajor(model?.major ?? "", isEnglish: false)
     titleLabel.text =  model?.title
     infoLabel.text = model?.content
     remainLabel.text = "잔여 \(model?.remainingSeat ?? 0)자리"

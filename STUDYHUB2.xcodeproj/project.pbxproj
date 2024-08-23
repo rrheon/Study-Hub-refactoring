@@ -67,6 +67,9 @@
 		EE27B44E2C5B70B700057475 /* EnterDepartmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */; };
 		EE2908042C75D3E2006B28A7 /* FetchDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908032C75D3E2006B28A7 /* FetchDatas.swift */; };
 		EE2908062C7600D9006B28A7 /* ShowToastPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */; };
+		EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */; };
+		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
+		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -108,11 +111,11 @@
 		EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD042C64D41F00FA347D /* HomeViewModel.swift */; };
 		EEDDDD072C69F4FD00FA347D /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD062C69F4FD00FA347D /* CommonModel.swift */; };
 		EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD0B2C6B3A8500FA347D /* PostedStudyViewModel.swift */; };
-		EEDDDD0E2C6B452E00FA347D /* PostedStudyMainComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD0D2C6B452E00FA347D /* PostedStudyMainComponent.swift */; };
-		EEDDDD112C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */; };
+		EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD0D2C6B452E00FA347D /* MainComponent.swift */; };
+		EEDDDD112C6B4A5B00FA347D /* DetailInfoConponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD102C6B4A5B00FA347D /* DetailInfoConponent.swift */; };
 		EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */; };
-		EEDDDD152C6B4D8800FA347D /* PostedStudyWriterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */; };
-		EEDDDD172C6B4F2F00FA347D /* PostedStudyCommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */; };
+		EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */; };
+		EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */; };
 		EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Convert.swift */; };
 		EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */; };
 		EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD212C71EEF300FA347D /* ManagementPost.swift */; };
@@ -212,6 +215,9 @@
 		EE27B44D2C5B70B600057475 /* EnterDepartmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterDepartmentViewModel.swift; sourceTree = "<group>"; };
 		EE2908032C75D3E2006B28A7 /* FetchDatas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchDatas.swift; sourceTree = "<group>"; };
 		EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowToastPopup.swift; sourceTree = "<group>"; };
+		EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
+		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -265,11 +271,11 @@
 		EEDDDD042C64D41F00FA347D /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		EEDDDD062C69F4FD00FA347D /* CommonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModel.swift; sourceTree = "<group>"; };
 		EEDDDD0B2C6B3A8500FA347D /* PostedStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyViewModel.swift; sourceTree = "<group>"; };
-		EEDDDD0D2C6B452E00FA347D /* PostedStudyMainComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyMainComponent.swift; sourceTree = "<group>"; };
-		EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyDetailInfoConponent.swift; sourceTree = "<group>"; };
+		EEDDDD0D2C6B452E00FA347D /* MainComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainComponent.swift; sourceTree = "<group>"; };
+		EEDDDD102C6B4A5B00FA347D /* DetailInfoConponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoConponent.swift; sourceTree = "<group>"; };
 		EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUIModel.swift; sourceTree = "<group>"; };
-		EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyWriterComponent.swift; sourceTree = "<group>"; };
-		EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostedStudyCommentComponent.swift; sourceTree = "<group>"; };
+		EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterComponent.swift; sourceTree = "<group>"; };
+		EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentComponent.swift; sourceTree = "<group>"; };
 		EEDDDD1A2C6CA05900FA347D /* Convert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convert.swift; sourceTree = "<group>"; };
 		EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowBottomSheet.swift; sourceTree = "<group>"; };
 		EEDDDD212C71EEF300FA347D /* ManagementPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementPost.swift; sourceTree = "<group>"; };
@@ -335,14 +341,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		EE07ADC82AF2570E0096890F /* PostedStudy */ = {
+		EE07ADC82AF2570E0096890F /* PostedStudyScene */ = {
 			isa = PBXGroup;
 			children = (
-				EEDDDD092C6B3A5700FA347D /* View */,
-				EEDDDD0A2C6B3A5E00FA347D /* ViewModel */,
+				EE2908072C762E94006B28A7 /* PostedStudy */,
+				EE2908082C762EDE006B28A7 /* Comment */,
 				EEFD5D312B654A5900D1CE00 /* Participate */,
 			);
-			path = PostedStudy;
+			path = PostedStudyScene;
 			sourceTree = "<group>";
 		};
 		EE07ADC92AF25F1E0096890F /* Helper */ = {
@@ -354,8 +360,6 @@
 				EE07ADCE2AF325F80096890F /* UILabelPadding.swift */,
 				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
 				EE07ADBC2AEFF7BD0096890F /* ConvertMajor.swift */,
-				EEDDDD202C71EE8900FA347D /* BottomSheet */,
-				EEDDDD252C72EC8D00FA347D /* PopupView */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
 				EEDDDD1A2C6CA05900FA347D /* Convert.swift */,
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
@@ -388,13 +392,13 @@
 			path = MainScene;
 			sourceTree = "<group>";
 		};
-		EE0A8B612AFCB4DC001C3F41 /* BookMark */ = {
+		EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */ = {
 			isa = PBXGroup;
 			children = (
-				F873775A2AACD41D0055B041 /* BookmarkViewController.swift */,
-				EE0A8B622AFCB572001C3F41 /* BookMarkCell.swift */,
+				EE2908132C770BE1006B28A7 /* View */,
+				EE2908142C770FA9006B28A7 /* ViewModel */,
 			);
-			path = BookMark;
+			path = BookMarkScene;
 			sourceTree = "<group>";
 		};
 		EE0A8B712B0896B4001C3F41 /* Font */ = {
@@ -521,6 +525,94 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		EE2908072C762E94006B28A7 /* PostedStudy */ = {
+			isa = PBXGroup;
+			children = (
+				EEDDDD092C6B3A5700FA347D /* View */,
+				EEDDDD0A2C6B3A5E00FA347D /* ViewModel */,
+			);
+			path = PostedStudy;
+			sourceTree = "<group>";
+		};
+		EE2908082C762EDE006B28A7 /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908092C76308C006B28A7 /* View */,
+				EE29080A2C763092006B28A7 /* ViewModel */,
+			);
+			path = Comment;
+			sourceTree = "<group>";
+		};
+		EE2908092C76308C006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */,
+				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29080A2C763092006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE29080D2C763592006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29080E2C76359A006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE2908112C76FD91006B28A7 /* Study */ = {
+			isa = PBXGroup;
+			children = (
+				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+			);
+			path = Study;
+			sourceTree = "<group>";
+		};
+		EE2908122C770BAC006B28A7 /* ServiceScene */ = {
+			isa = PBXGroup;
+			children = (
+				EE9356272B6A509E00D662CC /* NotificationViewController.swift */,
+				EE9356292B6A518500D662CC /* NotificationCell.swift */,
+				EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */,
+				EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */,
+				EEDD80FC2B6D12990022302E /* InquiryViewController.swift */,
+			);
+			path = ServiceScene;
+			sourceTree = "<group>";
+		};
+		EE2908132C770BE1006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F873775A2AACD41D0055B041 /* BookmarkViewController.swift */,
+				EE0A8B622AFCB572001C3F41 /* BookMarkCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE2908142C770FA9006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EE35ED6D2B14B7E2008040E2 /* Participate */ = {
 			isa = PBXGroup;
 			children = (
@@ -549,9 +641,12 @@
 		EE3AD8B52C467E6C000A8CCA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EEDDDD202C71EE8900FA347D /* BottomSheet */,
+				EEDDDD252C72EC8D00FA347D /* PopupView */,
 				EEA53A3E2C5250F900C8FEFF /* CustomUI */,
 				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* SignupScene */,
+				EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */,
 				EE0A8B582AF93255001C3F41 /* MainScene */,
 				F89A01652A87FAE000B4C10D /* StudyScene */,
 				EE3AD8B72C467F01000A8CCA /* SearchView */,
@@ -792,8 +887,6 @@
 			children = (
 				EE07ADB82AEFE6730096890F /* PostedStudyViewController.swift */,
 				EE07ADC02AF0D5A40096890F /* SimilarPostCell.swift */,
-				EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */,
-				EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */,
 				EEDDDD0F2C6B45A500FA347D /* ViewComponent */,
 			);
 			path = View;
@@ -810,10 +903,10 @@
 		EEDDDD0F2C6B45A500FA347D /* ViewComponent */ = {
 			isa = PBXGroup;
 			children = (
-				EEDDDD0D2C6B452E00FA347D /* PostedStudyMainComponent.swift */,
-				EEDDDD102C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift */,
-				EEDDDD142C6B4D8800FA347D /* PostedStudyWriterComponent.swift */,
-				EEDDDD162C6B4F2F00FA347D /* PostedStudyCommentComponent.swift */,
+				EEDDDD0D2C6B452E00FA347D /* MainComponent.swift */,
+				EEDDDD102C6B4A5B00FA347D /* DetailInfoConponent.swift */,
+				EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */,
+				EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -949,7 +1042,8 @@
 		F88AB3472A9E71A4001D619C /* CreateStudy */ = {
 			isa = PBXGroup;
 			children = (
-				F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */,
+				EE29080D2C763592006B28A7 /* View */,
+				EE29080E2C76359A006B28A7 /* ViewModel */,
 				EE07ADD02AF632B80096890F /* Calendar.swift */,
 				EE07ADD22AF632C40096890F /* SelectDepartment */,
 			);
@@ -959,10 +1053,9 @@
 		F89A01652A87FAE000B4C10D /* StudyScene */ = {
 			isa = PBXGroup;
 			children = (
-				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+				EE2908112C76FD91006B28A7 /* Study */,
 				F88AB3472A9E71A4001D619C /* CreateStudy */,
-				EE07ADC82AF2570E0096890F /* PostedStudy */,
-				EE0A8B612AFCB4DC001C3F41 /* BookMark */,
+				EE07ADC82AF2570E0096890F /* PostedStudyScene */,
 			);
 			path = StudyScene;
 			sourceTree = "<group>";
@@ -975,11 +1068,7 @@
 				EEDD81102B7DE2780022302E /* MyRequestList */,
 				EEB51E862B103C2300C23AB4 /* InfomationView */,
 				EEB51E892B103C2300C23AB4 /* MyPostView */,
-				EE9356272B6A509E00D662CC /* NotificationViewController.swift */,
-				EE9356292B6A518500D662CC /* NotificationCell.swift */,
-				EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */,
-				EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */,
-				EEDD80FC2B6D12990022302E /* InquiryViewController.swift */,
+				EE2908122C770BAC006B28A7 /* ServiceScene */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -1139,7 +1228,7 @@
 				EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
-				EEDDDD152C6B4D8800FA347D /* PostedStudyWriterComponent.swift in Sources */,
+				EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */,
 				EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
@@ -1165,7 +1254,7 @@
 				EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */,
 				EE07ADBD2AEFF7BD0096890F /* ConvertMajor.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */,
-				EEDDDD112C6B4A5B00FA347D /* PostedStudyDetailInfoConponent.swift in Sources */,
+				EEDDDD112C6B4A5B00FA347D /* DetailInfoConponent.swift in Sources */,
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
 				EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */,
 				EE0B6D122C74E43000FEFEBA /* PopUpViewActions.swift in Sources */,
@@ -1177,7 +1266,7 @@
 				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				EEDDDD072C69F4FD00FA347D /* CommonModel.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
-				EEDDDD172C6B4F2F00FA347D /* PostedStudyCommentComponent.swift in Sources */,
+				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
@@ -1190,10 +1279,12 @@
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
 				EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
+				EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */,
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */,
+				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
 				EE0B6D102C74759E00FEFEBA /* ManagementComment.swift in Sources */,
@@ -1224,6 +1315,7 @@
 				EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */,
 				EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
+				EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */,
 				EE27B44E2C5B70B700057475 /* EnterDepartmentViewModel.swift in Sources */,
 				EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */,
 				EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */,
@@ -1234,7 +1326,7 @@
 				EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */,
 				EE271F202AD0584100190E7A /* UIColor+.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
-				EEDDDD0E2C6B452E00FA347D /* PostedStudyMainComponent.swift in Sources */,
+				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,

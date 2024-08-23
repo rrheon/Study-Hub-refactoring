@@ -190,17 +190,17 @@ final class SearchViewController: NaviHelper {
       image: bookMarkImg,
       style: .plain,
       target: self,
-      action: #selector(bookmarkpageButtonTapped))
+      action: nil)
     bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
     navigationItem.rightBarButtonItem = bookMark
   }
   
   // MARK: - 북마크 아이콘 터치
-  @objc func bookmarkpageButtonTapped() {
-    let bookmarkViewController = BookmarkViewController(postID: 0)
-    navigationController?.pushViewController(bookmarkViewController, animated: true)
-  }
+//  @objc func bookmarkpageButtonTapped() {
+//    let bookmarkViewController = BookmarkViewController(loginStatus: loginStatus)
+//    navigationController?.pushViewController(bookmarkViewController, animated: true)
+//  }
   
   func buttonTapped(hot: String, titleAndMajor: String){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
