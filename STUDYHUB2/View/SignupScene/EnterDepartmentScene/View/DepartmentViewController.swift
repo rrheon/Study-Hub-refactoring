@@ -3,6 +3,7 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+import RxSwift
 
 final class DepartmentViewController: CommonNavi {
   let viewModel: EnterDepartmentViewModel
@@ -148,6 +149,7 @@ final class DepartmentViewController: CommonNavi {
   
   func setupActions(){
     resultTableView.rx.modelSelected(String.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         self?.majorTextField.textField.text = item
         self?.nextButton.unableButton(true)
@@ -166,6 +168,7 @@ final class DepartmentViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     nextButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         guard let major = self?.majorTextField.getTextFieldValue() else { return }
         self?.viewModel.createAccount(major)

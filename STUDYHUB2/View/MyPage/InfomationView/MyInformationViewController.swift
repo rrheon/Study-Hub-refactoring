@@ -347,8 +347,8 @@ final class MyInformViewController: NaviHelper {
   func editProfileButtonTapped(){
     let bottomSheetVC = BottomSheet(postID: 0,
                                     firstButtonTitle: "사진 촬영하기" ,
-                                    secondButtonTitle: "앨범에서 선택하기")
-    bottomSheetVC.delegate = self
+                                    secondButtonTitle: "앨범에서 선택하기",
+                                    checkPost: false)
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -405,18 +405,18 @@ final class MyInformViewController: NaviHelper {
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      self?.tokenManager.deleteTokens()
-      
-      self?.dismiss(animated: true) {
-        self?.bookmarkList.removeAll()
-        
-        let loginVC = LoginViewController()
-        loginVC.modalPresentationStyle = .overFullScreen
-        self?.present(loginVC, animated: true, completion: nil)
-      }
-    }
+//    
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      self?.tokenManager.deleteTokens()
+//      
+//      self?.dismiss(animated: true) {
+//        self?.bookmarkList.removeAll()
+//        
+//        let loginVC = LoginViewController()
+//        loginVC.modalPresentationStyle = .overFullScreen
+//        self?.present(loginVC, animated: true, completion: nil)
+//      }
+//    }
   }
   
   // MARK: - 탈퇴하기
@@ -429,8 +429,9 @@ final class MyInformViewController: NaviHelper {
 
 // MARK: - bottomSheet Delegate
 extension MyInformViewController: BottomSheetDelegate {
+  
   // 프로필 이미지 변경
-  func changeProfileImage(type: UIImagePickerController.SourceType){
+  func changeProfileImage(type: UIImagePickerController.SourceType, checkPost: Bool){
     self.dismiss(animated: true)
     
     let picker = UIImagePickerController()
@@ -440,24 +441,19 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
-  func firstButtonTapped(postID: Int?) {
-//    changeProfileImage(type: .camera)
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
     requestCameraAccess()
-
   }
   
-  // 앨범에서 선택하기
-  func secondButtonTapped(postID: Int?) {
-//    changeProfileImage(type: .photoLibrary)
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
     requestPhotoLibraryAccess()
-
   }
   
   func requestCameraAccess() {
     AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
       if granted {
         DispatchQueue.main.async {
-          self?.changeProfileImage(type: .camera)
+          self?.changeProfileImage(type: .camera, checkPost: false)
         }
       } else {
         DispatchQueue.main.async {
@@ -472,7 +468,7 @@ extension MyInformViewController: BottomSheetDelegate {
       switch status {
       case .authorized:
         DispatchQueue.main.async {
-          self?.changeProfileImage(type: .photoLibrary)
+          self?.changeProfileImage(type: .photoLibrary, checkPost: false)
         }
       case .denied, .restricted:
         DispatchQueue.main.async {
@@ -494,16 +490,16 @@ extension MyInformViewController: BottomSheetDelegate {
       rightButtonTilte: "설정"
     )
     
-    popupVC.popupView.leftButtonAction = {
-      self.dismiss(animated: true, completion: nil)
-    }
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(settingsURL)
-      }
-    }
+//    popupVC.popupView.leftButtonAction = {
+//      self.dismiss(animated: true, completion: nil)
+//    }
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true) {
+//        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+//        UIApplication.shared.open(settingsURL)
+//      }
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

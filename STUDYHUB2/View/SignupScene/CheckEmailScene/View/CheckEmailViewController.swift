@@ -142,7 +142,12 @@ final class CheckEmailViewController: CommonNavi {
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
         let color: UIColor = codeTextField.textField.isEditing ? .g60 : .g100
-          codeTextField.alertLabelSetting(hidden: true, title: "", textColor: color, underLineColor: color)
+          codeTextField.alertLabelSetting(
+            hidden: true,
+            title: "",
+            textColor: color,
+            underLineColor: color
+          )
       })
       .disposed(by: viewModel.disposeBag)
     

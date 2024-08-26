@@ -219,7 +219,12 @@ final class LoginViewController: UIViewController {
     }
     
     emailTextField.alertLabelSetting(hidden: true, title: "", textColor: .g100, underLineColor: .g100)
-    passwordTextField.alertLabelSetting(hidden: true, title: "", textColor: .g100, underLineColor: .g100)
+    passwordTextField.alertLabelSetting(
+      hidden: true,
+      title: "",
+      textColor: .g100,
+      underLineColor: .g100
+    )
   
     viewModel.login(email: email, password: password)
   }
@@ -232,6 +237,7 @@ final class LoginViewController: UIViewController {
     emailTextField.alertLabelSetting(hidden: false, title: "잘못된 주소예요. 다시 입력해주세요")
     passwordTextField.alertLabelSetting(
       hidden: false,
-      title: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)")
+      title: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
+    )
   }
 }

@@ -173,9 +173,7 @@ final class MyPostViewController: NaviHelper {
       
       emptyLabel.setLineSpacing(spacing: 15)
       emptyLabel.textAlignment = .center
-      emptyLabel.changeColor(label: emptyLabel,
-                             wantToChange: "새로운 스터디 활동을 시작해 보세요!",
-                             color: .bg60)
+      emptyLabel.changeColor(wantToChange: "새로운 스터디 활동을 시작해 보세요!", color: .bg60)
       emptyLabel.snp.makeConstraints { make in
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
@@ -232,11 +230,11 @@ final class MyPostViewController: NaviHelper {
     let popupVC = PopupViewController(title: "글을 모두 삭제할까요?",
                                       desc: "삭제한 글과 참여자는 다시 볼 수 없어요")
     
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-      popupVC.dismiss(animated: true)
-      self.deleteAllPost()
-    }
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      guard let self = self else { return }
+//      popupVC.dismiss(animated: true)
+//      self.deleteAllPost()
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
@@ -252,10 +250,10 @@ final class MyPostViewController: NaviHelper {
           dispatchGroup.leave() // 완료되면 나가기
         }
         switch result{
-        case .success(let response):
-          print(response)
-        case .failure(let response):
-          print(response)
+        case true:
+          print("삭제")
+        case false:
+          print("실패")
         }
       }
     })
@@ -290,17 +288,16 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
                       didSelectItemAt indexPath: IndexPath) {
   
     guard let postID = myPostDatas?[indexPath.row].postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
-    postedVC.previousMyPostVC = self
+//    postedVC.previousMyPostVC = self
     // 단건조회 시 연관된 포스트도 같이 나옴
     
     var username: String? = nil
     
     commonNetworking.refreshAccessToken { loginStatus in
       self.detailPostDataManager.searchSinglePostData(postId: postID,
-                                                 loginStatus: loginStatus) {
+                                                      loginStatus: loginStatus) { _ in 
         let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
+//        postedVC.postedData = cellData
         
         
         username = cellData?.postedUser.nickname
@@ -309,6 +306,10 @@ extension MyPostViewController: UICollectionViewDelegate, UICollectionViewDataSo
           self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
           return
         }
+        guard let postDatas = cellData else { return }
+        let postedData = PostedStudyData(isUserLogin: loginStatus, postDetailData: postDatas)
+        let postedVC = PostedStudyViewController(postedData)
+
         self.navigationController?.pushViewController(postedVC, animated: true)
       }
     }
@@ -350,7 +351,6 @@ extension MyPostViewController: MyPostCellDelegate {
   // 메뉴버튼
   func menuButtonTapped(in cell: MyPostCell, postID: Int) {
     let bottomSheetVC = BottomSheet(postID: postID)
-    bottomSheetVC.delegate = self
     
     if #available(iOS 15.0, *) {
       if let sheet = bottomSheetVC.sheetPresentationController {
@@ -382,22 +382,22 @@ extension MyPostViewController: MyPostCellDelegate {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
     
-    popupVC.popupView.rightButtonAction = {
-      self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
-        switch result {
-        case .success(let response):
-          print(response.response)
-          if response.statusCode == 200 {
-            self.getMyPostData(size: 5) {
-              print("데이터리로드")
-            }
-            self.dismiss(animated: true)
-          }
-        case .failure(let response):
-          print(response.response)
-        }
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
+//        switch result {
+//        case .success(let response):
+//          print(response.response)
+//          if response.statusCode == 200 {
+//            self.getMyPostData(size: 5) {
+//              print("데이터리로드")
+//            }
+//            self.dismiss(animated: true)
+//          }
+//        case .failure(let response):
+//          print(response.response)
+//        }
+//      }
+//    }
   }
   
   // MARK: - 스크롤해서 데이터 가져오기
@@ -419,17 +419,15 @@ extension MyPostViewController: MyPostCellDelegate {
 // 삭제하고 뒤로가면 마이페이지인데 이거 데이터도 다시 잡아줘야함, 게시글 상세조회에서 할때도
 extension MyPostViewController: BottomSheetDelegate {
   // 수정해야할수도
-  func firstButtonTapped(postID: Int?) {
+  func firstButtonTapped(postID: Int, checkPost: Bool) {
     let popupVC = PopupViewController(title: "이 글을 삭제할까요?",
-                                      desc: "삭제한 글과 참여자는 다시 볼 수 없어요",
-                                      postID: postID ?? 0)
-    popupVC.delegate = self
+                                      desc: "삭제한 글과 참여자는 다시 볼 수 없어요")
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
   }
   
   // BottomSheet에서 화면을 전환할 때
-  func secondButtonTapped(postID: Int?) {
+  func secondButtonTapped(postID: Int, checkPost: Bool) {
     self.dismiss(animated: true) {
       let createVC = CreateStudyViewController()
       createVC.modifyPostID = postID
@@ -454,10 +452,10 @@ extension MyPostViewController {
   }
 }
 
-extension MyPostViewController: PopupViewDelegate {
-  func afterDeletePost(completion: @escaping () -> Void) {
-    getMyPostData(size: 5) {
-      self.myPostCollectionView.reloadData()
-    }
-  }
-}
+//extension MyPostViewController: PopupViewDelegate {
+//  func afterDeletePost(completion: @escaping () -> Void) {
+//    getMyPostData(size: 5) {
+//      self.myPostCollectionView.reloadData()
+//    }
+////  }
+//}

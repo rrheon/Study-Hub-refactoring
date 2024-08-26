@@ -9,20 +9,16 @@ import Foundation
 
 import Moya
 
-protocol CheckLoginDelegate: AnyObject {
-  func checkLoginPopup(checkUser: Bool)
-}
-
 class CommonNetworking {
   static let shared = CommonNetworking()
   let tokenManager = TokenManager.shared
   
   weak var delegate: CheckLoginDelegate?
   
-  func moyaNetworking(networkingChoice: networkingAPI,
-                      needCheckToken: Bool = false,
-                      completion: @escaping (Result<Response, MoyaError>) -> Void) {
-    
+  func moyaNetworking(
+    networkingChoice: networkingAPI,
+    needCheckToken: Bool = false,
+    completion: @escaping (Result<Response, MoyaError>) -> Void) {
     if needCheckToken {
       checkingAccessToken { checkingToken in
         print("토큰 체크:\(checkingToken)")

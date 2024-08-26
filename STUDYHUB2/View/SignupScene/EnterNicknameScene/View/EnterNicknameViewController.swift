@@ -3,6 +3,7 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+import RxSwift
 
 final class EnterNicknameViewController: CommonNavi {
   
@@ -156,15 +157,19 @@ final class EnterNicknameViewController: CommonNavi {
   }
   
   func changeButtonUI(selet button: UIButton, deselect otherButton: UIButton){
-    genderButtonSetting(button: button,
-                        backgroundColor: .o60,
-                        titleColor: .o20,
-                        borderColor: .o50)
+    genderButtonSetting(
+      button: button,
+      backgroundColor: .o60,
+      titleColor: .o20,
+      borderColor: .o50
+    )
     
-    genderButtonSetting(button: otherButton,
-                        backgroundColor: .g100,
-                        titleColor: .g60,
-                        borderColor: .g80)
+    genderButtonSetting(
+      button: otherButton,
+      backgroundColor: .g100,
+      titleColor: .g60,
+      borderColor: .g80
+    )
   }
   
   func setupBindings(){
@@ -253,37 +258,42 @@ final class EnterNicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
     
     nextButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         let signupDatas = SignupDats(
           email: self?.viewModel.email,
           password: self?.viewModel.password,
           gender: self?.viewModel.selectedGender,
-          nickname: self?.nicknameTextField.getTextFieldValue())
+          nickname: self?.nicknameTextField.getTextFieldValue()
+        )
         let departmentVC = DepartmentViewController(signupDatas)
         self?.navigationController?.pushViewController(departmentVC, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
   }
 
-  func genderButtonSetting(button: UIButton,
-                           backgroundColor: UIColor,
-                           titleColor: UIColor,
-                           borderColor: UIColor) {
+  func genderButtonSetting(
+    button: UIButton,
+    backgroundColor: UIColor,
+    titleColor: UIColor,
+    borderColor: UIColor) {
       button.backgroundColor = backgroundColor
       button.setTitleColor(titleColor, for: .normal)
       button.layer.borderColor = borderColor.cgColor
-  }
+    }
   
   // MARK: - 중복 확인에 실패
   
   func failToCheckDuplicaiton(content: String){
     self.characterCountLabel.isHidden = true
     
-    nicknameTextField.alertLabelSetting(hidden: false,
-                                        title: content,
-                                        textColor: .r50,
-                                        underLineColor: .r50)
-
+    nicknameTextField.alertLabelSetting(
+      hidden: false,
+      title: content,
+      textColor: .r50,
+      underLineColor: .r50
+    )
+    
     self.nextButton.backgroundColor = .o60
     self.nextButton.setTitleColor(.g90, for: .normal)
   }
@@ -298,9 +308,7 @@ extension EnterNicknameViewController {
     let changedText = currentText.replacingCharacters(in: stringRange, with: string)
     
     characterCountLabel.text = "\(changedText.count)/10"
-    characterCountLabel.changeColor(label: characterCountLabel,
-                                    wantToChange: "\(changedText.count)",
-                                    color: .white)
+    characterCountLabel.changeColor(wantToChange: "\(changedText.count)", color: .white)
     return changedText.count <= 9
   }
 }

@@ -117,9 +117,7 @@ final class MyRequestListViewController: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
-    totalPostCountLabel.changeColor(label: totalPostCountLabel,
-                                    wantToChange: "\(countPostNumber)",
-                                    color: .black)
+    totalPostCountLabel.changeColor(wantToChange: "\(countPostNumber)", color: .black)
     totalPostCountLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(20)
@@ -161,12 +159,13 @@ final class MyRequestListViewController: NaviHelper {
     }
     
     view.addSubview(emptyLabel)
-    emptyLabel.changeColor(label: emptyLabel,
-                           wantToChange: "지금 스터디에 참여해보세요!",
-                           color: .bg60,
-                           font: UIFont(name: "Pretendard-Medium",
-                                        size: 16),
-                           lineSpacing: 5)
+    emptyLabel.changeColor(
+      wantToChange: "지금 스터디에 참여해보세요!",
+      color: .bg60,
+      font: UIFont(name: "Pretendard-Medium",
+                   size: 16),
+      lineSpacing: 5
+    )
     emptyLabel.snp.makeConstraints {
       $0.top.equalTo(emptyImage.snp.bottom).offset(10)
       $0.centerX.equalToSuperview()
@@ -222,23 +221,23 @@ extension MyRequestListViewController: MyRequestCellDelegate {
                                       desc: "")
     
     popupVC.modalPresentationStyle = .overFullScreen
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-
-      self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
-        self.getRequestList {
-          self.myStudyRequestCollectionView.reloadData()
-
-          if self.countPostNumber == 0 {
-            self.myStudyRequestCollectionView.isHidden = true
-            self.noDataUI()
-          }
-        }
-        self.showToast(message: "삭제가 완료됐어요.",
-                  imageCheck: true,
-                  alertCheck: true)
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//
+//      self.myRequestListManger.deleteRequestStudy(studyId: cell.model?.studyID ?? 0) {
+//        self.getRequestList {
+//          self.myStudyRequestCollectionView.reloadData()
+//
+//          if self.countPostNumber == 0 {
+//            self.myStudyRequestCollectionView.isHidden = true
+//            self.noDataUI()
+//          }
+//        }
+//        self.showToast(message: "삭제가 완료됐어요.",
+//                  imageCheck: true,
+//                  alertCheck: true)
+//      }
+//    }
     
     self.present(popupVC, animated: false)
   }

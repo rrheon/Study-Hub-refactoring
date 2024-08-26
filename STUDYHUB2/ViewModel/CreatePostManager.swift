@@ -16,12 +16,14 @@ final class PostManager {
   let commonNetworking = CommonNetworking.shared
   
   private init() {}
-
+  
   // 게시글 생성, 반환값 나중에 스웨거보고 확인하기
   func createPost(createPostDatas: CreateStudyRequest,
                   completion: @escaping (String) -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .createMyPost(createPostDatas),
-                                    needCheckToken: true) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .createMyPost(createPostDatas),
+      needCheckToken: true
+    ) { result in
       switch result {
       case .success(let response):
         print(response.response)
@@ -33,32 +35,29 @@ final class PostManager {
     }
   }
   
-  func modifyPost(data: UpdateStudyRequest,
-                  completion: @escaping () -> Void){
+  func modifyPost(data: UpdateStudyRequest, completion: @escaping (Bool) -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.modifyMyPost(_data: data)) { result in
-      print(data)
-      switch result {
-      case .success(let postResponse):
-        print(postResponse.response)
-//        let strData = String(data: postResponse.data, encoding: .utf8)
-//        print("Response body: \(strData ?? "")")
-        completion()
-      case .failure(let error):
-        print("Error: \(error)")
+    provider.request(.modifyMyPost(_data: data)) {
+      switch $0 {
+      case .success(_):
+        completion(true)
+      case .failure(_):
+        completion(false)
       }
     }
-//    commonNetworking.moyaNetworking(networkingChoice: .modifyMyPost(_data: data),
-//                                    needCheckToken: true) { result in
-//      switch result {
-//      case .success(let postResponse):
-//        print(postResponse.response)
-//        let strData = String(data: postResponse.data, encoding: .utf8)
-//        print("Response body: \(strData ?? "")")
-//        completion()
-//      case .failure(let error):
-//        print("Error: \(error)")
-//      }
-//    }
+  }
+  
+  func deleteMyPost(postId: Int, completion: @escaping (Bool) -> Void) {
+    let provider = MoyaProvider<networkingAPI>()
+    provider.request(.deleteMyPost(_postId: postId)) {
+      switch $0 {
+      case .success(_):
+        completion(true)
+      case .failure(_):
+        completion(false)
+      }
+    }
   }
 }
+
+

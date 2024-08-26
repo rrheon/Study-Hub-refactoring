@@ -26,11 +26,11 @@ final class StudyHubButton: UIButton {
     self.layer.cornerRadius = radious
   }
   
-  func unableButton(_ check: Bool){
+  func unableButton(_ check: Bool, backgroundColor: UIColor = .o60, titleColor: UIColor = .g70){
     self.isEnabled = check
-    self.backgroundColor = check ? .o50 : .o60
+    self.backgroundColor = check ? .o50 : backgroundColor
     
-    let titleColor = check ? UIColor.white : UIColor.g70
+    let titleColor = check ? UIColor.white : titleColor
     self.setTitleColor(titleColor, for: .normal)
   }
 }

@@ -138,9 +138,7 @@ final class MyParticipateStudyVC: NaviHelper {
   
   // MARK: - makeUI
   func makeUI(){
-    totalPostCountLabel.changeColor(label: totalPostCountLabel,
-                                    wantToChange: "\(countPostNumber)",
-                                    color: .black)
+    totalPostCountLabel.changeColor(wantToChange: "\(countPostNumber)", color: .black)
     totalPostCountLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.leading.equalToSuperview().offset(20)
@@ -172,9 +170,7 @@ final class MyParticipateStudyVC: NaviHelper {
       
       emptyLabel.setLineSpacing(spacing: 15)
       emptyLabel.textAlignment = .center
-      emptyLabel.changeColor(label: emptyLabel,
-                             wantToChange: "새로운 스터디 활동을 시작해 보세요!",
-                             color: .bg60)
+      emptyLabel.changeColor(wantToChange: "새로운 스터디 활동을 시작해 보세요!", color: .bg60)
       emptyLabel.snp.makeConstraints { make in
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
@@ -202,29 +198,29 @@ final class MyParticipateStudyVC: NaviHelper {
   func confirmDeleteAll(){
     let popupVC = PopupViewController(title: "스터디를 모두 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      self.participateInfo?.participateStudyData.content.map({ participateDatas in
-        self.myRequestListManger.deleteRequestStudy(studyId: participateDatas.studyID) {
-          print("전체삭제")
-        }
-      })
-      self.getRequestList {
-        self.myPostCollectionView.reloadData()
-        
-        if self.countPostNumber == 0 {
-          self.myPostCollectionView.isHidden = true
-          self.noDataUI()
-        }
-      }
-      self.showToast(message: "삭제가 완료됐어요.",
-                     imageCheck: true,
-                     alertCheck: true)
-      }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      self.participateInfo?.participateStudyData.content.map({ participateDatas in
+//        self.myRequestListManger.deleteRequestStudy(studyId: participateDatas.studyID) {
+//          print("전체삭제")
+//        }
+//      })
+//      self.getRequestList {
+//        self.myPostCollectionView.reloadData()
+//        
+//        if self.countPostNumber == 0 {
+//          self.myPostCollectionView.isHidden = true
+//          self.noDataUI()
+//        }
+//      }
+//      self.showToast(message: "삭제가 완료됐어요.",
+//                     imageCheck: true,
+//                     alertCheck: true)
+//      }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
   
   func noDataUI(){
@@ -234,12 +230,12 @@ final class MyParticipateStudyVC: NaviHelper {
     }
     
     view.addSubview(emptyLabel)
-    emptyLabel.changeColor(label: emptyLabel,
-                           wantToChange: "참여한 스터디가 없어요",
-                           color: .bg60,
-                           font: UIFont(name: "Pretendard-Medium",
-                                        size: 16),
-                           lineSpacing: 5)
+    emptyLabel.changeColor(
+      wantToChange: "참여한 스터디가 없어요",
+      color: .bg60,
+      font: UIFont(name: "Pretendard-Medium", size: 16),
+      lineSpacing: 5
+    )
     emptyLabel.snp.makeConstraints {
       $0.top.equalTo(emptyImage.snp.bottom).offset(10)
       $0.centerX.equalToSuperview()
@@ -301,24 +297,24 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?",
                                       desc: "삭제하면 채팅방을 다시 찾을 수 없어요")
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-
-      self.myRequestListManger.deleteRequestStudy(studyId: postID) {
-
-        self.getRequestList {
-          self.myPostCollectionView.reloadData()
-
-          if self.countPostNumber == 0 {
-            self.myPostCollectionView.isHidden = true
-            self.noDataUI()
-          }
-        }
-        self.showToast(message: "삭제가 완료됐어요.",
-                  imageCheck: true,
-                  alertCheck: true)
-      }
-    }
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//
+//      self.myRequestListManger.deleteRequestStudy(studyId: postID) {
+//
+//        self.getRequestList {
+//          self.myPostCollectionView.reloadData()
+//
+//          if self.countPostNumber == 0 {
+//            self.myPostCollectionView.isHidden = true
+//            self.noDataUI()
+//          }
+//        }
+//        self.showToast(message: "삭제가 완료됐어요.",
+//                  imageCheck: true,
+//                  alertCheck: true)
+//      }
+//    }
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)

@@ -159,9 +159,7 @@ extension WriteRefuseReasonVC {
     let changedText = currentText.replacingCharacters(in: stringRange, with: text)
     
     countContentLabel.text = "\(changedText.count)/200"
-    countContentLabel.changeColor(label: countContentLabel,
-                                  wantToChange: "\(changedText.count)",
-                                  color: .black)
+    countContentLabel.changeColor(wantToChange: "\(changedText.count)", color: .black)
     return changedText.count <= 199
   }
 }

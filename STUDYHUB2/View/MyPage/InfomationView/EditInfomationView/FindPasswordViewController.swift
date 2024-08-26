@@ -210,7 +210,7 @@ final class FindPasswordViewController: NaviHelper {
       view.addSubview($0)
     }
     
-    emailLabel.changeColor(label: emailLabel, wantToChange: "전송된 이메일", color: .bg70)
+    emailLabel.changeColor(wantToChange: "전송된 이메일", color: .bg70)
     emailLabel.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel.snp.leading)

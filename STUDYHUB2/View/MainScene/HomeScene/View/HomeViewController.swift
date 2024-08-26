@@ -2,9 +2,10 @@
 import UIKit
 
 import SnapKit
+import RxSwift
 import RxCocoa
 
-final class HomeViewController: CommonNavi {
+final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate {
 
   let viewModel: HomeViewModel
   
@@ -30,13 +31,11 @@ final class HomeViewController: CommonNavi {
 
   private lazy var allButton: UIButton = {
     let button = UIButton()
-    
     let title = "전체"
     let image = UIImage(named: "RightArrow")
     
     button.semanticContentAttribute = .forceLeftToRight
     button.contentHorizontalAlignment = .left
-    
     button.setTitle(title, for: .normal)
     button.setTitleColor(UIColor.g60, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
@@ -46,9 +45,6 @@ final class HomeViewController: CommonNavi {
     
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: 0)
-    button.addAction(UIAction { _ in
-      self.allButtonTapped()
-    } , for: .touchUpInside)
     return button
   }()
   
@@ -95,9 +91,6 @@ final class HomeViewController: CommonNavi {
   init(_ loginStatus: Bool) {
     self.viewModel = HomeViewModel(loginStatus: loginStatus)
     super.init()
-    
-    viewModel.fetchNewPostDatas()
-    viewModel.fetchDeadLinePostDatas()
   }
   
   required init?(coder: NSCoder) {
@@ -109,7 +102,8 @@ final class HomeViewController: CommonNavi {
     super.viewDidLoad()
     
     view.backgroundColor = .black
-    navigationController?.navigationBar.backgroundColor = .black
+    
+    commonNetworking.delegate = self
     
     setupBindings()
     setupCollectionView()
@@ -238,6 +232,8 @@ final class HomeViewController: CommonNavi {
   func redesignNavigationbar(){
     leftButtonSetting(imgName: "LogoImage", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
+    
+    self.navigationController?.navigationBar.isTranslucent = false
   }
   
   private func setupCollectionView() {
@@ -262,8 +258,9 @@ final class HomeViewController: CommonNavi {
   
   func setupBindings(){
     viewModel.newPostDatas
+      .asDriver(onErrorJustReturn: [])
       .map { Array($0.prefix(5)) }
-      .bind(to: recrutingCollectionView.rx.items(
+      .drive(recrutingCollectionView.rx.items(
         cellIdentifier: RecruitPostCell.id,
         cellType: RecruitPostCell.self)) { index, content, cell in
           cell.model = content
@@ -273,43 +270,76 @@ final class HomeViewController: CommonNavi {
         .disposed(by: viewModel.disposeBag)
     
     viewModel.deadlinePostDatas
+      .asDriver(onErrorJustReturn: [])
       .map { Array($0.prefix(4)) }
-      .bind(to: deadLineCollectionView.rx.items(
+      .drive(deadLineCollectionView.rx.items(
         cellIdentifier: DeadLineCell.id,
         cellType: DeadLineCell.self)) { index, content, cell in
           cell.model = content
-          cell.delegate = self
           cell.loginStatus = self.viewModel.checkLoginStatus.value
         }
         .disposed(by: viewModel.disposeBag)
+    
+    viewModel.singlePostData
+      .subscribe(onNext: { [weak self] in
+        self?.moveToPostedStudyVC(postData: $0)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isNeedFetchDatas
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        if $0 {
+          self?.viewModel.fetchNewPostDatas()
+          self?.viewModel.fetchDeadLinePostDatas()
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
     recrutingCollectionView.rx.modelSelected(Content.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
-        self?.moveToPostedStudyVC(postID: postID)
+        self?.viewModel.fectchSinglePostDatas(postID)
       })
       .disposed(by: viewModel.disposeBag)
     
     deadLineCollectionView.rx.modelSelected(Content.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postID
-        self?.moveToPostedStudyVC(postID: postID)
+        self?.viewModel.fectchSinglePostDatas(postID)
       })
       .disposed(by: viewModel.disposeBag)
     
     detailsButton.rx.tap
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: {[weak self] in
-        let detailsViewController = DetailsViewController()
+        guard let loginStatus = self?.viewModel.checkLoginStatus.value else { return }
+        let detailsViewController = HowToUseViewController(loginStatus)
         detailsViewController.hidesBottomBarWhenPushed = true
         self?.navigationController?.pushViewController(detailsViewController, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    allButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        if let tabBarController = self?.tabBarController {
+          tabBarController.selectedIndex = 1
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
-  func moveToPostedStudyVC(postID: Int){
-    let postedStudyVC = PostedStudyViewController(postID: postID)
+  func moveToPostedStudyVC(postData: PostDetailData){
+    let postData = PostedStudyData(
+      isUserLogin: viewModel.checkLoginStatus.value,
+      postDetailData: postData,
+      isNeedFechData: viewModel.isNeedFetchDatas
+    )
+    let postedStudyVC = PostedStudyViewController(postData)
     postedStudyVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(postedStudyVC, animated: true)
   }
@@ -317,12 +347,11 @@ final class HomeViewController: CommonNavi {
   // MARK: -  북마크 버튼 탭
   
   override func rightButtonTapped(_ sender: UIBarButtonItem) {
-    let bookmarkViewController = BookmarkViewController()
-    bookmarkViewController.navigationItem.title = "북마크"
-   
-    self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    bookmarkViewController.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(bookmarkViewController, animated: true)
+    let data = BookMarkData(
+      loginStatus: viewModel.checkLoginStatus.value,
+      isNeedFetch: viewModel.isNeedFetchDatas
+    )
+    moveToBookmarkView(sender, data: data)
   }
   
   // MARK: - 서치바 재설정
@@ -333,14 +362,6 @@ final class HomeViewController: CommonNavi {
     if let searchBarTextField = searchBar.value(forKey: "searchField") as? UITextField {
       searchBarTextField.backgroundColor = .bg30
       searchBarTextField.layer.borderColor = UIColor.clear.cgColor
-    }
-  }
-  
-  // MARK: - allbuttonTapped
-  
-  func allButtonTapped(){
-    if let tabBarController = self.tabBarController {
-      tabBarController.selectedIndex = 1
     }
   }
 }
@@ -375,12 +396,4 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
-extension HomeViewController: CheckLoginDelegate {
-  func checkLoginPopup(checkUser: Bool) {
-//    checkLoginStatus(checkUser: checkUser)
-  }
-}
-
-extension HomeViewController: BookMarkDelegate {
- 
-}
+extension HomeViewController: MoveToBookmarkView {}

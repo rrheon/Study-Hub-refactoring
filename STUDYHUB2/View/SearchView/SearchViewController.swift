@@ -190,17 +190,17 @@ final class SearchViewController: NaviHelper {
       image: bookMarkImg,
       style: .plain,
       target: self,
-      action: #selector(bookmarkpageButtonTapped))
+      action: nil)
     bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     
     navigationItem.rightBarButtonItem = bookMark
   }
   
   // MARK: - 북마크 아이콘 터치
-  @objc func bookmarkpageButtonTapped() {
-    let bookmarkViewController = BookmarkViewController(postID: 0)
-    navigationController?.pushViewController(bookmarkViewController, animated: true)
-  }
+//  @objc func bookmarkpageButtonTapped() {
+//    let bookmarkViewController = BookmarkViewController(loginStatus: loginStatus)
+//    navigationController?.pushViewController(bookmarkViewController, animated: true)
+//  }
   
   func buttonTapped(hot: String, titleAndMajor: String){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
@@ -512,22 +512,24 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
   func collectionView(_ collectionView: UICollectionView,
                       didSelectItemAt indexPath: IndexPath) {
     guard let postID = totalDatas?[indexPath.row].postID else { return }
-    let postedVC = PostedStudyViewController(postID: postID)
-    postedVC.previousSearchVC = self
-    postedVC.hidesBottomBarWhenPushed = true
     
     var username: String? = nil
     
     commonNetworking.refreshAccessToken { loginStatus in
-      self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) {
-        let cellData = self.detailPostDataManager.getPostDetailData()
-        postedVC.postedData = cellData
-        username = cellData?.postedUser.nickname
+      self.detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: loginStatus) { _ in
+        guard let cellData = self.detailPostDataManager.getPostDetailData() else { return }
+//        postedVC.postedData = cellData
+        username = cellData.postedUser.nickname
         
         if username == nil {
           self.showToast(message: "해당 post에 접근할 수 없습니다",imageCheck: false)
           return
         }
+        let postData = PostedStudyData(isUserLogin: loginStatus, postDetailData: cellData)
+        let postedVC = PostedStudyViewController(postData)
+    //    postedVC.previousSearchVC = self
+        postedVC.hidesBottomBarWhenPushed = true
+
         self.navigationController?.pushViewController(postedVC, animated: true)
 
       }
