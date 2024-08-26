@@ -370,7 +370,11 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
 
 extension HomeViewController: UISearchBarDelegate {
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-    let searchViewController = SearchViewController()
+    let searchViewdata = SearchViewData(
+      isUserLogin: viewModel.checkLoginStatus.value,
+      isNeedFechData: viewModel.isNeedFetchDatas
+    )
+    let searchViewController = SearchViewController(searchViewdata)
     searchViewController.hidesBottomBarWhenPushed = false
     self.navigationController?.pushViewController(searchViewController, animated: true)
     return false

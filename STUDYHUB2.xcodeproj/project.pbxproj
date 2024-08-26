@@ -70,6 +70,10 @@
 		EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */; };
 		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
 		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
+		EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908192C787A32006B28A7 /* SearchViewModel.swift */; };
+		EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */; };
+		EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */; };
+		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -177,7 +181,7 @@
 		EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecruitCell.swift; sourceTree = "<group>"; };
 		EE0A8B5B2AF9330F001C3F41 /* DeadLineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadLineCell.swift; sourceTree = "<group>"; };
 		EE0A8B5D2AF9B01C001C3F41 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
-		EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchResultCell.swift; path = ../SearchResultCell.swift; sourceTree = "<group>"; };
 		EE0A8B622AFCB572001C3F41 /* BookMarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkCell.swift; sourceTree = "<group>"; };
 		EE0A8B642AFDDA6E001C3F41 /* MyInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EE0A8B682B04FED3001C3F41 /* PostDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDataManager.swift; sourceTree = "<group>"; };
@@ -218,6 +222,10 @@
 		EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
 		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
+		EE2908192C787A32006B28A7 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
+		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -308,7 +316,7 @@
 		F8085D402A815DCD0067D4DE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F8085D432A81846C0067D4DE /* StudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewController.swift; sourceTree = "<group>"; };
 		F8085D452A8184800067D4DE /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
-		F86E031E2A8BBAE600164976 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		F86E031E2A8BBAE600164976 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchViewController.swift; path = ../SearchViewController.swift; sourceTree = "<group>"; };
 		F86E03202A8BFC8000164976 /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F87377582AA850940055B041 /* DepartmentselectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartmentselectViewController.swift; sourceTree = "<group>"; };
 		F873775A2AACD41D0055B041 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
@@ -613,6 +621,60 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		EE2908172C787A1D006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F86E031E2A8BBAE600164976 /* SearchViewController.swift */,
+				EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */,
+			);
+			name = View;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		EE2908182C787A25006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908192C787A32006B28A7 /* SearchViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE29081B2C78A70B006B28A7 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908172C787A1D006B28A7 /* View */,
+				EE2908182C787A25006B28A7 /* ViewModel */,
+			);
+			name = Search;
+			path = View/Search;
+			sourceTree = "<group>";
+		};
+		EE29081C2C78A71B006B28A7 /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				EE29081D2C78A72B006B28A7 /* View */,
+				EE29081E2C78A734006B28A7 /* ViewModel */,
+			);
+			name = SearchResult;
+			path = View/Search/SearchResult;
+			sourceTree = "<group>";
+		};
+		EE29081D2C78A72B006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29081E2C78A734006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EE35ED6D2B14B7E2008040E2 /* Participate */ = {
 			isa = PBXGroup;
 			children = (
@@ -634,6 +696,7 @@
 			children = (
 				EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */,
 				EEDDDD062C69F4FD00FA347D /* CommonModel.swift */,
+				EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -649,7 +712,7 @@
 				EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */,
 				EE0A8B582AF93255001C3F41 /* MainScene */,
 				F89A01652A87FAE000B4C10D /* StudyScene */,
-				EE3AD8B72C467F01000A8CCA /* SearchView */,
+				EE3AD8B72C467F01000A8CCA /* SearchScene */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
 			);
 			path = View;
@@ -675,14 +738,15 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		EE3AD8B72C467F01000A8CCA /* SearchView */ = {
+		EE3AD8B72C467F01000A8CCA /* SearchScene */ = {
 			isa = PBXGroup;
 			children = (
-				F86E031E2A8BBAE600164976 /* SearchViewController.swift */,
-				EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */,
+				EE29081B2C78A70B006B28A7 /* Search */,
+				EE29081C2C78A71B006B28A7 /* SearchResult */,
 			);
-			path = SearchView;
-			sourceTree = "<group>";
+			name = SearchScene;
+			path = "/Users/yong/Desktop/study-hub-iOS-2/STUDYHUB2/View/SearchScene";
+			sourceTree = "<absolute>";
 		};
 		EE7614972C50D4E60008E463 /* LoginScene */ = {
 			isa = PBXGroup;
@@ -1206,6 +1270,7 @@
 			files = (
 				EE02B10C2B15FEEE0092082F /* MyPageViewController.swift in Sources */,
 				EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */,
+				EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */,
 				EE02B10E2B15FEEE0092082F /* MyPostInfoManager.swift in Sources */,
 				EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */,
 				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
@@ -1270,6 +1335,7 @@
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
+				EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
@@ -1300,6 +1366,7 @@
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
 				EE98B1B02B3C387A0025C4F8 /* FindPasswordViewController.swift in Sources */,
 				EE07AD902AE106460096890F /* CreatePostManager.swift in Sources */,
+				EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */,
 				F86E031F2A8BBAE600164976 /* SearchViewController.swift in Sources */,
 				EE1E44112B17222200223436 /* MyPostCell.swift in Sources */,
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
@@ -1329,6 +1396,7 @@
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
+				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */,
 				EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */,

@@ -8,7 +8,7 @@ final class SearchResultCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-   var delegate: BookMarkDelegate?
+  var delegate: BookMarkDelegate?
   
   var model: Content? { didSet { bind() } }
   
@@ -183,18 +183,22 @@ final class SearchResultCell: UICollectionViewCell {
     memberStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     memberStackView.isLayoutMarginsRelativeArrangement = true
     
-    let memeberData = [memberCountImage, countMemeberLabel]
-    for data in memeberData {
-      memberStackView.addArrangedSubview(data)
+    [
+      memberCountImage,
+      countMemeberLabel
+    ].forEach {
+      memberStackView.addArrangedSubview($0)
     }
     
     fineStackView.alignment = .center
     fineStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     fineStackView.isLayoutMarginsRelativeArrangement = true
     
-    let fineData = [fineImage, fineLabel]
-    for data in fineData {
-      fineStackView.addArrangedSubview(data)
+    [
+      fineImage,
+      fineLabel
+    ].forEach {
+      fineStackView.addArrangedSubview($0)
     }
     
     genderStackView.alignment = .center
@@ -202,18 +206,24 @@ final class SearchResultCell: UICollectionViewCell {
     genderStackView.isLayoutMarginsRelativeArrangement = true
     
     let genderSpace = UIView()
-    let genderData = [genderSpace,genderImage, genderLabel]
-    for data in genderData {
-      genderStackView.addArrangedSubview(data)
+    [
+      genderSpace,
+      genderImage,
+      genderLabel
+    ].forEach {
+      genderStackView.addArrangedSubview($0)
     }
     
     infoStackView.backgroundColor = .bg20
     infoStackView.distribution = .fillEqually
     infoStackView.layer.cornerRadius = 10
     
-    let infoData = [memberStackView, fineStackView, genderStackView]
-    for data in infoData {
-      infoStackView.addArrangedSubview(data)
+    [
+      memberStackView,
+      fineStackView,
+      genderStackView
+    ].forEach {
+      infoStackView.addArrangedSubview($0)
     }
     
     [
@@ -284,16 +294,6 @@ final class SearchResultCell: UICollectionViewCell {
     self.layer.borderWidth = 0.1
     self.layer.borderColor = UIColor.cellShadow.cgColor
     self.layer.cornerRadius = 10
-  }
-  
-  func convertGender(gender: String) -> String {
-    if gender == "FEMALE" {
-      return "여자"
-    } else if gender == "MALE" {
-      return "남자"
-    } else {
-      return "무관"
-    }
   }
   
   private func bookmarkTapped(){
@@ -376,3 +376,5 @@ final class SearchResultCell: UICollectionViewCell {
     }
   }
 }
+
+extension SearchResultCell: Convert{}

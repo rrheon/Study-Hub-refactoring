@@ -16,10 +16,8 @@ enum ParticipateAction {
   case goToParticipateVC
 }
 
-protocol PostedStudyViewData {
-  var isUserLogin: Bool { get }
+protocol PostedStudyViewData: CommonViewData {
   var postDetailData: PostDetailData { get }
-  var isNeedFechData: PublishRelay<Bool>? { get }
 }
 
 struct PostedStudyData: PostedStudyViewData {
@@ -27,7 +25,10 @@ struct PostedStudyData: PostedStudyViewData {
   var postDetailData: PostDetailData
   var isNeedFechData: PublishRelay<Bool>?
  
-  init(isUserLogin: Bool ,postDetailData: PostDetailData, isNeedFechData: PublishRelay<Bool>? = nil) {
+  init(isUserLogin: Bool,
+       postDetailData: PostDetailData,
+       isNeedFechData: PublishRelay<Bool>? = nil
+  ) {
     self.isUserLogin = isUserLogin
     self.postDetailData = postDetailData
     self.isNeedFechData = isNeedFechData
