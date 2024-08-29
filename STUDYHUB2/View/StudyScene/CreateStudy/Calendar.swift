@@ -20,15 +20,21 @@ class CalendarViewController: UIViewController {
   
   var delegate: ChangeDateProtocol?
   var buttonSelect: Bool?
-  private lazy var titleLabel = createLabel(title: dateFormatter.string(from: calendar!.currentPage),
-                                            textColor: .black,
-                                            fontType: "Pretendard",
-                                            fontSize: 18)
+  private lazy var titleLabel = createLabel(
+    title: dateFormatter.string(
+      from: calendar!.currentPage
+    ),
+    textColor: .black,
+    fontType: "Pretendard",
+    fontSize: 18
+  )
   
   private lazy var previousButton: UIButton = {
     let button = UIButton()
-    button.setImage(UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate),
-                    for: .normal)
+    button.setImage(
+      UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate),
+      for: .normal
+    )
     button.tintColor = .black
     button.addTarget(self, action: #selector(self.prevCurrentPage), for: .touchUpInside)
     return button
@@ -267,20 +273,27 @@ extension CalendarViewController: FSCalendarDelegate,
   }
   
   // 현재 날짜를 선택할 수 있는지 여부
-  func calendar(_ calendar: FSCalendar,
-                shouldSelect date: Date,
-                at monthPosition: FSCalendarMonthPosition) -> Bool {
+  func calendar(
+    _ calendar: FSCalendar,
+    shouldSelect date: Date,
+    at monthPosition: FSCalendarMonthPosition
+  ) -> Bool {
     let currentDate = Date()
     let calendar = Calendar.current
-
+    
     dateFormatter.dateFormat = "yyyy-MM-dd"
-    if let test = dateFormatter.date(from: selectedStatDate){
+    if let test = dateFormatter.date(
+      from: selectedStatDate
+    ){
       if date < test && buttonSelect == false {
         return false
       }
     }
     
-    if calendar.isDate(date, inSameDayAs: currentDate) {
+    if calendar.isDate(
+      date,
+      inSameDayAs: currentDate
+    ) {
       return true
     }
     

@@ -149,21 +149,27 @@ final class PostDataManager {
     }
   }
   
-  func getRecentPostDatas(hotType: String,
-                          page: Int = 0,
-                          size: Int = 5,
-                          completion: @escaping (PostDataContent) -> Void) {
+  func getRecentPostDatas(
+    hotType: String,
+    page: Int = 0,
+    size: Int = 5,
+    completion: @escaping (
+      PostDataContent
+    ) -> Void
+  ) {
     let queryItems = [URLQueryItem(name: "hot", value: hotType),
                       URLQueryItem(name: "page", value: "\(page)"),
                       URLQueryItem(name: "size", value: "\(size)"),
                       URLQueryItem(name: "titleAndMajor", value: "false")]
     
-    networkingShared.fetchData(type: "GET",
-                               apiVesrion: "v2",
-                               urlPath: "/study-posts",
-                               queryItems: queryItems,
-                               tokenNeed: true,
-                               createPostData: nil) { [weak self] (result: Result<PostDataContent, NetworkError>) in
+    networkingShared.fetchData(
+      type: "GET",
+      apiVesrion: "v2",
+      urlPath: "/study-posts",
+      queryItems: queryItems,
+      tokenNeed: true,
+      createPostData: nil
+    ) { [weak self] (result: Result<PostDataContent, NetworkError>) in
       switch result {
       case .success(let postData):
         self?.newPostDatas = postData

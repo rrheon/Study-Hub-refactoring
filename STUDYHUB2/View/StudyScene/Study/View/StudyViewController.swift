@@ -1,46 +1,25 @@
+
 import UIKit
 
 import SnapKit
+import RxSwift
+import RxCocoa
 
-// searchResultCell이랑 같은 형식 , collectionview랑 추가버튼 같이 뜨게 수정해야함
-final class StudyViewController: NaviHelper {
+final class StudyViewController: CommonNavi {
+  let viewModel: StudyViewModel
   
-  let postDataManager = PostDataManager.shared
-  let detailPostDataManager = PostDetailInfoManager.shared
-  var recentDatas: PostDataContent?
-  var totalDatas: [Content]? = []
+  private lazy var recentButton = createButton(
+    title: "   전체   ",
+    titleColor: .white,
+    backgroundColor: .black
+  )
   
-  var pageCount: Int = 0
-  var isInfiniteScroll = true
-  var searchType: String = "false"
-  var loginStatus: Bool = false
-  
-  private lazy var recentButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("   전체   ", for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
-    button.backgroundColor = .black
-    button.layer.cornerRadius = 15
-    button.addTarget(self, action: #selector(recentButtonTapped), for: .touchUpInside)
+  private lazy var popularButton = createButton(
+    title: "   인기   ",
+    titleColor: .bg90,
+    backgroundColor: .bg30
+  )
     
-    return button
-  }()
-  
-  private lazy var popularButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("   인기   ", for: .normal)
-    button.setTitleColor(.bg90, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
-    button.backgroundColor = .bg30
-    button.layer.cornerRadius = 15
-    button.addTarget(self, action: #selector(popularButtonTapped), for: .touchUpInside)
-    
-    return button
-  }()
-  
-  private lazy var studyCount: Int = recentDatas?.totalCount ?? 0
-  
   private lazy var emptyImage = UIImage(named: "EmptyStudy")
   private lazy var emptyImageView = UIImageView(image: emptyImage)
   
@@ -48,11 +27,9 @@ final class StudyViewController: NaviHelper {
     title: "관련 스터디가 없어요\n지금 스터디를 만들어\n  팀원을 구해보세요!",
     textColor: .bg80,
     fontType: "Pretendard",
-    fontSize: 12)
+    fontSize: 12
+  )
   
-  // 스터디가 있는 경우
-  private lazy var contentView = UIView()
-  private lazy var testStackView = createStackView(axis: .horizontal, spacing: 10)
   private lazy var resultCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -70,7 +47,7 @@ final class StudyViewController: NaviHelper {
     scrollView.backgroundColor = .bg30
     return scrollView
   }()
-
+  
   private lazy var addButton: UIButton = {
     let addButton = UIButton(type: .system)
     addButton.setTitle("+", for: .normal)
@@ -82,46 +59,35 @@ final class StudyViewController: NaviHelper {
     return addButton
   }()
   
-  // 네트워킹 불러올 때
   private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
+  
+  init(loginStatus: Bool){
+    self.viewModel = StudyViewModel(loginStatus: loginStatus)
+    super.init()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     view.backgroundColor = .white
     
-    waitingNetworking()
-    
-    navigationItemSetting()
-    redesignNavigationbar()
-    
+    setupNavigationbar()
     setupCollectionView()
-
-    self.postDataManager.getRecentPostDatas(hotType: "false") { result in
-      self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
-      
-      DispatchQueue.main.async {
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-        
-        self.setupLayout()
-        self.makeUI()
-      }
-    }
     
-    commonNetworking.refreshAccessToken { result in
-      self.loginStatus = result
-    }
+    setupBinding()
+    setupActions()
   }
-  
-  func studyTapBarTapped(){
-    recentButtonTapped()
-  }
-  
-  // MARK: - setupLayout
-  func setupLayout(){
-    if studyCount > 0 {
 
+  // MARK: - setupLayout
+  
+  func setupLayout(_ count: Int){
+    if count > 0 {
+      scrollView.addSubview(resultCollectionView)
+      
       [
         recentButton,
         popularButton,
@@ -130,9 +96,6 @@ final class StudyViewController: NaviHelper {
       ].forEach {
         view.addSubview($0)
       }
-            scrollView.addSubview(resultCollectionView)
-      //      contentView.addSubview(resultCollectionView)
-      //      contentView.addSubview(addButton)
     }else {
       [
         recentButton,
@@ -146,16 +109,9 @@ final class StudyViewController: NaviHelper {
     }
   }
   
-  func setupCollectionView(){
-    resultCollectionView.delegate = self
-    resultCollectionView.dataSource = self
-    
-    resultCollectionView.register(SearchResultCell.self,
-                                      forCellWithReuseIdentifier: SearchResultCell.id)
-  }
-  
   // MARK: - makeUI
-  func makeUI(){
+  
+  func makeUI(_ count: Int){
     recentButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.leading.equalToSuperview().offset(20)
@@ -170,13 +126,7 @@ final class StudyViewController: NaviHelper {
       make.width.equalTo(57)
     }
     
-    if studyCount > 0 {
-//      resultCollectionView.snp.makeConstraints { make in
-//        make.top.equalTo(recentButton.snp.bottom).offset(20)
-//        make.leading.equalToSuperview().offset(10)
-//        make.trailing.equalToSuperview().offset(-10)
-//        make.bottom.equalTo(view.safeAreaLayoutGuide)
-//      }
+    if count > 0 {
       resultCollectionView.snp.makeConstraints { make in
         make.width.equalToSuperview()
         make.height.equalTo(scrollView.snp.height)
@@ -210,121 +160,167 @@ final class StudyViewController: NaviHelper {
       }
       
       addButton.snp.makeConstraints { make in
-        make.width.height.equalTo(60) // Increase width and height as needed
+        make.width.height.equalTo(60)
         make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         make.trailing.equalTo(view).offset(-16)
       }
     }
   }
   
-  // MARK: -  네비게이션바 재설정
-  func redesignNavigationbar(){
-    let logoImg = UIImage(named: "StudyImg")?.withRenderingMode(.alwaysOriginal)
-    let logo = UIBarButtonItem(image: logoImg, style: .done, target: nil, action: nil)
-    logo.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    logo.isEnabled = false
-    
-    let bookMarkImg = UIImage(named: "SearchImg_White")?.withRenderingMode(.alwaysOriginal)
-    lazy var bookMark = UIBarButtonItem(
-      image: bookMarkImg,
-      style: .plain,
-      target: self,
-      action: #selector(searchButtonTapped))
-    
-    bookMark.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-    
-    navigationItem.leftBarButtonItem = logo
-    navigationItem.rightBarButtonItem = bookMark
+  func setupCollectionView(){
+    resultCollectionView.delegate = self
+    resultCollectionView.register(
+      SearchResultCell.self,
+      forCellWithReuseIdentifier: SearchResultCell.id
+    )
   }
   
-  @objc func searchButtonTapped() {
-    //    let searchVC = SearchViewController()
-    //    searchVC.hidesBottomBarWhenPushed = true
-    //    navigationController?.pushViewController(searchVC, animated: true)
+  func createButton(title: String, titleColor: UIColor, backgroundColor: UIColor) -> UIButton{
+    let button = UIButton()
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(titleColor, for: .normal)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
+    button.backgroundColor = backgroundColor
+    button.layer.cornerRadius = 15
+    return button
+  }
+  
+  // MARK: -  setupNavigationbar
+  
+  func setupNavigationbar(){
+    leftButtonSetting(imgName: "StudyImg", activate: false)
+    rightButtonSetting(imgName: "SearchImg_White")
+    
+    self.navigationController?.navigationBar.isTranslucent = false
+  }
+  
+  override func rightButtonTapped(_ sender: UIBarButtonItem) {
+    let data = SearchViewData(
+      isUserLogin: viewModel.checkLoginStatus.value,
+      isNeedFechData: viewModel.isNeedFetch
+    )
+    let searchVC = SearchViewController(data)
+    searchVC.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(searchVC, animated: true)
+  }
+  
+  // MARK: -  setupBinding
+  
+  func setupBinding(){
+    viewModel.postCount
+      .asDriver(onErrorJustReturn: 0)
+      .drive(onNext: { [weak self] in
+        self?.setupLayout($0)
+        self?.makeUI($0)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.postDatas
+      .asDriver(onErrorJustReturn: [])
+      .drive(resultCollectionView.rx.items(
+        cellIdentifier: SearchResultCell.id,
+        cellType: SearchResultCell.self)) { index, content, cell in
+          cell.model = content
+          cell.delegate = self
+          cell.loginStatus = self.viewModel.checkLoginStatus.value
+        }
+        .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isNeedFetch
+      .asDriver(onErrorJustReturn: false)
+      .drive(onNext: { [weak self] _ in
+        self?.viewModel.fetchPostData(hotType: "false", test: true)
+        self?.viewModel.resetCounter()
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  // MARK: -  setupActions
+  
+  func setupActions(){
+    resultCollectionView.rx.modelSelected(Content.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
+      .subscribe(onNext: { [weak self] item in
+        guard let loginStauts = self?.viewModel.checkLoginStatus.value else { return }
+        self?.viewModel.detailPostDataManager.searchSinglePostData(
+          postId: item.postID,
+          loginStatus: loginStauts,
+          completion: { result  in
+            let postData = PostedStudyData(
+              isUserLogin: loginStauts,
+              postDetailData: result,
+              isNeedFechData: self?.viewModel.isNeedFetch
+            )
+            
+            let postedVC = PostedStudyViewController(postData)
+            postedVC.hidesBottomBarWhenPushed = true
+            self?.navigationController?.pushViewController(postedVC, animated: true)
+          })
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    recentButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        self?.recentButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    popularButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        self?.popularButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func studyTapBarTapped(){
+    viewModel.isNeedFetch.accept(true)
   }
   
   // MARK: - 게시글 작성 버튼 탭
+  
   @objc func addButtonTapped() {
-    loginStatus { loginCheck in
-      if loginCheck {
-        let createStudyVC = CreateStudyViewController()
-        createStudyVC.hidesBottomBarWhenPushed = true
-        createStudyVC.delegate = self
-        self.navigationController?.pushViewController(createStudyVC, animated: true)
-      } else {
-        let popupVC = PopupViewController(
-          title: "로그인이 필요해요",
-          desc: "계속하시려면 로그인을 해주세요!",
-          leftButtonTitle: "취소",
-          rightButtonTilte: "로그인")
-        
-        popupVC.popupView.rightButtonAction = {
-          self.dismiss(animated: true) {
-            self.dismiss(animated: true)
-          }
-        }
-        
-        popupVC.modalPresentationStyle = .overFullScreen
-        self.present(popupVC, animated: false)
-      }
+    if viewModel.checkLoginStatus.value{
+      let createStudyVC = CreateStudyViewController()
+      createStudyVC.hidesBottomBarWhenPushed = true
+      createStudyVC.delegate = self
+      self.navigationController?.pushViewController(createStudyVC, animated: true)
+    } else {
+      checkLoginPopup(checkUser: false)
     }
   }
   
-  // MARK: - 최신버튼 탭
-  @objc func recentButtonTapped(){
-    activityIndicator.startAnimating()
+  // MARK: - recent / popular button tap
+  
+  func updateButtonUI(selectedButton: UIButton, unselectedButton: UIButton) {
+    selectedButton.setTitleColor(.white, for: .normal)
+    selectedButton.backgroundColor = .black
     
-    postDataManager.getRecentPostDatas(hotType: "false") { _ in
-      self.searchType = "false"
-      self.recentDatas = self.postDataManager.getRecentPostDatas()
-      
-      self.totalDatas = []
-      
-      guard let datas = self.recentDatas?.postDataByInquiries.content else { return }
-      self.totalDatas?.append(contentsOf: datas)
-      
-      DispatchQueue.main.async {
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-        
-        self.resultCollectionView.reloadData()
-      }
-    }
-    popularButton.setTitleColor(.bg90, for: .normal)
-    popularButton.backgroundColor = .bg30
-    
-    recentButton.setTitleColor(.white, for: .normal)
-    recentButton.backgroundColor = .black
+    unselectedButton.setTitleColor(.bg90, for: .normal)
+    unselectedButton.backgroundColor = .bg30
   }
   
-  // MARK: - 인기버튼 탭
-  @objc func popularButtonTapped(){
-    resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
+  func resetViewModelAndFetchData(hotType: String) {
+    viewModel.resetCounter()
+    viewModel.isLastData = false
+    viewModel.isInfiniteScroll = true
     
-    postDataManager.getRecentPostDatas(hotType: "true") { _ in
-      self.searchType = "true"
-      
-      self.recentDatas = self.postDataManager.getRecentPostDatas()
-      self.totalDatas = []
-      
-      guard let datas = self.recentDatas?.postDataByInquiries.content else { return }
-      self.totalDatas?.append(contentsOf: datas)
-      
-      DispatchQueue.main.async {
-        self.resultCollectionView.reloadData()
-        
-        self.activityIndicator.stopAnimating()
-        self.activityIndicator.removeFromSuperview()
-      }
-    }
-    recentButton.setTitleColor(.bg90, for: .normal)
-    recentButton.backgroundColor = .bg30
-    
-    popularButton.setTitleColor(.white, for: .normal)
-    popularButton.backgroundColor = .black
+    resultCollectionView.setContentOffset(.zero, animated: false)
+    viewModel.fetchPostData(hotType: hotType)
   }
+  
+  @objc func recentButtonTapped() {
+    resetViewModelAndFetchData(hotType: "false")
+    updateButtonUI(selectedButton: recentButton, unselectedButton: popularButton)
+  }
+  
+  @objc func popularButtonTapped() {
+    resetViewModelAndFetchData(hotType: "true")
+    updateButtonUI(selectedButton: popularButton, unselectedButton: recentButton)
+  }
+
   
   // MARK: - 네트워킹 기다릴 때
+  
   func waitingNetworking(){
     view.addSubview(activityIndicator)
     
@@ -335,183 +331,60 @@ final class StudyViewController: NaviHelper {
     activityIndicator.startAnimating()
   }
   
-  func addPageCount(completion: @escaping (Int) -> Void){
-    pageCount += 1
-    completion(pageCount)
-  }
-  
-  
   // MARK: - 스크롤해서 네트워킹
-  func fetchMoreData(hotType: String){
-    
-    addPageCount { pageCount in
-      self.waitingNetworking()
-      self.postDataManager.getRecentPostDatas(hotType: hotType,
-                                              page: pageCount,
-                                              size: 5) { result in
-        
-        self.totalDatas?.append(contentsOf: result.postDataByInquiries.content)
-        
-        DispatchQueue.main.async {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.activityIndicator.stopAnimating()
-            self.activityIndicator.removeFromSuperview()
-            
-            self.updateCollectionViewHeight()
-            self.resultCollectionView.reloadData()
-            self.isInfiniteScroll = true
-          }
-        }
-      }
-    }
-  }
   
-  // MARK: - 스크롤 제약 업데이트
-  func updateCollectionViewHeight() {
-    // 기존의 제약 조건을 찾아 업데이트
-    let existingConstraint = resultCollectionView.constraints.first { constraint in
-      return constraint.firstAttribute == .height && constraint.relation == .equal
-    }
-    
-    if let existingConstraint = existingConstraint {
-      // 기존의 제약 조건이 존재하는 경우, 해당 제약 조건을 업데이트
-      existingConstraint.constant = calculateNewCollectionViewHeight()
-    } else {
-      // 기존의 제약 조건이 존재하지 않는 경우, 새로운 제약 조건 추가
-      resultCollectionView.snp.makeConstraints { make in
-        make.height.equalTo(calculateNewCollectionViewHeight())
-      }
-    }
-    
-    // 다른 View들의 제약 조건 수정
-    //    addButton.snp.updateConstraints { make in
-    //      make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
-    //    }
-    
-    //    contentView.snp.updateConstraints { make in
-    //      make.height.equalTo(calculateNewCollectionViewHeight())
-    //    }
-    
-    // 레이아웃 업데이트
-    self.view.layoutIfNeeded()
-  }
-  
-  // MARK: - 스크롤 시 셀 높이 계산
-  func calculateNewCollectionViewHeight() -> CGFloat {
-    // resultCollectionView의 셀 개수에 따라 새로운 높이 계산
-    let cellHeight: CGFloat = 247
-    let spacing: CGFloat = 10
-    let numberOfCells = recentDatas?.postDataByInquiries.number ?? 0
-    let newHeight = CGFloat(numberOfCells) * cellHeight + CGFloat(numberOfCells - 1) * spacing
-    studyCount = numberOfCells
-    return newHeight
+  func fetchMoreData(hotType: String) {
+    self.waitingNetworking()
+    viewModel.fetchPostData(hotType: hotType, page: viewModel.counter, size: 5)
+    activityIndicator.stopAnimating()
   }
 }
 
 // MARK: - collectionView
-extension StudyViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
+extension StudyViewController: UICollectionViewDelegate {
   // MARK: - 스크롤할 때 네트워킹 요청
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
-      if isInfiniteScroll {
-        isInfiniteScroll = false
-
-        fetchMoreData(hotType: searchType)
-      }
-    }
-  }
-
-  func collectionView(_ collectionView: UICollectionView,
-                      numberOfItemsInSection section: Int) -> Int {
-    return totalDatas?.count ?? 0
-  }
   
-  // 수정 후 인원이 이상한 이유 -> remainingSeat가 변경이 안되고 있는듯 -> 나는 지금 인원 계산을 studyPerson - remainingSeat로 하고 있음
-  func collectionView(_ collectionView: UICollectionView,
-                      didSelectItemAt indexPath: IndexPath) {
-    guard let postId = totalDatas?[indexPath.row].postID else { return }
-
-//    postedVC.previousStudyVC = self
-
-    var username: String? = nil
-
-    commonNetworking.refreshAccessToken { loginStatus in
-      self.detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: loginStatus) { _ in
-        let cellData = self.detailPostDataManager.getPostDetailData()
-//        postedVC.postedData = cellData
-
-        username = cellData?.postedUser.nickname
-
-        if username == nil {
-          self.showToast(message: "해당 post에 접근할 수 없습니다", imageCheck: false)
-          return
-        }
-        guard let postDatas = cellData else { return }
-        let postData = PostedStudyData(isUserLogin: loginStatus, postDetailData: postDatas)
-        let postedVC = PostedStudyViewController(postData)
-        postedVC.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(postedVC, animated: true)
-
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    if scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height) {
+      if viewModel.isInfiniteScroll && viewModel.isLastData != true {
+        viewModel.isInfiniteScroll = false
+        fetchMoreData(hotType: viewModel.searchType)
       }
     }
-  }
-
-  func collectionView(_ collectionView: UICollectionView,
-                      cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCell.id,
-                                                  for: indexPath)
-    if let cell = cell as? SearchResultCell {
-      //      let content = recentDatas?.postDataByInquiries.content[indexPath.row]
-      let content = totalDatas?[indexPath.row]
-      cell.model = content
-      cell.delegate = self
-      cell.loginStatus = loginStatus
-    }
-
-    return cell
   }
 }
 
 // 셀의 각각의 크기
 extension StudyViewController: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      sizeForItemAt indexPath: IndexPath) -> CGSize {
-
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAt indexPath: IndexPath
+  ) -> CGSize {
     return CGSize(width: 350, height: 247)
-
   }
 }
 
 extension StudyViewController: AfterCreatePost {
   func afterCreatePost(postId: Int) {
-    detailPostDataManager.searchSinglePostData(postId: postId, loginStatus: false) {_ in
-      guard let postData = self.detailPostDataManager.getPostDetailData() else { return }
-//      postedVC.postedData = postData
-      let postedData = PostedStudyData(isUserLogin: self.loginStatus, postDetailData: postData)
-
-      let postedVC = PostedStudyViewController(postedData)
-
-      self.navigationController?.pushViewController(postedVC, animated: false)
+    viewModel.detailPostDataManager.searchSinglePostData(
+      postId: postId,
+      loginStatus: false
+    ) { result in
       
-      self.showToast(message: "글 작성이 완료됐어요",imageCheck: true, alertCheck: true)
-    }
-
-  }
-}
-
-// MARK: - 북마크 관련
-extension StudyViewController: BookMarkDelegate {
-  func bookmarkTapped(postId: Int, userId: Int) {
-    self.bookmarkButtonTapped(postId,userId) {
-      //      self.resultCollectionView.reloadData()
+      let postedData = PostedStudyData(
+        isUserLogin:self.viewModel.checkLoginStatus.value,
+        postDetailData: result
+      )
+      let postedVC = PostedStudyViewController(postedData)
+      
+      self.navigationController?.pushViewController(postedVC, animated: false)
+      self.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
     }
   }
 }
 
-extension StudyViewController: CheckLoginDelegate {
-  func checkLoginPopup(checkUser: Bool) {
-    checkLoginStatus(checkUser: checkUser)
-  }
-}
+extension StudyViewController: BookMarkDelegate {}
+extension StudyViewController: CheckLoginDelegate {}
+extension StudyViewController: CreateUIprotocol {}

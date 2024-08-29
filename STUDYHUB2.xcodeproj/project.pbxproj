@@ -74,6 +74,7 @@
 		EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */; };
 		EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */; };
 		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
+		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -226,6 +227,7 @@
 		EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
+		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -587,7 +589,8 @@
 		EE2908112C76FD91006B28A7 /* Study */ = {
 			isa = PBXGroup;
 			children = (
-				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+				EE2908292C7DA94C006B28A7 /* View */,
+				EE29082A2C7DA951006B28A7 /* ViewModel */,
 			);
 			path = Study;
 			sourceTree = "<group>";
@@ -671,6 +674,22 @@
 			isa = PBXGroup;
 			children = (
 				EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE2908292C7DA94C006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29082A2C7DA951006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1278,6 +1297,7 @@
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
+				EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */,
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,

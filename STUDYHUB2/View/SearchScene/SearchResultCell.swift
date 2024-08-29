@@ -29,7 +29,6 @@ final class SearchResultCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
       self.bookmarkTapped()
     }, for: .touchUpInside)
     return button

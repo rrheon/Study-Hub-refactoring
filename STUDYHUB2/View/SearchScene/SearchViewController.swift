@@ -320,8 +320,8 @@ final class SearchViewController: CommonNavi {
     }
   }
   
-  
   // MARK: - 검색결과가 없을 때
+  
   func noSearchDataUI(count: Int){
     if count == 0 {
       [
@@ -550,10 +550,8 @@ extension SearchViewController {
 extension SearchViewController {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
-      
       if viewModel.isInfiniteScroll {
         viewModel.isInfiniteScroll = false
-        
         fetchMoreData(hotType: "false", titleAndMajor: "true")
       }
     }

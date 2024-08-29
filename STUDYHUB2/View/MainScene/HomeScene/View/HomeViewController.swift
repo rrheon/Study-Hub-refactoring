@@ -117,7 +117,7 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
   }
   
   func homeTapBarTapped(){
-    reloadHomeVCCells()
+    viewModel.isNeedFetchDatas.accept(true)
   }
   
   // MARK: - setuplayout
@@ -378,11 +378,6 @@ extension HomeViewController: UISearchBarDelegate {
     searchViewController.hidesBottomBarWhenPushed = false
     self.navigationController?.pushViewController(searchViewController, animated: true)
     return false
-  }
-  
-  func reloadHomeVCCells(){
-    self.recrutingCollectionView.reloadData()
-    self.deadLineCollectionView.reloadData()
   }
 }
 

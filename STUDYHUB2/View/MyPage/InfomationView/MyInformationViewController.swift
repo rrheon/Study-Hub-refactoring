@@ -405,18 +405,18 @@ final class MyInformViewController: NaviHelper {
     
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
-//    
-//    popupVC.popupView.rightButtonAction = { [weak self] in
-//      self?.tokenManager.deleteTokens()
-//      
-//      self?.dismiss(animated: true) {
-//        self?.bookmarkList.removeAll()
-//        
-//        let loginVC = LoginViewController()
-//        loginVC.modalPresentationStyle = .overFullScreen
-//        self?.present(loginVC, animated: true, completion: nil)
-//      }
-//    }
+    
+    popupVC.popupView.rightButtonAction = { [weak self] in
+      self?.tokenManager.deleteTokens()
+      
+      self?.dismiss(animated: true) {
+        self?.bookmarkList.removeAll()
+        
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .overFullScreen
+        self?.present(loginVC, animated: true, completion: nil)
+      }
+    }
   }
   
   // MARK: - 탈퇴하기
