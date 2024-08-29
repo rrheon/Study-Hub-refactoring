@@ -229,8 +229,14 @@ final class StudyViewController: CommonNavi {
     viewModel.isNeedFetch
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] _ in
-        self?.viewModel.fetchPostData(hotType: "false", test: true)
-        self?.viewModel.resetCounter()
+        guard let count = self?.viewModel.postCounts,
+        let type = self?.viewModel.searchType else { return }
+        self?.viewModel.fetchPostData(
+          hotType: type,
+          page: 0,
+          size: count,
+          dataUpdate: true
+        )
       })
       .disposed(by: viewModel.disposeBag)
   }

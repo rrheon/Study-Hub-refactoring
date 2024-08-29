@@ -35,7 +35,7 @@ struct PostedStudyData: PostedStudyViewData {
   }
 }
 
-final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottomSheet {
+final class PostedStudyViewModel: CommonViewModel {
   let detailPostDataManager = PostDetailInfoManager.shared
   let commentManager = CommentManager.shared
   let userInfoManager = UserInfoManager.shared
@@ -146,4 +146,5 @@ final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottom
 }
 
 extension PostedStudyViewModel: PostDataFetching {}
-
+extension PostedStudyViewModel: BookMarkDelegate {}
+extension PostedStudyViewModel: StudyBottomSheet {}

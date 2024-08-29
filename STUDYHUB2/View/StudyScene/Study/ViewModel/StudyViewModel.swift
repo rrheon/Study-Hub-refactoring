@@ -39,6 +39,7 @@ final class StudyViewModel: CommonViewModel {
   var searchType: String = "false"
   var isInfiniteScroll = true
   var isLastData = false
+  lazy var postCounts: Int? = 0
   
   init(loginStatus: Bool) {
     super.init()
@@ -46,7 +47,7 @@ final class StudyViewModel: CommonViewModel {
     self.fetchPostData(hotType: "false")
   }
   
-  func fetchPostData(hotType: String, page: Int = 0, size: Int = 5, test: Bool = false){
+  func fetchPostData(hotType: String, page: Int = 0, size: Int = 5, dataUpdate: Bool = false){
     postDataManager.getRecentPostDatas(
       hotType: hotType,
       page: page,
@@ -54,8 +55,7 @@ final class StudyViewModel: CommonViewModel {
     ) { [weak self] response in
       guard let self = self else { return }
       
-      // 기존의 데이터와 합칠 때 문제 
-      if searchType == hotType && !test {
+      if searchType == hotType && !dataUpdate{
         let updatedPosts = self.postDatas.value + response.postDataByInquiries.content
         self.postDatas.accept(updatedPosts)
       } else{
@@ -65,30 +65,11 @@ final class StudyViewModel: CommonViewModel {
       self.searchType = hotType
       isLastData = response.postDataByInquiries.last
       isInfiniteScroll = true
+      postCounts = postDatas.value.count
     }
   }
   
-  // 삭제하고 데이터 업데이트 어떻게 할건지
-  // -> 데이터 뒤져서 해당 포스트 데이터에서 없애기, 셀 터치하면 포스트 아이디 받아서 해당 포스트 아이디 없애주기
-  // 북마크 저장 삭제하고 업데이트 어떻게 할건지
-  // -> 데이터 뒤져서 해당 포스트의 북마크 확인 후 true false 지정
   func resetCounter(){
     internalCounter = 0
   }
-  
-//  func removePost(with postID: Int) {
-//    let updatedData = postDatas.value.filter { $0.postID != postID }
-//    postDatas.accept(updatedData)
-//  }
-//
-//  func toggleBookmark(for postID: Int) {
-//    let updatedData = postDatas.value.map { post -> Content in
-//      var mutablePost = post
-//      if post.postID == postID {
-//        mutablePost.bookmarked.toggle()
-//      }
-//      return mutablePost
-//    }
-//    postDatas.accept(updatedData)
-//  }
 }
