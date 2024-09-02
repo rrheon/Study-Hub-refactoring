@@ -75,6 +75,11 @@
 		EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */; };
 		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
 		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
+		EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */; };
+		EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908302C81A002006B28A7 /* SelectMajorView.swift */; };
+		EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908322C81A125006B28A7 /* StudyMemberView.swift */; };
+		EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908342C81A3EE006B28A7 /* StudyWayView.swift */; };
+		EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -228,6 +233,11 @@
 		EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
 		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
+		EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyInfoView.swift; sourceTree = "<group>"; };
+		EE2908302C81A002006B28A7 /* SelectMajorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMajorView.swift; sourceTree = "<group>"; };
+		EE2908322C81A125006B28A7 /* StudyMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyMemberView.swift; sourceTree = "<group>"; };
+		EE2908342C81A3EE006B28A7 /* StudyWayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyWayView.swift; sourceTree = "<group>"; };
+		EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPeriodView.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -574,6 +584,7 @@
 			isa = PBXGroup;
 			children = (
 				F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */,
+				EE29082D2C819AE3006B28A7 /* ViewComponent */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -692,6 +703,18 @@
 				EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE29082D2C819AE3006B28A7 /* ViewComponent */ = {
+			isa = PBXGroup;
+			children = (
+				EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */,
+				EE2908302C81A002006B28A7 /* SelectMajorView.swift */,
+				EE2908322C81A125006B28A7 /* StudyMemberView.swift */,
+				EE2908342C81A3EE006B28A7 /* StudyWayView.swift */,
+				EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */,
+			);
+			path = ViewComponent;
 			sourceTree = "<group>";
 		};
 		EE35ED6D2B14B7E2008040E2 /* Participate */ = {
@@ -1315,6 +1338,7 @@
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */,
 				EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */,
+				EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
@@ -1353,6 +1377,8 @@
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
 				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
+				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
+				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
 				EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */,
@@ -1387,11 +1413,13 @@
 				EE98B1B02B3C387A0025C4F8 /* FindPasswordViewController.swift in Sources */,
 				EE07AD902AE106460096890F /* CreatePostManager.swift in Sources */,
 				EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */,
+				EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */,
 				F86E031F2A8BBAE600164976 /* SearchViewController.swift in Sources */,
 				EE1E44112B17222200223436 /* MyPostCell.swift in Sources */,
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
 				EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */,
 				EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */,
+				EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */,
 				EE2908042C75D3E2006B28A7 /* FetchDatas.swift in Sources */,
 				EEDDDD242C71EF3600FA347D /* ManagementBookmark.swift in Sources */,
 				EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */,

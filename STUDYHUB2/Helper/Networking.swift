@@ -72,9 +72,9 @@ enum networkingAPI {
 extension networkingAPI: TargetType {
   // MARK: - baseURL
   var baseURL: URL {
-    return URL(string: "https://study-hub.site:443/api")!
+      return URL(string: "https://studyhub.shop:443/api")!
   }
-  
+
   // MARK: - path
   var path: String {
     switch self {
@@ -507,7 +507,7 @@ final class Networking {
                              completion: @escaping NetworkCompletion<T>) {
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"
-    urlComponents.host = "study-hub.site"
+    urlComponents.host = "studyhub.shop"
     urlComponents.port = 443
     urlComponents.path = "/api/" + apiVesrion + urlPath
     

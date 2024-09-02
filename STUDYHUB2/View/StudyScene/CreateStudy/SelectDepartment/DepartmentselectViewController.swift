@@ -111,7 +111,7 @@ final class DepartmentselectViewController: NaviHelper {
   @objc func redesingRightButtonTapped(){
     guard let major = selectedMajor else { return }
 
-    previousVC?.addDepartmentButton(major)
+//    previousVC?.addDepartmentButton(major)
     self.navigationController?.popViewController(animated: true)
 
   }

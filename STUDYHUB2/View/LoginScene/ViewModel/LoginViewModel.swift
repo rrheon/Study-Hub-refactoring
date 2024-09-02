@@ -15,7 +15,7 @@ class LoginViewModel: CommonViewModel {
   let isValidAccount = PublishRelay<Bool>()
   
   func login(email: String, password: String){
-    guard let loginURL = URL(string: "https://study-hub.site:443/api/v1/users/login") else {
+    guard let loginURL = URL(string: "https://studyhub.shop:443/api/v1/users/login") else {
       return
     }
     

@@ -28,6 +28,10 @@ protocol CreateTextField {
   func createTextField(title: String) -> UITextField
 }
 
+protocol CreateButtonInCreatePost {
+  func createButton(title: String) -> UIButton
+}
+
 extension CreateLabel {
   func createLabel(
     title: String,
@@ -81,9 +85,25 @@ extension CreateTextField {
     textField.layer.cornerRadius = 5
     textField.layer.borderColor = UIColor.bg50.cgColor
     textField.layer.borderWidth = 0.5
-//    textField.delegate = self as! any UITextFieldDelegate
     return textField
   }
 }
 
-protocol CreateUIprotocol: CreateLabel, CreateStackView, CreateTextField, CreateDividerLine {}
+extension CreateButtonInCreatePost {
+  func createButton(title: String) -> UIButton {
+    let button = UIButton()
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(UIColor(hexCode: "#A1AAB0"), for: .normal)
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor(hexCode: "#D8DCDE").cgColor
+    button.layer.cornerRadius = 5
+    button.backgroundColor = .white
+    return button
+  }
+}
+
+protocol CreateUIprotocol: CreateLabel,
+                           CreateStackView,
+                           CreateTextField,
+                           CreateDividerLine,
+                           CreateButtonInCreatePost {}

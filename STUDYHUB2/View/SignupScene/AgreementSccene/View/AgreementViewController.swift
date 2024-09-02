@@ -17,9 +17,11 @@ final class AgreementViewController: CommonNavi {
   let viewModel = AgreementViewModel()
   
   // MARK: - UI
-  private lazy var mainTitleView = AuthTitleView(pageNumber: "1/5",
-                                                 pageTitle: "이용약관에 동의해주세요",
-                                                 pageContent: "서비스 이용을 위해서 약관 동의가 필요해요")
+  private lazy var mainTitleView = AuthTitleView(
+    pageNumber: "1/5",
+    pageTitle: "이용약관에 동의해주세요",
+    pageContent: "서비스 이용을 위해서 약관 동의가 필요해요"
+  )
   
   // 전체동의
   private lazy var agreeAllButton = UIButton().then {
@@ -103,7 +105,7 @@ final class AgreementViewController: CommonNavi {
   // MARK: - makeUI
   func makeUI(){
     mainTitleView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(40)
+      $0.top.equalToSuperview().offset(100)
       $0.leading.equalToSuperview().offset(20)
     }
     
