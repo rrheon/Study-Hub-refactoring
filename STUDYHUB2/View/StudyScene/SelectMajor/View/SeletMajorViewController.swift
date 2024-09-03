@@ -2,20 +2,20 @@
 import UIKit
 
 import SnapKit
+import RxRelay
 
 // 토스트팝업 추가하기
-final class DepartmentselectViewController: NaviHelper {
-  var previousVC: CreateStudyViewController?
+final class SeletMajorViewController: NaviHelper {
+  let viewModel: SeletMajorViewModel
   
   var resultDepartments: [String] = []
   var selectedMajor: String?
   
-  private let searchController = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
+  private lazy var searchController = createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
   private lazy var resultTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(CustomCell.self,
-                       forCellReuseIdentifier: CustomCell.cellId)
+    tableView.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
     tableView.backgroundColor = .white
     tableView.separatorInset.left = 0
     tableView.layer.cornerRadius = 10
@@ -43,6 +43,14 @@ final class DepartmentselectViewController: NaviHelper {
     return button
   }()
   
+  init(seletedMajor: PublishRelay<String>) {
+    self.viewModel = SeletMajorViewModel(enteredMajor: seletedMajor)
+    super.init()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   // MARK: - viewDidLoad
   override func viewDidLoad() {
@@ -127,7 +135,7 @@ final class DepartmentselectViewController: NaviHelper {
 }
 
 
-extension DepartmentselectViewController: UISearchBarDelegate {
+extension SeletMajorViewController: UISearchBarDelegate {
   // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
@@ -166,15 +174,15 @@ extension DepartmentselectViewController: UISearchBarDelegate {
 
 
 // MARK: - cell 함수
-extension DepartmentselectViewController: UITableViewDelegate, UITableViewDataSource {
+extension SeletMajorViewController: UITableViewDelegate, UITableViewDataSource {
   // UITableViewDataSource 함수
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return resultDepartments.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = resultTableView.dequeueReusableCell(withIdentifier: CustomCell.cellId,
-                                                   for: indexPath) as! CustomCell
+    let cell = resultTableView.dequeueReusableCell(withIdentifier: SeletMajorCell.cellId,
+                                                   for: indexPath) as! SeletMajorCell
     
     cell.backgroundColor = .bg20
     cell.textColor = .black
@@ -245,3 +253,5 @@ extension DepartmentselectViewController: UITableViewDelegate, UITableViewDataSo
     view.layoutIfNeeded()
   }
 }
+
+extension SeletMajorViewController: CreateUIprotocol {}

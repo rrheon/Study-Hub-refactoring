@@ -21,9 +21,7 @@ class CalendarViewController: UIViewController {
   var delegate: ChangeDateProtocol?
   var buttonSelect: Bool?
   private lazy var titleLabel = createLabel(
-    title: dateFormatter.string(
-      from: calendar!.currentPage
-    ),
+    title: dateFormatter.string(from: calendar!.currentPage),
     textColor: .black,
     fontType: "Pretendard",
     fontSize: 18
@@ -167,10 +165,12 @@ class CalendarViewController: UIViewController {
     calendar?.reloadData()
   }
   
-  func calendar(_ calendar: FSCalendar,
-                willDisplay cell: FSCalendarCell,
-                for date: Date,
-                at monthPosition: FSCalendarMonthPosition) {
+  func calendar(
+    _ calendar: FSCalendar,
+    willDisplay cell: FSCalendarCell,
+    for date: Date,
+    at monthPosition: FSCalendarMonthPosition
+  ) {
     let calendarCurrent = Calendar.current
     let currentMonth = calendarCurrent.component(.month, from: Date())
     let cellMonth = calendarCurrent.component(.month, from: date)
@@ -241,8 +241,6 @@ class CalendarViewController: UIViewController {
     }
   }
 
-
-  
   @objc private func completeButtonTapped(_ sender: UIButton) {
     if selectedDate == nil {
       selectedDate = self.today
@@ -250,7 +248,6 @@ class CalendarViewController: UIViewController {
     guard let data = selectDate else { return }
     if buttonSelect == true {
       delegate?.dataSend(data: data, buttonTag: 1)
-      
     } else {
       delegate?.dataSend(data: data, buttonTag: 2)
     }
@@ -302,7 +299,11 @@ extension CalendarViewController: FSCalendarDelegate,
   
   
   // 기본 색상 설정
-  func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
+  func calendar(
+    _ calendar: FSCalendar,
+    appearance: FSCalendarAppearance,
+    titleDefaultColorFor date: Date
+  ) -> UIColor? {
     let currentDate = Date()
     let calendar = Calendar.current
     
@@ -319,8 +320,6 @@ extension CalendarViewController: FSCalendarDelegate,
       return UIColor.bg40
     }
   }
-
-
 }
 
 protocol ChangeDateProtocol {

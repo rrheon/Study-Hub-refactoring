@@ -1,15 +1,10 @@
-//
-//  StudyMemberView.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/30/24.
-//
 
 import UIKit
 
 import SnapKit
+import RxCocoa
 
-final class StudyMemberView: UIView {
+final class StudyMemberView: UIView, UITextFieldDelegate {
 
   let viewModel: CreateStudyViewModel
   
@@ -78,6 +73,8 @@ final class StudyMemberView: UIView {
     
     self.setupLayout()
     self.makeUI()
+    self.setupDelegate()
+    self.setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -172,6 +169,56 @@ final class StudyMemberView: UIView {
       $0.leading.trailing.equalToSuperview()
     }
   }
+  
+  func setupActions() {
+    let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
+      (allGenderButton, viewModel.isAllGenderButton),
+      (maleOnlyButton, viewModel.isMaleOnlyButton),
+      (femaleOnlyButton, viewModel.isFemaleOnlyButton)
+    ]
+    
+    buttonsWithStates.forEach { button, state in
+      button.rx.tap
+        .subscribe(onNext: { [weak self] in
+          guard let self = self else { return }
+          self.updateButtonSelection(selectedButton: button)
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
+  }
+  
+  func updateButtonColors() {
+    let buttonsWithStates: [(UIButton, Bool)] = [
+      (allGenderButton, viewModel.isAllGenderButton.value),
+      (maleOnlyButton, viewModel.isMaleOnlyButton.value),
+      (femaleOnlyButton, viewModel.isFemaleOnlyButton.value)
+    ]
+    
+    buttonsWithStates.forEach { button, isSelected in
+      button.layer.borderColor = isSelected ? UIColor.o40.cgColor : UIColor.bg50.cgColor
+      button.setTitleColor(isSelected ? .o50 : .bg70, for: .normal)
+    }
+  }
+  
+  func updateButtonSelection(selectedButton: UIButton) {
+    viewModel.isAllGenderButton.accept(selectedButton == allGenderButton)
+    viewModel.isMaleOnlyButton.accept(selectedButton == maleOnlyButton)
+    viewModel.isFemaleOnlyButton.accept(selectedButton == femaleOnlyButton)
+    updateButtonColors()
+  }
+  
+  func setupDelegate(){
+    studymemberTextField.delegate = self
+  }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    didBeginEditing(view: textField)
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    didEndEditing(view: textField)
+  }
 }
 
 extension StudyMemberView: CreateUIprotocol {}
+extension StudyMemberView: EditableViewProtocol {}

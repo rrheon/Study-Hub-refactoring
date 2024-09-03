@@ -430,7 +430,7 @@ extension MyPostViewController: BottomSheetDelegate {
   func secondButtonTapped(postID: Int, checkPost: Bool) {
     self.dismiss(animated: true) {
       let createVC = CreateStudyViewController()
-      createVC.modifyPostID = postID
+//      createVC.modifyPostID = postID
       self.navigationController?.pushViewController(createVC, animated: true)
     }
   }

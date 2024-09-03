@@ -105,7 +105,7 @@ final class AgreementViewController: CommonNavi {
   // MARK: - makeUI
   func makeUI(){
     mainTitleView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(100)
+      $0.top.equalToSuperview().offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     

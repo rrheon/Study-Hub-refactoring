@@ -9,7 +9,7 @@ final class SearchViewController: CommonNavi {
   var viewModel: SearchViewModel
     
   // MARK: - 서치바
-  private let searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
+  private lazy var searchBar = createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
   private lazy var resultTableView: UITableView = {
     let tableView = UITableView()
@@ -123,8 +123,8 @@ final class SearchViewController: CommonNavi {
     
     resultTableView.delegate = self
     resultTableView.register(
-      CustomCell.self,
-      forCellReuseIdentifier: CustomCell.cellId
+      SeletMajorCell.self,
+      forCellReuseIdentifier: SeletMajorCell.cellId
     )
   }
   
@@ -183,8 +183,8 @@ final class SearchViewController: CommonNavi {
     viewModel.recommendList
       .asDriver(onErrorJustReturn: [])
       .drive(resultTableView.rx.items(
-        cellIdentifier: CustomCell.cellId,
-        cellType: CustomCell.self)) { index, content, cell in
+        cellIdentifier: SeletMajorCell.cellId,
+        cellType: SeletMajorCell.self)) { index, content, cell in
           cell.model = content
           cell.setupImage()
         }
@@ -559,3 +559,4 @@ extension SearchViewController {
 }
 
 extension SearchViewController: MoveToBookmarkView {}
+extension SearchViewController: CreateUIprotocol {}

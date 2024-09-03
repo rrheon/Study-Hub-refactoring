@@ -1,13 +1,8 @@
-//
-//  SelectMajorView.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/30/24.
-//
 
 import UIKit
 
 import SnapKit
+import RxCocoa
 
 final class SelectMajorView: UIView {
   let viewModel: CreateStudyViewModel
@@ -50,6 +45,7 @@ final class SelectMajorView: UIView {
     
     self.setupLayout()
     self.makeUI()
+    self.setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -84,6 +80,20 @@ final class SelectMajorView: UIView {
       $0.top.equalTo(selectMajorLabel.snp.bottom).offset(30)
       $0.leading.trailing.equalToSuperview()
     }
+  }
+  
+  func setupActions(){
+    selectMajorButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        self?.viewModel.isMoveToSeletMajor.accept(true)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    cancelButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func addDepartmentButton(_ department: String) {

@@ -5,7 +5,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate {
+final class HomeViewController: CommonNavi {
 
   let viewModel: HomeViewModel
   
@@ -21,8 +21,7 @@ final class HomeViewController: CommonNavi, CheckLoginDelegate, BookMarkDelegate
 
   let detailsButton = StudyHubButton(title: "알아보기", radious: 5)
 
-  // MARK: - 서치바
-  private let searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
+  private lazy var searchBar = createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
   private lazy var newStudyLabel = createHomeLabel(
     title: "NEW! 모집 중인 스터디예요",
@@ -396,3 +395,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension HomeViewController: MoveToBookmarkView {}
+extension HomeViewController: CreateUIprotocol {}
+extension HomeViewController: CheckLoginDelegate {}
+extension HomeViewController: BookMarkDelegate {}

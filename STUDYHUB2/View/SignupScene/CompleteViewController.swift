@@ -7,10 +7,12 @@ final class CompleteViewController: UIViewController {
   
   // MARK: - 화면구성
   private lazy var mainImageView: UIImageView = UIImageView(
-    image: UIImage(named: "SingupCompleteImage"))
+    image: UIImage(named: "SingupCompleteImage")
+  )
 
   private lazy var underMainImageView: UIImageView = UIImageView(
-    image: UIImage(named: "UnderSingupCompleteImage"))
+    image: UIImage(named: "UnderSingupCompleteImage")
+  )
   
   private lazy var startButton = StudyHubButton(title: "시작하기")
   

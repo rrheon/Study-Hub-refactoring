@@ -17,17 +17,18 @@ final class EditMajorViewController: NaviHelper {
   
   var resultDepartments: [String] = []
   
-  private lazy var titleLabel = createLabel(title: "변경할 학과를 알려주세요",
-                                            textColor: .black,
-                                            fontType: "Pretendard-Bold",
-                                            fontSize: 16)
+  private lazy var titleLabel = createLabel(
+    title: "변경할 학과를 알려주세요",
+    textColor: .black,
+    fontType: "Pretendard-Bold",
+    fontSize: 16
+  )
   
-  private lazy var searchController = UISearchBar.createSearchBar(placeholder: beforeMajor ?? "없음")
+  private lazy var searchController = createSearchBar(placeholder: beforeMajor ?? "없음")
   
   private lazy var resultTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(CustomCell.self,
-                       forCellReuseIdentifier: CustomCell.cellId)
+    tableView.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
     tableView.backgroundColor = .white
     tableView.separatorInset.left = 0
     tableView.layer.cornerRadius = 10
@@ -90,9 +91,11 @@ final class EditMajorViewController: NaviHelper {
   func redesignNavigationbar(){
     navigationItem.rightBarButtonItem = .none
     
-    settingNavigationTitle(title: "학과 변경",
-                           font: "Pretendard-Bold",
-                           size: 18)
+    settingNavigationTitle(
+      title: "학과 변경",
+      font: "Pretendard-Bold",
+      size: 18
+    )
     
     let completeImg = UIImage(named: "DeCompletedImg")?.withRenderingMode(.alwaysOriginal)
     let completeButton = UIBarButtonItem(image: completeImg,
@@ -170,8 +173,8 @@ extension EditMajorViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = resultTableView.dequeueReusableCell(withIdentifier: CustomCell.cellId,
-                                                   for: indexPath) as! CustomCell
+    let cell = resultTableView.dequeueReusableCell(withIdentifier: SeletMajorCell.cellId,
+                                                   for: indexPath) as! SeletMajorCell
     
     cell.backgroundColor = .bg20
     
@@ -223,3 +226,5 @@ extension EditMajorViewController: UITableViewDelegate, UITableViewDataSource {
     resultTableView.reloadData()
   }
 }
+
+extension EditMajorViewController: CreateUIprotocol {}

@@ -22,7 +22,7 @@ final class StudyPeriodView: UIView {
     fontSize: 16
   )
   
-  private lazy var startDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  private lazy var startDateButton = createDateButton()
   
   private lazy var endLabel = createLabel(
     title: "종료하는 날",
@@ -31,7 +31,7 @@ final class StudyPeriodView: UIView {
     fontSize: 16
   )
   
-  private lazy var endDateButton = createDateButton(selector: #selector(calendarButtonTapped))
+  private lazy var endDateButton = createDateButton()
   
   private lazy var completeButton = StudyHubButton(title: "완료하기")
   
@@ -96,6 +96,7 @@ final class StudyPeriodView: UIView {
       $0.height.equalTo(50)
     }
     
+    completeButton.unableButton(false, backgroundColor: .o30, titleColor: .white)
     completeButton.snp.makeConstraints {
       $0.top.equalTo(endDateButton.snp.bottom).offset(30)
       $0.leading.trailing.equalTo(endDateButton)
@@ -103,18 +104,11 @@ final class StudyPeriodView: UIView {
     }
   }
   
-  func createDateButton(selector: Selector) -> UIButton {
-    // 버튼 초기화
+  func createDateButton() -> UIButton {
     let button = UIButton()
-    
-    // 버튼에 이미지 설정
     let image = UIImage(named: "RightArrow")
     button.setImage(image, for: .normal)
-    
-    // 버튼의 이미지 위치 조절
     button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 320, bottom: 0, right: 10)
-    
-    // 버튼의 나머지 속성 설정
     button.setTitle("선택하기", for: .normal)
     button.contentHorizontalAlignment = .left
     button.setTitleColor(UIColor(hexCode: "#A1AAB0"), for: .normal)
@@ -123,8 +117,6 @@ final class StudyPeriodView: UIView {
     button.layer.borderWidth = 1
     button.layer.borderColor = UIColor(hexCode: "#D8DCDE").cgColor
     button.layer.cornerRadius = 5
-    button.addTarget(self, action: selector, for: .touchUpInside)
-    
     return button
   }
   

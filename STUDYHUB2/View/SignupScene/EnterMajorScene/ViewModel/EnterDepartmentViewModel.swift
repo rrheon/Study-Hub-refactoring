@@ -38,11 +38,13 @@ final class EnterDepartmentViewModel: SignupViewModel, ConvertMajor {
           let nickname = nickname,
           let password = password,
           let major = convertMajor(major, toEnglish: true) else { return }
-    let userInfo = CreateAccount(email: email,
-                                 gender: gender,
-                                 major: major,
-                                 nickname: nickname,
-                                 password: password)
+    let userInfo = CreateAccount(
+      email: email,
+      gender: gender,
+      major: major,
+      nickname: nickname,
+      password: password
+    )
     createAccountManager.createNewAccount(accountData: userInfo) {
       self.isSuccessCreateAccount.accept($0)
     }

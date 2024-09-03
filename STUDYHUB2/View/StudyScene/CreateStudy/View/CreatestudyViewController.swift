@@ -4,6 +4,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+// postedVC에서 옵저버블 하나 받기
+// 학과 선택에 relay하나 넘기기
+// 스크롤할 때 네비게이션 바 색상 변경 이슈있음
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
 }
@@ -53,7 +56,10 @@ final class CreateStudyViewController: CommonNavi {
   }
   
   func setScrollViewSingTap(){
-    let singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(myTapMethod))
+    let singleTapGestureRecognizer = UITapGestureRecognizer(
+      target: self,
+      action: #selector(myTapMethod)
+    )
     singleTapGestureRecognizer.numberOfTapsRequired = 1
     singleTapGestureRecognizer.isEnabled = true
     singleTapGestureRecognizer.cancelsTouchesInView = false
@@ -74,11 +80,7 @@ final class CreateStudyViewController: CommonNavi {
       pageStackView.addArrangedSubview($0)
     }
     
-    [
-      pageStackView
-    ].forEach {
-      scrollView.addSubview($0)
-    }
+    scrollView.addSubview(pageStackView)
     
     view.addSubview(scrollView)
   }
@@ -128,7 +130,7 @@ final class CreateStudyViewController: CommonNavi {
   
   func setupNavigationbar() {
     leftButtonSetting()
-    settingNavigationTitle(title: "게시글 작성하기")
+    settingNavigationTitle(title: "스터디 만들기")
   }
   
   // MARK: - setupBinding
@@ -141,11 +143,16 @@ final class CreateStudyViewController: CommonNavi {
 //        self?.postModify(data)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isMoveToSeletMajor
+      .subscribe(onNext: { [weak self] _ in
+        self?.departmentArrowButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
   }
 
   @objc func departmentArrowButtonTapped() {
-    let departmentselectVC = DepartmentselectViewController()
-    departmentselectVC.previousVC = self
+    let departmentselectVC = SeletMajorViewController(seletedMajor: viewModel.seletedMajor)
     
     if let navigationController = self.navigationController {
       navigationController.pushViewController(departmentselectVC, animated: true)

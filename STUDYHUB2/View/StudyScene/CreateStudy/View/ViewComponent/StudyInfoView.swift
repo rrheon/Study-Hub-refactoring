@@ -3,7 +3,7 @@ import UIKit
 
 import SnapKit
 
-final class StudyInfoView: UIView, UITextViewDelegate {
+final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   let viewModel: CreateStudyViewModel
     
   private lazy var chatLinkLabel = createLabel(
@@ -49,7 +49,6 @@ final class StudyInfoView: UIView, UITextViewDelegate {
     tv.layer.borderColor = UIColor.lightGray.cgColor
     tv.layer.cornerRadius = 5.0
     tv.adjustUITextViewHeight()
-    tv.delegate = self
     return tv
   }()
   
@@ -61,6 +60,7 @@ final class StudyInfoView: UIView, UITextViewDelegate {
     
     self.setupLayout()
     self.makeUI()
+    self.setupDelegate()
   }
   
   required init?(coder: NSCoder) {
@@ -110,7 +110,7 @@ final class StudyInfoView: UIView, UITextViewDelegate {
       $0.top.equalTo(chatLinkDividerLine.snp.bottom).offset(32)
       $0.leading.equalTo(chatLinkLabel)
     }
-    
+
     studytitleTextField.snp.makeConstraints {
       $0.top.equalTo(studytitleLabel.snp.bottom).offset(20)
       $0.leading.equalTo(chatLinkLabel)
@@ -135,6 +135,32 @@ final class StudyInfoView: UIView, UITextViewDelegate {
       $0.leading.trailing.equalToSuperview()
     }
   }
+  
+  func setupDelegate(){
+    chatLinkTextField.delegate = self
+    studytitleTextField.delegate = self
+    studyIntroduceTextView.delegate = self
+  }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    didBeginEditing(view: textField)
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    didEndEditing(view: textField)
+  }
+  
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    didBeginEditing(view: textView)
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+    didEndEditing(
+      view: textView,
+      placeholderText: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)"
+    )
+  }
 }
 
 extension StudyInfoView: CreateUIprotocol {}
+extension StudyInfoView: EditableViewProtocol {}

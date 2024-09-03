@@ -5,11 +5,6 @@ class CommonNavi: UIViewController {
   
   init() {
     super.init(nibName: nil, bundle: .none)
-    
-    let navigationBarAppearance = UINavigationBarAppearance()
-    navigationBarAppearance.configureWithTransparentBackground()
-    UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-    UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
   }
   
   required init?(coder: NSCoder) {
@@ -47,13 +42,17 @@ class CommonNavi: UIViewController {
   
   // MARK: - 네비게이션 바 제목설정
   
-  func settingNavigationTitle(title: String,
-                              font: String = "Pretendard-Bold",
-                              size: CGFloat = 18){
+  func settingNavigationTitle(
+    title: String,
+    font: String = "Pretendard-Bold",
+    size: CGFloat = 18
+  ){
     self.navigationItem.title = title
     self.navigationController?.navigationBar.titleTextAttributes = [
       NSAttributedString.Key.foregroundColor: UIColor.white,
       NSAttributedString.Key.font: UIFont(name: font, size: size)!
     ]
+    
+    self.navigationController?.navigationBar.isTranslucent = false
   }
 }

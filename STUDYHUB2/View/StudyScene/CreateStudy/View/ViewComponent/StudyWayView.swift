@@ -1,7 +1,10 @@
-import UIKit
-import SnapKit
 
-final class StudyWayView: UIView {
+import UIKit
+
+import SnapKit
+import RxCocoa
+
+final class StudyWayView: UIView, UITextFieldDelegate {
 
   let viewModel: CreateStudyViewModel
   
@@ -97,8 +100,11 @@ final class StudyWayView: UIView {
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
+    
     self.setupLayout()
     self.makeUI()
+    self.setupDelegate()
+    self.setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -241,6 +247,56 @@ final class StudyWayView: UIView {
     }
   }
   
+  func setupActions() {
+    let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
+      (mixmeetButton, viewModel.isMixButton),
+      (contactButton, viewModel.isContactButton),
+      (untactButton, viewModel.isUntactButton)
+    ]
+    
+    buttonsWithStates.forEach { button, state in
+      button.rx.tap
+        .subscribe(onNext: { [weak self] in
+          guard let self = self else { return }
+          self.updateButtonSelection(selectedButton: button)
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
+  }
+  
+  func updateButtonColors() {
+    let buttonsWithStates: [(UIButton, Bool)] = [
+      (mixmeetButton, viewModel.isMixButton.value),
+      (contactButton, viewModel.isContactButton.value),
+      (untactButton, viewModel.isUntactButton.value)
+    ]
+    
+    buttonsWithStates.forEach { button, isSelected in
+      button.layer.borderColor = isSelected ? UIColor.o40.cgColor : UIColor.bg50.cgColor
+      button.setTitleColor(isSelected ? .o50 : .bg70, for: .normal)
+    }
+  }
+  
+  func updateButtonSelection(selectedButton: UIButton) {
+    viewModel.isMixButton.accept(selectedButton == mixmeetButton)
+    viewModel.isContactButton.accept(selectedButton == contactButton)
+    viewModel.isUntactButton.accept(selectedButton == untactButton)
+    updateButtonColors()
+  }
+  
+  func setupDelegate(){
+    fineTypesTextField.delegate = self
+    fineAmountTextField.delegate = self
+  }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    didBeginEditing(view: textField)
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    didEndEditing(view: textField)
+  }
+  
   func createFineButton() -> UIButton {
     let button = UIButton()
     button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
@@ -251,3 +307,4 @@ final class StudyWayView: UIView {
 }
 
 extension StudyWayView: CreateUIprotocol{}
+extension StudyWayView: EditableViewProtocol{}

@@ -3,7 +3,7 @@ import UIKit
 
 import SnapKit
 
-final class CustomCell: UITableViewCell {
+final class SeletMajorCell: UITableViewCell {
   
   var model: String? {
     didSet {
