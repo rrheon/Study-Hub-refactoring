@@ -25,7 +25,6 @@ final class SelectMajorView: UIView {
     let button = UIButton()
     let img = UIImage(named: "DeleteImg")
     button.setImage(img, for: .normal)
-//    button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     return button
   }()
   
@@ -36,9 +35,7 @@ final class SelectMajorView: UIView {
 //    button.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
     return button
   }()
-  
-  private lazy var selectMajorDividerLine = createDividerLine(height: 8)
-  
+    
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
@@ -46,6 +43,7 @@ final class SelectMajorView: UIView {
     self.setupLayout()
     self.makeUI()
     self.setupActions()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -55,8 +53,7 @@ final class SelectMajorView: UIView {
   func setupLayout(){
     [
       selectMajorLabel,
-      selectMajorButton,
-      selectMajorDividerLine
+      selectMajorButton
     ].forEach {
       self.addSubview($0)
     }
@@ -75,11 +72,6 @@ final class SelectMajorView: UIView {
       $0.centerY.equalTo(selectMajorLabel)
       $0.trailing.equalToSuperview().offset(-20)
     }
-    
-    selectMajorDividerLine.snp.makeConstraints {
-      $0.top.equalTo(selectMajorLabel.snp.bottom).offset(30)
-      $0.leading.trailing.equalToSuperview()
-    }
   }
   
   func setupActions(){
@@ -91,18 +83,23 @@ final class SelectMajorView: UIView {
     
     cancelButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        
+        self?.cancelButtonTapped()
       })
       .disposed(by: viewModel.disposeBag)
   }
   
-  func addDepartmentButton(_ department: String) {
-    
-//    selectedMajor = department
-//    print(selectedMajor)
-//    guard let labelText = selectedMajor else { return }
-    
-//    selectedMajorLabel.text = "  \(labelText)"
+  func setupBinding(){
+    viewModel.seletedMajor
+      .subscribe(onNext: { [weak self] in
+        if !$0.isEmpty {
+          self?.addDepartmentButton($0)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func addDepartmentButton(_ major: String) {
+    selectedMajorLabel.text = "  \(major)  "
     selectedMajorLabel.clipsToBounds = true
     selectedMajorLabel.layer.cornerRadius = 15
     selectedMajorLabel.backgroundColor = .bg30
@@ -114,7 +111,7 @@ final class SelectMajorView: UIView {
     
     selectedMajorLabel.isHidden = false
     selectedMajorLabel.snp.makeConstraints { make in
-      make.top.equalTo(selectMajorLabel.snp.bottom).offset(10)
+      make.top.equalTo(selectMajorLabel.snp.bottom).offset(20)
       make.leading.equalTo(selectMajorLabel)
       make.height.equalTo(30)
     }
@@ -132,8 +129,7 @@ final class SelectMajorView: UIView {
     selectedMajorLabel.isHidden = true
     cancelButton.isHidden = true
     
-//    selectedMajor = nil
-    
+    self.layoutIfNeeded()
   }
 }
 

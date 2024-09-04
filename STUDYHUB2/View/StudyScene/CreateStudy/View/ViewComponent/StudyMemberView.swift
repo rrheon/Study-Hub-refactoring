@@ -8,13 +8,14 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
 
   let viewModel: CreateStudyViewModel
   
+  private lazy var studyMemeberTopLine = createDividerLine(height: 8)
   private lazy var studymemberLabel = createLabel(
     title: "스터디 팀원",
     textColor: .black,
     fontType: "Pretendard-SemiBold",
     fontSize: 16
   )
-  private lazy var studymemberDividerLine = createDividerLine(height: 1)
+  private lazy var studyMemeberUnderLine = createDividerLine(height: 1)
   
   // MARK: - 인원
   private lazy var studymemberTitleLabel = createLabel(
@@ -83,8 +84,9 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   
   func setupLayout(){
     [
+      studyMemeberTopLine,
       studymemberLabel,
-      studymemberDividerLine,
+      studyMemeberUnderLine,
       studymemberTitleLabel,
       studyMemberDescibeLabel,
       studymemberTextField,
@@ -101,18 +103,23 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   }
   
   func makeUI(){
-    studymemberLabel.snp.makeConstraints {
+    studyMemeberTopLine.snp.makeConstraints {
       $0.top.equalToSuperview()
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    studymemberLabel.snp.makeConstraints {
+      $0.top.equalTo(studyMemeberTopLine.snp.bottom).offset(20)
       $0.leading.equalToSuperview().offset(20)
     }
     
-    studymemberDividerLine.snp.makeConstraints {
+    studyMemeberUnderLine.snp.makeConstraints {
       $0.top.equalTo(studymemberLabel.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview()
     }
     
     studymemberTitleLabel.snp.makeConstraints {
-      $0.top.equalTo(studymemberDividerLine.snp.bottom).offset(33)
+      $0.top.equalTo(studyMemeberUnderLine.snp.bottom).offset(33)
       $0.leading.equalTo(studymemberLabel)
     }
     

@@ -2,14 +2,11 @@
 import UIKit
 
 import SnapKit
-import RxRelay
+import RxSwift
+import RxCocoa
 
-// 토스트팝업 추가하기
-final class SeletMajorViewController: NaviHelper {
+final class SeletMajorViewController: CommonNavi {
   let viewModel: SeletMajorViewModel
-  
-  var resultDepartments: [String] = []
-  var selectedMajor: String?
   
   private lazy var searchController = createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
@@ -26,7 +23,8 @@ final class SeletMajorViewController: NaviHelper {
     title: "- 관련학과는 1개만 선택할 수 있어요 \n- 다양한 학과와 관련된 스터디라면, '공통'을 선택해 주세요",
     textColor: .bg60,
     fontType: "Pretendard",
-    fontSize: 12)
+    fontSize: 12
+  )
 
   private lazy var selectMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
@@ -53,16 +51,23 @@ final class SeletMajorViewController: NaviHelper {
   }
   
   // MARK: - viewDidLoad
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     
-    navigationItemSetting()
+    setupNavigationbar()
     
     setupLayout()
     makeUI()
+    
+    setupDelegate()
+    setupActions()
+    setupBinding()
   }
+  
   // MARK: - setupLayout
+  
   func setupLayout(){
     [
       searchController,
@@ -72,12 +77,8 @@ final class SeletMajorViewController: NaviHelper {
     }
   }
   // MARK: - makeUI
+  
   func makeUI() {
-    searchController.delegate = self
-    
-    resultTableView.delegate = self
-    resultTableView.dataSource = self
-    
     searchController.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
       make.top.equalToSuperview().offset(10)
@@ -91,37 +92,62 @@ final class SeletMajorViewController: NaviHelper {
     }
   }
   
-  // MARK: - 네비게이션바 재설정
-  override func navigationItemSetting() {
-    super.navigationItemSetting()
-
-    let rightButtonImg = UIImage(named: "DeCompletedImg.png")?.withRenderingMode(.alwaysOriginal)
-    let rightButton = UIBarButtonItem(image: rightButtonImg,
-                                      style: .plain,
-                                      target: self,
-                                      action: nil)
-    self.navigationItem.rightBarButtonItem = rightButton
-    
-    settingNavigationTitle(title: "관련학과",
-                           font: "Pretendard-Bold",
-                           size: 18)
+  func setupDelegate(){
+    searchController.delegate = self
+    resultTableView.delegate = self
   }
   
-  func redesignNavigationbar(){
-    let rightButtonImg = UIImage(named: "CompleteImage.png")?.withRenderingMode(.alwaysOriginal)
-    let rightButton = UIBarButtonItem(image: rightButtonImg,
-                                      style: .plain,
-                                      target: self,
-                                      action: #selector(redesingRightButtonTapped))
-    self.navigationItem.rightBarButtonItem = rightButton
+  // MARK: - setupNavigationbar
+  
+  func setupNavigationbar() {
+    leftButtonSetting()
+    rightButtonSetting(imgName: "DeCompletedImg.png", activate: false)
+
+    settingNavigationTitle(title: "관련학과")
   }
   
-  @objc func redesingRightButtonTapped(){
-    guard let major = selectedMajor else { return }
-
-//    previousVC?.addDepartmentButton(major)
+  // 네비게이션 오른쪽 버튼을 누르면 이전 화면에 뜰 수 있도록 설정하기
+  
+  override func rightButtonTapped(_ sender: UIBarButtonItem) {
+    viewModel.enteredMajor.accept(viewModel.selectedMajor)
     self.navigationController?.popViewController(animated: true)
-
+  }
+  
+  func setupActions(){
+    resultTableView.rx.modelSelected(String.self)
+      .subscribe(onNext: { [weak self] in
+        self?.cellTapped(selectedCell: $0)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.matchedMajors
+      .subscribe(onNext: { [weak self] in
+        if !$0.isEmpty {
+          self?.searchTapped(department: $0)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setupBinding(){
+    viewModel.matchedMajors
+      .asDriver(onErrorJustReturn: [])
+      .drive(resultTableView.rx.items(
+        cellIdentifier: SeletMajorCell.cellId,
+        cellType: SeletMajorCell.self)) { index , content ,cell in
+          cell.model = content
+          cell.backgroundColor = .bg20
+          cell.textColor = .black
+        }
+        .disposed(by: viewModel.disposeBag)
+    
+//    viewModel.enteredMajor
+//      .asDriver(onErrorJustReturn: "")
+//      .drive(onNext: { [weak self] in
+//        let image = $0.isEmpty ? "DeCompletedImg.png" : "CompleteImage.png"
+//        self?.rightButtonSetting(imgName: image, activate: !$0.isEmpty)
+//      })
+//      .disposed(by: viewModel.disposeBag)
   }
   
   @objc func cancelButtonTapped(){
@@ -130,27 +156,15 @@ final class SeletMajorViewController: NaviHelper {
     cancelButton.isHidden = true
     resultTableView.isHidden = true
     
-    selectedMajor = nil
+    viewModel.selectedMajor = ""
   }
 }
 
-
-extension SeletMajorViewController: UISearchBarDelegate {
+extension SeletMajorViewController: UISearchBarDelegate, UITableViewDelegate {
   // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-    
-    let matchingDepartments = majorSet.filter { $0.contains(keyword) }
-    
-    if matchingDepartments.isEmpty {
-      print("검색 결과가 없음")
-      // 검색 결과가 없을 때의 처리를 할 수 있습니다.
-    } else {
-      print("검색 결과: \(matchingDepartments)")
-      searchTapped(department: matchingDepartments)
-    }
-    
-    reloadTalbeView()
+    viewModel.searchMajorFromPlist(keyword)
   }
   
   func searchTapped(department: [String]){
@@ -168,88 +182,67 @@ extension SeletMajorViewController: UISearchBarDelegate {
       make.leading.trailing.equalTo(searchController)
       make.bottom.equalTo(view).offset(-10)
     }
-    resultDepartments = department
   }
 }
 
-
 // MARK: - cell 함수
-extension SeletMajorViewController: UITableViewDelegate, UITableViewDataSource {
-  // UITableViewDataSource 함수
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return resultDepartments.count
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = resultTableView.dequeueReusableCell(withIdentifier: SeletMajorCell.cellId,
-                                                   for: indexPath) as! SeletMajorCell
-    
-    cell.backgroundColor = .bg20
-    cell.textColor = .black
-    if indexPath.row < resultDepartments.count {
-      let department = resultDepartments[indexPath.row]
-      cell.name.text = department
-    }
-    
-    return cell
-  }
-  
-  // UITableViewDelegate 함수 (선택)
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    // resultDepartments가 nil이 아닌 경우에만 실행
-    
-    if indexPath.row < resultDepartments.count {
-      let selectedMajor = resultDepartments[indexPath.row]
-      cellTapped(selectedCell: selectedMajor)
-    }
-  }
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 70
-  }
-  
-  func reloadTalbeView(){
-    resultTableView.reloadData()
-  }
-  
-  // cell이 선택되었을 때 ui변경
-  func cellTapped(selectedCell: String){
-    let labelText = selectedCell
-    let labelSize = (labelText as NSString).size(withAttributes: [NSAttributedString.Key.font: selectMajorLabel.font!])
-    
+
+extension SeletMajorViewController {
+  func cellTapped(selectedCell: String) {
     if selectMajorLabel.text != nil {
       showToast(message: "관련학과는 1개만 선택이 가능해요", alertCheck: false)
+      return
     }
     
-    redesignNavigationbar()
+    updateNavigationbar(selectedCell)
+    viewModel.selectedMajor = selectedCell
     
-    selectMajorLabel.text = selectedCell
+    let labelSize = calculateLabelSize(for: selectedCell, font: selectMajorLabel.font!)
+    
+    configureSelectMajorLabel(with: selectedCell, size: labelSize)
+    
+    resultTableView.isHidden = true
+    cancelButton.isHidden = false
+    
+    layoutSelectMajorLabel(labelSize: labelSize)
+    layoutCancelButton()
+  }
+  
+  private func updateNavigationbar(_ selectedCell: String){
+    let image = selectedCell.isEmpty ? "DeCompletedImg.png" : "CompleteImage.png"
+    rightButtonSetting(imgName: image, activate: !selectedCell.isEmpty)
+  }
+  
+  private func calculateLabelSize(for text: String, font: UIFont) -> CGSize {
+    return (text as NSString).size(withAttributes: [.font: font])
+  }
+  
+  private func configureSelectMajorLabel(with text: String, size: CGSize) {
+    selectMajorLabel.text = text
     selectMajorLabel.clipsToBounds = true
     selectMajorLabel.layer.cornerRadius = 15
     selectMajorLabel.backgroundColor = .bg30
     selectMajorLabel.textAlignment = .left
-    
-    selectedMajor = selectMajorLabel.text
-    
-    resultTableView.isHidden = true
-    
     selectMajorLabel.isHidden = false
-    cancelButton.isHidden = false
-    
+  }
+  
+  private func layoutSelectMajorLabel(labelSize: CGSize) {
     view.addSubview(selectMajorLabel)
-    view.addSubview(cancelButton)
-    
     selectMajorLabel.snp.makeConstraints { make in
       make.top.equalTo(describeLabel.snp.bottom).offset(-30)
       make.leading.equalTo(searchController).offset(10)
       make.width.equalTo(labelSize.width + 40)
       make.height.equalTo(30)
     }
-    
+  }
+  
+  private func layoutCancelButton() {
+    view.addSubview(cancelButton)
     cancelButton.snp.makeConstraints { make in
       make.centerY.equalTo(selectMajorLabel.snp.centerY)
       make.leading.equalTo(selectMajorLabel.snp.trailing).offset(-25)
     }
+    
     view.layoutIfNeeded()
   }
 }

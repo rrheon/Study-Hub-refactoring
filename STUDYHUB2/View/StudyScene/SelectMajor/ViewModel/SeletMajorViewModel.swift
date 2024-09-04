@@ -10,6 +10,7 @@ import Foundation
 import RxRelay
 
 final class SeletMajorViewModel: CommonViewModel {
+  var selectedMajor = ""
   let enteredMajor: PublishRelay<String>
   let matchedMajors = PublishRelay<[String]>()
 
@@ -19,7 +20,6 @@ final class SeletMajorViewModel: CommonViewModel {
   
   func searchMajorFromPlist(_ major: String){
     loadMajors(major)
-    enteredMajor.accept(major)
   }
   
   private func loadMajors(_ enteredMajor: String) {

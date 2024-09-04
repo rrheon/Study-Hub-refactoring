@@ -26,7 +26,7 @@ class CommonNavi: UIViewController {
     self.navigationController?.popViewController(animated: true)
   }
   
-  func rightButtonSetting(imgName: String){
+  func rightButtonSetting(imgName: String, activate: Bool = true) {
     let rightButtonImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
     lazy var rightButton = UIBarButtonItem(
       image: rightButtonImg,
@@ -34,7 +34,7 @@ class CommonNavi: UIViewController {
       target: self,
       action: #selector(rightButtonTapped(_:)))
     rightButton.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-    
+    rightButton.isEnabled = activate
     self.navigationItem.rightBarButtonItem = rightButton
   }
   

@@ -5,7 +5,7 @@ import RxSwift
 import RxCocoa
 
 // postedVC에서 옵저버블 하나 받기
-// 학과 선택에 relay하나 넘기기
+// 스터디 팀원부터 다시 수정
 // 스크롤할 때 네비게이션 바 색상 변경 이슈있음
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
@@ -96,7 +96,7 @@ final class CreateStudyViewController: CommonNavi {
     seletMajorView.snp.makeConstraints {
       $0.top.equalTo(studyInfoView.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
-      $0.height.equalTo(80)
+      $0.height.equalTo(50)
     }
     
     studyMemeberView.snp.makeConstraints {
@@ -147,6 +147,21 @@ final class CreateStudyViewController: CommonNavi {
     viewModel.isMoveToSeletMajor
       .subscribe(onNext: { [weak self] _ in
         self?.departmentArrowButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.seletedMajor
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] _ in
+        guard let self = self else { return }
+
+        self.seletMajorView.snp.updateConstraints {
+          $0.height.equalTo(100)
+        }
+
+        UIView.animate(withDuration: 0.3) {
+          self.view.layoutIfNeeded()
+        }
       })
       .disposed(by: viewModel.disposeBag)
   }
