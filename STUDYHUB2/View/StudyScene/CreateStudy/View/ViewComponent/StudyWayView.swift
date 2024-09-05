@@ -62,9 +62,6 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     fontSize: 14
   )
   
-  private lazy var fineDividerLine = createDividerLine(height: 8)
-  
-  // MARK: - 벌금 있을 때
   private lazy var fineTypeLabel = createLabel(
     title: "어떤 벌금인가요?",
     textColor: .bg90,
@@ -105,6 +102,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     self.makeUI()
     self.setupDelegate()
     self.setupActions()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -125,7 +123,6 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       haveFineLabel,
       noFineButton,
       noFineLabel,
-      fineDividerLine,
       fineTypeLabel,
       fineTypesTextField,
       fineAmountLabel,
@@ -192,7 +189,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     
     haveFineLabel.snp.makeConstraints {
       $0.centerY.equalTo(haveFineButton)
-      $0.leading.equalTo(haveFineButton.snp.trailing).offset(10)
+      $0.leading.equalTo(haveFineButton.snp.trailing).offset(5)
     }
     
     noFineButton.snp.makeConstraints {
@@ -203,7 +200,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     
     noFineLabel.snp.makeConstraints {
       $0.centerY.equalTo(noFineButton)
-      $0.leading.equalTo(noFineButton.snp.trailing).offset(10)
+      $0.leading.equalTo(noFineButton.snp.trailing).offset(5)
     }
     
     fineTypeLabel.snp.makeConstraints {
@@ -241,10 +238,21 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       $0.leading.equalTo(studymethodLabel)
     }
     
-    fineDividerLine.snp.makeConstraints {
-      $0.top.equalTo(maxFineLabel.snp.bottom).offset(20)
-      $0.leading.trailing.equalToSuperview()
-    }
+    setupFineUI(true)
+  }
+  
+  func setupBinding(){
+    viewModel.isFineButton
+      .subscribe(onNext: { [weak self] isFine in
+        guard let self = self else { return }
+        let haveFineImage = UIImage(named: isFine ? "ButtonChecked" : "ButtonEmpty")
+        let noFineImage = UIImage(named: isFine ? "ButtonEmpty" : "ButtonChecked")
+        
+        self.haveFineButton.setImage(haveFineImage, for: .normal)
+        self.noFineButton.setImage(noFineImage, for: .normal)
+        setupFineUI(!isFine)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions() {
@@ -259,6 +267,17 @@ final class StudyWayView: UIView, UITextFieldDelegate {
         .subscribe(onNext: { [weak self] in
           guard let self = self else { return }
           self.updateButtonSelection(selectedButton: button)
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
+    
+    [
+      haveFineButton: true,
+      noFineButton: false
+    ].forEach { (button, isFine) in
+      button.rx.tap
+        .subscribe(onNext: { [weak self] in
+          self?.viewModel.isFineButton.accept(isFine)
         })
         .disposed(by: viewModel.disposeBag)
     }
@@ -294,15 +313,32 @@ final class StudyWayView: UIView, UITextFieldDelegate {
   }
   
   func textFieldDidEndEditing(_ textField: UITextField) {
+    if textField == fineAmountTextField {
+      if let number = Int(fineAmountTextField.text ?? "0"), number >= 99999 {
+        fineAmountTextField.text = "99999"
+      }
+    }
     didEndEditing(view: textField)
   }
   
   func createFineButton() -> UIButton {
     let button = UIButton()
     button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.setImage(UIImage(named: "ButtonChecked"), for: .selected)
     button.tintColor = UIColor(hexCode: "#FF5530")
     return button
+  }
+  
+  func setupFineUI(_ hidden: Bool){
+    [
+      fineTypeLabel,
+      fineTypesTextField,
+      fineAmountLabel,
+      fineAmountTextField,
+      fineAmountCountLabel,
+      maxFineLabel
+    ].forEach {
+      $0.isHidden = hidden
+    }
   }
 }
 

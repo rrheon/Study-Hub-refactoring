@@ -37,8 +37,10 @@ extension UIView {
     backView.layer.shadowColor = UIColor.cellShadow.cgColor
     
     // Set the shadow path for the view
-    backView.layer.shadowPath = UIBezierPath(roundedRect: backView.bounds,
-                                             cornerRadius: backView.layer.cornerRadius).cgPath
+    backView.layer.shadowPath = UIBezierPath(
+      roundedRect: backView.bounds,
+      cornerRadius: backView.layer.cornerRadius
+    ).cgPath
   }
   
 }

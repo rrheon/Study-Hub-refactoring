@@ -4,8 +4,44 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+// 전처리
+#if DEBUG
+
+import SwiftUI
+@available(iOS 13.0, *)
+
+// UIViewControllerRepresentable을 채택
+struct ViewControllerRepresentable: UIViewControllerRepresentable {
+    // update
+    // _ uiViewController: UIViewController로 지정
+    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
+        
+    }
+    // makeui
+    func makeUIViewController(context: Context) -> UIViewController {
+    // Preview를 보고자 하는 Viewcontroller 이름
+    // e.g.)
+      var test = PublishRelay<String>()
+
+      return CreateStudyViewController()
+    }
+}
+
+struct ViewController_Previews: PreviewProvider {
+    
+    @available(iOS 13.0, *)
+    static var previews: some View {
+        // UIViewControllerRepresentable에 지정된 이름.
+        ViewControllerRepresentable()
+
+// 테스트 해보고자 하는 기기
+            .previewDevice("iPhone 11")
+    }
+}
+#endif
+
 // postedVC에서 옵저버블 하나 받기
-// 스터디 팀원부터 다시 수정
+// 날짜 선택하는 거 수정 -> 날짜 선택 버튼 탭 -> viewmodel에서 반응 -> vc에서 바텀시트 띄어서 처리 -> viewmodel로 날짜받음-> 각 view에 적용
 // 스크롤할 때 네비게이션 바 색상 변경 이슈있음
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
@@ -96,7 +132,7 @@ final class CreateStudyViewController: CommonNavi {
     seletMajorView.snp.makeConstraints {
       $0.top.equalTo(studyInfoView.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
-      $0.height.equalTo(50)
+      $0.height.equalTo(80)
     }
     
     studyMemeberView.snp.makeConstraints {
@@ -108,7 +144,7 @@ final class CreateStudyViewController: CommonNavi {
     studyWayView.snp.makeConstraints {
       $0.top.equalTo(studyMemeberView.snp.bottom).offset(11)
       $0.leading.trailing.equalToSuperview()
-      $0.height.equalTo(480)
+      $0.height.equalTo(230)
     }
     
     studyPeroioudView.snp.makeConstraints {
@@ -158,12 +194,34 @@ final class CreateStudyViewController: CommonNavi {
         self.seletMajorView.snp.updateConstraints {
           $0.height.equalTo(100)
         }
-
-        UIView.animate(withDuration: 0.3) {
-          self.view.layoutIfNeeded()
-        }
+        uiAnimation()
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isFineButton
+      .asDriver(onErrorJustReturn: false)
+      .drive(onNext: { [weak self]  in
+        guard let self = self else { return }
+        let height = $0 ? 450 : 230
+        self.studyWayView.snp.updateConstraints {
+          $0.height.equalTo(height)
+        }
+        uiAnimation()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    [
+      viewModel.isStartDateButton,
+      viewModel.isEndDateButton
+    ].forEach {
+      $0.asDriver(onErrorJustReturn: false)
+        .drive(onNext: { [weak self] in
+          if $0 {
+            self?.calendarButtonTapped()
+          }
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
   }
 
   @objc func departmentArrowButtonTapped() {
@@ -177,91 +235,19 @@ final class CreateStudyViewController: CommonNavi {
       present(navigationController, animated: true, completion: nil)
     }
   }
+  
+  func uiAnimation(){
+    UIView.animate(withDuration: 0.3) {
+      self.view.layoutIfNeeded()
+    }
+  }
+  
+  @objc func calendarButtonTapped() {
+    let calendarVC = CalendarViewController(viewModel: viewModel)
+
+    showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
+    self.present(calendarVC, animated: true, completion: nil)
+  }
 }
 
-// MARK: - textField 0 입력 시
-//extension CreateStudyViewController {
-//  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-//    self.view.endEditing(true)
-//  }
-//  
-//  func textViewDidChange(_ textView: UITextView) {
-//    if textView == studyProduceTextView {
-//      checkButtonActivation()
-//      updateTextViewHeight()
-//    }
-//  }
-//  
-//  private func updateTextViewHeight() {
-//    let fixedWidth = studyProduceTextView.frame.size.width
-//    let newSize = studyProduceTextView.sizeThatFits(CGSize(width: fixedWidth,
-//                                                           height: CGFloat.greatestFiniteMagnitude))
-//    let newHeight = max(newSize.height, 170)
-//    studyProduceTextView.delegate = self
-//    studyProduceTextView.constraints.forEach { constraint in
-//      if constraint.firstAttribute == .height {
-//        constraint.constant = newHeight
-//      }
-//    }
-//  }
-//  
-//  @objc func textFieldDidChange(_ textField: UITextField) {
-//    let monitoredTextFields: [UITextField] = [
-//      chatLinkTextField,
-//      studymemberTextField,
-//      studytitleTextField,
-//      fineAmountTextField,
-//      fineTypesTextField
-//    ]
-//    
-//    if monitoredTextFields.contains(textField) {
-//      checkButtonActivation()
-//    }
-//  }
-//  
-//  
-//  
-//  override func textFieldDidEndEditing(_ textField: UITextField) {
-//    if textField == fineAmountTextField {
-//      if let text = fineAmountTextField.text,
-//         let number = Int(text),
-//         number >= 99999 {
-//        fineAmountTextField.text = "99999"
-//      }
-//    }
-//    
-//    if textField == studymemberTextField,
-//       let text = textField.text,
-//       let number = Int(text),
-//       !(2...50).contains(number){
-//      countAlert.isHidden = false
-//      studymemberTextField.layer.borderColor = UIColor.r50.cgColor
-//      
-//      scrollView.addSubview(countAlert)
-//      
-//      countAlert.snp.makeConstraints { make in
-//        make.top.equalTo(studymemberTextField.snp.bottom)
-//        make.leading.equalTo(studymemberTextField)
-//      }
-//      studymemberTextField.text = ""
-//    }
-//    else {
-//      studymemberTextField.layer.borderColor = UIColor.bg50.cgColor
-//      
-//      countAlert.isHidden = true
-//    }
-//  }
-//}
-//
-//// MARK: - 캘린더에서 선택한 날짜로 바꿈
-//extension CreateStudyViewController: ChangeDateProtocol {
-//  func dataSend(data: String, buttonTag: Int) {
-//    if buttonTag == 1 {
-//      startDateButton.setTitle(data, for: .normal)
-//      self.startDateCheck = data
-//    } else if buttonTag == 2 {
-//      endDateButton.setTitle(data, for: .normal)
-//      self.endDateCheck = data
-//    }
-//  }
-//}
+extension CreateStudyViewController: ShowBottomSheet{}

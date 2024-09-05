@@ -12,6 +12,7 @@ import RxRelay
 final class CreateStudyViewModel: CommonViewModel {
   var postedData = BehaviorRelay<PostDetailData?>(value: nil)
   var isMoveToSeletMajor = PublishRelay<Bool>()
+  var seletedMajor = PublishRelay<String>()
   
   var isAllGenderButton = BehaviorRelay<Bool>(value: false)
   var isMaleOnlyButton = BehaviorRelay<Bool>(value: false)
@@ -21,8 +22,17 @@ final class CreateStudyViewModel: CommonViewModel {
   var isContactButton = BehaviorRelay<Bool>(value: false)
   var isUntactButton = BehaviorRelay<Bool>(value: false)
   
-  var seletedMajor = PublishRelay<String>()
+  var isFineButton = PublishRelay<Bool>()
   
+  var isStartDateButton = BehaviorRelay<Bool>(value: false)
+  var isEndDateButton = BehaviorRelay<Bool>(value: false)
+  var startDate = BehaviorRelay<String>(value: "선택하기")
+  var endDate = BehaviorRelay<String>(value: "선택하기")
+  
+  var seletedDate: String? = nil
+  var selectedDay: Int = 0
+  var currentPage: Date? = nil
+
   init(_ data: PostDetailData?) {
     super.init()
     
@@ -31,5 +41,8 @@ final class CreateStudyViewModel: CommonViewModel {
   
   func setPostedData(_ data: PostDetailData?) {
     self.postedData.accept(data)
+    
   }
 }
+
+extension CreateStudyViewModel: ManagementDate {}

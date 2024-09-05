@@ -52,8 +52,6 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     return tv
   }()
   
-  private lazy var studyIntroduceDividerLine = createDividerLine(height: 8)
-
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
@@ -76,8 +74,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
       studytitleLabel,
       studytitleTextField,
       studyIntroduceLabel,
-      studyIntroduceTextView,
-      studyIntroduceDividerLine
+      studyIntroduceTextView
     ].forEach {
       self.addSubview($0)
     }
@@ -128,11 +125,6 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
       $0.leading.equalTo(chatLinkLabel)
       $0.trailing.equalToSuperview().offset(-20)
       $0.height.equalTo(170)
-    }
-    
-    studyIntroduceDividerLine.snp.makeConstraints {
-      $0.top.equalTo(studyIntroduceTextView.snp.bottom).offset(20)
-      $0.leading.trailing.equalToSuperview()
     }
   }
   

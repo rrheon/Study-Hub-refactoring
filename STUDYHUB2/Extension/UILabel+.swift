@@ -10,10 +10,12 @@ import UIKit
 extension UILabel {
   // MARK: - 글자색상 일부분 변경
   
-  func changeColor(wantToChange: String,
-                   color: UIColor,
-                   font: UIFont? = nil,
-                   lineSpacing: CGFloat? = nil) {
+  func changeColor(
+    wantToChange: String,
+    color: UIColor,
+    font: UIFont? = nil,
+    lineSpacing: CGFloat? = nil
+  ) {
     guard let originalText = self.attributedText?.mutableCopy() as? NSMutableAttributedString else { return }
     
     let range = (originalText.string as NSString).range(of: wantToChange)
@@ -35,17 +37,22 @@ extension UILabel {
     }
   }
 
-func setLineSpacing(spacing: CGFloat) {
-  guard let text = text else { return }
-  
-  let attributeString = NSMutableAttributedString(string: text)
-  let style = NSMutableParagraphStyle()
-  style.lineSpacing = spacing
-  attributeString.addAttribute(.paragraphStyle,
-                               value: style,
-                               range: NSRange(location: 0, length: attributeString.length))
-  attributedText = attributeString
-}
+  func setLineSpacing(spacing: CGFloat) {
+    guard let text = text else { return }
+    
+    let attributeString = NSMutableAttributedString(string: text)
+    let style = NSMutableParagraphStyle()
+    style.lineSpacing = spacing
+    attributeString.addAttribute(
+      .paragraphStyle,
+      value: style,
+      range: NSRange(
+        location: 0,
+        length: attributeString.length
+      )
+    )
+    attributedText = attributeString
+  }
 }
 
 

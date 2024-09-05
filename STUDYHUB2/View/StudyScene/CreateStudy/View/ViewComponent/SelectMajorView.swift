@@ -7,6 +7,8 @@ import RxCocoa
 final class SelectMajorView: UIView {
   let viewModel: CreateStudyViewModel
   
+  private lazy var selectMajorDividerLine = createDividerLine(height: 8)
+
   private lazy var selectMajorLabel = createLabel(
     title: "관련 학과 선택",
     textColor: .black,
@@ -52,6 +54,7 @@ final class SelectMajorView: UIView {
   
   func setupLayout(){
     [
+      selectMajorDividerLine,
       selectMajorLabel,
       selectMajorButton
     ].forEach {
@@ -63,8 +66,13 @@ final class SelectMajorView: UIView {
   }
   
   func makeUI(){
-    selectMajorLabel.snp.makeConstraints {
+    selectMajorDividerLine.snp.makeConstraints {
       $0.top.equalToSuperview()
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    selectMajorLabel.snp.makeConstraints {
+      $0.top.equalTo(selectMajorDividerLine.snp.bottom).offset(25)
       $0.leading.equalToSuperview().offset(20)
     }
     

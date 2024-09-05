@@ -91,6 +91,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
       studyMemberDescibeLabel,
       studymemberTextField,
       countLabel,
+      countAlert,
       genderLabel,
       genderDescribeLabel,
       allGenderButton,
@@ -138,6 +139,12 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     countLabel.snp.makeConstraints {
       $0.centerY.equalTo(studymemberTextField)
       $0.trailing.equalTo(studymemberTextField.snp.trailing).offset(-10)
+    }
+    
+    countAlert.isHidden = true
+    countAlert.snp.makeConstraints {
+      $0.top.equalTo(studymemberTextField.snp.bottom)
+      $0.leading.equalTo(studymemberTextField)
     }
     
     genderLabel.snp.makeConstraints {
@@ -220,10 +227,21 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   
   func textFieldDidBeginEditing(_ textField: UITextField) {
     didBeginEditing(view: textField)
+    countAlert.isHidden = true
   }
   
   func textFieldDidEndEditing(_ textField: UITextField) {
-    didEndEditing(view: textField)
+    guard let number = Int(studymemberTextField.text ?? "0") else { return }
+    
+    if !(0 < number && number < 51) {
+      countAlert.isHidden = false
+      
+      studymemberTextField.layer.borderColor = UIColor.r50.cgColor
+      studymemberTextField.text = ""
+    } else {
+      didEndEditing(view: textField)
+      countAlert.isHidden = true
+    }
   }
 }
 

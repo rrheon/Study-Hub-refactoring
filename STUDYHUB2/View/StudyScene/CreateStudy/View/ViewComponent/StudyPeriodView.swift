@@ -2,10 +2,13 @@
 import UIKit
 
 import SnapKit
+import RxCocoa
 
 final class StudyPeriodView: UIView {
   let viewModel: CreateStudyViewModel
   
+  private lazy var periodTopDivideLine = createDividerLine(height: 8)
+
   private lazy var periodLabel = createLabel(
     title: "기간",
     textColor: .black,
@@ -13,7 +16,7 @@ final class StudyPeriodView: UIView {
     fontSize: 16
   )
   
-  private lazy var periodDividerLine = createDividerLine(height: 1)
+  private lazy var periodUnderDividerLine = createDividerLine(height: 1)
   
   private lazy var startLabel = createLabel(
     title: "시작하는 날",
@@ -41,6 +44,8 @@ final class StudyPeriodView: UIView {
     
     self.setupLayout()
     self.makeUI()
+    self.setupDateButtonActions()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -49,8 +54,9 @@ final class StudyPeriodView: UIView {
   
   func setupLayout(){
     [
+      periodTopDivideLine,
       periodLabel,
-      periodDividerLine,
+      periodUnderDividerLine,
       startLabel,
       startDateButton,
       endLabel,
@@ -62,18 +68,23 @@ final class StudyPeriodView: UIView {
   }
   
   func makeUI(){
-    periodLabel.snp.makeConstraints {
+    periodTopDivideLine.snp.makeConstraints {
       $0.top.equalToSuperview()
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    periodLabel.snp.makeConstraints {
+      $0.top.equalTo(periodTopDivideLine.snp.bottom).offset(10)
       $0.leading.equalToSuperview().offset(20)
     }
     
-    periodDividerLine.snp.makeConstraints {
+    periodUnderDividerLine.snp.makeConstraints {
       $0.top.equalTo(periodLabel.snp.bottom).offset(11)
       $0.leading.trailing.equalToSuperview()
     }
     
     startLabel.snp.makeConstraints {
-      $0.top.equalTo(periodDividerLine.snp.bottom).offset(25)
+      $0.top.equalTo(periodUnderDividerLine.snp.bottom).offset(25)
       $0.leading.equalTo(periodLabel)
     }
     
@@ -120,21 +131,53 @@ final class StudyPeriodView: UIView {
     return button
   }
   
-  @objc func calendarButtonTapped(_ sender: Any) {
-    let calendarVC = CalendarViewController()
-//    calendarVC.delegate = self
-    calendarVC.selectedStatDate = startDateButton.titleLabel?.text ?? ""
+  func setupDateButtonActions() {
+    setupButtonAction(
+      startDateButton,
+      selectedState: viewModel.isStartDateButton,
+      otherState: viewModel.isEndDateButton
+    )
     
-    if (sender as AnyObject).tag == 1 {
-      calendarVC.buttonSelect = true
-    } else {
-      calendarVC.buttonSelect = false
-    }
-    showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
-//    self.present(calendarVC, animated: true, completion: nil)
+    setupButtonAction(
+      endDateButton,
+      selectedState: viewModel.isEndDateButton,
+      otherState: viewModel.isStartDateButton
+    )
+  }
+  
+  private func setupButtonAction(
+    _ button: UIButton,
+    selectedState: BehaviorRelay<Bool>,
+    otherState: BehaviorRelay<Bool>
+  ) {
+    button.rx.tap
+      .subscribe(onNext: { _ in
+        selectedState.accept(true)
+        otherState.accept(false)
+        if button == self.startDateButton {
+          self.viewModel.startDate.accept(self.startDateButton.titleLabel?.text ?? "선택하기")
+        } else {
+          self.viewModel.endDate.accept(self.endDateButton.titleLabel?.text ?? "선택하기")
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  private func setupBinding(){
+    viewModel.startDate
+      .asDriver(onErrorJustReturn: "선택하기")
+      .drive(onNext: { [weak self] in
+        self?.startDateButton.setTitle($0, for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.endDate
+      .asDriver(onErrorJustReturn: "선택하기")
+      .drive(onNext: { [weak self] in
+        self?.endDateButton.setTitle($0, for: .normal)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
 }
 
 extension StudyPeriodView: CreateUIprotocol{}
-extension StudyPeriodView: ShowBottomSheet{}
-

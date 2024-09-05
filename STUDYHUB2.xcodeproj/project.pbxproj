@@ -81,6 +81,7 @@
 		EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */; };
 		EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */; };
 		EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */; };
+		EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -240,6 +241,7 @@
 		EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPeriodView.swift; sourceTree = "<group>"; };
 		EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextProtocol.swift; sourceTree = "<group>"; };
 		EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeletMajorViewModel.swift; sourceTree = "<group>"; };
+		EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementDate.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
 				EEDDDD212C71EEF300FA347D /* ManagementPost.swift */,
 				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
+				EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */,
 				EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */,
 				EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */,
 				EE2908032C75D3E2006B28A7 /* FetchDatas.swift */,
@@ -587,7 +590,6 @@
 			isa = PBXGroup;
 			children = (
 				F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */,
-				EE07ADD02AF632B80096890F /* Calendar.swift */,
 				EE29082D2C819AE3006B28A7 /* ViewComponent */,
 			);
 			path = View;
@@ -717,6 +719,7 @@
 				EE2908322C81A125006B28A7 /* StudyMemberView.swift */,
 				EE2908342C81A3EE006B28A7 /* StudyWayView.swift */,
 				EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */,
+				EE07ADD02AF632B80096890F /* Calendar.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -1336,6 +1339,7 @@
 				EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */,
 				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
 				EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */,
+				EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */,
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
