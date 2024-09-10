@@ -243,18 +243,24 @@ final class StudyWayView: UIView, UITextFieldDelegate {
   
   func setupBinding(){
     viewModel.isFineButton
-      .subscribe(onNext: { [weak self] isFine in
+      .asDriver()
+      .drive(onNext: { [weak self] isFine in
         guard let self = self else { return }
-        let haveFineImage = UIImage(named: isFine ? "ButtonChecked" : "ButtonEmpty")
-        let noFineImage = UIImage(named: isFine ? "ButtonEmpty" : "ButtonChecked")
-        
-        self.haveFineButton.setImage(haveFineImage, for: .normal)
-        self.noFineButton.setImage(noFineImage, for: .normal)
+//        updateFineButtonUI()
         setupFineUI(!isFine)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    fineTypesTextField.rx.text.orEmpty
+      .bind(to: viewModel.fineTypeValue)
+      .disposed(by: viewModel.disposeBag)
+    
+    fineAmountTextField.rx.text.orEmpty
+      .compactMap { Int($0) }
+      .bind(to: viewModel.fineAmountValue)
+      .disposed(by: viewModel.disposeBag)
   }
-  
+
   func setupActions() {
     let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
       (mixmeetButton, viewModel.isMixButton),
@@ -271,15 +277,33 @@ final class StudyWayView: UIView, UITextFieldDelegate {
         .disposed(by: viewModel.disposeBag)
     }
     
-    [
-      haveFineButton: true,
-      noFineButton: false
-    ].forEach { (button, isFine) in
+    let fineButtonsWithStates: [(UIButton, Bool)] = [
+      (haveFineButton, viewModel.isFineButton.value),
+      (noFineButton, viewModel.isNoFineButton.value)
+    ]
+    
+    fineButtonsWithStates.forEach { button, isSelected in
       button.rx.tap
-        .subscribe(onNext: { [weak self] in
-          self?.viewModel.isFineButton.accept(isFine)
+        .asDriver()
+        .drive(onNext: { [weak self] in
+          guard let self = self else { return }
+          viewModel.isFineButton.accept(button == haveFineButton)
+          viewModel.isNoFineButton.accept(button == noFineButton)
+          updateFineButtonUI()
         })
         .disposed(by: viewModel.disposeBag)
+    }
+  }
+  
+  func updateFineButtonUI() {
+    let buttonsWithStates: [(UIButton, Bool)] = [
+      (haveFineButton, viewModel.isFineButton.value),
+      (noFineButton, viewModel.isNoFineButton.value)
+    ]
+    
+    buttonsWithStates.forEach { button, isSelected in
+      let seletedImage = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
+      button.setImage(seletedImage, for: .normal)
     }
   }
   
@@ -296,10 +320,25 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     }
   }
   
+  func studyWayButtonTapped(_ button: UIButton) -> String {
+    switch button {
+    case contactButton:
+      return "CONTACT"
+    case untactButton:
+      return "UNTACT"
+    default:
+      return "MIX"
+    }
+  }
+
   func updateButtonSelection(selectedButton: UIButton) {
     viewModel.isMixButton.accept(selectedButton == mixmeetButton)
     viewModel.isContactButton.accept(selectedButton == contactButton)
     viewModel.isUntactButton.accept(selectedButton == untactButton)
+    
+    let studyWay = studyWayButtonTapped(selectedButton)
+    viewModel.seletedStudyWayValue.accept(studyWay)
+    
     updateButtonColors()
   }
   

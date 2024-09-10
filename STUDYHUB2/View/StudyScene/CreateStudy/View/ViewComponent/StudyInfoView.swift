@@ -2,6 +2,7 @@
 import UIKit
 
 import SnapKit
+import RxCocoa
 
 final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   let viewModel: CreateStudyViewModel
@@ -59,6 +60,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     self.setupLayout()
     self.makeUI()
     self.setupDelegate()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -126,6 +128,20 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
       $0.trailing.equalToSuperview().offset(-20)
       $0.height.equalTo(170)
     }
+  }
+  
+  func setupBinding(){
+    chatLinkTextField.rx.text.orEmpty
+      .bind(to: viewModel.chatLinkValue)
+      .disposed(by: viewModel.disposeBag)
+    
+    studytitleTextField.rx.text.orEmpty
+      .bind(to: viewModel.studyTitleValue)
+      .disposed(by: viewModel.disposeBag)
+    
+    studyIntroduceTextView.rx.text.orEmpty
+      .bind(to: viewModel.studyIntroduceValue)
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupDelegate(){

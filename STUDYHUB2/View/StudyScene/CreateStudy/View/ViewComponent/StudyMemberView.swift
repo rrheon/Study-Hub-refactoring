@@ -76,6 +76,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     self.makeUI()
     self.setupDelegate()
     self.setupActions()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -184,6 +185,13 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     }
   }
   
+  func setupBinding(){
+    studymemberTextField.rx.text.orEmpty
+      .map({ Int($0) })
+      .bind(to: viewModel.studyMemberValue)
+      .disposed(by: viewModel.disposeBag)
+  }
+  
   func setupActions() {
     let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
       (allGenderButton, viewModel.isAllGenderButton),
@@ -218,9 +226,24 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     viewModel.isAllGenderButton.accept(selectedButton == allGenderButton)
     viewModel.isMaleOnlyButton.accept(selectedButton == maleOnlyButton)
     viewModel.isFemaleOnlyButton.accept(selectedButton == femaleOnlyButton)
+    
+    let selectedGender = genderButtonTapped(selectedButton)
+    viewModel.seletedGenderValue.accept(selectedGender)
+    
     updateButtonColors()
   }
   
+  func genderButtonTapped(_ button: UIButton) -> String {
+    switch button {
+    case maleOnlyButton:
+      return "MALE"
+    case femaleOnlyButton:
+      return "FEMALE"
+    default:
+      return "NULL"
+    }
+  }
+
   func setupDelegate(){
     studymemberTextField.delegate = self
   }

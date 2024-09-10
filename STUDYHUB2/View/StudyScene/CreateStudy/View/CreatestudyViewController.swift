@@ -50,6 +50,7 @@ protocol AfterCreatePost: AnyObject {
 // 캘린더 커스텀하기, 캘린더 선택 버튼 수정
 final class CreateStudyViewController: CommonNavi {
   let viewModel: CreateStudyViewModel
+  weak var delegate: AfterCreatePost?
 
   private var studyInfoView: StudyInfoView
   private var seletMajorView: SelectMajorView
@@ -87,22 +88,7 @@ final class CreateStudyViewController: CommonNavi {
     makeUI()
     
     setupBinding()
-    
-    setScrollViewSingTap()
   }
-  
-  func setScrollViewSingTap(){
-    let singleTapGestureRecognizer = UITapGestureRecognizer(
-      target: self,
-      action: #selector(myTapMethod)
-    )
-    singleTapGestureRecognizer.numberOfTapsRequired = 1
-    singleTapGestureRecognizer.isEnabled = true
-    singleTapGestureRecognizer.cancelsTouchesInView = false
-    scrollView.addGestureRecognizer(singleTapGestureRecognizer)
-  }
-  
-  @objc func myTapMethod(sender: UITapGestureRecognizer) {self.view.endEditing(true)}
   
   // MARK: - setUpLayout
   func setUpLayout(){
@@ -186,13 +172,13 @@ final class CreateStudyViewController: CommonNavi {
       })
       .disposed(by: viewModel.disposeBag)
     
-    viewModel.seletedMajor
+    viewModel.selectedMajor
       .asDriver(onErrorJustReturn: "")
-      .drive(onNext: { [weak self] _ in
+      .drive(onNext: { [weak self]  in
         guard let self = self else { return }
-
+        let height = (($0?.isEmpty) != nil) ? 120 : 80
         self.seletMajorView.snp.updateConstraints {
-          $0.height.equalTo(100)
+          $0.height.equalTo(height)
         }
         uiAnimation()
       })
@@ -222,10 +208,18 @@ final class CreateStudyViewController: CommonNavi {
         })
         .disposed(by: viewModel.disposeBag)
     }
+    
+    viewModel.isSuccessCreateStudy
+      .subscribe(onNext: { [weak self] in
+        guard let postID = Int($0) else { return }
+        self?.navigationController?.popViewController(animated: false)
+        self?.delegate?.afterCreatePost(postId: postID)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
 
   @objc func departmentArrowButtonTapped() {
-    let departmentselectVC = SeletMajorViewController(seletedMajor: viewModel.seletedMajor)
+    let departmentselectVC = SeletMajorViewController(seletedMajor: viewModel.selectedMajor)
     
     if let navigationController = self.navigationController {
       navigationController.pushViewController(departmentselectVC, animated: true)

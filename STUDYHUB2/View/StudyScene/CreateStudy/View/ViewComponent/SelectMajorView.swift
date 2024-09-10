@@ -97,11 +97,10 @@ final class SelectMajorView: UIView {
   }
   
   func setupBinding(){
-    viewModel.seletedMajor
+    viewModel.selectedMajor
       .subscribe(onNext: { [weak self] in
-        if !$0.isEmpty {
-          self?.addDepartmentButton($0)
-        }
+        guard let major = $0 else { return }
+        self?.addDepartmentButton(major)
       })
       .disposed(by: viewModel.disposeBag)
   }

@@ -285,17 +285,9 @@ final class StudyViewController: CommonNavi {
   // MARK: - 게시글 작성 버튼 탭
   
   @objc func addButtonTapped() {
-//    if viewModel.checkLoginStatus.value{
-//      let createStudyVC = CreateStudyViewController()
-//      createStudyVC.hidesBottomBarWhenPushed = true
-////      createStudyVC.delegate = self
-//      self.navigationController?.pushViewController(createStudyVC, animated: true)
-//    } else {
-//      checkLoginPopup(checkUser: false)
-//    }
     let createStudyVC = CreateStudyViewController()
+    createStudyVC.delegate = self
     createStudyVC.hidesBottomBarWhenPushed = true
-//      createStudyVC.delegate = self
     self.navigationController?.pushViewController(createStudyVC, animated: true)
   }
   

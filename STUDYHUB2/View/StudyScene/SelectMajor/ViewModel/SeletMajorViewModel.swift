@@ -11,10 +11,10 @@ import RxRelay
 
 final class SeletMajorViewModel: CommonViewModel {
   var selectedMajor = ""
-  let enteredMajor: PublishRelay<String>
+  let enteredMajor: BehaviorRelay<String?>
   let matchedMajors = PublishRelay<[String]>()
 
-  init(enteredMajor: PublishRelay<String>) {
+  init(enteredMajor: BehaviorRelay<String?>) {
     self.enteredMajor = enteredMajor
   }
   

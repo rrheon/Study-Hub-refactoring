@@ -41,7 +41,7 @@ final class SeletMajorViewController: CommonNavi {
     return button
   }()
   
-  init(seletedMajor: PublishRelay<String>) {
+  init(seletedMajor: BehaviorRelay<String?>) {
     self.viewModel = SeletMajorViewModel(enteredMajor: seletedMajor)
     super.init()
   }

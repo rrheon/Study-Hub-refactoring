@@ -46,6 +46,7 @@ final class StudyPeriodView: UIView {
     self.makeUI()
     self.setupDateButtonActions()
     self.setupBinding()
+    self.setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -107,7 +108,6 @@ final class StudyPeriodView: UIView {
       $0.height.equalTo(50)
     }
     
-    completeButton.unableButton(false, backgroundColor: .o30, titleColor: .white)
     completeButton.snp.makeConstraints {
       $0.top.equalTo(endDateButton.snp.bottom).offset(30)
       $0.leading.trailing.equalTo(endDateButton)
@@ -163,20 +163,45 @@ final class StudyPeriodView: UIView {
       .disposed(by: viewModel.disposeBag)
   }
   
+  func setupActions(){
+    completeButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        self?.viewModel.createStudy()
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
   private func setupBinding(){
     viewModel.startDate
       .asDriver(onErrorJustReturn: "선택하기")
       .drive(onNext: { [weak self] in
-        self?.startDateButton.setTitle($0, for: .normal)
+        guard let self = self else { return }
+        uiUpdate(startDateButton, title: $0)
       })
       .disposed(by: viewModel.disposeBag)
     
     viewModel.endDate
       .asDriver(onErrorJustReturn: "선택하기")
       .drive(onNext: { [weak self] in
-        self?.endDateButton.setTitle($0, for: .normal)
+        guard let self = self else { return }
+        uiUpdate(endDateButton, title: $0)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isCompleteButtonActivate
+      .asDriver()
+      .drive(onNext: {[weak self] in
+        guard let self = self else { return }
+        let backgroundColor: UIColor = $0 ? .o50 : .o30
+        completeButton.unableButton($0, backgroundColor: backgroundColor, titleColor: .white)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func uiUpdate(_ button: UIButton, title: String){
+    let titleColor: UIColor = title == "선택하기" ? .bg70 : .black
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(titleColor, for: .normal)
   }
 }
 
