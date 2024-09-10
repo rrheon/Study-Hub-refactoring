@@ -44,6 +44,7 @@ final class StudyPeriodView: UIView {
     
     self.setupLayout()
     self.makeUI()
+    self.setupModifyUI()
     self.setupDateButtonActions()
     self.setupBinding()
     self.setupActions()
@@ -113,6 +114,19 @@ final class StudyPeriodView: UIView {
       $0.leading.trailing.equalTo(endDateButton)
       $0.height.equalTo(55)
     }
+  }
+  
+  func setupModifyUI(){
+    guard let postValue = viewModel.postedData.value else { return }
+    let startDate = postValue.studyStartDate
+    let convertedStartDate = "\(startDate[0])-\(startDate[1])-\(startDate[2])"
+    startDateButton.setTitle(convertedStartDate, for: .normal)
+    viewModel.startDate.accept(convertedStartDate)
+    
+    let endDate = postValue.studyEndDate
+    let convertedEndDate = "\(endDate[0])-\(endDate[1])-\(endDate[2])"
+    endDateButton.setTitle(convertedEndDate, for: .normal)
+    viewModel.endDate.accept(convertedEndDate)
   }
   
   func createDateButton() -> UIButton {

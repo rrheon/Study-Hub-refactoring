@@ -140,14 +140,6 @@ final class SeletMajorViewController: CommonNavi {
           cell.textColor = .black
         }
         .disposed(by: viewModel.disposeBag)
-    
-//    viewModel.enteredMajor
-//      .asDriver(onErrorJustReturn: "")
-//      .drive(onNext: { [weak self] in
-//        let image = $0.isEmpty ? "DeCompletedImg.png" : "CompleteImage.png"
-//        self?.rightButtonSetting(imgName: image, activate: !$0.isEmpty)
-//      })
-//      .disposed(by: viewModel.disposeBag)
   }
   
   @objc func cancelButtonTapped(){
@@ -161,6 +153,10 @@ final class SeletMajorViewController: CommonNavi {
 }
 
 extension SeletMajorViewController: UISearchBarDelegate, UITableViewDelegate {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 48.0
+  }
+  
   // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }

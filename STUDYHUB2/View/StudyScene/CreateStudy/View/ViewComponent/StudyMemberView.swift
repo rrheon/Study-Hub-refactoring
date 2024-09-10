@@ -74,6 +74,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     
     self.setupLayout()
     self.makeUI()
+    self.setupModifyUI()
     self.setupDelegate()
     self.setupActions()
     self.setupBinding()
@@ -185,6 +186,20 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     }
   }
   
+  func setupModifyUI(){
+    guard let postValue = viewModel.postedData.value else { return }
+    [
+      allGenderButton,
+      maleOnlyButton,
+      femaleOnlyButton
+    ].forEach {
+      if $0.titleLabel?.text == convertGender(gender: postValue.filteredGender) {
+        updateButtonSelection(selectedButton: $0)
+      }
+    }
+    studymemberTextField.text = String(postValue.studyPerson)
+  }
+  
   func setupBinding(){
     studymemberTextField.rx.text.orEmpty
       .map({ Int($0) })
@@ -270,3 +285,4 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
 
 extension StudyMemberView: CreateUIprotocol {}
 extension StudyMemberView: EditableViewProtocol {}
+extension StudyMemberView: ConvertGender {}

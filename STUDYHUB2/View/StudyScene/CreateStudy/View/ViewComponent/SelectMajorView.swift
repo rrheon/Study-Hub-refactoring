@@ -34,7 +34,6 @@ final class SelectMajorView: UIView {
     let button = UIButton(type: .system)
     button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
     button.tintColor = .black
-//    button.addTarget(self, action: #selector(departmentArrowButtonTapped), for: .touchUpInside)
     return button
   }()
     
@@ -44,6 +43,7 @@ final class SelectMajorView: UIView {
     
     self.setupLayout()
     self.makeUI()
+    self.setupModifyUI()
     self.setupActions()
     self.setupBinding()
   }
@@ -80,6 +80,12 @@ final class SelectMajorView: UIView {
       $0.centerY.equalTo(selectMajorLabel)
       $0.trailing.equalToSuperview().offset(-20)
     }
+  }
+  
+  func setupModifyUI(){
+    guard let postValue = viewModel.postedData.value else { return }
+    let major = convertMajor(postValue.major, toEnglish: false)
+    viewModel.selectedMajor.accept(major)
   }
   
   func setupActions(){
@@ -141,3 +147,4 @@ final class SelectMajorView: UIView {
 }
 
 extension SelectMajorView: CreateUIprotocol {}
+extension SelectMajorView: ConvertMajor {}

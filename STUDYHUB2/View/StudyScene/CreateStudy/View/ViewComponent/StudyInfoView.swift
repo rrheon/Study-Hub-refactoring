@@ -59,6 +59,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     
     self.setupLayout()
     self.makeUI()
+    self.setupModifyUI()
     self.setupDelegate()
     self.setupBinding()
   }
@@ -148,6 +149,13 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     chatLinkTextField.delegate = self
     studytitleTextField.delegate = self
     studyIntroduceTextView.delegate = self
+  }
+  
+  func setupModifyUI(){
+    guard let postValue = viewModel.postedData.value else { return }
+    chatLinkTextField.text = postValue.chatURL
+    studytitleTextField.text = postValue.title
+    studyIntroduceTextView.text = postValue.content
   }
   
   func textFieldDidBeginEditing(_ textField: UITextField) {

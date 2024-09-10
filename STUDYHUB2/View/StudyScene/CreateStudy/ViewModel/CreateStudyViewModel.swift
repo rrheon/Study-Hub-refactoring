@@ -119,8 +119,9 @@ final class CreateStudyViewModel: CommonViewModel {
       studyWay: seletedStudyWayValue.value ?? "",
       title: studyTitleValue.value ?? ""
     )
-    
-    print(value)
+   
+    // 함수로 전달 네비게이션 타이틀로 수정하기 작성하기 판단
+    // 처음 들어온 postdetail과 value가 다른 상태로 뒤로 간다면 팝업
     createPost(value) {
       self.isSuccessCreateStudy.accept($0)
     }

@@ -100,6 +100,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     
     self.setupLayout()
     self.makeUI()
+    self.setupModifyUI()
     self.setupDelegate()
     self.setupActions()
     self.setupBinding()
@@ -260,7 +261,31 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       .bind(to: viewModel.fineAmountValue)
       .disposed(by: viewModel.disposeBag)
   }
+  
+  func setupModifyUI(){
+    guard let postValue = viewModel.postedData.value else { return }
+    [
+      contactButton,
+      untactButton,
+      mixmeetButton
+    ].forEach {
+      if $0.titleLabel?.text == convertStudyWay(wayToStudy: postValue.studyWay) {
+        updateButtonSelection(selectedButton: $0)
+      }
+    }
+    
+    if postValue.penaltyWay != "" {
+      viewModel.isFineButton.accept(true)
+      
+      fineTypesTextField.text = postValue.penaltyWay
+      fineAmountTextField.text = String(postValue.penalty)
+    } else {
+      viewModel.isNoFineButton.accept(true)
+    }
+    updateFineButtonUI()
 
+  }
+  
   func setupActions() {
     let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
       (mixmeetButton, viewModel.isMixButton),
@@ -383,3 +408,4 @@ final class StudyWayView: UIView, UITextFieldDelegate {
 
 extension StudyWayView: CreateUIprotocol{}
 extension StudyWayView: EditableViewProtocol{}
+extension StudyWayView: ConvertStudyWay {}

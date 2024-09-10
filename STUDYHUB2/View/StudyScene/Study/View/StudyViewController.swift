@@ -374,7 +374,7 @@ extension StudyViewController: AfterCreatePost {
       postId: postId,
       loginStatus: false
     ) { result in
-      
+      self.recentButtonTapped()
       let postedData = PostedStudyData(
         isUserLogin:self.viewModel.checkLoginStatus.value,
         postDetailData: result

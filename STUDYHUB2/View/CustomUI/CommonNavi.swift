@@ -5,6 +5,12 @@ class CommonNavi: UIViewController {
   
   init() {
     super.init(nibName: nil, bundle: .none)
+    let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
+    appearance.configureWithOpaqueBackground()
+    appearance.shadowColor = .black
+    appearance.backgroundColor = .black
+    UINavigationBar.appearance().standardAppearance = appearance
+    UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
   
   required init?(coder: NSCoder) {
@@ -46,13 +52,17 @@ class CommonNavi: UIViewController {
     title: String,
     font: String = "Pretendard-Bold",
     size: CGFloat = 18
-  ){
+  ) {
     self.navigationItem.title = title
-    self.navigationController?.navigationBar.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.white,
-      NSAttributedString.Key.font: UIFont(name: font, size: size)!
-    ]
     
-    self.navigationController?.navigationBar.isTranslucent = false
+    if let appearance = self.navigationController?.navigationBar.standardAppearance {
+      appearance.titleTextAttributes = [
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.font: UIFont(name: font, size: size)!
+      ]
+      
+      self.navigationController?.navigationBar.standardAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
   }
 }

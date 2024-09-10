@@ -4,44 +4,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-// 전처리
-#if DEBUG
-
-import SwiftUI
-@available(iOS 13.0, *)
-
-// UIViewControllerRepresentable을 채택
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    // update
-    // _ uiViewController: UIViewController로 지정
-    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
-        
-    }
-    // makeui
-    func makeUIViewController(context: Context) -> UIViewController {
-    // Preview를 보고자 하는 Viewcontroller 이름
-    // e.g.)
-      var test = PublishRelay<String>()
-
-      return CreateStudyViewController()
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    
-    @available(iOS 13.0, *)
-    static var previews: some View {
-        // UIViewControllerRepresentable에 지정된 이름.
-        ViewControllerRepresentable()
-
-// 테스트 해보고자 하는 기기
-            .previewDevice("iPhone 11")
-    }
-}
-#endif
-
 // postedVC에서 옵저버블 하나 받기
-// 날짜 선택하는 거 수정 -> 날짜 선택 버튼 탭 -> viewmodel에서 반응 -> vc에서 바텀시트 띄어서 처리 -> viewmodel로 날짜받음-> 각 view에 적용
 // 스크롤할 때 네비게이션 바 색상 변경 이슈있음
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
@@ -151,8 +114,9 @@ final class CreateStudyViewController: CommonNavi {
   }
   
   func setupNavigationbar() {
+    let navigationTitle = viewModel.postedData.value == nil ? "스터디 만들기" : "수정하기"
     leftButtonSetting()
-    settingNavigationTitle(title: "스터디 만들기")
+    settingNavigationTitle(title: navigationTitle)
   }
   
   // MARK: - setupBinding
