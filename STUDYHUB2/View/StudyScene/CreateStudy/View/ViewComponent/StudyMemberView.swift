@@ -193,11 +193,23 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
       maleOnlyButton,
       femaleOnlyButton
     ].forEach {
-      if $0.titleLabel?.text == convertGender(gender: postValue.filteredGender) {
+      if $0.titleLabel?.text == convertGenderType(postValue.filteredGender) {
         updateButtonSelection(selectedButton: $0)
       }
     }
     studymemberTextField.text = String(postValue.studyPerson)
+  }
+  
+  func convertGenderType(_ gender: String) -> String{
+    let convertGender = convertGender(gender: gender)
+    switch convertGender {
+    case "남자":
+      return "남자만"
+    case "여자":
+      return "여자만"
+    default:
+      return "무관"
+    }
   }
   
   func setupBinding(){

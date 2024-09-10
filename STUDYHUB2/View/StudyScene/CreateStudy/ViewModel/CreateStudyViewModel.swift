@@ -41,6 +41,7 @@ final class CreateStudyViewModel: CommonViewModel {
   
   var isCompleteButtonActivate = BehaviorRelay<Bool>(value: false)
   var isSuccessCreateStudy = PublishRelay<String>()
+  var isSuccessModifyStudy = PublishRelay<Bool>()
   
   init(_ data: PostDetailData?) {
     super.init()
@@ -104,7 +105,7 @@ final class CreateStudyViewModel: CommonViewModel {
       .disposed(by: disposeBag)
   }
   
-  func createStudy(){
+  func createPostValue() -> CreateStudyRequest{
     let value = CreateStudyRequest(
       chatUrl: chatLinkValue.value ?? "",
       close: false,
@@ -119,17 +120,55 @@ final class CreateStudyViewModel: CommonViewModel {
       studyWay: seletedStudyWayValue.value ?? "",
       title: studyTitleValue.value ?? ""
     )
-   
-    // 함수로 전달 네비게이션 타이틀로 수정하기 작성하기 판단
-    // 처음 들어온 postdetail과 value가 다른 상태로 뒤로 간다면 팝업
-    createPost(value) {
-      self.isSuccessCreateStudy.accept($0)
+    return value
+  }
+  
+  func updatePostValue() -> UpdateStudyRequest{
+    let value = UpdateStudyRequest(
+      chatUrl: chatLinkValue.value ?? "",
+      close: false,
+      content: studyIntroduceValue.value ?? "",
+      gender: seletedGenderValue.value ?? "",
+      major: convertMajor(selectedMajor.value ?? "", toEnglish: true) ?? "",
+      penalty: fineAmountValue.value,
+      penaltyWay: fineTypeValue.value,
+      postId: postedData.value?.postID ?? 0,
+      studyEndDate: endDate.value,
+      studyPerson: studyMemberValue.value ?? 0,
+      studyStartDate: startDate.value,
+      studyWay: seletedStudyWayValue.value ?? "",
+      title: studyTitleValue.value ?? ""
+    )
+    return value
+  }
+
+  func createOrModifyPost(){
+    let mode = (postedData.value == nil) ? "POST" : "PUT"
+    switch mode {
+    case "POST":
+      let value = createPostValue()
+      return createPost(value) {
+        self.isSuccessCreateStudy.accept($0)
+      }
+    case "PUT":
+      let value = updatePostValue()
+      return modifyMyPost(value) {
+        self.isSuccessModifyStudy.accept($0)
+      }
+    default:
+      return
     }
+  }
+  
+  func changeDate(_ date: [Int]) -> String{
+    let convertedDate = "\(date[0])-\(date[1])-\(date[2])"
+    let changedDate = convertedDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
+    return changedDate
   }
 }
 
 extension CreateStudyViewModel: ManagementDate {}
 extension CreateStudyViewModel: ConvertMajor {}
 extension CreateStudyViewModel: CreatePost {}
-
+extension CreateStudyViewModel: ModifyPost {}
 

@@ -118,17 +118,15 @@ final class StudyPeriodView: UIView {
   
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
-    let startDate = postValue.studyStartDate
-    let convertedStartDate = "\(startDate[0])-\(startDate[1])-\(startDate[2])"
-    startDateButton.setTitle(convertedStartDate, for: .normal)
-    viewModel.startDate.accept(convertedStartDate)
+    let changedStartDate = viewModel.changeDate(postValue.studyStartDate)
+    startDateButton.setTitle(changedStartDate, for: .normal)
+    viewModel.startDate.accept(changedStartDate)
     
-    let endDate = postValue.studyEndDate
-    let convertedEndDate = "\(endDate[0])-\(endDate[1])-\(endDate[2])"
-    endDateButton.setTitle(convertedEndDate, for: .normal)
-    viewModel.endDate.accept(convertedEndDate)
+    let changedEndDate = viewModel.changeDate(postValue.studyEndDate)
+    endDateButton.setTitle(changedEndDate, for: .normal)
+    viewModel.endDate.accept(changedEndDate)
   }
-  
+
   func createDateButton() -> UIButton {
     let button = UIButton()
     let image = UIImage(named: "RightArrow")
@@ -180,7 +178,7 @@ final class StudyPeriodView: UIView {
   func setupActions(){
     completeButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.viewModel.createStudy()
+        self?.viewModel.createOrModifyPost()
       })
       .disposed(by: viewModel.disposeBag)
   }

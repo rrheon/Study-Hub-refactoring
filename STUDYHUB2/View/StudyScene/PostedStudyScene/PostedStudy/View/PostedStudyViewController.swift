@@ -5,7 +5,6 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-// 해야할 거 -> 수정하기 이동 시 데이터 안받아짐, 삭제하기 북마크 작동 후 이전페이지 작업, 댓글페이지
 final class PostedStudyViewController: CommonNavi{
   let viewModel: PostedStudyViewModel
   
@@ -576,9 +575,11 @@ extension PostedStudyViewController: BottomSheetDelegate {
   
   func goToLoginVC(){
     DispatchQueue.main.async {
-        let popupVC = PopupViewController(title: "로그인이 필요해요",
-                                          desc: "계속하려면 로그인을 해주세요!",
-                                          rightButtonTilte: "로그인")
+      let popupVC = PopupViewController(
+        title: "로그인이 필요해요",
+        desc: "계속하려면 로그인을 해주세요!",
+        rightButtonTilte: "로그인"
+      )
         self.present(popupVC, animated: true)
        
         popupVC.popupView.rightButtonAction = {

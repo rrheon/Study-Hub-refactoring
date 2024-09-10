@@ -4,13 +4,10 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-// postedVC에서 옵저버블 하나 받기
-// 스크롤할 때 네비게이션 바 색상 변경 이슈있음
 protocol AfterCreatePost: AnyObject {
   func afterCreatePost(postId: Int)
 }
 
-// 캘린더 커스텀하기, 캘린더 선택 버튼 수정
 final class CreateStudyViewController: CommonNavi {
   let viewModel: CreateStudyViewModel
   weak var delegate: AfterCreatePost?
@@ -122,14 +119,6 @@ final class CreateStudyViewController: CommonNavi {
   // MARK: - setupBinding
   
   func setupBinding() {
-    viewModel.postedData
-      .asDriver(onErrorDriveWith: .empty())
-      .drive(onNext: { [weak self] postData in
-        guard let data = postData else { return }
-//        self?.postModify(data)
-      })
-      .disposed(by: viewModel.disposeBag)
-    
     viewModel.isMoveToSeletMajor
       .subscribe(onNext: { [weak self] _ in
         self?.departmentArrowButtonTapped()
@@ -178,6 +167,15 @@ final class CreateStudyViewController: CommonNavi {
         guard let postID = Int($0) else { return }
         self?.navigationController?.popViewController(animated: false)
         self?.delegate?.afterCreatePost(postId: postID)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isSuccessModifyStudy
+      .asDriver(onErrorJustReturn: false)
+      .drive(onNext: { [weak self] _ in
+        guard let self = self else { return }
+        self.navigationController?.popViewController(animated: true)
+        self.showToast(message: "글이 수정됐어요.", alertCheck: true)
       })
       .disposed(by: viewModel.disposeBag)
   }
