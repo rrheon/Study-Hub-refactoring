@@ -171,5 +171,4 @@ final class SimilarPostCell: UICollectionViewCell {
       }
     }
   }
-  
 }

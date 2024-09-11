@@ -1,10 +1,3 @@
-//
-//  PostedStudyCommonetComponent.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/13/24.
-//
-
 import UIKit
 
 import SnapKit
@@ -13,10 +6,8 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   
   lazy var countComment: Int = 0 {
     didSet {
-      setupLayout()
-      makeUI()
+      updateCommentLabel()
       tableViewResizing()
-      commentLabel.text = "댓글 \(countComment)"
     }
   }
   
@@ -31,11 +22,11 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     let button = UIButton()
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
     button.tintColor = .black
+    button.isHidden = countComment == 0
     return button
   }()
   
   private lazy var commentLabelStackView = createStackView(axis: .horizontal, spacing: 10)
-  
   lazy var commentTableView: UITableView = {
     let tableView = UITableView()
     tableView.register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellId)
@@ -51,34 +42,24 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   private lazy var divideLineUnderTextField = createDividerLine(height: 8.0)
   private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
   
-  init(){
+  init() {
     super.init(frame: .zero)
+    setupLayout()
+    makeUI()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func setupLayout(){
-    [
-      commentLabel,
-      moveToCommentViewButton
-    ].forEach {
-      commentLabelStackView.addArrangedSubview($0)
-    }
-    
-    if countComment == 0 {
-      moveToCommentViewButton.isHidden = true
-    }
+  private func setupLayout() {
+    commentLabelStackView.addArrangedSubview(commentLabel)
+    commentLabelStackView.addArrangedSubview(moveToCommentViewButton)
     
     commentStackView.addArrangedSubview(commentTableView)
     
-    [
-      commentTextField,
-      commentButton
-    ].forEach {
-      commentButtonStackView.addArrangedSubview($0)
-    }
+    commentButtonStackView.addArrangedSubview(commentTextField)
+    commentButtonStackView.addArrangedSubview(commentButton)
     
     [
       commentLabelStackView,
@@ -87,15 +68,12 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
       commentButtonStackView,
       divideLineUnderTextField
     ].forEach {
-      self.addSubview($0)
+      addSubview($0)
     }
   }
   
-  func makeUI() {
-    let tableViewHeight = 86 * countComment
-    
+  private func makeUI() {
     commentTableView.snp.makeConstraints {
-      $0.height.equalTo(tableViewHeight)
       $0.leading.trailing.equalToSuperview().inset(10)
     }
     
@@ -105,9 +83,9 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     
     commentStackView.snp.makeConstraints {
       $0.top.equalTo(commentLabelStackView.snp.bottom).offset(10)
-      $0.leading.trailing.equalToSuperview()
+      $0.leading.trailing.equalToSuperview().inset(10)
     }
-
+    
     divideLineTopTextField.snp.makeConstraints {
       $0.top.equalTo(commentTableView.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview()
@@ -123,7 +101,7 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
       $0.height.equalTo(42)
       $0.width.equalTo(65)
     }
-
+    
     commentButtonStackView.snp.makeConstraints {
       $0.top.equalTo(divideLineTopTextField.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview().inset(20)
@@ -135,9 +113,14 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     }
   }
   
-  func tableViewResizing(){
+  private func updateCommentLabel() {
+    commentLabel.text = "댓글 \(countComment)"
+    moveToCommentViewButton.isHidden = countComment == 0
+  }
+  
+  func tableViewResizing() {
     let tableViewHeight = 86 * countComment
-    self.commentTableView.snp.updateConstraints {
+    commentTableView.snp.updateConstraints {
       $0.height.equalTo(tableViewHeight)
     }
   }

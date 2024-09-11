@@ -1,15 +1,8 @@
-//
-//  PostedStudyWriterComponent.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/13/24.
-//
-
 import UIKit
 
 import SnapKit
 
-final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor{
+final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor {
   
   let postedValues: PostDetailData
   
@@ -20,11 +13,12 @@ final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor{
     fontSize: 16
   )
   
-  private lazy var profileImageStackView = createStackView(axis: .vertical, spacing: 10)
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(named: "ProfileAvatar_change")
-    imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+    imageView.contentMode = .scaleAspectFill
+    imageView.layer.cornerRadius = 20
+    imageView.clipsToBounds = true
     return imageView
   }()
   
@@ -42,70 +36,47 @@ final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor{
     fontSize: 16
   )
   
-  private lazy var writerInfoStackView = createStackView(axis: .vertical, spacing: 5)
+  private lazy var writerInfoStackView: UIStackView = {
+    let stackView = UIStackView(arrangedSubviews: [writerMajorLabel, nickNameLabel])
+    stackView.axis = .vertical
+    stackView.spacing = 5
+    return stackView
+  }()
   
-  private lazy var writerInfoWithImageStackView = createStackView(axis: .horizontal, spacing: 10)
+  private lazy var writerInfoWithImageStackView: UIStackView = {
+    let stackView = UIStackView(arrangedSubviews: [profileImageView, writerInfoStackView])
+    stackView.axis = .horizontal
+    stackView.spacing = 10
+    stackView.alignment = .center
+    return stackView
+  }()
   
-  private lazy var totalWriterInfoStackView = createStackView(axis: .vertical, spacing: 20)
-  private lazy var spaceView1 = UIView()
-  
-  private lazy var grayDividerLine3 = createDividerLine(height: 8.0)
+  private lazy var totalWriterInfoStackView: UIStackView = {
+    let stackView = UIStackView(arrangedSubviews: [writerLabel, writerInfoWithImageStackView])
+    stackView.axis = .vertical
+    stackView.spacing = 20
+    return stackView
+  }()
   
   init(_ postedValues: PostDetailData) {
     self.postedValues = postedValues
-    
     super.init(frame: .zero)
-    
     self.setupLayout()
-    self.makeUI()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func setupLayout(){
-    let spaceViewTopUsermajorLabel = UIView()
-    let spaceViewUnderNicknameLabel = UIView()
-    
-    [
-      spaceViewTopUsermajorLabel,
-      writerMajorLabel,
-      nickNameLabel,
-      spaceViewUnderNicknameLabel
-    ].forEach {
-      writerInfoStackView.addArrangedSubview($0)
-    }
-    
-    [
-      profileImageView,
-      writerInfoStackView,
-      spaceView1
-    ].forEach {
-      writerInfoWithImageStackView.addArrangedSubview($0)
-    }
-    
-    [
-      writerLabel,
-      writerInfoWithImageStackView
-    ].forEach {
-      totalWriterInfoStackView.addArrangedSubview($0)
-    }
-    
+  private func setupLayout() {
     self.addSubview(totalWriterInfoStackView)
-  }
-  
-  func makeUI(){
-    writerInfoWithImageStackView.distribution = .fillProportionally
     
     profileImageView.snp.makeConstraints {
       $0.height.width.equalTo(50)
     }
-        
+    
     totalWriterInfoStackView.snp.makeConstraints {
-      $0.top.bottom.equalToSuperview()
-      $0.leading.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-20)
+      $0.edges.equalToSuperview().inset(20)
     }
   }
 }

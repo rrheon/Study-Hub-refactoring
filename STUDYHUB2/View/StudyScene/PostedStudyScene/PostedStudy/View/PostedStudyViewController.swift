@@ -5,27 +5,28 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
+// 바인딩 되어있는거 각 요소로 이동시키기, 스택사용한거 다 풀기
 final class PostedStudyViewController: CommonNavi{
   let viewModel: PostedStudyViewModel
   
   private var mainComponent: PostedStudyMainComponent
   
-  private lazy var aboutStudyLabel = createLabel(
-    title: "소개",
-    textColor: .bg90,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 14
-  )
-  
-  private lazy var aboutStudyDeatilLabel = createLabel(
-    title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
-    textColor: .bg80,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
+//  private lazy var aboutStudyLabel = createLabel(
+//    title: "소개",
+//    textColor: .bg90,
+//    fontType: "Pretendard-SemiBold",
+//    fontSize: 14
+//  )
+//  
+//  private lazy var aboutStudyDeatilLabel = createLabel(
+//    title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
+//    textColor: .bg80,
+//    fontType: "Pretendard-Medium",
+//    fontSize: 14
+//  )
   
   private lazy var aboutStudyStackView = createStackView(axis: .vertical, spacing: 10)
-  private var detailInfoComponent: PostedStudyDetailInfoConponent
+  private var detailInfoComponent: PostedStudyDetailInfoComponent
   
   private lazy var divideLineTopWriterInfo = createDividerLine(height: 8.0)
   private lazy var divideLineUnderWriterInfo = createDividerLine(height: 8.0)
@@ -70,7 +71,7 @@ final class PostedStudyViewController: CommonNavi{
     self.viewModel = PostedStudyViewModel(data)
     
     mainComponent = PostedStudyMainComponent(data.postDetailData)
-    detailInfoComponent = PostedStudyDetailInfoConponent(data.postDetailData)
+    detailInfoComponent = PostedStudyDetailInfoComponent(data.postDetailData)
     writerComponent = PostedStudyWriterComponent(data.postDetailData)
     
     super.init()
@@ -110,14 +111,14 @@ final class PostedStudyViewController: CommonNavi{
   func setUpLayout(){
     let grayDividerLine = createDividerLine(height: 1.0)
     
-    [
-      aboutStudyLabel,
-      aboutStudyDeatilLabel,
-      grayDividerLine
-    ].forEach {
-      aboutStudyStackView.addArrangedSubview($0)
-    }
-    
+//    [
+//      aboutStudyLabel,
+//      aboutStudyDeatilLabel,
+//      grayDividerLine
+//    ].forEach {
+//      aboutStudyStackView.addArrangedSubview($0)
+//    }
+//    
     [
       similarPostLabel,
       similarCollectionView
@@ -159,7 +160,7 @@ final class PostedStudyViewController: CommonNavi{
     }
     
     aboutStudyStackView.backgroundColor = .white
-    aboutStudyDeatilLabel.numberOfLines = 0
+//    aboutStudyDeatilLabel.numberOfLines = 0
     aboutStudyStackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 10)
     aboutStudyStackView.isLayoutMarginsRelativeArrangement = true
     
@@ -230,7 +231,7 @@ final class PostedStudyViewController: CommonNavi{
   func setupBindings(){
     viewModel.postDatas
       .subscribe(onNext: { [weak self] in
-        self?.aboutStudyDeatilLabel.text = $0?.content
+        self?.detailInfoComponent.introduceStudyDeatilLabel.text = $0?.content
         if $0?.usersPost == false {
           self?.navigationItem.rightBarButtonItem = nil
         }
@@ -444,7 +445,6 @@ final class PostedStudyViewController: CommonNavi{
         })
       })
       .disposed(by: viewModel.disposeBag)
-    
   }
 
   private func setupDelegate() {

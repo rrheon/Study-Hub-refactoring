@@ -82,6 +82,7 @@
 		EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */; };
 		EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */; };
 		EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */; };
+		EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -242,6 +243,7 @@
 		EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextProtocol.swift; sourceTree = "<group>"; };
 		EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeletMajorViewModel.swift; sourceTree = "<group>"; };
 		EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementDate.swift; sourceTree = "<group>"; };
+		EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarComponent.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -1036,6 +1038,7 @@
 				EEDDDD102C6B4A5B00FA347D /* DetailInfoConponent.swift */,
 				EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */,
 				EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */,
+				EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -1343,6 +1346,7 @@
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
+				EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */,
 				EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */,

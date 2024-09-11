@@ -1,16 +1,25 @@
-//
-//  PostedStudyDetailInfoConponent.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/13/24.
-//
-
 import UIKit
 
 import SnapKit
 
-final class PostedStudyDetailInfoConponent: UIView, CreateUIprotocol, Convert{
+final class PostedStudyDetailInfoComponent: UIView, CreateUIprotocol, Convert {
   let postedValues: PostDetailData
+  
+  private lazy var introduceStudyLabel = createLabel(
+    title: "소개",
+    textColor: .bg90,
+    fontType: "Pretendard-SemiBold",
+    fontSize: 14
+  )
+  
+  lazy var introduceStudyDeatilLabel = createLabel(
+    title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
+    textColor: .bg80,
+    fontType: "Pretendard-Medium",
+    fontSize: 14
+  )
+  
+  private lazy var divideLineUnderIntroduceStudy = createDividerLine(height: 1.0)
   
   private lazy var periodTitleLabel = createLabel(
     title: "기간",
@@ -20,7 +29,7 @@ final class PostedStudyDetailInfoConponent: UIView, CreateUIprotocol, Convert{
   )
   
   private lazy var periodLabel = createLabel(
-    title: "기간",
+    title: periodText,
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -34,7 +43,7 @@ final class PostedStudyDetailInfoConponent: UIView, CreateUIprotocol, Convert{
   )
   
   private lazy var fineAmountLabel = createLabel(
-    title: "결석비  " + "\(postedValues.penalty)원",
+    title: "결석비 \(postedValues.penalty)원",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -72,129 +81,85 @@ final class PostedStudyDetailInfoConponent: UIView, CreateUIprotocol, Convert{
     return label
   }()
   
-  private lazy var majorStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var detailInfoStackView = createStackView(axis: .vertical, spacing: 10)
-  private lazy var spaceView6 = UIView()
-  private lazy var spaceView7 = UIView()
-  private lazy var spaceView8 = UIView()
-  
-  private lazy var periodStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var fineInfoStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var meetStackView = createStackView(axis: .horizontal, spacing: 10)
-  
-  private lazy var periodImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "CalenderImage")
-    imageView.contentMode = .left
-    imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-    return imageView
+  private lazy var detailInfoStackView: UIStackView = {
+    let stackView = UIStackView(
+      arrangedSubviews: [
+        introduceStudyLabel,
+        introduceStudyDeatilLabel,
+        divideLineUnderIntroduceStudy,
+        createInfoRow(
+          titleLabel: periodTitleLabel,
+          contentLabel: periodLabel,
+          imageName: "CalenderImage"
+        ),
+        createInfoRow(
+          titleLabel: fineTitleLabel,
+          contentLabel: fineAmountLabel,
+          imageName: "MoneyImage"
+        ),
+        createInfoRow(
+          titleLabel: meetTitleLabel,
+          contentLabel: meetLabel,
+          imageName: "MixMeetImage"
+        ),
+        createMajorStackView(),
+        UIView()
+      ]
+    )
+    stackView.axis = .vertical
+    stackView.spacing = 30
+    return stackView
   }()
   
-  private lazy var meetImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "MixMeetImage")
-    imageView.contentMode = .left
-    imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-    return imageView
-  }()
-  
-  private lazy var smallFineImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "MoneyImage")
-    imageView.contentMode = .left
-    imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-    return imageView
-  }()
-  
-  private lazy var grayDividerLine2 = createDividerLine(height: 8.0)
+  private var periodText: String {
+    let startDate = postedValues.studyStartDate
+    let endDate = postedValues.studyEndDate
+    return "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
+  }
   
   init(_ postedValues: PostDetailData) {
     self.postedValues = postedValues
-    
     super.init(frame: .zero)
-    
-    self.setupLayout()
-    self.makeUI()
+    setupLayout()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  func setupLayout(){
-    [
-      periodImageView,
-      periodLabel,
-      spaceView6
-    ].forEach {
-      periodStackView.addArrangedSubview($0)
-    }
-    
-    [
-      smallFineImageView,
-      fineAmountLabel,
-      spaceView7
-    ].forEach {
-      fineInfoStackView.addArrangedSubview($0)
-    }
-    
-    [
-      meetImageView,
-      meetLabel,
-      spaceView8
-    ].forEach {
-      meetStackView.addArrangedSubview($0)
-    }
-    
-    majorLabel.backgroundColor = .bg30
-    
-    let spaceView10 = UIView()
-    
-    [
-      majorLabel,
-      spaceView10
-    ].forEach {
-      majorStackView.addArrangedSubview($0)
-    }
-    
-    [
-      periodTitleLabel,
-      periodStackView,
-      fineTitleLabel,
-      fineInfoStackView,
-      meetTitleLabel,
-      meetStackView,
-      majorTitleLabel,
-      majorStackView
-    ].forEach {
-      detailInfoStackView.addArrangedSubview($0)
-    }
-    
+  
+  private func setupLayout() {
     self.addSubview(detailInfoStackView)
+    
+    detailInfoStackView.snp.makeConstraints {
+      $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20))
+    }
   }
   
-  func makeUI(){
-    [
-      periodStackView,
-      fineInfoStackView,
-      meetStackView,
-      majorStackView
-    ].forEach {
-      $0.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
-      $0.isLayoutMarginsRelativeArrangement = true
-    }
-       
-    detailInfoStackView.snp.makeConstraints {
-      $0.top.bottom.equalToSuperview()
-      $0.leading.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-20)
-    }
+  private func createInfoRow(
+    titleLabel: UILabel,
+    contentLabel: UILabel,
+    imageName: String
+  ) -> UIStackView {
+    let imageView = UIImageView(image: UIImage(named: imageName))
+    imageView.contentMode = .left
     
-    let startDate = postedValues.studyStartDate
-    let convertedStartDate = "\(startDate[0]). \(startDate[1]). \(startDate[2])"
-    let endDate = postedValues.studyEndDate
-    let convertedEndDate = "\(endDate[0]). \(endDate[1]). \(endDate[2])"
+    let stackView = createStackView(axis: .horizontal, spacing: 10)
+    stackView.addArrangedSubview(imageView)
+    stackView.addArrangedSubview(contentLabel)
+    stackView.addArrangedSubview(UIView())
     
-    periodLabel.text = convertedStartDate + " ~ " + convertedEndDate
+    let containerStack = UIStackView(arrangedSubviews: [titleLabel, stackView])
+    containerStack.axis = .vertical
+    containerStack.spacing = 10
+    return containerStack
+  }
+  
+  private func createMajorStackView() -> UIStackView {
+    let stackView = createStackView(axis: .vertical, spacing: 10)
+    stackView.addArrangedSubview(majorTitleLabel)
+    stackView.addArrangedSubview(majorLabel)
+    stackView.addArrangedSubview(UIView())
+    stackView.alignment = .leading
+    return stackView
   }
 }

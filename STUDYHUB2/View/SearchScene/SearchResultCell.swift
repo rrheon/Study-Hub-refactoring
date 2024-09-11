@@ -160,8 +160,6 @@ final class SearchResultCell: UICollectionViewCell {
     
     addSubviews()
     configure()
-    
-    closePostUI()
   }
   
   @available(*, unavailable)
@@ -306,7 +304,6 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   private func bind() {
-    //    titleLabel.text = model
     guard let data = model else { return }
     
     checkBookmarked = data.bookmarked
@@ -340,8 +337,9 @@ final class SearchResultCell: UICollectionViewCell {
     if let imageURL = URL(string: data.userData.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
             
-      self.profileImageView.kf.setImage(with: imageURL,
-                                        options: [.processor(processor)]) { result in
+      self.profileImageView.kf.setImage(
+        with: imageURL,
+        options: [.processor(processor)]) { result in
         switch result {
         case .success(let value):
           DispatchQueue.main.async {
@@ -354,25 +352,31 @@ final class SearchResultCell: UICollectionViewCell {
         }
       }
     }
+    
+    closePostUI(data.close, countMember: countMember, remainingSeat: data.remainingSeat)
   }
   
-  func closePostUI(){
-    if model?.close == true {
-      majorLabel.textColor = .bg70
-      majorLabel.backgroundColor = .bg30
-      
-      titleLabel.textColor = .bg70
-      periodLabel.textColor = .bg60
-      
-      remainLabel.text = "마감됐어요"
-      remainLabel.textColor = .bg70
-      
-      countMemeberLabel.textColor = .bg70
-      fineLabel.textColor = .bg70
-      genderLabel.textColor = .bg70
-      
-      nickNameLabel.textColor = .bg70
+  func closePostUI(_ postClose: Bool, countMember: Int, remainingSeat: Int){
+    majorLabel.textColor = postClose ? .bg70 : .o50
+    majorLabel.backgroundColor = postClose ? .bg30 : .o10
+    
+    titleLabel.textColor = postClose ? .bg70 : .black
+    periodLabel.textColor = postClose ? .bg60 : .bg80
+    
+    remainLabel.text = postClose ? "마감됐어요" : "\(remainingSeat)자리 남았어요"
+    remainLabel.textColor = postClose ? .bg70 : .o50
+    
+    countMemeberLabel.textColor = postClose ? .bg70 : .bg90
+    
+    if postClose == false {
+      countMemeberLabel.changeColor(wantToChange: "\(countMember)", color: .o50)
     }
+    
+    fineLabel.textColor = postClose ? .bg70 : .bg90
+    genderLabel.textColor = postClose ? .bg70 : .bg90
+    
+    nickNameLabel.textColor = postClose ? .bg70 : .bg90
+    bookMarkButton.isHidden = postClose
   }
 }
 
