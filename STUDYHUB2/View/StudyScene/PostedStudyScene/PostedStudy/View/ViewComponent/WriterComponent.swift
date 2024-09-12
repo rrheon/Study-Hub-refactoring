@@ -2,10 +2,11 @@ import UIKit
 
 import SnapKit
 
-final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor {
-  
+final class PostedStudyWriterComponent: UIView {
+  let viewModel: PostedStudyViewModel
   let postedValues: PostDetailData
   
+  private lazy var divideLineTopWriterLabel = createDividerLine(height: 8.0)
   private lazy var writerLabel = createLabel(
     title: "작성자",
     textColor: .black,
@@ -36,6 +37,8 @@ final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor {
     fontSize: 16
   )
   
+  private lazy var divideLineUnderWriterLabel = createDividerLine(height: 8.0)
+
   private lazy var writerInfoStackView: UIStackView = {
     let stackView = UIStackView(arrangedSubviews: [writerMajorLabel, nickNameLabel])
     stackView.axis = .vertical
@@ -52,14 +55,21 @@ final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor {
   }()
   
   private lazy var totalWriterInfoStackView: UIStackView = {
-    let stackView = UIStackView(arrangedSubviews: [writerLabel, writerInfoWithImageStackView])
+    let stackView = UIStackView(
+      arrangedSubviews: [
+        divideLineTopWriterLabel,
+        writerLabel,
+        writerInfoWithImageStackView,
+        divideLineUnderWriterLabel
+      ])
     stackView.axis = .vertical
     stackView.spacing = 20
     return stackView
   }()
   
-  init(_ postedValues: PostDetailData) {
-    self.postedValues = postedValues
+  init(_ viewModel: PostedStudyViewModel) {
+    self.viewModel = viewModel
+    self.postedValues = viewModel.postDatas.value!
     super.init(frame: .zero)
     self.setupLayout()
   }
@@ -71,12 +81,27 @@ final class PostedStudyWriterComponent: UIView, CreateUIprotocol, ConvertMajor {
   private func setupLayout() {
     self.addSubview(totalWriterInfoStackView)
     
+    writerLabel.snp.makeConstraints {
+      $0.leading.equalToSuperview().offset(20)
+    }
+    
     profileImageView.snp.makeConstraints {
+      $0.leading.equalToSuperview().offset(20)
       $0.height.width.equalTo(50)
     }
     
+    divideLineTopWriterLabel.snp.makeConstraints {
+      $0.leading.trailing.equalToSuperview()
+    }
+    
+    divideLineUnderWriterLabel.snp.makeConstraints {
+      $0.leading.trailing.equalToSuperview()
+    }
+    
     totalWriterInfoStackView.snp.makeConstraints {
-      $0.edges.equalToSuperview().inset(20)
+      $0.edges.equalToSuperview()
     }
   }
 }
+extension PostedStudyWriterComponent: CreateUIprotocol {}
+extension PostedStudyWriterComponent: Convert {}

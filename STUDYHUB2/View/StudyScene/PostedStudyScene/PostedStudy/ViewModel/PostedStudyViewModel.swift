@@ -55,6 +55,9 @@ final class PostedStudyViewModel: CommonViewModel {
   var isActivateParticipate = PublishRelay<Bool>()
   var isUserLogined: Bool
   
+  var showToastMessage = PublishRelay<String>()
+  var showBottomSheet = PublishRelay<Int>()
+  
   init(_ data: PostedStudyViewData) {
     self.postedStudyData = data
 

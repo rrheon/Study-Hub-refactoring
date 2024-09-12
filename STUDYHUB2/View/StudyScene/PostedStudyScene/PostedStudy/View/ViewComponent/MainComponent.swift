@@ -4,6 +4,7 @@ import SnapKit
 
 final class PostedStudyMainComponent: UIView {
   let postedValues: PostDetailData
+  let viewModel: PostedStudyViewModel
   
   private lazy var createDate = postedValues.createdDate
   private lazy var postedDateLabel = createLabel(
@@ -61,8 +62,10 @@ final class PostedStudyMainComponent: UIView {
   
   let bottomSpaceView = UIView()
   
-  init(_ postedValues: PostDetailData) {
-    self.postedValues = postedValues
+  init(_ viewModel: PostedStudyViewModel) {
+    self.viewModel = viewModel
+    self.postedValues = viewModel.postDatas.value!
+    
     super.init(frame: .zero)
     setupLayout()
     configureUI()

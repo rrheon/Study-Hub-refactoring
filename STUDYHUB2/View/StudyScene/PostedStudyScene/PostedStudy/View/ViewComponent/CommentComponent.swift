@@ -1,15 +1,11 @@
 import UIKit
 
 import SnapKit
+import RxSwift
+import RxCocoa
 
-final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
-  
-  lazy var countComment: Int = 0 {
-    didSet {
-      updateCommentLabel()
-      tableViewResizing()
-    }
-  }
+final class PostedStudyCommentComponent: UIView {
+  let viewModel: PostedStudyViewModel
   
   private lazy var commentLabel = createLabel(
     title: "댓글 0",
@@ -22,7 +18,6 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     let button = UIButton()
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
     button.tintColor = .black
-    button.isHidden = countComment == 0
     return button
   }()
   
@@ -42,10 +37,14 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
   private lazy var divideLineUnderTextField = createDividerLine(height: 8.0)
   private lazy var commentButtonStackView = createStackView(axis: .horizontal, spacing: 8)
   
-  init() {
+  init(_ viewModel: PostedStudyViewModel) {
+    self.viewModel = viewModel
+    
     super.init(frame: .zero)
     setupLayout()
     makeUI()
+    setupBinding()
+    setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -113,15 +112,118 @@ final class PostedStudyCommentComponent: UIView, CreateUIprotocol {
     }
   }
   
-  private func updateCommentLabel() {
-    commentLabel.text = "댓글 \(countComment)"
-    moveToCommentViewButton.isHidden = countComment == 0
+  func setupBinding(){
+    viewModel.countComment
+      .asDriver(onErrorJustReturn: 0)
+      .drive(onNext: { [weak self] count in
+        self?.commentLabel.text = "댓글 \(count)"
+
+        let value = count <= 8 ? count : 8
+        self?.snp.remakeConstraints {
+          $0.height.equalTo(value * 86 + 160)
+        }
+        
+        self?.commentTableView.snp.remakeConstraints {
+          $0.height.equalTo(value * 86)
+        }
+      
+        let hideButton = count == 0 ? true : false
+        self?.moveToCommentViewButton.isHidden = hideButton
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.commentDatas
+      .bind(to: commentTableView.rx.items(
+        cellIdentifier: CommentCell.cellId,
+        cellType: CommentCell.self)) { index, content, cell in
+          cell.model = content
+          cell.userNickname = self.viewModel.userNickanme
+          cell.delegate = self
+          cell.selectionStyle = .none
+          cell.contentView.isUserInteractionEnabled = false
+        }
+        .disposed(by: viewModel.disposeBag)
+    
+    commentTextField.rx.text.orEmpty
+      .bind(to: viewModel.commentTextFieldValue)
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.commentTextFieldValue
+      .subscribe(onNext: { [weak self] in
+        self?.commentButton.unableButton(
+          !$0.isEmpty,
+          backgroundColor: .o30,
+          titleColor: .white
+        )
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.isNeedFetch?
+      .asDriver(onErrorJustReturn: true)
+      .drive(onNext: { [weak self] in
+        if $0 {
+          self?.viewModel.fetchCommentDatas()
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
-  func tableViewResizing() {
-    let tableViewHeight = 86 * countComment
-    commentTableView.snp.updateConstraints {
-      $0.height.equalTo(tableViewHeight)
+  func setupActions(){
+    commentButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let postID = self?.viewModel.postDatas.value?.postID,
+              let content = self?.viewModel.commentTextFieldValue.value,
+              let commentID = self?.viewModel.postOrCommentID else { return }
+        let title = self?.commentButton.currentTitle
+        
+        switch title {
+        case "수정":
+          self?.modifyComment(content: content, commentID: commentID)
+        case "등록":
+          self?.createComment(content: content, postID: postID)
+        case .none:
+          return
+        case .some(_):
+          return
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func createComment(content: String, postID: Int) {
+    viewModel.commentManager.createComment(
+      content: content,
+      postID: postID
+    ) { [weak self] success in
+      guard success else { return }
+      self?.settingComment(mode: "생성")
     }
   }
+  
+  func modifyComment(content: String, commentID: Int) {
+    viewModel.commentManager.modifyComment(
+      content: content,
+      commentID: commentID
+    ) { [weak self] success in
+      self?.settingComment(mode: "수정")
+    }
+  }
+  
+  func settingComment(mode: String){
+    viewModel.fetchCommentDatas()
+    let message = mode == "생성" ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
+    viewModel.showToastMessage.accept(message)
+    
+    commentButton.setTitle("등록", for: .normal)
+    commentTextField.text = nil
+    commentTextField.resignFirstResponder()
+  }
 }
+
+extension PostedStudyCommentComponent: CreateUIprotocol {}
+extension PostedStudyCommentComponent: CommentCellDelegate {
+  func menuButtonTapped(in cell: CommentCell, commentId: Int) {
+    viewModel.showBottomSheet.accept(commentId)
+  }
+}
+

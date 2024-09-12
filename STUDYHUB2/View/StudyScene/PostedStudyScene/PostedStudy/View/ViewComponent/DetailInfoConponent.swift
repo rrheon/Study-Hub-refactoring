@@ -1,9 +1,11 @@
 import UIKit
 
 import SnapKit
+import RxSwift
 
-final class PostedStudyDetailInfoComponent: UIView, CreateUIprotocol, Convert {
+final class PostedStudyDetailInfoComponent: UIView {
   let postedValues: PostDetailData
+  let viewModel: PostedStudyViewModel
   
   private lazy var introduceStudyLabel = createLabel(
     title: "소개",
@@ -117,8 +119,9 @@ final class PostedStudyDetailInfoComponent: UIView, CreateUIprotocol, Convert {
     return "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
   }
   
-  init(_ postedValues: PostDetailData) {
-    self.postedValues = postedValues
+  init(_ viewModel: PostedStudyViewModel) {
+    self.viewModel = viewModel
+    self.postedValues = viewModel.postDatas.value!
     super.init(frame: .zero)
     setupLayout()
   }
@@ -162,4 +165,15 @@ final class PostedStudyDetailInfoComponent: UIView, CreateUIprotocol, Convert {
     stackView.alignment = .leading
     return stackView
   }
+  
+  func setupBinding(){
+    viewModel.postDatas
+      .subscribe(onNext: { [weak self] in
+        self?.introduceStudyDeatilLabel.text = $0?.content
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
 }
+
+extension PostedStudyDetailInfoComponent: CreateUIprotocol {}
+extension PostedStudyDetailInfoComponent: Convert {}
