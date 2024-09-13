@@ -1,9 +1,3 @@
-//
-//  PostedStudyViewModel.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 8/13/24.
-//
 
 import Foundation
 
@@ -16,10 +10,8 @@ enum ParticipateAction {
   case goToParticipateVC
 }
 
-protocol PostedStudyViewData {
-  var isUserLogin: Bool { get }
+protocol PostedStudyViewData: CommonViewData {
   var postDetailData: PostDetailData { get }
-  var isNeedFechData: PublishRelay<Bool>? { get }
 }
 
 struct PostedStudyData: PostedStudyViewData {
@@ -27,14 +19,17 @@ struct PostedStudyData: PostedStudyViewData {
   var postDetailData: PostDetailData
   var isNeedFechData: PublishRelay<Bool>?
  
-  init(isUserLogin: Bool ,postDetailData: PostDetailData, isNeedFechData: PublishRelay<Bool>? = nil) {
+  init(isUserLogin: Bool,
+       postDetailData: PostDetailData,
+       isNeedFechData: PublishRelay<Bool>? = nil
+  ) {
     self.isUserLogin = isUserLogin
     self.postDetailData = postDetailData
     self.isNeedFechData = isNeedFechData
   }
 }
 
-final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottomSheet {
+final class PostedStudyViewModel: CommonViewModel {
   let detailPostDataManager = PostDetailInfoManager.shared
   let commentManager = CommentManager.shared
   let userInfoManager = UserInfoManager.shared
@@ -59,6 +54,9 @@ final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottom
   var isNeedFetch: PublishRelay<Bool>?
   var isActivateParticipate = PublishRelay<Bool>()
   var isUserLogined: Bool
+  
+  var showToastMessage = PublishRelay<String>()
+  var showBottomSheet = PublishRelay<Int>()
   
   init(_ data: PostedStudyViewData) {
     self.postedStudyData = data
@@ -145,4 +143,5 @@ final class PostedStudyViewModel: CommonViewModel, BookMarkDelegate, StudyBottom
 }
 
 extension PostedStudyViewModel: PostDataFetching {}
-
+extension PostedStudyViewModel: BookMarkDelegate {}
+extension PostedStudyViewModel: StudyBottomSheet {}

@@ -19,10 +19,12 @@ extension UIButton {
       return objc_getAssociatedObject(self, &AssociatedKeys.titleLabelKey) as? UIView
     }
     set {
-      objc_setAssociatedObject(self,
-                               &AssociatedKeys.titleLabelKey,
-                               newValue,
-                               .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+      objc_setAssociatedObject(
+        self,
+        &AssociatedKeys.titleLabelKey,
+        newValue,
+        .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+      )
     }
   }
   
@@ -68,9 +70,13 @@ extension UIButton {
   func setUnderlineInLoginVC() {
     guard let title = title(for: .normal) else { return }
     let attributedString = NSMutableAttributedString(string: title)
-    attributedString.addAttribute(.underlineStyle,
-                                  value: NSUnderlineStyle.single.rawValue,
-                                  range: NSRange(location: 0, length: title.count)
+    attributedString.addAttribute(
+      .underlineStyle,
+      value: NSUnderlineStyle.single.rawValue,
+      range: NSRange(
+        location: 0,
+        length: title.count
+      )
     )
     setAttributedTitle(attributedString, for: .normal)
   }

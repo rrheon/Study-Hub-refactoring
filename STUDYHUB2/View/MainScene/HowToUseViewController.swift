@@ -138,7 +138,7 @@ final class HowToUseViewController: CommonNavi {
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+      make.top.equalTo(view.safeAreaLayoutGuide)
       make.leading.trailing.bottom.equalTo(view)
     }
   }

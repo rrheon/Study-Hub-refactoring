@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ManagementPost {
+protocol ManagementPost: CommonNetworkingProtocol {
   var postManagementNetworking: PostManager { get }
 }
 
@@ -18,7 +18,19 @@ extension ManagementPost {
 }
 
 protocol CreatePost: ManagementPost {
-  
+  func createPost(_ postData: CreateStudyRequest, completion: @escaping (String) -> Void)
+}
+
+extension CreatePost {
+  func createPost(_ postData: CreateStudyRequest, completion: @escaping (String) -> Void) {
+    commonNetworking.refreshAccessToken {
+      if $0 {
+        self.postManagementNetworking.createPost(createPostDatas: postData) {
+          completion($0)
+        }
+      }
+    }
+  }
 }
 
 protocol ModifyPost: ManagementPost {

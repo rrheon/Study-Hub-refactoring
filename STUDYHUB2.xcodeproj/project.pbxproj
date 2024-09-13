@@ -26,8 +26,7 @@
 		EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADC22AF236260096890F /* BottomSheet.swift */; };
 		EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADC42AF2414C0096890F /* PopUpViewController.swift */; };
 		EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADC62AF241A30096890F /* PopUpView.swift */; };
-		EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADCA2AF25F440096890F /* SearchBarHelper.swift */; };
-		EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADCC2AF26D360096890F /* DepartMentCell.swift */; };
+		EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADCC2AF26D360096890F /* MajorCell.swift */; };
 		EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADCE2AF325F80096890F /* UILabelPadding.swift */; };
 		EE07ADD12AF632B80096890F /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE07ADD02AF632B80096890F /* Calendar.swift */; };
 		EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */; };
@@ -70,6 +69,20 @@
 		EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */; };
 		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
 		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
+		EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908192C787A32006B28A7 /* SearchViewModel.swift */; };
+		EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */; };
+		EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */; };
+		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
+		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
+		EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */; };
+		EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908302C81A002006B28A7 /* SelectMajorView.swift */; };
+		EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908322C81A125006B28A7 /* StudyMemberView.swift */; };
+		EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908342C81A3EE006B28A7 /* StudyWayView.swift */; };
+		EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */; };
+		EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */; };
+		EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */; };
+		EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */; };
+		EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD42B873C3200D365A2 /* NoticeDTO.swift */; };
@@ -147,7 +160,7 @@
 		F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8085D432A81846C0067D4DE /* StudyViewController.swift */; };
 		F86E031F2A8BBAE600164976 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E031E2A8BBAE600164976 /* SearchViewController.swift */; };
 		F86E03212A8BFC8000164976 /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E03202A8BFC8000164976 /* HowToUseViewController.swift */; };
-		F87377592AA850940055B041 /* DepartmentselectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87377582AA850940055B041 /* DepartmentselectViewController.swift */; };
+		F87377592AA850940055B041 /* SeletMajorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87377582AA850940055B041 /* SeletMajorViewController.swift */; };
 		F873775B2AACD41D0055B041 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F873775A2AACD41D0055B041 /* BookmarkViewController.swift */; };
 		F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */; };
 /* End PBXBuildFile section */
@@ -170,14 +183,13 @@
 		EE07ADC22AF236260096890F /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		EE07ADC42AF2414C0096890F /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		EE07ADC62AF241A30096890F /* PopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpView.swift; sourceTree = "<group>"; };
-		EE07ADCA2AF25F440096890F /* SearchBarHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarHelper.swift; sourceTree = "<group>"; };
-		EE07ADCC2AF26D360096890F /* DepartMentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartMentCell.swift; sourceTree = "<group>"; };
+		EE07ADCC2AF26D360096890F /* MajorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorCell.swift; sourceTree = "<group>"; };
 		EE07ADCE2AF325F80096890F /* UILabelPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelPadding.swift; sourceTree = "<group>"; };
 		EE07ADD02AF632B80096890F /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecruitCell.swift; sourceTree = "<group>"; };
 		EE0A8B5B2AF9330F001C3F41 /* DeadLineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadLineCell.swift; sourceTree = "<group>"; };
 		EE0A8B5D2AF9B01C001C3F41 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
-		EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchResultCell.swift; path = ../SearchResultCell.swift; sourceTree = "<group>"; };
 		EE0A8B622AFCB572001C3F41 /* BookMarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkCell.swift; sourceTree = "<group>"; };
 		EE0A8B642AFDDA6E001C3F41 /* MyInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EE0A8B682B04FED3001C3F41 /* PostDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDataManager.swift; sourceTree = "<group>"; };
@@ -218,6 +230,20 @@
 		EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
 		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
+		EE2908192C787A32006B28A7 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
+		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
+		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
+		EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyInfoView.swift; sourceTree = "<group>"; };
+		EE2908302C81A002006B28A7 /* SelectMajorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMajorView.swift; sourceTree = "<group>"; };
+		EE2908322C81A125006B28A7 /* StudyMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyMemberView.swift; sourceTree = "<group>"; };
+		EE2908342C81A3EE006B28A7 /* StudyWayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyWayView.swift; sourceTree = "<group>"; };
+		EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPeriodView.swift; sourceTree = "<group>"; };
+		EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextProtocol.swift; sourceTree = "<group>"; };
+		EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeletMajorViewModel.swift; sourceTree = "<group>"; };
+		EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementDate.swift; sourceTree = "<group>"; };
+		EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarComponent.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -308,9 +334,9 @@
 		F8085D402A815DCD0067D4DE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F8085D432A81846C0067D4DE /* StudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewController.swift; sourceTree = "<group>"; };
 		F8085D452A8184800067D4DE /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
-		F86E031E2A8BBAE600164976 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		F86E031E2A8BBAE600164976 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchViewController.swift; path = ../SearchViewController.swift; sourceTree = "<group>"; };
 		F86E03202A8BFC8000164976 /* HowToUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
-		F87377582AA850940055B041 /* DepartmentselectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartmentselectViewController.swift; sourceTree = "<group>"; };
+		F87377582AA850940055B041 /* SeletMajorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeletMajorViewController.swift; sourceTree = "<group>"; };
 		F873775A2AACD41D0055B041 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatestudyViewController.swift; sourceTree = "<group>"; };
 		FBF19D90E98D2A473BB1FACD /* Pods_STUDYHUB2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_STUDYHUB2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -355,16 +381,17 @@
 			isa = PBXGroup;
 			children = (
 				EE07ADBE2AF0BB360096890F /* NaviHelper.swift */,
-				EE07ADCA2AF25F440096890F /* SearchBarHelper.swift */,
 				EE271F272AD7852900190E7A /* TapBar.swift */,
 				EE07ADCE2AF325F80096890F /* UILabelPadding.swift */,
 				EEDDDD122C6B4AC200FA347D /* CreateUIModel.swift */,
+				EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */,
 				EE07ADBC2AEFF7BD0096890F /* ConvertMajor.swift */,
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
 				EEDDDD1A2C6CA05900FA347D /* Convert.swift */,
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
 				EEDDDD212C71EEF300FA347D /* ManagementPost.swift */,
 				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
+				EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */,
 				EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */,
 				EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */,
 				EE2908032C75D3E2006B28A7 /* FetchDatas.swift */,
@@ -372,13 +399,14 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		EE07ADD22AF632C40096890F /* SelectDepartment */ = {
+		EE07ADD22AF632C40096890F /* SelectMajor */ = {
 			isa = PBXGroup;
 			children = (
-				F87377582AA850940055B041 /* DepartmentselectViewController.swift */,
-				EE07ADCC2AF26D360096890F /* DepartMentCell.swift */,
+				EE07ADCC2AF26D360096890F /* MajorCell.swift */,
+				EE29083A2C86F3D7006B28A7 /* View */,
+				EE29083B2C86F3E1006B28A7 /* ViewModel */,
 			);
-			path = SelectDepartment;
+			path = SelectMajor;
 			sourceTree = "<group>";
 		};
 		EE0A8B582AF93255001C3F41 /* MainScene */ = {
@@ -500,13 +528,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		EE27B44C2C5B709500057475 /* EnterDepartmentScene */ = {
+		EE27B44C2C5B709500057475 /* EnterMajorScene */ = {
 			isa = PBXGroup;
 			children = (
 				EE27B44F2C5B71E700057475 /* View */,
 				EE27B4502C5B71EF00057475 /* ViewModel */,
 			);
-			path = EnterDepartmentScene;
+			path = EnterMajorScene;
 			sourceTree = "<group>";
 		};
 		EE27B44F2C5B71E700057475 /* View */ = {
@@ -564,6 +592,7 @@
 			isa = PBXGroup;
 			children = (
 				F88AB33E2A95236B001D619C /* CreatestudyViewController.swift */,
+				EE29082D2C819AE3006B28A7 /* ViewComponent */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -579,7 +608,8 @@
 		EE2908112C76FD91006B28A7 /* Study */ = {
 			isa = PBXGroup;
 			children = (
-				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+				EE2908292C7DA94C006B28A7 /* View */,
+				EE29082A2C7DA951006B28A7 /* ViewModel */,
 			);
 			path = Study;
 			sourceTree = "<group>";
@@ -613,6 +643,105 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		EE2908172C787A1D006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F86E031E2A8BBAE600164976 /* SearchViewController.swift */,
+				EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */,
+			);
+			name = View;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		EE2908182C787A25006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908192C787A32006B28A7 /* SearchViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE29081B2C78A70B006B28A7 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908172C787A1D006B28A7 /* View */,
+				EE2908182C787A25006B28A7 /* ViewModel */,
+			);
+			name = Search;
+			path = View/Search;
+			sourceTree = "<group>";
+		};
+		EE29081C2C78A71B006B28A7 /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				EE29081D2C78A72B006B28A7 /* View */,
+				EE29081E2C78A734006B28A7 /* ViewModel */,
+			);
+			name = SearchResult;
+			path = View/Search/SearchResult;
+			sourceTree = "<group>";
+		};
+		EE29081D2C78A72B006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29081E2C78A734006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE2908292C7DA94C006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F8085D432A81846C0067D4DE /* StudyViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29082A2C7DA951006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EE29082D2C819AE3006B28A7 /* ViewComponent */ = {
+			isa = PBXGroup;
+			children = (
+				EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */,
+				EE2908302C81A002006B28A7 /* SelectMajorView.swift */,
+				EE2908322C81A125006B28A7 /* StudyMemberView.swift */,
+				EE2908342C81A3EE006B28A7 /* StudyWayView.swift */,
+				EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */,
+				EE07ADD02AF632B80096890F /* Calendar.swift */,
+			);
+			path = ViewComponent;
+			sourceTree = "<group>";
+		};
+		EE29083A2C86F3D7006B28A7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F87377582AA850940055B041 /* SeletMajorViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EE29083B2C86F3E1006B28A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EE35ED6D2B14B7E2008040E2 /* Participate */ = {
 			isa = PBXGroup;
 			children = (
@@ -634,6 +763,7 @@
 			children = (
 				EED00B7D2C539D51000D2E23 /* CommonViewModel.swift */,
 				EEDDDD062C69F4FD00FA347D /* CommonModel.swift */,
+				EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -649,7 +779,7 @@
 				EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */,
 				EE0A8B582AF93255001C3F41 /* MainScene */,
 				F89A01652A87FAE000B4C10D /* StudyScene */,
-				EE3AD8B72C467F01000A8CCA /* SearchView */,
+				EE3AD8B72C467F01000A8CCA /* SearchScene */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
 			);
 			path = View;
@@ -675,14 +805,15 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		EE3AD8B72C467F01000A8CCA /* SearchView */ = {
+		EE3AD8B72C467F01000A8CCA /* SearchScene */ = {
 			isa = PBXGroup;
 			children = (
-				F86E031E2A8BBAE600164976 /* SearchViewController.swift */,
-				EE0A8B5F2AFA7FD2001C3F41 /* SearchResultCell.swift */,
+				EE29081B2C78A70B006B28A7 /* Search */,
+				EE29081C2C78A71B006B28A7 /* SearchResult */,
 			);
-			path = SearchView;
-			sourceTree = "<group>";
+			name = SearchScene;
+			path = "/Users/yong/Desktop/study-hub-iOS-2/STUDYHUB2/View/SearchScene";
+			sourceTree = "<absolute>";
 		};
 		EE7614972C50D4E60008E463 /* LoginScene */ = {
 			isa = PBXGroup;
@@ -907,6 +1038,7 @@
 				EEDDDD102C6B4A5B00FA347D /* DetailInfoConponent.swift */,
 				EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */,
 				EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */,
+				EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -1033,7 +1165,7 @@
 				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
 				EE27B43E2C57876C00057475 /* EnterPasswordScene */,
 				EE27B4452C57EC9F00057475 /* EnterNicknameScene */,
-				EE27B44C2C5B709500057475 /* EnterDepartmentScene */,
+				EE27B44C2C5B709500057475 /* EnterMajorScene */,
 				F8085D3D2A7E9E270067D4DE /* CompleteViewController.swift */,
 			);
 			path = SignupScene;
@@ -1044,8 +1176,6 @@
 			children = (
 				EE29080D2C763592006B28A7 /* View */,
 				EE29080E2C76359A006B28A7 /* ViewModel */,
-				EE07ADD02AF632B80096890F /* Calendar.swift */,
-				EE07ADD22AF632C40096890F /* SelectDepartment */,
 			);
 			path = CreateStudy;
 			sourceTree = "<group>";
@@ -1055,6 +1185,7 @@
 			children = (
 				EE2908112C76FD91006B28A7 /* Study */,
 				F88AB3472A9E71A4001D619C /* CreateStudy */,
+				EE07ADD22AF632C40096890F /* SelectMajor */,
 				EE07ADC82AF2570E0096890F /* PostedStudyScene */,
 			);
 			path = StudyScene;
@@ -1206,13 +1337,17 @@
 			files = (
 				EE02B10C2B15FEEE0092082F /* MyPageViewController.swift in Sources */,
 				EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */,
+				EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */,
 				EE02B10E2B15FEEE0092082F /* MyPostInfoManager.swift in Sources */,
 				EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */,
 				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
 				EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */,
+				EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */,
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
+				EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */,
+				EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */,
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,
@@ -1230,6 +1365,7 @@
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */,
 				EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */,
+				EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
@@ -1263,13 +1399,15 @@
 				EE93562C2B6B874900D662CC /* BookmarkManager.swift in Sources */,
 				EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */,
 				EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */,
-				EE07ADCB2AF25F440096890F /* SearchBarHelper.swift in Sources */,
 				EEDDDD072C69F4FD00FA347D /* CommonModel.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
 				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
+				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
+				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
+				EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
@@ -1283,7 +1421,7 @@
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */,
-				EE07ADCD2AF26D360096890F /* DepartMentCell.swift in Sources */,
+				EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */,
 				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
@@ -1300,15 +1438,19 @@
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
 				EE98B1B02B3C387A0025C4F8 /* FindPasswordViewController.swift in Sources */,
 				EE07AD902AE106460096890F /* CreatePostManager.swift in Sources */,
+				EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */,
+				EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */,
+				EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */,
 				F86E031F2A8BBAE600164976 /* SearchViewController.swift in Sources */,
 				EE1E44112B17222200223436 /* MyPostCell.swift in Sources */,
 				EE0A8B5E2AF9B01C001C3F41 /* UILabel+.swift in Sources */,
 				EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */,
 				EEA53A372C50E43600C8FEFF /* Networking.swift in Sources */,
+				EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */,
 				EE2908042C75D3E2006B28A7 /* FetchDatas.swift in Sources */,
 				EEDDDD242C71EF3600FA347D /* ManagementBookmark.swift in Sources */,
 				EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */,
-				F87377592AA850940055B041 /* DepartmentselectViewController.swift in Sources */,
+				F87377592AA850940055B041 /* SeletMajorViewController.swift in Sources */,
 				EED00B832C54D622000D2E23 /* CheckEmailViewModel.swift in Sources */,
 				EE07ADB52AEFC2B90096890F /* UITextField+.swift in Sources */,
 				EE0A8B602AFA7FD2001C3F41 /* SearchResultCell.swift in Sources */,
@@ -1321,6 +1463,7 @@
 				EEFD5D2A2B600BA600D1CE00 /* UserDTO.swift in Sources */,
 				F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */,
 				EEA53A3B2C51338300C8FEFF /* UITextView+.swift in Sources */,
+				EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */,
 				F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */,
 				EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */,
 				EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */,
@@ -1329,6 +1472,7 @@
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
+				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */,
 				EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */,

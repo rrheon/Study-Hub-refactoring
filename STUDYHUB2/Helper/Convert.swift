@@ -21,27 +21,31 @@ protocol ConvertMajor{
 
 extension ConvertStudyWay {
   func convertStudyWay(wayToStudy: String) -> String {
-    switch wayToStudy {
-    case "CONTACT":
-      return "대면"
-    case "MIX":
-      return "혼합"
-    default:
-      return "비대면"
-    }
+    let mappings: [String: String] = [
+      "CONTACT": "대면",
+      "MIX": "혼합",
+      "UNTACT": "비대면",
+      "대면": "CONTACT",
+      "혼합": "MIX",
+      "비대면": "UNTACT"
+    ]
+    
+    return mappings[wayToStudy, default: "MIX"]
   }
 }
 
 extension ConvertGender {
   func convertGender(gender: String) -> String {
-    switch gender {
-    case "FEMALE":
-      return "여자"
-    case "MALE":
-      return "남자"
-    default:
-      return "무관"
-    }
+    let mappings: [String: String] = [
+      "FEMALE": "여자",
+      "MALE": "남자",
+      "NULL": "무관",
+      "여자": "FEMALE",
+      "남자": "MALE",
+      "무관": "NULL"
+    ]
+    
+    return mappings[gender, default: "NULL"]
   }
 }
 

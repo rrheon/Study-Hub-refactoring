@@ -14,25 +14,30 @@ final class EnterPasswordViewController: CommonNavi {
   private lazy var mainTitleView = AuthTitleView(
     pageNumber: "3/5",
     pageTitle: "비밀번호를 설정해주세요",
-    pageContent: "10자리 이상, 특수문자 포함(!,@,#,$,%,^,&,*,?,~,_)이 필수에요")
+    pageContent: "10자리 이상, 특수문자 포함(!,@,#,$,%,^,&,*,?,~,_)이 필수에요"
+  )
   
   private lazy var passwordTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "비밀번호",
     textFieldPlaceholder: "비밀번호를 입력해주세요",
-    alertLabelTitle: "사용할 수 없는 비밀번호예요. (10자리 이상, 특수문자 포함 필수)")
+    alertLabelTitle: "사용할 수 없는 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
+  )
   
   private lazy var passwordTextField = EnterPasswordTextField(
-    setValue: passwordTextFieldValue)
+    setValue: passwordTextFieldValue
+  )
   
   private lazy var confirmPasswordTextFieldValue = SetAuthTextFieldValue(
     labelTitle: nil,
     textFieldPlaceholder: "비밀번호를 한 번 더 입력해주세요",
-    alertLabelTitle: "비밀번호가 일치하지 않아요")
+    alertLabelTitle: "비밀번호가 일치하지 않아요"
+  )
   
   private lazy var confirmPasswordTextField = EnterPasswordTextField(
     setValue: confirmPasswordTextFieldValue,
     failContent: "비밀번호가 일치하지 않아요",
-    successContent: "비밀번호가 확인되었어요")
+    successContent: "비밀번호가 확인되었어요"
+  )
   
   private lazy var nextButton = StudyHubButton(title: "다음")
   

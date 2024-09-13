@@ -8,18 +8,20 @@
 import UIKit
 
 enum DateFormat: String {
-    case format1 = "yyyy'년' MM'월' dd'일'"
-    case format2 = "yyyy/MM/dd"
-    case format3 = "yyyy-M-d"
+  case format1 = "yyyy'년' MM'월' dd'일'"
+  case format2 = "yyyy/MM/dd"
+  case format3 = "yyyy-M-d"
 }
 
 extension String {
   func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
     let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
-    let boundingBox = self.boundingRect(with: constraintRect,
-                                        options: .usesLineFragmentOrigin,
-                                        attributes: [NSAttributedString.Key.font: font],
-                                        context: nil)
+    let boundingBox = self.boundingRect(
+      with: constraintRect,
+      options: .usesLineFragmentOrigin,
+      attributes: [NSAttributedString.Key.font: font],
+      context: nil
+    )
     return ceil(boundingBox.width)
   }
   

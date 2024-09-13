@@ -26,7 +26,7 @@ class TabBarController: UITabBarController {
     self.delegate = self
      
     let homeVC = addViewController(vc: HomeViewController(checkLoginStatus))
-    let studyVC = addViewController(vc: StudyViewController())
+    let studyVC = addViewController(vc: StudyViewController(loginStatus: checkLoginStatus))
     let mypageVC = addViewController(vc: MyPageViewController())
 
     self.viewControllers = [homeVC, studyVC, mypageVC]

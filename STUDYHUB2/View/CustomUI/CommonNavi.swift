@@ -5,11 +5,12 @@ class CommonNavi: UIViewController {
   
   init() {
     super.init(nibName: nil, bundle: .none)
-    
-    let navigationBarAppearance = UINavigationBarAppearance()
-    navigationBarAppearance.configureWithTransparentBackground()
-    UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-    UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+    let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
+    appearance.configureWithOpaqueBackground()
+    appearance.shadowColor = .black
+    appearance.backgroundColor = .black
+    UINavigationBar.appearance().standardAppearance = appearance
+    UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
   
   required init?(coder: NSCoder) {
@@ -31,7 +32,7 @@ class CommonNavi: UIViewController {
     self.navigationController?.popViewController(animated: true)
   }
   
-  func rightButtonSetting(imgName: String){
+  func rightButtonSetting(imgName: String, activate: Bool = true) {
     let rightButtonImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
     lazy var rightButton = UIBarButtonItem(
       image: rightButtonImg,
@@ -39,7 +40,7 @@ class CommonNavi: UIViewController {
       target: self,
       action: #selector(rightButtonTapped(_:)))
     rightButton.imageInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-    
+    rightButton.isEnabled = activate
     self.navigationItem.rightBarButtonItem = rightButton
   }
   
@@ -47,13 +48,21 @@ class CommonNavi: UIViewController {
   
   // MARK: - 네비게이션 바 제목설정
   
-  func settingNavigationTitle(title: String,
-                              font: String = "Pretendard-Bold",
-                              size: CGFloat = 18){
+  func settingNavigationTitle(
+    title: String,
+    font: String = "Pretendard-Bold",
+    size: CGFloat = 18
+  ) {
     self.navigationItem.title = title
-    self.navigationController?.navigationBar.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.white,
-      NSAttributedString.Key.font: UIFont(name: font, size: size)!
-    ]
+    
+    if let appearance = self.navigationController?.navigationBar.standardAppearance {
+      appearance.titleTextAttributes = [
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.font: UIFont(name: font, size: size)!
+      ]
+      
+      self.navigationController?.navigationBar.standardAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
   }
 }

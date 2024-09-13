@@ -28,6 +28,14 @@ protocol CreateTextField {
   func createTextField(title: String) -> UITextField
 }
 
+protocol CreateButtonInCreatePost {
+  func createButton(title: String) -> UIButton
+}
+
+protocol CreateSearchbar {
+  func createSearchBar(placeholder: String) -> UISearchBar
+}
+
 extension CreateLabel {
   func createLabel(
     title: String,
@@ -81,9 +89,52 @@ extension CreateTextField {
     textField.layer.cornerRadius = 5
     textField.layer.borderColor = UIColor.bg50.cgColor
     textField.layer.borderWidth = 0.5
-//    textField.delegate = self as! any UITextFieldDelegate
     return textField
   }
 }
 
-protocol CreateUIprotocol: CreateLabel, CreateStackView, CreateTextField, CreateDividerLine {}
+extension CreateButtonInCreatePost {
+  func createButton(title: String) -> UIButton {
+    let button = UIButton()
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(UIColor(hexCode: "#A1AAB0"), for: .normal)
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor(hexCode: "#D8DCDE").cgColor
+    button.layer.cornerRadius = 5
+    button.backgroundColor = .white
+    return button
+  }
+}
+
+extension CreateSearchbar {
+  func createSearchBar(placeholder: String) -> UISearchBar {
+    let bar = UISearchBar()
+
+    bar.placeholder = placeholder
+    bar.searchTextField.font = UIFont(name: "Pretendard-Medium", size: 20)
+    
+    if let searchBarTextField = bar.value(forKey: "searchField") as? UITextField {
+      searchBarTextField.font = UIFont.systemFont(ofSize: 14)
+      searchBarTextField.layer.cornerRadius = 10
+      searchBarTextField.layer.masksToBounds = true
+      searchBarTextField.backgroundColor = .white
+      searchBarTextField.layer.borderColor = UIColor.lightGray.cgColor
+      searchBarTextField.layer.borderWidth = 0.5
+    }
+    
+    let searchImg = UIImage(named: "SearchImg")?.withRenderingMode(.alwaysOriginal)
+    bar.setImage(UIImage(), for: UISearchBar.Icon.search, state: .normal)
+    bar.showsBookmarkButton = true
+    bar.setImage(searchImg, for: .bookmark, state: .normal)
+    bar.backgroundImage = UIImage()
+    
+    return bar
+  }
+}
+
+protocol CreateUIprotocol: CreateLabel,
+                           CreateStackView,
+                           CreateTextField,
+                           CreateDividerLine,
+                           CreateButtonInCreatePost,
+                           CreateSearchbar{}

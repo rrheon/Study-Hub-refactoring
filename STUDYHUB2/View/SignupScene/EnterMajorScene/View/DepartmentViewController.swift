@@ -9,9 +9,11 @@ final class DepartmentViewController: CommonNavi {
   let viewModel: EnterDepartmentViewModel
     
   // MARK: - 화면구성
-  private lazy var mainTitleView = AuthTitleView(pageNumber: "5/5",
-                                                 pageTitle:  "학과를 알려주세요",
-                                                 pageContent: nil)
+  private lazy var mainTitleView = AuthTitleView(
+    pageNumber: "5/5",
+    pageTitle:  "학과를 알려주세요",
+    pageContent: nil
+  )
   
   private lazy var textFieldValue = SetAuthTextFieldValue(
     labelTitle: "헉과",
@@ -27,7 +29,7 @@ final class DepartmentViewController: CommonNavi {
 
   private lazy var resultTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(CustomCell.self, forCellReuseIdentifier: CustomCell.cellId)
+    tableView.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
     tableView.backgroundColor = .black
     tableView.separatorInset.left = 0
     tableView.layer.cornerRadius = 10

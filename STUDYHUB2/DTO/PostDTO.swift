@@ -42,7 +42,7 @@ struct Content: Codable {
   let remainingSeat: Int
   let close: Bool
   let userData: UserData
-  let bookmarked: Bool
+  var bookmarked: Bool
   
   enum CodingKeys: String, CodingKey {
     case postID = "postId"

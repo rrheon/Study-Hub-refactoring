@@ -8,7 +8,7 @@ final class SearchResultCell: UICollectionViewCell {
   
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
-   var delegate: BookMarkDelegate?
+  var delegate: BookMarkDelegate?
   
   var model: Content? { didSet { bind() } }
   
@@ -29,7 +29,6 @@ final class SearchResultCell: UICollectionViewCell {
     let button = UIButton()
     button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
     button.addAction(UIAction { _ in
-      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
       self.bookmarkTapped()
     }, for: .touchUpInside)
     return button
@@ -161,8 +160,6 @@ final class SearchResultCell: UICollectionViewCell {
     
     addSubviews()
     configure()
-    
-    closePostUI()
   }
   
   @available(*, unavailable)
@@ -183,18 +180,22 @@ final class SearchResultCell: UICollectionViewCell {
     memberStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     memberStackView.isLayoutMarginsRelativeArrangement = true
     
-    let memeberData = [memberCountImage, countMemeberLabel]
-    for data in memeberData {
-      memberStackView.addArrangedSubview(data)
+    [
+      memberCountImage,
+      countMemeberLabel
+    ].forEach {
+      memberStackView.addArrangedSubview($0)
     }
     
     fineStackView.alignment = .center
     fineStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     fineStackView.isLayoutMarginsRelativeArrangement = true
     
-    let fineData = [fineImage, fineLabel]
-    for data in fineData {
-      fineStackView.addArrangedSubview(data)
+    [
+      fineImage,
+      fineLabel
+    ].forEach {
+      fineStackView.addArrangedSubview($0)
     }
     
     genderStackView.alignment = .center
@@ -202,18 +203,24 @@ final class SearchResultCell: UICollectionViewCell {
     genderStackView.isLayoutMarginsRelativeArrangement = true
     
     let genderSpace = UIView()
-    let genderData = [genderSpace,genderImage, genderLabel]
-    for data in genderData {
-      genderStackView.addArrangedSubview(data)
+    [
+      genderSpace,
+      genderImage,
+      genderLabel
+    ].forEach {
+      genderStackView.addArrangedSubview($0)
     }
     
     infoStackView.backgroundColor = .bg20
     infoStackView.distribution = .fillEqually
     infoStackView.layer.cornerRadius = 10
     
-    let infoData = [memberStackView, fineStackView, genderStackView]
-    for data in infoData {
-      infoStackView.addArrangedSubview(data)
+    [
+      memberStackView,
+      fineStackView,
+      genderStackView
+    ].forEach {
+      infoStackView.addArrangedSubview($0)
     }
     
     [
@@ -286,16 +293,6 @@ final class SearchResultCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
-  func convertGender(gender: String) -> String {
-    if gender == "FEMALE" {
-      return "여자"
-    } else if gender == "MALE" {
-      return "남자"
-    } else {
-      return "무관"
-    }
-  }
-  
   private func bookmarkTapped(){
     self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
     
@@ -307,7 +304,6 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   private func bind() {
-    //    titleLabel.text = model
     guard let data = model else { return }
     
     checkBookmarked = data.bookmarked
@@ -341,8 +337,9 @@ final class SearchResultCell: UICollectionViewCell {
     if let imageURL = URL(string: data.userData.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
             
-      self.profileImageView.kf.setImage(with: imageURL,
-                                        options: [.processor(processor)]) { result in
+      self.profileImageView.kf.setImage(
+        with: imageURL,
+        options: [.processor(processor)]) { result in
         switch result {
         case .success(let value):
           DispatchQueue.main.async {
@@ -355,24 +352,32 @@ final class SearchResultCell: UICollectionViewCell {
         }
       }
     }
+    
+    closePostUI(data.close, countMember: countMember, remainingSeat: data.remainingSeat)
   }
   
-  func closePostUI(){
-    if model?.close == true {
-      majorLabel.textColor = .bg70
-      majorLabel.backgroundColor = .bg30
-      
-      titleLabel.textColor = .bg70
-      periodLabel.textColor = .bg60
-      
-      remainLabel.text = "마감됐어요"
-      remainLabel.textColor = .bg70
-      
-      countMemeberLabel.textColor = .bg70
-      fineLabel.textColor = .bg70
-      genderLabel.textColor = .bg70
-      
-      nickNameLabel.textColor = .bg70
+  func closePostUI(_ postClose: Bool, countMember: Int, remainingSeat: Int){
+    majorLabel.textColor = postClose ? .bg70 : .o50
+    majorLabel.backgroundColor = postClose ? .bg30 : .o10
+    
+    titleLabel.textColor = postClose ? .bg70 : .black
+    periodLabel.textColor = postClose ? .bg60 : .bg80
+    
+    remainLabel.text = postClose ? "마감됐어요" : "\(remainingSeat)자리 남았어요"
+    remainLabel.textColor = postClose ? .bg70 : .o50
+    
+    countMemeberLabel.textColor = postClose ? .bg70 : .bg90
+    
+    if postClose == false {
+      countMemeberLabel.changeColor(wantToChange: "\(countMember)", color: .o50)
     }
+    
+    fineLabel.textColor = postClose ? .bg70 : .bg90
+    genderLabel.textColor = postClose ? .bg70 : .bg90
+    
+    nickNameLabel.textColor = postClose ? .bg70 : .bg90
+    bookMarkButton.isHidden = postClose
   }
 }
+
+extension SearchResultCell: Convert{}

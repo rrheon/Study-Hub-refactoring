@@ -3,19 +3,20 @@ import UIKit
 
 import SnapKit
 
-final class CustomCell: UITableViewCell {
-
-  var model: RecommendList? {
+final class SeletMajorCell: UITableViewCell {
+  
+  var model: String? {
     didSet {
       bind()
     }
   }
-
+  
   var textColor: UIColor? {
     didSet {
       name.textColor = textColor
     }
   }
+  
   static let cellId = "CellId"
   var buttonAction: (() -> Void) = {}
   
@@ -53,9 +54,22 @@ final class CustomCell: UITableViewCell {
       make.centerY.equalTo(self.snp.centerY)
     }
   }
-
+  
   func bind(){
-//    name.text = model?.recommend
+    name.text = model
+  }
+    
+  func setupImage(){
+    let imageView = UIImageView()
+    imageView.image = UIImage(named: "ScearchImgGray")
+    
+    contentView.addSubview(imageView)
+    imageView.snp.makeConstraints { make in
+      make.leading.equalToSuperview()
+      make.centerY.equalTo(contentView)
+    }
+    
+    backgroundColor = .white
   }
 }
 

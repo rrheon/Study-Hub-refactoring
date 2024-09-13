@@ -10,20 +10,26 @@ final class EnterNicknameViewController: CommonNavi {
   let viewModel: EnterNicknameViewModel
   
   // MARK: - 화면구성
-  private lazy var mainTitleView = AuthTitleView(pageNumber: "4/5",
-                                                 pageTitle: "스터디 참여에 필요한 정보를 알려주세요",
-                                                 pageContent: "성별은 추후에 수정이 불가해요")
+  private lazy var mainTitleView = AuthTitleView(
+    pageNumber: "4/5",
+    pageTitle: "스터디 참여에 필요한 정보를 알려주세요",
+    pageContent: "성별은 추후에 수정이 불가해요"
+  )
   
-  private lazy var textFieldValues = SetAuthTextFieldValue(labelTitle: "닉네임",
-                                                           textFieldPlaceholder: "닉네임을 입력해주세요",
-                                                           alertLabelTitle: "")
+  private lazy var textFieldValues = SetAuthTextFieldValue(
+    labelTitle: "닉네임",
+    textFieldPlaceholder: "닉네임을 입력해주세요",
+    alertLabelTitle: ""
+  )
   
   private lazy var nicknameTextField = AuthTextField(setValue: textFieldValues)
   
-  private lazy var checkDuplicationButton = StudyHubButton(title: "중복 확인",
-                                                           fontSize: 14,
-                                                           radious: 4)
-  // 닉네임 세는 라벨
+  private lazy var checkDuplicationButton = StudyHubButton(
+    title: "중복 확인",
+    fontSize: 14,
+    radious: 4
+  )
+
   private lazy var characterCountLabel = createLabel(
     title: "0/10",
     textColor: .bg70,
@@ -147,8 +153,7 @@ final class EnterNicknameViewController: CommonNavi {
     let button = UIButton()
     button.setTitle(title, for: .normal)
     button.setTitleColor(UIColor.g60, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold",
-                                     size: 16)
+    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     button.backgroundColor = .g100
     button.layer.borderWidth = 1
     button.layer.borderColor = UIColor.g80.cgColor

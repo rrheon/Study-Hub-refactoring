@@ -36,9 +36,11 @@ final class PostManager {
   }
   
   func modifyPost(data: UpdateStudyRequest, completion: @escaping (Bool) -> Void){
-    let provider = MoyaProvider<networkingAPI>()
-    provider.request(.modifyMyPost(_data: data)) {
-      switch $0 {
+    commonNetworking.moyaNetworking(
+      networkingChoice: .modifyMyPost(_data: data),
+      needCheckToken: true
+    ) { result in
+      switch result {
       case .success(_):
         completion(true)
       case .failure(_):
