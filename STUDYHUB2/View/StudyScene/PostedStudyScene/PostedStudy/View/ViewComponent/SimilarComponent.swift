@@ -171,6 +171,29 @@ final class SimilarStudyComponent: UIView {
         self?.viewModel.similarCellTapped(postID)
       })
       .disposed(by: viewModel.disposeBag)
+    
+      participateButton.rx.tap
+        .asDriver()
+        .throttle(.seconds(1))
+        .drive(onNext: { [weak self] in
+          guard let self = self else { return }
+          self.viewModel.participateButtonTapped(completion: { action in
+            DispatchQueue.main.async {
+              switch action {
+              case .closed:
+                self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
+              case .goToLoginVC:
+                self.viewModel.moveToLoginVC.accept(true)
+              case .goToParticipateVC:
+                let studyID = self.viewModel.postedStudyData.postDetailData.studyID 
+                self.viewModel.moveToParticipateVC.accept(studyID)
+              case .limitedGender:
+                self.viewModel.showToastMessage.accept("이 스터디는 성별 제한이 있는 스터디예요")
+              }
+            }
+          })
+        })
+        .disposed(by: viewModel.disposeBag)
   }
 }
 

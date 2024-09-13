@@ -1,14 +1,13 @@
 import UIKit
 
 import SnapKit
+import RxCocoa
 
 final class PostedStudyMainComponent: UIView {
-  let postedValues: PostDetailData
   let viewModel: PostedStudyViewModel
+  private lazy var postedValues = viewModel.postedStudyData.postDetailData
   
-  private lazy var createDate = postedValues.createdDate
   private lazy var postedDateLabel = createLabel(
-    title: "\(createDate[0]). \(createDate[1]). \(createDate[2])",
     textColor: .g70,
     fontType: "Pretendard-Medium",
     fontSize: 12
@@ -16,7 +15,6 @@ final class PostedStudyMainComponent: UIView {
   
   private lazy var postedMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
-    label.text = convertMajor(postedValues.major, toEnglish: false)
     label.textColor = .o30
     label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     label.backgroundColor = .o60
@@ -26,14 +24,12 @@ final class PostedStudyMainComponent: UIView {
   }()
   
   private lazy var postedTitleLabel = createLabel(
-    title: postedValues.title,
     textColor: .white,
     fontType: "Pretendard-Bold",
     fontSize: 20
   )
   
   private lazy var availablePersonNum = postedValues.studyPerson - postedValues.remainingSeat
-  
   private lazy var memberNumberStackView = createInfoStack(
     labelText: "팀원수",
     imageName: "MemberNumberImage",
@@ -50,7 +46,7 @@ final class PostedStudyMainComponent: UIView {
   
   private lazy var genderStackView = createInfoStack(
     labelText: "성별",
-    imageName: "GenderImage",
+    imageName: postedValues.filteredGender,
     countText: convertGender(gender: postedValues.filteredGender),
     countColor: .white
   )
@@ -64,16 +60,20 @@ final class PostedStudyMainComponent: UIView {
   
   init(_ viewModel: PostedStudyViewModel) {
     self.viewModel = viewModel
-    self.postedValues = viewModel.postDatas.value!
     
     super.init(frame: .zero)
     setupLayout()
     configureUI()
+    setupBinding()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  
+  // MARK: - setupLayout
+  
   
   private func setupLayout() {
     [
@@ -163,9 +163,7 @@ final class PostedStudyMainComponent: UIView {
       fontType: "Pretendard-SemiBold",
       fontSize: 16
     )
-    
-    changeLabelColor(countLabel)
-    
+        
     let stackView = createStackView(axis: .vertical, spacing: 8)
     
     stackView.alignment = .center
@@ -179,15 +177,64 @@ final class PostedStudyMainComponent: UIView {
     return stackView
   }
   
-  func changeLabelColor(_ label: UILabel) {
+  func changeLabelColor(_ label: UILabel, studyPerson: Int = 0) {
     guard let title = label.text else { return }
     switch title {
     case _ where title.contains("명"):
-      label.changeColor(wantToChange: "/\(postedValues.studyPerson)명", color: .white)
+      label.changeColor(wantToChange: "/\(studyPerson)명", color: .white)
     case _ where title.contains("원"):
       label.changeColor(wantToChange: "원", color: .white)
     default:
       break
+    }
+  }
+  
+  // MARK: - setupBinding
+  
+  func setupBinding(){
+    viewModel.postDatas
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        guard let data = $0 else { return }
+        self?.setupUIData(data)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setupUIData(_ data: PostDetailData){
+    let createdData = data.createdDate
+    postedDateLabel.text =  "\(createdData[0]). \(createdData[1]). \(createdData[2])"
+    postedMajorLabel.text = convertMajor(data.major, toEnglish: false)
+    postedTitleLabel.text = data.title
+
+    let availablePersonNum = data.studyPerson - data.remainingSeat
+    let title = "\(availablePersonNum) /\(data.studyPerson)명"
+    changeLabelTextInStackView(memberNumberStackView, title: title, studyPerson: data.studyPerson)
+    changeLabelTextInStackView(fineStackView, title: "\(data.penalty)원")
+    
+    let convertedGender = convertGender(gender: data.filteredGender)
+    changeLabelTextInStackView(genderStackView, title: convertedGender)
+    changeImageInStackView(genderStackView, gender: data.filteredGender)
+  }
+  
+  func changeLabelTextInStackView(_ stackView: UIStackView, title: String, studyPerson: Int = 0){
+    if let titleLabel = stackView.arrangedSubviews.last as? UILabel {
+      titleLabel.text = title
+      studyPerson != 0 ? changeLabelColor(
+        titleLabel,
+        studyPerson: studyPerson
+      ) : changeLabelColor(
+        titleLabel
+      )
+    }
+  }
+  
+  func changeImageInStackView(_ stackView: UIStackView, gender: String){
+    for view in stackView.arrangedSubviews {
+      if let imageView = view as? UIImageView {
+        imageView.image = UIImage(named: convertGenderImage(gender))
+        break
+      }
     }
   }
 }

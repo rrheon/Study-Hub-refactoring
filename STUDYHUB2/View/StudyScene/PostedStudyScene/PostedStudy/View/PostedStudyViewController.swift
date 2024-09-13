@@ -5,6 +5,7 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
+// 각 요소들 바인딩 제대로 하기, 데이터가 들어왔을 때
 final class PostedStudyViewController: CommonNavi{
   let viewModel: PostedStudyViewModel
   
@@ -46,7 +47,6 @@ final class PostedStudyViewController: CommonNavi{
     
     setupDelegate()
     setupBindings()
-    addActions()
     
     setUpLayout()
     makeUI()
@@ -125,19 +125,18 @@ final class PostedStudyViewController: CommonNavi{
         }
       })
       .disposed(by: viewModel.disposeBag)
-    
-    // 게시글 삭제 후 나가고 토스트 팝업 띄우면 될듯 어떻게하실?
-    
+        
     viewModel.dataFromPopupView
       .subscribe(onNext: { [weak self] action in
         guard let self = self else { return }
         switch action {
         case .deletePost:
           viewModel.deleteMyPost {
-            self.navigationController?.popViewController(animated: true)
+            self.navigationController?.popViewController(animated: false)
+            self.showToast(message: "삭제가 완료됐어요.")
           }
         case .editPost:
-          guard let postData = viewModel.postDatas.value else { return }
+          let postData = viewModel.postDatas
           let modifyVC = CreateStudyViewController(postData)
           modifyVC.hidesBottomBarWhenPushed = true
           navigationController?.pushViewController(modifyVC, animated: true)
@@ -187,43 +186,22 @@ final class PostedStudyViewController: CommonNavi{
         self?.present(bottomSheetVC, animated: true, completion: nil)
       })
       .disposed(by: viewModel.disposeBag)
-  }
-  
-  // MARK: - addActions
-  
-  func addActions(){
-    commentComponent.moveToCommentViewButton.rx.tap
+    
+    viewModel.moveToCommentVC
       .subscribe(onNext: { [weak self] in
-        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
-        let commentVC = CommentViewController(
-          postId: postID,
-          nickname: self?.viewModel.userNickanme,
-          isNeedFetch: self?.viewModel.isNeedFetch ?? nil
-        )
-        commentVC.hidesBottomBarWhenPushed = true
-        self?.navigationController?.pushViewController(commentVC, animated: true)
+        self?.navigationController?.pushViewController($0, animated: true)
       })
       .disposed(by: viewModel.disposeBag)
     
-    similarStudyComponent.participateButton.rx.tap
-      .asDriver()
-      .throttle(.seconds(1))
-      .drive(onNext: { [weak self] in
-        self?.viewModel.participateButtonTapped(completion: { action in
-          DispatchQueue.main.async {
-            switch action {
-            case .closed:
-              self?.showToast(message: "이미 마감된 스터디예요", alertCheck: false)
-            case .goToLoginVC:
-              self?.goToLoginVC()
-            case .goToParticipateVC:
-              guard let studyID = self?.viewModel.postedStudyData.postDetailData.studyID else { return }
-              self?.goToParticipateVC(studyID: studyID)
-            case .limitedGender:
-              self?.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요", alertCheck: false)
-            }
-          }
-        })
+    viewModel.moveToLoginVC
+      .subscribe(onNext: { [weak self] _ in
+        self?.goToLoginVC()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.moveToParticipateVC
+      .subscribe(onNext: { [weak self] in
+        self?.goToParticipateVC(studyID: $0)
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -267,7 +245,6 @@ final class PostedStudyViewController: CommonNavi{
       self.dismiss(animated: true)
     }
   }
-  
 }
 
 // MARK: - extension

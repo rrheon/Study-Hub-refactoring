@@ -22,7 +22,7 @@ final class CreateStudyViewController: CommonNavi {
   
   let scrollView = UIScrollView()
   
-  init(_ postedData: PostDetailData? = nil){
+  init(_ postedData: BehaviorRelay<PostDetailData?>? = nil) {
     self.viewModel = CreateStudyViewModel(postedData)
     self.studyInfoView = StudyInfoView(viewModel)
     self.seletMajorView = SelectMajorView(viewModel)

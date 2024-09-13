@@ -13,6 +13,7 @@ protocol ConvertStudyWay {
 
 protocol ConvertGender {
   func convertGender(gender: String) -> String
+  func convertGenderImage(_ gender: String) -> String
 }
 
 protocol ConvertMajor{
@@ -46,6 +47,17 @@ extension ConvertGender {
     ]
     
     return mappings[gender, default: "NULL"]
+  }
+  
+  func convertGenderImage(_ gender: String) -> String{
+    switch gender {
+    case "MALE":
+      return "MenGenderImage"
+    case "FEMALE":
+      return "GenderImage"
+    default:
+      return "GenderMixImg"
+    }
   }
 }
 

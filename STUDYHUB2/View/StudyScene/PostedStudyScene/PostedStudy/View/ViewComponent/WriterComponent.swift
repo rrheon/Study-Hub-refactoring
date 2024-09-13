@@ -1,11 +1,11 @@
 import UIKit
 
 import SnapKit
+import RxCocoa
 
 final class PostedStudyWriterComponent: UIView {
   let viewModel: PostedStudyViewModel
-  let postedValues: PostDetailData
-  
+
   private lazy var divideLineTopWriterLabel = createDividerLine(height: 8.0)
   private lazy var writerLabel = createLabel(
     title: "작성자",
@@ -24,14 +24,12 @@ final class PostedStudyWriterComponent: UIView {
   }()
   
   private lazy var writerMajorLabel = createLabel(
-    title: convertMajor(postedValues.postedUser.major, toEnglish: false) ?? "비어있음",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
   )
   
   private lazy var nickNameLabel = createLabel(
-    title: postedValues.postedUser.nickname,
     textColor: .black,
     fontType: "Pretendard-Medium",
     fontSize: 16
@@ -69,9 +67,9 @@ final class PostedStudyWriterComponent: UIView {
   
   init(_ viewModel: PostedStudyViewModel) {
     self.viewModel = viewModel
-    self.postedValues = viewModel.postDatas.value!
     super.init(frame: .zero)
     self.setupLayout()
+    self.setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -101,6 +99,21 @@ final class PostedStudyWriterComponent: UIView {
     totalWriterInfoStackView.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
+  }
+  
+  func setupBinding(){
+    viewModel.postDatas
+      .asDriver()
+      .drive(onNext: {[weak self] in
+        guard let data = $0 else { return }
+        self?.setupUIData(data)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setupUIData(_ data: PostDetailData){
+    writerMajorLabel.text = convertMajor(data.major, toEnglish: false)
+    nickNameLabel.text = data.postedUser.nickname
   }
 }
 extension PostedStudyWriterComponent: CreateUIprotocol {}
