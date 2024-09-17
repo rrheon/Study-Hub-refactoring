@@ -31,9 +31,9 @@ final class HowToUseViewController: CommonNavi {
     return scrollView
   }()
   
-  init(_ loginStatus: Bool) {
+  override init(_ loginStatus: Bool) {
     self.loginStatus = loginStatus
-    super.init()
+    super.init(true)
   }
   
   required init?(coder: NSCoder) {

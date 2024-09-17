@@ -169,6 +169,13 @@ final class CreateStudyViewModel: CommonViewModel {
     let changedDate = convertedDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
     return changedDate
   }
+  
+  func comparePostData() -> Bool{
+    let request = createPostValue()
+    let detail = postedData.value
+    
+    return request == detail?.toCreateStudyRequest()
+  }
 }
 
 extension CreateStudyViewModel: ManagementDate {}

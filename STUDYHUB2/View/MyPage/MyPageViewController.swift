@@ -462,12 +462,19 @@ final class MyPageViewController: NaviHelper {
   // MARK: - 로그인화면 or 상세페이지 이동
   @objc func chevronButtonTapped() {
     if loginStatus == false {
-      let loginVC = LoginViewController()
-      loginVC.modalPresentationStyle = .overFullScreen
-      self.present(loginVC, animated: true, completion: nil)
+      navigationController?.popToRootViewController(animated: false)
+      
+      tabBarController?.dismiss(animated: false) {
+        DispatchQueue.main.async {
+          let loginVC = LoginViewController()
+          loginVC.modalPresentationStyle = .overFullScreen
+          self.present(loginVC, animated: true, completion: nil)
+        }
+      }
       
       return
     }
+
     
     let myinformVC = MyInformViewController()
     myinformVC.previousVC = self

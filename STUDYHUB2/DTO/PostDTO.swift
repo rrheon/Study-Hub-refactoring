@@ -1,9 +1,3 @@
-//
-//  PostDTO.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 2024/01/23.
-//
 
 import Foundation
 
@@ -123,6 +117,7 @@ struct CreateStudyRequest: Codable {
   var studyStartDate, studyWay, title: String
 }
 
+
 // MARK: - 게시글 수정 시
 
 struct UpdateStudyRequest: Codable {
@@ -192,4 +187,30 @@ struct Sort: Codable {
 
 struct PostResponse: Codable {
   let response: String
+}
+
+
+extension CreateStudyRequest: Equatable {}
+
+extension PostDetailData {
+  func toCreateStudyRequest() -> CreateStudyRequest {
+    return CreateStudyRequest(
+      chatUrl: self.chatURL,
+      close: self.close,
+      content: self.content,
+      gender: self.filteredGender,
+      major: self.major,
+      penalty: self.penalty,
+      penaltyWay: self.penaltyWay,
+      studyEndDate: formatDate(self.studyEndDate),
+      studyPerson: self.studyPerson,
+      studyStartDate: formatDate(self.studyStartDate),
+      studyWay: self.studyWay,
+      title: self.title
+    )
+  }
+  
+  private func formatDate(_ date: [Int]) -> String {
+    return String(format: "%04d-%02d-%02d", date[0], date[1], date[2])
+  }
 }

@@ -94,6 +94,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
       $0.leading.equalTo(chatLinkLabel)
     }
     
+    chatLinkTextField.clearButtonMode = .whileEditing
     chatLinkTextField.snp.makeConstraints {
       $0.top.equalTo(chatLinkdescriptionLabel.snp.bottom).offset(17)
       $0.leading.equalTo(chatLinkLabel)
@@ -156,6 +157,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     chatLinkTextField.text = postValue.chatURL
     studytitleTextField.text = postValue.title
     studyIntroduceTextView.text = postValue.content
+    studyIntroduceTextView.textColor = .black
   }
   
   func textFieldDidBeginEditing(_ textField: UITextField) {

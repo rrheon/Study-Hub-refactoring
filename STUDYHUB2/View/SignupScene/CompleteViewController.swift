@@ -64,6 +64,8 @@ final class CompleteViewController: UIViewController {
   
   // MARK: - 함수
   @objc func startButtonTapped() {
+    navigationController?.viewControllers.removeAll()
+    
     let viewController = LoginViewController()
     
     let navigationController = UINavigationController(rootViewController: viewController)

@@ -54,7 +54,9 @@ final class PostedStudyViewController: CommonNavi{
   
   func setupNavigation(){
     leftButtonSetting()
-    rightButtonSetting(imgName: "RightButtonImg")
+    if let isUsersPost = viewModel.postDatas.value?.usersPost, isUsersPost {
+      rightButtonSetting(imgName: "RightButtonImg")
+    }
   }
   
   // MARK: - setUpLayout
@@ -97,10 +99,11 @@ final class PostedStudyViewController: CommonNavi{
       $0.leading.trailing.equalToSuperview()
     }
     
+    let height = viewModel.postDatas.value?.usersPost ?? false ? 280 : 408
     similarStudyComponent.snp.makeConstraints {
       $0.top.equalTo(commentComponent.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
-      $0.height.equalTo(408)
+      $0.height.equalTo(height)
     }
     
     pageStackView.snp.makeConstraints {
@@ -237,13 +240,6 @@ final class PostedStudyViewController: CommonNavi{
     
     showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
     present(bottomSheetVC, animated: true, completion: nil)
-  }
-  
-  func deleteMyPost(){
-    guard let postID = self.viewModel.postDatas.value?.postID else { return }
-    viewModel.deleteMyPost(postID) { _ in
-      self.dismiss(animated: true)
-    }
   }
 }
 

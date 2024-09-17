@@ -25,11 +25,8 @@ final class SimilarStudyComponent: UIView {
     return view
   }()
   
-  lazy var similarPostStackView: UIStackView = createStackView(axis: .vertical, spacing: 20)
-  private lazy var bottomButtonStackView: UIStackView = createStackView(
-    axis: .horizontal,
-    spacing: 10
-  )
+  lazy var similarPostStackView = createStackView(axis: .vertical, spacing: 20)
+  private lazy var bottomButtonStackView = createStackView(axis: .horizontal, spacing: 10)
   
   lazy var bookmarkButton: UIButton = {
     let button = UIButton()
@@ -79,28 +76,30 @@ final class SimilarStudyComponent: UIView {
     bottomButtonStackView.distribution = .fillProportionally
     bottomButtonStackView.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
     bottomButtonStackView.isLayoutMarginsRelativeArrangement = true
-    
-    bookmarkButton.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(8)
-      $0.leading.equalToSuperview().offset(20)
-      $0.width.equalTo(45)
-      $0.height.equalTo(55)
-    }
-    
-    participateButton.snp.makeConstraints {
-      $0.top.equalTo(bookmarkButton)
-      $0.leading.equalTo(bookmarkButton.snp.trailing).offset(40)
-      $0.trailing.equalToSuperview().offset(-20)
-      $0.height.equalTo(55)
-    }
-    
+  
     similarPostStackView.snp.makeConstraints {
       $0.top.leading.trailing.equalToSuperview()
     }
     
-    bottomButtonStackView.snp.makeConstraints {
-      $0.top.equalTo(similarPostStackView.snp.bottom).offset(10)
-      $0.leading.trailing.equalToSuperview()
+    if let isUsersPost = viewModel.postDatas.value?.usersPost, !isUsersPost {
+      bookmarkButton.snp.makeConstraints {
+        $0.top.equalToSuperview().offset(8)
+        $0.leading.equalToSuperview().offset(20)
+        $0.width.equalTo(45)
+        $0.height.equalTo(55)
+      }
+      
+      participateButton.snp.makeConstraints {
+        $0.top.equalTo(bookmarkButton)
+        $0.leading.equalTo(bookmarkButton.snp.trailing).offset(40)
+        $0.trailing.equalToSuperview().offset(-20)
+        $0.height.equalTo(55)
+      }
+      
+      bottomButtonStackView.snp.makeConstraints {
+        $0.top.equalTo(similarPostStackView.snp.bottom).offset(10)
+        $0.leading.trailing.equalToSuperview()
+      }
     }
   }
   
@@ -172,28 +171,28 @@ final class SimilarStudyComponent: UIView {
       })
       .disposed(by: viewModel.disposeBag)
     
-      participateButton.rx.tap
-        .asDriver()
-        .throttle(.seconds(1))
-        .drive(onNext: { [weak self] in
-          guard let self = self else { return }
-          self.viewModel.participateButtonTapped(completion: { action in
-            DispatchQueue.main.async {
-              switch action {
-              case .closed:
-                self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
-              case .goToLoginVC:
-                self.viewModel.moveToLoginVC.accept(true)
-              case .goToParticipateVC:
-                let studyID = self.viewModel.postedStudyData.postDetailData.studyID 
-                self.viewModel.moveToParticipateVC.accept(studyID)
-              case .limitedGender:
-                self.viewModel.showToastMessage.accept("이 스터디는 성별 제한이 있는 스터디예요")
-              }
+    participateButton.rx.tap
+      .asDriver()
+      .throttle(.seconds(1))
+      .drive(onNext: { [weak self] in
+        guard let self = self else { return }
+        self.viewModel.participateButtonTapped(completion: { action in
+          DispatchQueue.main.async {
+            switch action {
+            case .closed:
+              self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
+            case .goToLoginVC:
+              self.viewModel.moveToLoginVC.accept(true)
+            case .goToParticipateVC:
+              let studyID = self.viewModel.postedStudyData.postDetailData.studyID
+              self.viewModel.moveToParticipateVC.accept(studyID)
+            case .limitedGender:
+              self.viewModel.showToastMessage.accept("이 스터디는 성별 제한이 있는 스터디예요")
             }
-          })
+          }
         })
-        .disposed(by: viewModel.disposeBag)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
 }
 

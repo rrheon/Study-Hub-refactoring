@@ -30,20 +30,23 @@ final class CreateStudyViewController: CommonNavi {
     self.studyWayView = StudyWayView(viewModel)
     self.studyPeroioudView = StudyPeriodView(viewModel)
 
-    super.init()
+    super.init(true)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
+  
   // MARK: - viewDidLoad
+
+    
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     
     setupNavigationbar()
-        
+    
     setUpLayout()
     makeUI()
     
@@ -116,6 +119,16 @@ final class CreateStudyViewController: CommonNavi {
     settingNavigationTitle(title: navigationTitle)
   }
   
+  override func leftButtonTapped(_ sender: UIBarButtonItem) {
+    guard let _ = viewModel.postedData.value else {
+      super.leftButtonTapped(sender)
+      return
+    }
+    
+    viewModel.comparePostData() ? super.leftButtonTapped(sender) : backButtonTapped()
+  }
+
+  
   // MARK: - setupBinding
   
   func setupBinding() {
@@ -133,7 +146,6 @@ final class CreateStudyViewController: CommonNavi {
         self.seletMajorView.snp.updateConstraints {
           $0.height.equalTo(height)
         }
-        uiAnimation()
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -145,7 +157,6 @@ final class CreateStudyViewController: CommonNavi {
         self.studyWayView.snp.updateConstraints {
           $0.height.equalTo(height)
         }
-        uiAnimation()
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -192,17 +203,30 @@ final class CreateStudyViewController: CommonNavi {
     }
   }
   
-  func uiAnimation(){
-    UIView.animate(withDuration: 0.3) {
-      self.view.layoutIfNeeded()
-    }
-  }
-  
   @objc func calendarButtonTapped() {
     let calendarVC = CalendarViewController(viewModel: viewModel)
 
     showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
     self.present(calendarVC, animated: true, completion: nil)
+  }
+  
+  func backButtonTapped(){
+    self.view.endEditing(true)
+    
+    let popupVC = PopupViewController(
+      title: "수정을 취소할까요?",
+      desc: "취소할 시 내용이 저장되지 않아요",
+      leftButtonTitle: "아니요",
+      rightButtonTilte: "네"
+    )
+    popupVC.modalPresentationStyle = .overFullScreen
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: false) {
+        self.navigationController?.popViewController(animated: true)
+      }
+    }
+    self.present(popupVC, animated: true)
   }
 }
 
