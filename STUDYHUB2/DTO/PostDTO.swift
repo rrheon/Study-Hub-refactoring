@@ -63,7 +63,7 @@ struct PostDetailData: Codable {
   let studyID: Int
   let postedUser: PostedUser
   let relatedPost: [RelatedPost]
-  let close, apply, usersPost, bookmarked: Bool
+  var close, apply, usersPost, bookmarked: Bool
   
   enum CodingKeys: String, CodingKey {
     case postID = "postId"

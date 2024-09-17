@@ -87,15 +87,19 @@ final class CreateStudyViewModel: CommonViewModel {
           introduce,
           major,
           studyWay,
-          gender].allSatisfy {
+          gender,
+        ].allSatisfy {
             $0?.isEmpty == false
           }
         let isDatesSelected = startDate != "선택하기" && endDate != "선택하기"
         let isFineDataValid = isFine && !fineType.isEmpty && fineAmount > 0
         let isNoFineDataValid = isNoFine && fineType.isEmpty && fineAmount == 0
         
+        guard let member = member else { return }
+        let checkMemeber = 0 < member && member < 51
+       
         if isDataFilled &&
-            member != nil &&
+            checkMemeber &&
             isDatesSelected &&
             (isFineDataValid || isNoFineDataValid) {
           self.isCompleteButtonActivate.accept(true)

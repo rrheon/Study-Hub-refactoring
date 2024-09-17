@@ -33,16 +33,18 @@ final class ParticipateManager{
   // MARK: - 스터디 신청
   func participateStudy(introduce: String,
                         studyId: Int,
-                        completion: @escaping () -> Void){
-    commonNetworing.moyaNetworking(networkingChoice: .participateStudy(introduce: introduce,
-                                                                       studyId: studyId),
-                                   needCheckToken: true) { result in
+                        completion: @escaping (Bool) -> Void){
+    commonNetworing.moyaNetworking(
+      networkingChoice: .participateStudy(introduce: introduce, studyId: studyId),
+      needCheckToken: true
+    ) { result in
       switch result {
       case .success(let response):
         print(response.response)
-        completion()
+        completion(true)
       case .failure(let response):
         print(response.response)
+        completion(false)
       }
     }
   }

@@ -1,31 +1,20 @@
-//
-//  ParticipateVC.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 2024/01/22.
-//
-
 import UIKit
 
 import SnapKit
+import RxRelay
 
-final class ParticipateVC: NaviHelper {
-  
-  let participateManager = ParticipateManager.shared
-  let postDeatilManager = PostDetailInfoManager.shared
-  let userDataManager = UserInfoManager.shared
-  
-  var beforeVC: PostedStudyViewController?
-  
-  var studyId: Int = 0
-  var postId: Int = 0
+final class ParticipateVC: CommonNavi {
+  let viewModel: ParticipateViewModel
   
   // MARK: - UI세팅
+  
+  
   private lazy var titleLabel = createLabel(
     title: "자기소개나 스터디에 대한 의지를 스터디 팀장에게 알려 주세요! 💬",
     textColor: .black,
     fontType: "Pretendard",
-    fontSize: 16)
+    fontSize: 16
+  )
   
   private lazy var reasonTextView: UITextView = {
     let textView = UITextView()
@@ -52,40 +41,37 @@ final class ParticipateVC: NaviHelper {
     title: "- 수락 여부는 알림으로 알려드려요\n- 채팅방 링크는 ‘마이페이지-참여한 스터디’에서 확인할 수 있어요",
     textColor: .bg60,
     fontType: "Pretendard",
-    fontSize: 12)
-  
-  private lazy var completeButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("완료", for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.backgroundColor = .o30
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
-    button.addAction(UIAction { _ in
-      self.completeButtonTapped()
-    }, for: .touchUpInside)
-    button.isEnabled = false
-    button.layer.cornerRadius = 10
-    return button
-  }()
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    print("1")
-    
+    fontSize: 12
+  )
+
+  private lazy var completeButton = StudyHubButton(title: "완료")
+
+  init(_ postData: BehaviorRelay<PostDetailData?>) {
+    self.viewModel = ParticipateViewModel(postData)
+    super.init()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
   
-  
   // MARK: - viewDidLoad
+
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
     view.backgroundColor = .white
     
-    navigationItemSetting()
+    setupNavigationbar()
     
     changeTitleLabelColor()
     
     setupLayout()
     makeUI()
+    
+    setupAction()
+    setupBinding()
   }
   
   // MARK: - setupLayout
@@ -128,6 +114,7 @@ final class ParticipateVC: NaviHelper {
       $0.leading.equalTo(completeButton)
     }
     
+    completeButton.unableButton(false, backgroundColor: .o30, titleColor: .white)
     completeButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-40)
       $0.leading.equalToSuperview().offset(20)
@@ -137,42 +124,78 @@ final class ParticipateVC: NaviHelper {
   }
   
   // MARK: - 네비게이션 세팅
-  override func navigationItemSetting() {
-    super.navigationItemSetting()
-    
-    settingNavigationTitle(title: "참여하기",
-                           font: "Pretendard-Bold",
-                           size: 18)
-    navigationItem.rightBarButtonItem = .none
+  
+  
+  func setupNavigationbar() {
+    leftButtonSetting()
+    settingNavigationTitle(title: "참여하기")
   }
   
   // MARK: - 메인라벨 텍스트 색상 변경
+  
+  
   func changeTitleLabelColor(){
     titleLabel.changeColor(wantToChange: "자기소개", color: .o50)
-    titleLabel.changeColor(wantToChange: "스터디에 대한 의지",color: .o50)
+    titleLabel.changeColor(wantToChange: "스터디에 대한 의지", color: .o50)
   }
   
-  // MARK: - 완료버튼 tapped
+  // MARK: - setupBinding
+  
+  
+  func setupBinding(){
+    viewModel.isSuccessParticipate
+      .asDriver(onErrorJustReturn: false)
+      .drive(onNext: { [weak self] in
+        if $0 {
+          self?.navigationController?.popViewController(animated: true)
+          self?.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.userIntroduce
+      .asDriver(onErrorJustReturn: "")
+      .drive(onNext: { [weak self] in
+        let buttonHidden = $0.count > 0 ? true : false
+        let buttonBackgroundColor: UIColor = $0.count > 0 ? .o50 : .o30
+        self?.completeButton.unableButton(
+          buttonHidden,
+          backgroundColor: buttonBackgroundColor,
+          titleColor: .white)
+      })
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  func setupAction(){
+    completeButton.rx.tap
+      .subscribe(onNext: { [ weak self] in
+        self?.completeButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    reasonTextView.rx.text.orEmpty
+        .filter { [weak self] _ in
+            return self?.reasonTextView.textColor == UIColor.black
+        }
+        .bind(to: viewModel.userIntroduce)
+        .disposed(by: viewModel.disposeBag)
+
+  }
+  
   func completeButtonTapped(){
     guard let text = reasonTextView.text else { return }
-    
+  
     if text.count < 10 {
       showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
     } else {
-      self.participateManager.participateStudy(introduce: text, studyId: self.studyId) {
-        
-        DispatchQueue.main.async {
-          self.navigationController?.popViewController(animated: true)
-          self.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
-          //              self.beforeVC?.participateCheck = true
-          //              self.beforeVC?.redrawUI()
-        }
-      }
+      viewModel.participateButtonTapped(text)
     }
   }
 }
 
 // MARK: - textview
+
+
 extension ParticipateVC {
   override func textViewDidBeginEditing(_ textView: UITextView) {
     if textView.textColor == UIColor.bg70 {
@@ -196,9 +219,11 @@ extension ParticipateVC {
     }
   }
   
-  func textView(_ textView: UITextView,
-                shouldChangeTextIn range: NSRange,
-                replacementText text: String) -> Bool {
+  func textView(
+    _ textView: UITextView,
+    shouldChangeTextIn range: NSRange,
+    replacementText text: String
+  ) -> Bool {
     let currentText = textView.text ?? ""
     guard let stringRange = Range(range, in: currentText) else { return false }
     

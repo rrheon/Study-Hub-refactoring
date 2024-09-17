@@ -108,6 +108,7 @@
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
 		EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */; };
+		EEC5FF692C994BEE00896FEB /* ParticipateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF682C994BEE00896FEB /* ParticipateViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -279,6 +280,7 @@
 		EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseBottomSheet.swift; sourceTree = "<group>"; };
 		EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusePersonCell.swift; sourceTree = "<group>"; };
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
+		EEC5FF682C994BEE00896FEB /* ParticipateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -368,7 +370,6 @@
 			children = (
 				EE2908072C762E94006B28A7 /* PostedStudy */,
 				EE2908082C762EDE006B28A7 /* Comment */,
-				EEFD5D312B654A5900D1CE00 /* Participate */,
 			);
 			path = PostedStudyScene;
 			sourceTree = "<group>";
@@ -395,14 +396,14 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		EE07ADD22AF632C40096890F /* SelectMajor */ = {
+		EE07ADD22AF632C40096890F /* SelectMajorScene */ = {
 			isa = PBXGroup;
 			children = (
 				EE07ADCC2AF26D360096890F /* MajorCell.swift */,
 				EE29083A2C86F3D7006B28A7 /* View */,
 				EE29083B2C86F3E1006B28A7 /* ViewModel */,
 			);
-			path = SelectMajor;
+			path = SelectMajorScene;
 			sourceTree = "<group>";
 		};
 		EE0A8B582AF93255001C3F41 /* MainScene */ = {
@@ -601,13 +602,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		EE2908112C76FD91006B28A7 /* Study */ = {
+		EE2908112C76FD91006B28A7 /* StudyScene */ = {
 			isa = PBXGroup;
 			children = (
 				EE2908292C7DA94C006B28A7 /* View */,
 				EE29082A2C7DA951006B28A7 /* ViewModel */,
 			);
-			path = Study;
+			path = StudyScene;
 			sourceTree = "<group>";
 		};
 		EE2908122C770BAC006B28A7 /* ServiceScene */ = {
@@ -824,9 +825,6 @@
 			isa = PBXGroup;
 			children = (
 				EED00B712C5342DD000D2E23 /* CommonNavi.swift */,
-				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
-				EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */,
-				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
 				EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */,
 			);
 			path = CustomUI;
@@ -912,6 +910,32 @@
 				EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */,
 			);
 			path = Wait;
+			sourceTree = "<group>";
+		};
+		EEC5FF662C994BCE00896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FF672C994BD300896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FF682C994BEE00896FEB /* ParticipateViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */ = {
+			isa = PBXGroup;
+			children = (
+				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
+				EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */,
+				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
+			);
+			path = SignupCustomUI;
 			sourceTree = "<group>";
 		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
@@ -1065,12 +1089,13 @@
 			path = DTO;
 			sourceTree = "<group>";
 		};
-		EEFD5D312B654A5900D1CE00 /* Participate */ = {
+		EEFD5D312B654A5900D1CE00 /* ParticipateScene */ = {
 			isa = PBXGroup;
 			children = (
-				EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */,
+				EEC5FF662C994BCE00896FEB /* View */,
+				EEC5FF672C994BD300896FEB /* ViewModel */,
 			);
-			path = Participate;
+			path = ParticipateScene;
 			sourceTree = "<group>";
 		};
 		F4E2C96E19FEA11B39F5379C /* Frameworks */ = {
@@ -1130,6 +1155,7 @@
 			isa = PBXGroup;
 			children = (
 				EE27B43C2C55419B00057475 /* SignupViewModel.swift */,
+				EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */,
 				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
 				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
 				EE27B43E2C57876C00057475 /* EnterPasswordScene */,
@@ -1140,22 +1166,23 @@
 			path = SignupScene;
 			sourceTree = "<group>";
 		};
-		F88AB3472A9E71A4001D619C /* CreateStudy */ = {
+		F88AB3472A9E71A4001D619C /* CreateStudyScene */ = {
 			isa = PBXGroup;
 			children = (
 				EE29080D2C763592006B28A7 /* View */,
 				EE29080E2C76359A006B28A7 /* ViewModel */,
 			);
-			path = CreateStudy;
+			path = CreateStudyScene;
 			sourceTree = "<group>";
 		};
 		F89A01652A87FAE000B4C10D /* StudyScene */ = {
 			isa = PBXGroup;
 			children = (
-				EE2908112C76FD91006B28A7 /* Study */,
-				F88AB3472A9E71A4001D619C /* CreateStudy */,
-				EE07ADD22AF632C40096890F /* SelectMajor */,
+				EE2908112C76FD91006B28A7 /* StudyScene */,
+				F88AB3472A9E71A4001D619C /* CreateStudyScene */,
+				EE07ADD22AF632C40096890F /* SelectMajorScene */,
 				EE07ADC82AF2570E0096890F /* PostedStudyScene */,
+				EEFD5D312B654A5900D1CE00 /* ParticipateScene */,
 			);
 			path = StudyScene;
 			sourceTree = "<group>";
@@ -1321,6 +1348,7 @@
 				EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */,
 				EE5B2FD72B886BFE00D365A2 /* CommnetManager.swift in Sources */,
 				EE02B1162B15FEEE0092082F /* ParticipateCell.swift in Sources */,
+				EEC5FF692C994BEE00896FEB /* ParticipateViewModel.swift in Sources */,
 				EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
 				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,
