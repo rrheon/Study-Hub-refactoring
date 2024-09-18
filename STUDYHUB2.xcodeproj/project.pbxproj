@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		903CF32160A1EDD2ADE8AA03 /* Pods_STUDYHUB2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD0AEF76B97F2D81A35C2224 /* Pods_STUDYHUB2.framework */; };
-		EE02B10C2B15FEEE0092082F /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E852B103C2300C23AB4 /* MyPageViewController.swift */; };
 		EE02B10E2B15FEEE0092082F /* MyPostInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E8A2B103C2300C23AB4 /* MyPostInfoManager.swift */; };
 		EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */; };
 		EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E972B107B7100C23AB4 /* WaitCell.swift */; };
@@ -109,6 +108,11 @@
 		EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+.swift */; };
 		EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */; };
 		EEC5FF692C994BEE00896FEB /* ParticipateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF682C994BEE00896FEB /* ParticipateViewModel.swift */; };
+		EEC5FF6F2C995E5000896FEB /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF6E2C995E5000896FEB /* UserInfoView.swift */; };
+		EEC5FF712C995E9A00896FEB /* UserActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF702C995E9A00896FEB /* UserActivityView.swift */; };
+		EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF722C995EB200896FEB /* ServiceView.swift */; };
+		EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF742C9960B600896FEB /* ManagementImage.swift */; };
+		EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF772C9963D800896FEB /* MyPageViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -270,7 +274,6 @@
 		EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTitleView.swift; sourceTree = "<group>"; };
 		EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementViewModel.swift; sourceTree = "<group>"; };
 		EEB51E842B103C2300C23AB4 /* UserInfoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoManager.swift; sourceTree = "<group>"; };
-		EEB51E852B103C2300C23AB4 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPageViewController.swift; path = ../MyPageViewController.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditnicknameViewController.swift; sourceTree = "<group>"; };
 		EEB51E8A2B103C2300C23AB4 /* MyPostInfoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPostInfoManager.swift; sourceTree = "<group>"; };
@@ -281,6 +284,11 @@
 		EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusePersonCell.swift; sourceTree = "<group>"; };
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
 		EEC5FF682C994BEE00896FEB /* ParticipateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateViewModel.swift; sourceTree = "<group>"; };
+		EEC5FF6E2C995E5000896FEB /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
+		EEC5FF702C995E9A00896FEB /* UserActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActivityView.swift; sourceTree = "<group>"; };
+		EEC5FF722C995EB200896FEB /* ServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceView.swift; sourceTree = "<group>"; };
+		EEC5FF742C9960B600896FEB /* ManagementImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementImage.swift; sourceTree = "<group>"; };
+		EEC5FF772C9963D800896FEB /* MyPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -390,6 +398,7 @@
 				EEDDDD232C71EF3600FA347D /* ManagementBookmark.swift */,
 				EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */,
 				EE0B6D0F2C74759E00FEFEBA /* ManagementComment.swift */,
+				EEC5FF742C9960B600896FEB /* ManagementImage.swift */,
 				EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */,
 				EE2908032C75D3E2006B28A7 /* FetchDatas.swift */,
 			);
@@ -881,7 +890,6 @@
 			isa = PBXGroup;
 			children = (
 				EE1E44152B172ACB00223436 /* MyPostViewController.swift */,
-				EEB51E852B103C2300C23AB4 /* MyPageViewController.swift */,
 				EE1E44102B17222200223436 /* MyPostCell.swift */,
 				EEB51E962B107B5600C23AB4 /* Participants */,
 			);
@@ -936,6 +944,42 @@
 				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
 			);
 			path = SignupCustomUI;
+			sourceTree = "<group>";
+		};
+		EEC5FF6B2C995C7400896FEB /* MyPageScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FF6C2C995C7C00896FEB /* View */,
+				EEC5FF762C9963CB00896FEB /* ViewModel */,
+			);
+			path = MyPageScene;
+			sourceTree = "<group>";
+		};
+		EEC5FF6C2C995C7C00896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */,
+				EEC5FF6D2C995E1300896FEB /* ViewComponent */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FF6D2C995E1300896FEB /* ViewComponent */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FF6E2C995E5000896FEB /* UserInfoView.swift */,
+				EEC5FF702C995E9A00896FEB /* UserActivityView.swift */,
+				EEC5FF722C995EB200896FEB /* ServiceView.swift */,
+			);
+			path = ViewComponent;
+			sourceTree = "<group>";
+		};
+		EEC5FF762C9963CB00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FF772C9963D800896FEB /* MyPageViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
@@ -1190,11 +1234,11 @@
 		F89A01662A87FAF600B4C10D /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
-				EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */,
-				EE1E44172B18635600223436 /* MyParticipateStudy */,
-				EEDD81102B7DE2780022302E /* MyRequestList */,
+				EEC5FF6B2C995C7400896FEB /* MyPageScene */,
 				EEB51E862B103C2300C23AB4 /* InfomationView */,
 				EEB51E892B103C2300C23AB4 /* MyPostView */,
+				EE1E44172B18635600223436 /* MyParticipateStudy */,
+				EEDD81102B7DE2780022302E /* MyRequestList */,
 				EE2908122C770BAC006B28A7 /* ServiceScene */,
 			);
 			path = MyPage;
@@ -1331,7 +1375,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE02B10C2B15FEEE0092082F /* MyPageViewController.swift in Sources */,
 				EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */,
 				EE02B10E2B15FEEE0092082F /* MyPostInfoManager.swift in Sources */,
 				EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */,
@@ -1372,10 +1415,13 @@
 				EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */,
 				EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */,
 				EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */,
+				EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */,
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
+				EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */,
 				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */,
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
+				EEC5FF6F2C995E5000896FEB /* UserInfoView.swift in Sources */,
 				EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */,
 				EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */,
 				EEDDDD2B2C7340B300FA347D /* StudyBottomSheet.swift in Sources */,
@@ -1386,6 +1432,7 @@
 				EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */,
 				EE07ADBD2AEFF7BD0096890F /* ConvertMajor.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */,
+				EEC5FF712C995E9A00896FEB /* UserActivityView.swift in Sources */,
 				EEDDDD112C6B4A5B00FA347D /* DetailInfoConponent.swift in Sources */,
 				F80421922A7D6816006C6B87 /* AppDelegate.swift in Sources */,
 				EEDD80FD2B6D12990022302E /* InquiryViewController.swift in Sources */,
@@ -1417,6 +1464,7 @@
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* EditPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */,
+				EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */,
 				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,

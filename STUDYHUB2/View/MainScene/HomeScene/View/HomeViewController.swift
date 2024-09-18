@@ -225,6 +225,8 @@ final class HomeViewController: CommonNavi {
   }
   
   // MARK: - 네비게이션바 재설정
+  
+  
   func redesignNavigationbar(){
     leftButtonSetting(imgName: "LogoImage", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
@@ -285,7 +287,7 @@ final class HomeViewController: CommonNavi {
     viewModel.isNeedFetchDatas
       .asDriver(onErrorJustReturn: true)
       .drive(onNext: { [weak self] in
-        if $0 {
+        if $0 == true{
           self?.viewModel.fetchNewPostDatas()
           self?.viewModel.fetchDeadLinePostDatas()
         }

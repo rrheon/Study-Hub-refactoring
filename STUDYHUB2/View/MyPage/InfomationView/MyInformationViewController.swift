@@ -162,11 +162,11 @@ final class MyInformViewController: NaviHelper {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    if self.isMovingFromParent {
-      previousVC?.changedUserNickname = nickname
-      previousVC?.changedUserMajor = major
-      previousVC?.fetchUserData()
-    }
+//    if self.isMovingFromParent {
+//      previousVC?.changedUserNickname = nickname
+//      previousVC?.changedUserMajor = major
+//      previousVC?.fetchUserData()
+//    }
   }
   
   

@@ -61,7 +61,7 @@ final class StudyViewController: CommonNavi {
   
   private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
   
-  init(loginStatus: Bool){
+  override init(_ loginStatus: Bool){
     self.viewModel = StudyViewModel(loginStatus: loginStatus)
     super.init()
   }
