@@ -9,7 +9,7 @@ import UIKit
 
 protocol CreateLabel {
   func createLabel(
-    title: String,
+    title: String?,
     textColor: UIColor,
     fontType: String,
     fontSize: CGFloat
@@ -38,7 +38,7 @@ protocol CreateSearchbar {
 
 extension CreateLabel {
   func createLabel(
-    title: String,
+    title: String? = "",
     textColor: UIColor,
     fontType: String,
     fontSize: CGFloat

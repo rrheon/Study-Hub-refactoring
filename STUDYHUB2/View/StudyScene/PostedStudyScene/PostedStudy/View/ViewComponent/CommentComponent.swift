@@ -51,6 +51,9 @@ final class PostedStudyCommentComponent: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // MARK: - setupLayout
+  
+  
   private func setupLayout() {
     commentLabelStackView.addArrangedSubview(commentLabel)
     commentLabelStackView.addArrangedSubview(moveToCommentViewButton)
@@ -70,6 +73,9 @@ final class PostedStudyCommentComponent: UIView {
       addSubview($0)
     }
   }
+  
+  // MARK: - makeUI
+  
   
   private func makeUI() {
     commentTableView.snp.makeConstraints {
@@ -111,6 +117,9 @@ final class PostedStudyCommentComponent: UIView {
       $0.leading.trailing.equalToSuperview()
     }
   }
+  
+  // MARK: -  setupBinding
+  
   
   func setupBinding(){
     viewModel.countComment
@@ -168,6 +177,9 @@ final class PostedStudyCommentComponent: UIView {
       .disposed(by: viewModel.disposeBag)
   }
   
+  // MARK: - setupActions
+  
+  
   func setupActions(){
     commentButton.rx.tap
       .subscribe(onNext: { [weak self] in
@@ -186,6 +198,19 @@ final class PostedStudyCommentComponent: UIView {
         case .some(_):
           return
         }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    moveToCommentViewButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
+        let commentVC = CommentViewController(
+          postId: postID,
+          nickname: self?.viewModel.userNickanme,
+          isNeedFetch: self?.viewModel.isNeedFetch ?? nil
+        )
+        commentVC.hidesBottomBarWhenPushed = true
+        self?.viewModel.moveToCommentVC.accept(commentVC)
       })
       .disposed(by: viewModel.disposeBag)
   }

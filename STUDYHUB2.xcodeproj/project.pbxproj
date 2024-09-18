@@ -70,8 +70,6 @@
 		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
 		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
 		EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908192C787A32006B28A7 /* SearchViewModel.swift */; };
-		EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */; };
-		EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */; };
 		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
 		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
 		EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */; };
@@ -231,8 +229,6 @@
 		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
 		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
 		EE2908192C787A32006B28A7 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
-		EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
 		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
 		EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyInfoView.swift; sourceTree = "<group>"; };
@@ -671,32 +667,6 @@
 			path = View/Search;
 			sourceTree = "<group>";
 		};
-		EE29081C2C78A71B006B28A7 /* SearchResult */ = {
-			isa = PBXGroup;
-			children = (
-				EE29081D2C78A72B006B28A7 /* View */,
-				EE29081E2C78A734006B28A7 /* ViewModel */,
-			);
-			name = SearchResult;
-			path = View/Search/SearchResult;
-			sourceTree = "<group>";
-		};
-		EE29081D2C78A72B006B28A7 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				EE29081F2C78A74B006B28A7 /* SearchResultViewController.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		EE29081E2C78A734006B28A7 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				EE2908212C78A75D006B28A7 /* SearchResultViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		EE2908292C7DA94C006B28A7 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -809,7 +779,6 @@
 			isa = PBXGroup;
 			children = (
 				EE29081B2C78A70B006B28A7 /* Search */,
-				EE29081C2C78A71B006B28A7 /* SearchResult */,
 			);
 			name = SearchScene;
 			path = "/Users/yong/Desktop/study-hub-iOS-2/STUDYHUB2/View/SearchScene";
@@ -1337,7 +1306,6 @@
 			files = (
 				EE02B10C2B15FEEE0092082F /* MyPageViewController.swift in Sources */,
 				EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */,
-				EE2908202C78A74B006B28A7 /* SearchResultViewController.swift in Sources */,
 				EE02B10E2B15FEEE0092082F /* MyPostInfoManager.swift in Sources */,
 				EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */,
 				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
@@ -1407,7 +1375,6 @@
 				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
-				EE2908222C78A75D006B28A7 /* SearchResultViewModel.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,

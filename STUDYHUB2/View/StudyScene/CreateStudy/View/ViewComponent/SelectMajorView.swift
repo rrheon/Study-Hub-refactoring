@@ -142,6 +142,8 @@ final class SelectMajorView: UIView {
     selectedMajorLabel.isHidden = true
     cancelButton.isHidden = true
     
+    viewModel.selectedMajor.accept(nil)
+    
     self.layoutIfNeeded()
   }
 }

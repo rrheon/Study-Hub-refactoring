@@ -43,15 +43,16 @@ final class CreateStudyViewModel: CommonViewModel {
   var isSuccessCreateStudy = PublishRelay<String>()
   var isSuccessModifyStudy = PublishRelay<Bool>()
   
-  init(_ data: PostDetailData?) {
+  init(_ data: BehaviorRelay<PostDetailData?>? = nil) {
     super.init()
-    setPostedData(data)
+    
+    if let data = data {
+      self.postedData = data
+    }
+    
     setupBindings()
   }
-  
-  func setPostedData(_ data: PostDetailData?) {
-    self.postedData.accept(data)
-  }
+
   
   func setupBindings() {
     let basicInfo = Observable.combineLatest(
@@ -151,9 +152,12 @@ final class CreateStudyViewModel: CommonViewModel {
         self.isSuccessCreateStudy.accept($0)
       }
     case "PUT":
-      let value = updatePostValue()
-      return modifyMyPost(value) {
+      let updateRequestValue = updatePostValue()
+      return modifyMyPost(updateRequestValue) {
         self.isSuccessModifyStudy.accept($0)
+        self.fetchSinglePostDatas(updateRequestValue.postId) { updatedPostValue in
+          self.postedData.accept(updatedPostValue)
+        }
       }
     default:
       return
@@ -165,10 +169,17 @@ final class CreateStudyViewModel: CommonViewModel {
     let changedDate = convertedDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
     return changedDate
   }
+  
+  func comparePostData() -> Bool{
+    let request = createPostValue()
+    let detail = postedData.value
+    
+    return request == detail?.toCreateStudyRequest()
+  }
 }
 
 extension CreateStudyViewModel: ManagementDate {}
 extension CreateStudyViewModel: ConvertMajor {}
 extension CreateStudyViewModel: CreatePost {}
 extension CreateStudyViewModel: ModifyPost {}
-
+extension CreateStudyViewModel: PostDataFetching {}

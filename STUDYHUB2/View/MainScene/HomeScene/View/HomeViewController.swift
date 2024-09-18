@@ -87,9 +87,9 @@ final class HomeViewController: CommonNavi {
   private lazy var totalStackView = createStackView(axis: .vertical, spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
   
-  init(_ loginStatus: Bool) {
+  override init(_ loginStatus: Bool) {
     self.viewModel = HomeViewModel(loginStatus: loginStatus)
-    super.init()
+    super.init(true)
   }
   
   required init?(coder: NSCoder) {
@@ -102,7 +102,7 @@ final class HomeViewController: CommonNavi {
     
     view.backgroundColor = .black
     
-    commonNetworking.delegate = self
+//    commonNetworking.delegate = self
     
     setupBindings()
     setupCollectionView()
@@ -130,23 +130,20 @@ final class HomeViewController: CommonNavi {
     ].forEach {
       newStudyTopStackView.addArrangedSubview($0)
     }
-    
-    let spaceView = UIView()
-    
+        
     [
       newStudyTopStackView,
-      spaceView,
+      UIView(),
       recrutingCollectionView
     ].forEach {
       newStudyTotalStackView.addArrangedSubview($0)
     }
     
-    let spaceView1 = UIView()
     
     [
       deadLineImg,
       deadLineLabel,
-      spaceView1
+      UIView()
     ].forEach {
       deadLineStackView.addArrangedSubview($0)
     }

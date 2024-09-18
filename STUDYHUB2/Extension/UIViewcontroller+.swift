@@ -210,7 +210,7 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       make.trailing.equalTo(toastContainer).offset(-16)
     }
     
-    UIView.animate(withDuration: 2.0, delay: 0.1, options: .curveEaseOut, animations: {
+    UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
       toastContainer.alpha = 0.0
     }, completion: { _ in
       toastContainer.removeFromSuperview()

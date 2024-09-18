@@ -4,9 +4,8 @@ import SnapKit
 import RxSwift
 
 final class PostedStudyDetailInfoComponent: UIView {
-  let postedValues: PostDetailData
   let viewModel: PostedStudyViewModel
-  
+
   private lazy var introduceStudyLabel = createLabel(
     title: "소개",
     textColor: .bg90,
@@ -15,7 +14,6 @@ final class PostedStudyDetailInfoComponent: UIView {
   )
   
   lazy var introduceStudyDeatilLabel = createLabel(
-    title: "스터디에 대해 알려주세요\n (운영 방법, 대면 여부,벌금,공부 인증 방법 등)",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -31,7 +29,6 @@ final class PostedStudyDetailInfoComponent: UIView {
   )
   
   private lazy var periodLabel = createLabel(
-    title: periodText,
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -45,7 +42,6 @@ final class PostedStudyDetailInfoComponent: UIView {
   )
   
   private lazy var fineAmountLabel = createLabel(
-    title: "결석비 \(postedValues.penalty)원",
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -59,7 +55,6 @@ final class PostedStudyDetailInfoComponent: UIView {
   )
   
   private lazy var meetLabel = createLabel(
-    title: convertStudyWay(wayToStudy: postedValues.studyWay),
     textColor: .bg80,
     fontType: "Pretendard-Medium",
     fontSize: 14
@@ -74,7 +69,6 @@ final class PostedStudyDetailInfoComponent: UIView {
   
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
-    label.text = convertMajor(postedValues.major, toEnglish: false)
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     label.backgroundColor = .bg30
@@ -113,17 +107,11 @@ final class PostedStudyDetailInfoComponent: UIView {
     return stackView
   }()
   
-  private var periodText: String {
-    let startDate = postedValues.studyStartDate
-    let endDate = postedValues.studyEndDate
-    return "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
-  }
-  
   init(_ viewModel: PostedStudyViewModel) {
     self.viewModel = viewModel
-    self.postedValues = viewModel.postDatas.value!
     super.init(frame: .zero)
     setupLayout()
+    setupBinding()
   }
   
   required init?(coder: NSCoder) {
@@ -169,9 +157,24 @@ final class PostedStudyDetailInfoComponent: UIView {
   func setupBinding(){
     viewModel.postDatas
       .subscribe(onNext: { [weak self] in
-        self?.introduceStudyDeatilLabel.text = $0?.content
+        guard let data = $0 else { return }
+        self?.setupUIData(data)
       })
       .disposed(by: viewModel.disposeBag)
+  }
+  
+  func getPeriodText(_ data: PostDetailData) -> String {
+    let startDate = data.studyStartDate
+    let endDate = data.studyEndDate
+    return "\(startDate[0]). \(startDate[1]). \(startDate[2]) ~ \(endDate[0]). \(endDate[1]). \(endDate[2])"
+  }
+  
+  func setupUIData(_ data: PostDetailData){
+    introduceStudyDeatilLabel.text = data.content
+    periodLabel.text = getPeriodText(data)
+    fineAmountLabel.text = "\(data.penaltyWay) \(data.penalty)원"
+    meetLabel.text = convertStudyWay(wayToStudy: data.studyWay)
+    majorLabel.text = convertMajor(data.major, toEnglish: false)
   }
 }
 

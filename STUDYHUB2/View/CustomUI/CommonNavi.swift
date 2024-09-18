@@ -3,14 +3,9 @@ import UIKit
 
 class CommonNavi: UIViewController {
   
-  init() {
+  init(_ scroll: Bool = false) {
     super.init(nibName: nil, bundle: .none)
-    let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
-    appearance.configureWithOpaqueBackground()
-    appearance.shadowColor = .black
-    appearance.backgroundColor = .black
-    UINavigationBar.appearance().standardAppearance = appearance
-    UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    settingNavigationbar(scroll)
   }
   
   required init?(coder: NSCoder) {
@@ -62,7 +57,27 @@ class CommonNavi: UIViewController {
       ]
       
       self.navigationController?.navigationBar.standardAppearance = appearance
-      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+//      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
   }
+  
+  func settingNavigationbar(_ scroll: Bool) {
+    let appearance = UINavigationBarAppearance()
+    appearance.configureWithOpaqueBackground()
+    appearance.shadowColor = .black
+    appearance.backgroundColor = .black
+    
+    appearance.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.white,
+      NSAttributedString.Key.font: UIFont(name: "Pretendard-Bold", size: 18)!
+    ]
+    
+    let navigationBar = UINavigationBar.appearance()
+    navigationBar.standardAppearance = appearance
+    
+    if scroll {
+      navigationBar.scrollEdgeAppearance = appearance
+    }
+  }
+
 }

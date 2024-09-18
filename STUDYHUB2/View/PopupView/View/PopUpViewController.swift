@@ -31,6 +31,7 @@ final class PopupViewController: UIViewController {
       rightButtonTitle: rightButtonTilte,
       checkEndButton: checkEndButton
     )
+    
     super.init(nibName: nil, bundle: nil)
     
     self.view.backgroundColor = .lightGray.withAlphaComponent(0.8)
@@ -57,9 +58,11 @@ final class PopupViewController: UIViewController {
     }
     
     self.popupView.rightButtonAction = { [weak self] in
-      guard let self = self,
-            let selectedAction = selectedAction else { return }
-      viewModel.dataSubject.accept(selectedAction)
+      guard let self = self else { return }
+      if let selectedAction = selectedAction {
+        viewModel.dataSubject.accept(selectedAction)
+      }
+      
       self.dismiss(animated: true, completion: nil)
     }
     

@@ -375,8 +375,9 @@ extension StudyViewController: AfterCreatePost {
         postDetailData: result
       )
       let postedVC = PostedStudyViewController(postedData)
-      
+      postedVC.hidesBottomBarWhenPushed = true
       self.navigationController?.pushViewController(postedVC, animated: false)
+      
       self.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
     }
   }

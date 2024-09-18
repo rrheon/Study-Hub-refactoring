@@ -411,7 +411,8 @@ final class MyInformViewController: NaviHelper {
       
       self?.dismiss(animated: true) {
         self?.bookmarkList.removeAll()
-        
+        self?.navigationController?.popToRootViewController(animated: true)
+
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .overFullScreen
         self?.present(loginVC, animated: true, completion: nil)

@@ -57,6 +57,9 @@ final class PostedStudyViewModel: CommonViewModel {
   
   var showToastMessage = PublishRelay<String>()
   var showBottomSheet = PublishRelay<Int>()
+  var moveToCommentVC = PublishRelay<CommentViewController>()
+  var moveToLoginVC = PublishRelay<Bool>()
+  var moveToParticipateVC = PublishRelay<Int>()
   
   init(_ data: PostedStudyViewData) {
     self.postedStudyData = data

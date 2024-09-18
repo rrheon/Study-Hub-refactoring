@@ -218,7 +218,13 @@ final class LoginViewController: UIViewController {
       return
     }
     
-    emailTextField.alertLabelSetting(hidden: true, title: "", textColor: .g100, underLineColor: .g100)
+    emailTextField.alertLabelSetting(
+      hidden: true,
+      title: "",
+      textColor: .g100,
+      underLineColor: .g100
+    )
+    
     passwordTextField.alertLabelSetting(
       hidden: true,
       title: "",
