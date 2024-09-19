@@ -1,21 +1,33 @@
-//
-//  MyPageViewModel.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 9/17/24.
-//
 
 import Foundation
 
 import RxRelay
 
+enum UserActivity {
+  case writtenButton
+  case participateStudyButton
+  case requestListButton
+}
+
+enum Service {
+  case notice
+  case inquiry
+  case howToUse
+  case termsOfService
+  case privacyPolicy
+}
+
 final class MyPageViewModel: CommonViewModel {
   let userInfoManager = UserInfoManager.shared
-
+  let tokenManager = TokenManager.shared
+  
   var userData = BehaviorRelay<UserDetailData?>(value: nil)
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
-
   var managementProfileButton = PublishRelay<Bool>()
+  
+  var isNeedFetch = PublishRelay<Bool>()
+  var uesrActivityTapped = PublishRelay<UserActivity>()
+  var serviceTapped = PublishRelay<Service>()
   
   init(_ checkLoginStatus: Bool) {
     self.checkLoginStatus.accept(checkLoginStatus)
@@ -29,6 +41,18 @@ final class MyPageViewModel: CommonViewModel {
     userInfoManager.getUserInfo { result in
       self.userData.accept(result)
     }
+  }
+  
+  func deleteToken(){
+    tokenManager.deleteTokens()
+  }
+  
+  func seletUserActivity(_ seletedActivity: UserActivity){
+    uesrActivityTapped.accept(seletedActivity)
+  }
+  
+  func seletService(_ seletedService: Service) {
+    serviceTapped.accept(seletedService)
   }
 }
 

@@ -2,53 +2,20 @@
 import UIKit
 
 import SnapKit
-import Kingfisher
-// 전처리
-#if DEBUG
-
-import SwiftUI
-@available(iOS 13.0, *)
-
-// UIViewControllerRepresentable을 채택
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    // update
-    // _ uiViewController: UIViewController로 지정
-    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
-        
-    }
-    // makeui
-    func makeUIViewController(context: Context) -> UIViewController {
-    // Preview를 보고자 하는 Viewcontroller 이름
-    // e.g.)
-
-      return MyPageViewController(true)
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    
-    @available(iOS 13.0, *)
-    static var previews: some View {
-        // UIViewControllerRepresentable에 지정된 이름.
-        ViewControllerRepresentable()
-
-// 테스트 해보고자 하는 기기
-            .previewDevice("iPhone 11")
-    }
-}
-#endif
+import RxSwift
 
 final class MyPageViewController: CommonNavi {
   let viewModel: MyPageViewModel
   
   private var userInfoView: UserInfoView
   private var userActivityView: UserActivityView
-  private lazy var serviceView = ServiceView()
+  private var serviceView: ServiceView
   
   override init(_ checkLoginStatus: Bool) {
     self.viewModel = MyPageViewModel(checkLoginStatus)
     self.userInfoView = UserInfoView(viewModel)
     self.userActivityView = UserActivityView(viewModel)
+    self.serviceView = ServiceView(viewModel)
     super.init()
   }
   
@@ -63,10 +30,15 @@ final class MyPageViewController: CommonNavi {
     setupNavigationbar()
     setupLayout()
     makeUI()
+    
+    setupBinding()
+    setupActions()
   }
 
+  // MARK: - setupLayout
+  
+  
   func setupLayout(){
-    // 추가하기 전에 addSubview 체크
     [
       userInfoView,
       userActivityView,
@@ -78,19 +50,19 @@ final class MyPageViewController: CommonNavi {
 
   func makeUI(){
     userInfoView.snp.makeConstraints {
-      $0.top.equalTo(view.safeAreaLayoutGuide).offset(24)
-      $0.leading.equalToSuperview().offset(10)
-      $0.trailing.equalToSuperview().offset(-10)
+      $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
+      $0.leading.trailing.equalToSuperview().inset(10)
+      $0.height.equalTo(60)
     }
     
     userActivityView.snp.makeConstraints {
-      $0.top.equalTo(userInfoView.snp.bottom)
+      $0.top.equalTo(userInfoView.snp.bottom).offset(30)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(119)
     }
     
     serviceView.snp.makeConstraints {
-      $0.top.equalTo(userActivityView.snp.bottom).offset(110)
+      $0.top.equalTo(userActivityView.snp.bottom).offset(10)
       $0.leading.equalTo(userInfoView.snp.leading).offset(15)
       $0.height.equalTo(250)
     }
@@ -100,16 +72,88 @@ final class MyPageViewController: CommonNavi {
     leftButtonSetting(imgName: "MyPageImg", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
   }
-}
+  
+// MARK: - setupBinding
+  
+  
+  func setupBinding(){
+   
+  }
+  
+  
+  // MARK: - setupActions
+  
+  
+  func setupActions(){
+    viewModel.managementProfileButton
+      .subscribe(onNext: { [weak self] loginStatus in
+        guard let self = self else { return }
+        switch loginStatus {
+        case true:
+          moveToMyInfoVC()
+        case false :
+          moveToLoginVC()
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.uesrActivityTapped
+      .subscribe(onNext: { [weak self] seleted in
+        switch seleted {
+        case .writtenButton:
+          self?.moveToOtherVCWithSameNavi(vc: MyPostViewController(), hideTabbar: true)
+        case .participateStudyButton:
+          self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(), hideTabbar: true)
+        case .requestListButton:
+          self?.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(), hideTabbar: true)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.serviceTapped
+      .subscribe(onNext: { [weak self] seleted in
+        guard let loginStatus = self?.viewModel.checkLoginStatus.value else { return }
+        switch seleted {
+        case .notice:
+          self?.moveToOtherVCWithSameNavi(vc: NotificationViewController(), hideTabbar: true)
+        case .inquiry:
+          self?.moveToOtherVCWithSameNavi(vc: InquiryViewController(), hideTabbar: true)
+        case .howToUse:
+          self?.moveToOtherVCWithSameNavi(vc: HowToUseViewController(loginStatus), hideTabbar: true)
+        case .termsOfService:
+          self?.moveToOtherVCWithSameNavi(vc: ServiceUseInfoViewContrller(), hideTabbar: true)
+        case .privacyPolicy:
+          self?.moveToOtherVCWithSameNavi(vc: PersonalInfoViewController(), hideTabbar: true)
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
 
+  }
   
-//  override func rightButtonTapped(_ sender: UIBarButtonItem) {
-//    let data = BookMarkData(
-//      loginStatus: viewModel.checkLoginStatus.value,
-//      isNeedFetch: nil
-//    )
-//    moveToBookmarkView(sender, data: data)
-//  }
+  func moveToLoginVC() {
+    viewModel.deleteToken()
+    
+    let loginVC = LoginViewController()
+    loginVC.modalPresentationStyle = .overFullScreen
+    
+    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+       let window = windowScene.windows.first {
+      window.rootViewController = loginVC
+    }
+  }
   
+  func moveToMyInfoVC(){
+    let myinformVC = MyInformViewController()
+    self.navigationController?.pushViewController(myinformVC, animated: true)
+  }
+  
+  override func rightButtonTapped(_ sender: UIBarButtonItem) {
+    let data = BookMarkData(
+      loginStatus: viewModel.checkLoginStatus.value,
+      isNeedFetch: viewModel.isNeedFetch
+    )
+    moveToBookmarkView(sender, data: data)
+  }
+}
 
 extension MyPageViewController: MoveToBookmarkView {}

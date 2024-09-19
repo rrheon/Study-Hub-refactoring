@@ -4,7 +4,7 @@ import UIKit
 import SnapKit
 
 final class ServiceView: UIView {
-  
+  let viewModel: MyPageViewModel
   private lazy var bottomButtonStackView = createStackView(axis: .vertical, spacing: 5)
   
   private lazy var notificationButton = createMypageButton(title: "공지사항")
@@ -21,10 +21,12 @@ final class ServiceView: UIView {
     return button
   }
   
-  init(){
+  init(_ viewModel: MyPageViewModel){
+    self.viewModel = viewModel
     super.init(frame: .zero)
     setupLayout()
     makeUI()
+    setupActions()
   }
   
   required init?(coder: NSCoder) {
@@ -52,39 +54,24 @@ final class ServiceView: UIView {
       $0.edges.equalToSuperview()
     }
   }
-  //  func serviceButtonTapped(){
-//    let serviceVC = ServiceUseInfoViewContrller()
-//    serviceVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(serviceVC, animated: true)
-//  }
-//  
-//  func informhandleButtonTapped(){
-//    let infoVC = PersonalInfoViewController()
-//    infoVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(infoVC, animated: true)
-//  }
-//  
-//
-//  
-//  // MARK: - 문의하기 버튼 탭
-//  func inquiryButtonTapped(){
-//    let inquiryVC = InquiryViewController()
-//    inquiryVC.hidesBottomBarWhenPushed = true
-//    navigationController?.pushViewController(inquiryVC, animated: true)
-//  }
   
-//  // MARK: - 이용방법 버튼 탭
-//  func howToUseButtonTapped(){
-//    let howtouseVC = HowToUseViewController(viewModel.checkLoginStatus.value)
-//    howtouseVC.hidesBottomBarWhenPushed = true
-//    navigationController?.pushViewController(howtouseVC, animated: true)
-//  }
-//  
-//  func notificationButtonTapped(){
-//    let notificationVC = NotificationViewController()
-//    notificationVC.hidesBottomBarWhenPushed = true
-//    navigationController?.pushViewController(notificationVC, animated: true)
-//  }
+  func setupActions(){
+    let buttonActions: [(UIButton, Service)] = [
+      (notificationButton, .notice),
+      (askButton, .inquiry),
+      (howToUseButton, .howToUse),
+      (serviceButton, .termsOfService),
+      (informhandleButton, .privacyPolicy)
+    ]
+    
+    buttonActions.forEach { button, activity in
+      button.rx.tap
+        .subscribe(onNext: { [weak self] in
+          self?.viewModel.seletService(activity)
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
+  }
 }
 
 extension ServiceView: CreateUIprotocol {}

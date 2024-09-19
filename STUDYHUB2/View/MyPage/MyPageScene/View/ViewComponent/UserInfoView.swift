@@ -3,6 +3,7 @@ import UIKit
 
 import SnapKit
 import RxCocoa
+import RxSwift
 
 final class UserInfoView: UIView {
   let viewModel: MyPageViewModel
@@ -42,16 +43,14 @@ final class UserInfoView: UIView {
     fontSize: 18
   )
   
-  // 로그인 시 -> 정보수정, 비로그인 시 -> 로그인화면으로 이동
   private lazy var managementProfileButton: UIButton = {
     let button = UIButton(type: .system)
     button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
     button.tintColor = .black
-    button.contentHorizontalAlignment = .trailing
-    
     return button
   }()
   
+  private lazy var buttonStackView = createStackView(axis: .vertical, spacing: 10)
   
   init(_ viewModel: MyPageViewModel) {
     self.viewModel = viewModel
@@ -99,6 +98,16 @@ final class UserInfoView: UIView {
   
   
   func makeUI(){
+    viewModel.checkLoginStatus.value ? loginUI() : logoutUI()
+
+    managementProfileButton.snp.makeConstraints {
+      $0.top.equalTo(self.safeAreaLayoutGuide).offset(20)
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.height.width.equalTo(32)
+    }
+  }
+  
+  func loginUI(){
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(10)
       $0.leading.equalToSuperview().offset(10)
@@ -113,33 +122,11 @@ final class UserInfoView: UIView {
       $0.top.equalTo(majorLabel.snp.bottom).offset(5)
       $0.leading.equalTo(majorLabel)
     }
-    
-    managementProfileButton.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-20)
-    }
-  }
-  
-  func loginUI(){
-    profileImageView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(10)
-      $0.leading.equalToSuperview().offset(10)
-    }
-    
-    majorLabel.snp.makeConstraints {
-      $0.top.equalTo(profileImageView)
-      $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
-    }
-    
-    nickNameLabel.snp.makeConstraints {
-      $0.top.equalTo(majorLabel.snp.bottom).offset(13)
-      $0.leading.equalTo(majorLabel)
-    }
   }
   
   func logoutUI(){
     loginFailLabel.snp.makeConstraints {
-      $0.top.equalToSuperview()
+      $0.top.equalToSuperview().offset(13)
       $0.leading.equalToSuperview().offset(10)
     }
     

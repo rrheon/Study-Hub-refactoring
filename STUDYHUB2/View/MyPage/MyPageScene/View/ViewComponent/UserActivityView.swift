@@ -106,7 +106,7 @@ final class UserActivityView: UIView {
     // 작성한 글
     writtenButton.snp.makeConstraints {
       $0.leading.equalToSuperview().offset(20)
-      $0.top.equalToSuperview().offset(100)
+      $0.top.equalToSuperview()
       $0.width.equalTo(105)
       $0.height.equalTo(87)
     }
@@ -173,37 +173,26 @@ final class UserActivityView: UIView {
       .disposed(by: viewModel.disposeBag)
   }
   
-  func setupActions(){
+  func setupActions() {
+    let buttonActions: [(UIButton, UserActivity)] = [
+      (writtenButton, .writtenButton),
+      (joinstudyButton, .participateStudyButton),
+      (requestListButton, .requestListButton)
+    ]
     
+    buttonActions.forEach { button, activity in
+      button.rx.tap
+        .subscribe(onNext: { [weak self] in
+          self?.viewModel.seletUserActivity(activity)
+        })
+        .disposed(by: viewModel.disposeBag)
+    }
   }
-  
-  // MARK: - 작성한 글 버튼 탭
-//  
-//  @objc func writtenButtonTapped(){
-//    let myPostVC = MyPostViewController()
-//    myPostVC.previousMyPage = self
-//    myPostVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(myPostVC, animated: true)
-//  }
-//  
-//  // MARK: - 참여한 스터디 버튼 탭
-//  
-//  func joinstudyButtonTapped(){
-//    let myParticipateVC = MyParticipateStudyVC()
-//    myParticipateVC.previousMyPage = self
-//    myParticipateVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(myParticipateVC, animated: true)
-//  }
-//  
-//  @objc func myRequestPageButtonTapped() {
-//    let myRequestVC = MyRequestListViewController()
-//    myRequestVC.previousMyPage = self
-//    myRequestVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(myRequestVC, animated: true)
-//  }
-  
+
 
   // MARK: - updateVC
+  
+  
   func setupUIData(_ data: UserDetailData){
     self.writtenCountLabel.text = "\(data.postCount ?? 0)"
     self.joinstudyCountLabel.text = "\(data.participateCount ?? 0)"
