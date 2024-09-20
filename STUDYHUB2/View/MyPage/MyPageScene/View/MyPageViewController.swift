@@ -4,6 +4,7 @@ import UIKit
 import SnapKit
 import RxSwift
 
+// 프로필이 일관적으로 적용이 안됨..
 final class MyPageViewController: CommonNavi {
   let viewModel: MyPageViewModel
   
@@ -82,7 +83,7 @@ final class MyPageViewController: CommonNavi {
         switch loginStatus {
         case true:
           moveToOtherVCWithSameNavi(
-            vc: MyInformViewController(viewModel.userData),
+            vc: MyInformViewController(viewModel.userData, profile: viewModel.userProfile),
             hideTabbar: true
           )
         case false :

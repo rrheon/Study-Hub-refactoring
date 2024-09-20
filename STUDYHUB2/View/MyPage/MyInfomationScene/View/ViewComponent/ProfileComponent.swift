@@ -11,7 +11,7 @@ final class ProfileComponent: UIView {
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 15
-    imageView.image = UIImage(named: "ProfileAvatar_change")
+//    imageView.image = UIImage(named: "ProfileAvatar_change")
     
     return imageView
   }()
@@ -27,8 +27,6 @@ final class ProfileComponent: UIView {
     makeUI()
     setupBinding()
     setupActions()
-    
-    viewModel.fetchUserProfile()
   }
   
   required init?(coder: NSCoder) {

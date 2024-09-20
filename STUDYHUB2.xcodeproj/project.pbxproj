@@ -118,6 +118,7 @@
 		EEC5FF812C9C09C300896FEB /* UserInfomationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF802C9C09C300896FEB /* UserInfomationComponent.swift */; };
 		EEC5FF832C9C0AFA00896FEB /* ExitComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF822C9C0AFA00896FEB /* ExitComponent.swift */; };
 		EEC5FF852C9C108400896FEB /* Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF842C9C108400896FEB /* Logout.swift */; };
+		EEC5FF872C9D6A4B00896FEB /* MypageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF862C9D6A4B00896FEB /* MypageViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -299,6 +300,7 @@
 		EEC5FF802C9C09C300896FEB /* UserInfomationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfomationComponent.swift; sourceTree = "<group>"; };
 		EEC5FF822C9C0AFA00896FEB /* ExitComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitComponent.swift; sourceTree = "<group>"; };
 		EEC5FF842C9C108400896FEB /* Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logout.swift; sourceTree = "<group>"; };
+		EEC5FF862C9D6A4B00896FEB /* MypageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -1271,6 +1273,7 @@
 		F89A01662A87FAF600B4C10D /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				EEC5FF862C9D6A4B00896FEB /* MypageViewModel.swift */,
 				EEC5FF6B2C995C7400896FEB /* MyPageScene */,
 				EEB51E862B103C2300C23AB4 /* MyInfomationScene */,
 				EE98B1AE2B3BDEB80025C4F8 /* EditInfomationScene */,
@@ -1455,6 +1458,7 @@
 				EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */,
 				EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */,
 				EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */,
+				EEC5FF872C9D6A4B00896FEB /* MypageViewModel.swift in Sources */,
 				EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */,
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
 				EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */,

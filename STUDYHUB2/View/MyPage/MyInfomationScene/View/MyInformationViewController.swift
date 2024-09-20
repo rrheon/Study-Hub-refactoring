@@ -12,8 +12,8 @@ final class MyInformViewController: CommonNavi {
   private var userInfoComponent: UserInfomationComponent
   private var exitComponent: ExitComponent
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
-    self.viewModel = MyInfomationViewModel(userData)
+  init(_ userData: BehaviorRelay<UserDetailData?>, profile:  BehaviorRelay<UIImage?>) {
+    self.viewModel = MyInfomationViewModel(userData, userProfile: profile)
     
     self.profileComponent = ProfileComponent(viewModel)
     self.userInfoComponent = UserInfomationComponent(viewModel)

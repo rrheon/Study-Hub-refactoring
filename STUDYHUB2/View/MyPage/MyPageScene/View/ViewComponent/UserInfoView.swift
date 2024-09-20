@@ -111,6 +111,7 @@ final class UserInfoView: UIView {
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(10)
       $0.leading.equalToSuperview().offset(10)
+      $0.height.width.equalTo(56)
     }
     
     majorLabel.snp.makeConstraints {
@@ -144,6 +145,15 @@ final class UserInfoView: UIView {
         self?.setupUIData(data)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.userProfile
+      .asDriver(onErrorJustReturn: UIImage(named: "ProfileAvatar_change")!)
+      .drive(onNext: { [weak self] image in
+        self?.profileImageView.image = image
+        self?.profileImageView.layer.cornerRadius = 25
+        self?.profileImageView.clipsToBounds = true
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
@@ -161,10 +171,12 @@ final class UserInfoView: UIView {
     self.majorLabel.text = self.convertMajor(data.major ?? "", toEnglish: false)
     if let imageURL = URL(string: data.imageURL ?? "") {
       viewModel.getUserProfileImage(imageURL: imageURL) { result in
-        self.viewModel.settingProfileImage(
-          profile: self.profileImageView,
-          result: result,
-          radious: 25)
+        switch result {
+        case .success(let image):
+          self.viewModel.userProfile.accept(image)
+        case .failure(_):
+          self.viewModel.userProfile.accept(UIImage(named: "ProfileAvatar_change")!)
+        }
       }
     }
   }
