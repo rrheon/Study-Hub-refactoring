@@ -33,7 +33,7 @@ final class EditnicknameViewController: NaviHelper {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    if self.isMovingFromParent { previousVC?.nickname = changeNickname }
+//    if self.isMovingFromParent { previousVC?.nickname = changeNickname }
   }
   
   // MARK: - viewDidLoad

@@ -40,7 +40,6 @@ extension ManagementImage {
       }
     }
 
-
   func settingProfileImage(
     profile: UIImageView,
     result: Result<UIImage, any Error>,

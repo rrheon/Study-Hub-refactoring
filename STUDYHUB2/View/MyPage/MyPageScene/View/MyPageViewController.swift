@@ -26,15 +26,14 @@ final class MyPageViewController: CommonNavi {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-     
+    
     setupNavigationbar()
     setupLayout()
     makeUI()
     
-    setupBinding()
     setupActions()
   }
-
+  
   // MARK: - setupLayout
   
   
@@ -47,7 +46,7 @@ final class MyPageViewController: CommonNavi {
       view.addSubview($0)
     }
   }
-
+  
   func makeUI(){
     userInfoView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
@@ -67,19 +66,11 @@ final class MyPageViewController: CommonNavi {
       $0.height.equalTo(250)
     }
   }
-
+  
   func setupNavigationbar(){
     leftButtonSetting(imgName: "MyPageImg", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
   }
-  
-// MARK: - setupBinding
-  
-  
-  func setupBinding(){
-   
-  }
-  
   
   // MARK: - setupActions
   
@@ -90,7 +81,10 @@ final class MyPageViewController: CommonNavi {
         guard let self = self else { return }
         switch loginStatus {
         case true:
-          moveToMyInfoVC()
+          moveToOtherVCWithSameNavi(
+            vc: MyInformViewController(viewModel.userData),
+            hideTabbar: true
+          )
         case false :
           moveToLoginVC()
         }
@@ -127,24 +121,11 @@ final class MyPageViewController: CommonNavi {
         }
       })
       .disposed(by: viewModel.disposeBag)
-
   }
   
   func moveToLoginVC() {
     viewModel.deleteToken()
-    
-    let loginVC = LoginViewController()
-    loginVC.modalPresentationStyle = .overFullScreen
-    
-    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-       let window = windowScene.windows.first {
-      window.rootViewController = loginVC
-    }
-  }
-  
-  func moveToMyInfoVC(){
-    let myinformVC = MyInformViewController()
-    self.navigationController?.pushViewController(myinformVC, animated: true)
+    logout()
   }
   
   override func rightButtonTapped(_ sender: UIBarButtonItem) {
@@ -157,3 +138,4 @@ final class MyPageViewController: CommonNavi {
 }
 
 extension MyPageViewController: MoveToBookmarkView {}
+extension MyPageViewController: Logout{}

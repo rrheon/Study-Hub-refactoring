@@ -41,7 +41,7 @@ final class EditMajorViewController: NaviHelper {
     if self.isMovingFromParent {
       var major = convertMajor(changedMajor ?? "", isEnglish: false)
       if major != "" {
-        previousVC?.major = major
+//        previousVC?.major = major
       }
     }
   }

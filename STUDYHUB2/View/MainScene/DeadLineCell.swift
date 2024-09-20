@@ -168,7 +168,7 @@ final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
         } else if let data = data {
           let image = UIImage(data: data)
           DispatchQueue.main.async {
-            self.profileImageView.layer.cornerRadius = 15
+            self.profileImageView.layer.cornerRadius = 25
             self.profileImageView.image = image
           }
         }
