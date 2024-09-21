@@ -443,7 +443,8 @@ extension networkingAPI: TargetType {
         .deleteMyPost(_postId: _),
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark,
-        .editUserMaojr(_major: _):
+        .editUserMaojr(_major: _),
+        .editUserNickName(_nickname: _):
       return [ "Authorization": "\(accessToken)"]
       
     default:

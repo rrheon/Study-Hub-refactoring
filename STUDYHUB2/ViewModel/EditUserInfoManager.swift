@@ -39,15 +39,16 @@ final class EditUserInfoManager {
   }
 
   // MARK: - 유저 닉네임 변경
-  func editUserNickname(_ nickname: String,
-                        completion: @escaping () -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .editUserNickName(_nickname: nickname)) { result in
+  
+  func editUserNickname(_ nickname: String, completion: @escaping (Int?) -> Void) {
+    commonNetworking.moyaNetworking(
+      networkingChoice: .editUserNickName(_nickname: nickname),
+      needCheckToken: true
+    ) { result in
       switch result {
       case let .success(response):
-        let result = try? response.map(String.self)
-        print(result)
-                
-        completion()
+        let result = response.response?.statusCode
+        completion(result)
         
       case let .failure(error):
         print(error.localizedDescription)

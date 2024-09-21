@@ -124,6 +124,8 @@ final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
   }
   
   // MARK: - 셀 재사용 관련
+  
+  
   override func prepareForReuse() {
     super.prepareForReuse()
     
@@ -160,23 +162,23 @@ final class DeadLineCell: UICollectionViewCell, BookMarkDelegate {
     )
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요!"
-    
-    if let url = URL(string: data.userData.imageURL ?? "") {
-      let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-          print("Error: \(error)")
-        } else if let data = data {
-          let image = UIImage(data: data)
-          DispatchQueue.main.async {
+        
+    if let imageURL = URL(string: data.userData.imageURL ?? "") {
+      getUserProfileImage(imageURL: imageURL) { result in
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let image):
             self.profileImageView.layer.cornerRadius = 25
             self.profileImageView.image = image
+          case .failure(_):
+            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
           }
         }
       }
-      task.resume()
     }
-    
   }
 }
+
+extension DeadLineCell: ManagementImage {}
 
 

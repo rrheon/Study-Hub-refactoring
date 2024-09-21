@@ -1,6 +1,7 @@
 
 
 import Foundation
+
 import RxRelay
 
 protocol PostDataFetching {

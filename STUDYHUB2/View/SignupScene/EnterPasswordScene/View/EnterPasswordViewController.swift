@@ -120,8 +120,10 @@ final class EnterPasswordViewController: CommonNavi {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        let signupDatas = SignupDats(email: viewModel.email,
-                                     password: passwordTextField.getTextFieldValue())
+        let signupDatas = SignupDats(
+          email: viewModel.email,
+          password: passwordTextField.getTextFieldValue()
+        )
         
         let nicknameVC = EnterNicknameViewController(signupDatas)
         navigationController?.pushViewController(nicknameVC, animated: true)

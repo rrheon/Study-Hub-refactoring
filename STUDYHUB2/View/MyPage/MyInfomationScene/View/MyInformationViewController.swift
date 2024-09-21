@@ -119,9 +119,12 @@ final class MyInformViewController: CommonNavi {
   }
   
   func editActions(_ action: EditInfomationList){
+    let userData = viewModel.userData
+    
     switch action {
     case .nickname:
-      moveToOtherVCWithSameNavi(vc: EditnicknameViewController(), hideTabbar: true)
+      moveToOtherVCWithSameNavi(vc: EditnicknameViewController(userData), hideTabbar: true)
+      return
     case .major:
       moveToOtherVCWithSameNavi(vc: EditMajorViewController(), hideTabbar: true)
     case .password:
@@ -174,6 +177,8 @@ final class MyInformViewController: CommonNavi {
 }
 
 // MARK: - bottomSheet Delegate
+
+
 extension MyInformViewController: BottomSheetDelegate {
   
   // 프로필 이미지 변경
@@ -196,34 +201,29 @@ extension MyInformViewController: BottomSheetDelegate {
   }
   
   func requestCameraAccess() {
-    AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-      if granted {
-        DispatchQueue.main.async {
-          self?.changeProfileImage(type: .camera, checkPost: false)
-        }
-      } else {
-        DispatchQueue.main.async {
-          self?.showAccessDeniedAlert()
-        }
+    DispatchQueue.main.async {
+      AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+        granted ? self?.changeProfileImage(
+          type: .camera,
+          checkPost: false
+        ) : self?.showAccessDeniedAlert()
       }
     }
   }
   
   func requestPhotoLibraryAccess() {
     PHPhotoLibrary.requestAuthorization { [weak self] status in
-      switch status {
-      case .authorized:
-        DispatchQueue.main.async {
+      DispatchQueue.main.async {
+        switch status {
+        case .authorized:
           self?.changeProfileImage(type: .photoLibrary, checkPost: false)
-        }
-      case .denied, .restricted:
-        DispatchQueue.main.async {
+        case .denied, .restricted:
           self?.showAccessDeniedAlert()
+        case .notDetermined:
+          self?.requestPhotoLibraryAccess()
+        default:
+          break
         }
-      case .notDetermined:
-        self?.requestPhotoLibraryAccess()
-      default:
-        break
       }
     }
   }
@@ -256,9 +256,7 @@ extension MyInformViewController: UIImagePickerControllerDelegate,
     didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
   ) {
     if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
-    
       viewModel.storeProfileToserver(image: image)
-      
       self.dismiss(animated: true)
     }
   }
