@@ -119,6 +119,9 @@ final class EditnicknameViewController: CommonNavi {
       .disposed(by: viewModel.disposeBag)
   }
   
+  // MARK: - setupAction
+  
+  
   func setupAction(){
     viewModel.newNickname
       .asDriver()

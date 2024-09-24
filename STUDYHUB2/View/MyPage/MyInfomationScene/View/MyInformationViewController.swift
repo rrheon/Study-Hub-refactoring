@@ -126,7 +126,7 @@ final class MyInformViewController: CommonNavi {
       moveToOtherVCWithSameNavi(vc: EditnicknameViewController(userData), hideTabbar: true)
       return
     case .major:
-      moveToOtherVCWithSameNavi(vc: EditMajorViewController(), hideTabbar: true)
+      moveToOtherVCWithSameNavi(vc: EditMajorViewController(userData), hideTabbar: true)
     case .password:
       moveToOtherVCWithSameNavi(vc: EditPasswordViewController(), hideTabbar: true)
     case .logout:

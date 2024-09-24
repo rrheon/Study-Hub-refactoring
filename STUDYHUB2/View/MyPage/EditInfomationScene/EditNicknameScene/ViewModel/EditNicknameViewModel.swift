@@ -3,15 +3,14 @@ import Foundation
 
 import RxRelay
 
-final class EditNicknameViewModel: CommonViewModel {
+final class EditNicknameViewModel: EditUserInfoViewModel {
   let editUserInfoManager = EditUserInfoManager.shared
   
   var newNickname = BehaviorRelay<String?>(value: nil)
-  var userData = BehaviorRelay<UserDetailData?>(value: nil)
   var isCheckNicknameDuplication = PublishRelay<String>()
   
-  init(userData: BehaviorRelay<UserDetailData?>) {
-    self.userData = userData
+  override init(userData: BehaviorRelay<UserDetailData?>) {
+    super.init(userData: userData)
   }
   
   func checkNicknameDuplication(_ nickname: String){
@@ -22,7 +21,9 @@ final class EditNicknameViewModel: CommonViewModel {
   
   func storeNicknameToServer(_ nickname: String){
     editUserInfoManager.editUserNickname(nickname) {
+      // 예외처리 필요
       print($0)
+      self.updateUserData(nickname: nickname)
     }
   }
   
@@ -33,7 +34,7 @@ final class EditNicknameViewModel: CommonViewModel {
     let pattern = "^[a-zA-Z0-9가-힣]*$"
     let regex = try? NSRegularExpression(pattern: pattern)
     let range = NSRange(location: 0, length: nickname.utf16.count)
-
+    
     return regex?.firstMatch(in: nickname, options: [], range: range) != nil ? true : false
   }
 }

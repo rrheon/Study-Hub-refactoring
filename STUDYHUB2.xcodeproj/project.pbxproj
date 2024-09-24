@@ -124,6 +124,7 @@
 		EEC5FF9B2C9DBF7200896FEB /* FindPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF9A2C9DBF7200896FEB /* FindPasswordViewModel.swift */; };
 		EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF9F2C9DBFAF00896FEB /* DeleteAccountViewModel.swift */; };
 		EEC5FFA22C9DC23500896FEB /* EditNicknameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */; };
+		EEC5FFA42CA27F5500896FEB /* EditUserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFA32CA27F5500896FEB /* EditUserInfoViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -311,6 +312,7 @@
 		EEC5FF9A2C9DBF7200896FEB /* FindPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindPasswordViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF9F2C9DBFAF00896FEB /* DeleteAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameProtocol.swift; sourceTree = "<group>"; };
+		EEC5FFA32CA27F5500896FEB /* EditUserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -1410,6 +1412,7 @@
 		F89A01662A87FAF600B4C10D /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				EEC5FFA32CA27F5500896FEB /* EditUserInfoViewModel.swift */,
 				EEC5FF6B2C995C7400896FEB /* MyPageScene */,
 				EEB51E862B103C2300C23AB4 /* MyInfomationScene */,
 				EE98B1AE2B3BDEB80025C4F8 /* EditInfomationScene */,
@@ -1563,6 +1566,7 @@
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
 				EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */,
+				EEC5FFA42CA27F5500896FEB /* EditUserInfoViewModel.swift in Sources */,
 				EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */,
 				EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */,
 				EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */,
