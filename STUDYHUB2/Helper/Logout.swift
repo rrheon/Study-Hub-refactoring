@@ -10,8 +10,11 @@ extension Logout {
           let window = windowScene.windows.first else {
       return
     }
-    
+
     let loginVC = LoginViewController()
     loginVC.modalPresentationStyle = .overFullScreen
+
+    window.rootViewController = loginVC
+    window.makeKeyAndVisible() 
   }
 }

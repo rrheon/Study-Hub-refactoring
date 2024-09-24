@@ -128,7 +128,8 @@ final class MyInformViewController: CommonNavi {
     case .major:
       moveToOtherVCWithSameNavi(vc: EditMajorViewController(userData), hideTabbar: true)
     case .password:
-      moveToOtherVCWithSameNavi(vc: EditPasswordViewController(), hideTabbar: true)
+      guard let email = userData.value?.email else { return }
+      moveToOtherVCWithSameNavi(vc: ConfirmPasswordViewController(email), hideTabbar: true)
     case .logout:
       logoutButtonTapped()
     case .deleteAccount:
@@ -170,6 +171,7 @@ final class MyInformViewController: CommonNavi {
     popupVC.popupView.rightButtonAction = { [weak self] in
       self?.viewModel.deleteToken()
       self?.dismiss(animated: true) {
+        self?.navigationController?.popViewController(animated: false)
         self?.logout()
       }
     }

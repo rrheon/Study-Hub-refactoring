@@ -113,10 +113,12 @@ class AuthTextField: UIView {
     }
   }
   
-  func alertLabelSetting(hidden: Bool,
-                         title: String = "",
-                         textColor: UIColor = .r50,
-                         underLineColor: UIColor = .r50){
+  func alertLabelSetting(
+    hidden: Bool,
+    title: String = "",
+    textColor: UIColor = .r50,
+    underLineColor: UIColor = .r50
+  ){
     alertLabel.isHidden = hidden
     alertLabel.text = title
     alertLabel.textColor = textColor

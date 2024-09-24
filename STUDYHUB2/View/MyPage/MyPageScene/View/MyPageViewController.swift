@@ -4,7 +4,6 @@ import UIKit
 import SnapKit
 import RxSwift
 
-// 프로필이 일관적으로 적용이 안됨..
 final class MyPageViewController: CommonNavi {
   let viewModel: MyPageViewModel
   
