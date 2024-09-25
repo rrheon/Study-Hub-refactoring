@@ -404,7 +404,6 @@ extension networkingAPI: TargetType {
         .createNewAccount(accountData: _),
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
-        .editUserPassword(_checkPassword: _, email: _, _password: _),
         .getPreviewCommentList(_postid: _),
         .getNotice(page: _, size: _):
       return ["Content-type": "application/json"]
@@ -443,7 +442,9 @@ extension networkingAPI: TargetType {
         .deleteMyPost(_postId: _),
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark,
-        .editUserMaojr(_major: _):
+        .editUserMaojr(_major: _),
+        .editUserNickName(_nickname: _),
+        .editUserPassword(_checkPassword: _, email: _, _password: _):
       return [ "Authorization": "\(accessToken)"]
       
     default:

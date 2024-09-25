@@ -170,7 +170,7 @@ final class PostedStudyCommentComponent: UIView {
     viewModel.isNeedFetch?
       .asDriver(onErrorJustReturn: true)
       .drive(onNext: { [weak self] in
-        if $0 {
+        if $0 == true{
           self?.viewModel.fetchCommentDatas()
         }
       })

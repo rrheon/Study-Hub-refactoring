@@ -80,10 +80,10 @@ final class MyParticipateStudyVC: NaviHelper {
   // MARK: - 이전페이지로 넘어갈 때
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    
-    if self.isMovingFromParent {
-      previousMyPage?.fetchUserData()
-    }
+//    
+//    if self.isMovingFromParent {
+//      previousMyPage?.fetchUserData()
+//    }
   }
   
   // MARK: - viewDidLoad

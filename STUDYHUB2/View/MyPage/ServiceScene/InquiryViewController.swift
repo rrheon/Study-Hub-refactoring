@@ -205,3 +205,5 @@ extension InquiryViewController {
     textView.layer.borderWidth = 1.0 // 테두리 두께 초기화
   }
 }
+
+//extension InquiryViewController: CreateTextField {}

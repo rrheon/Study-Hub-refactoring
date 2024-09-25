@@ -288,10 +288,11 @@ extension BookmarkViewController: ParticipatePostDelegate{
         self.showToast(message: "이미 신청한 스터디예요.", imageCheck: false)
         return
       }
+      let postData = BehaviorRelay<PostDetailData?>(value: nil)
+      postData.accept(result)
       
-      let participateVC = ParticipateVC()
-      participateVC.studyId = studyId
-      participateVC.postId = postId
+      let participateVC = ParticipateVC(postData)
+   
       self.navigationController?.pushViewController(participateVC, animated: true)
     }
   }

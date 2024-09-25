@@ -267,6 +267,11 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     self.present(navigationVC, animated: true, completion: nil)
   }
   
+  func moveToOtherVCWithSameNavi(vc: UIViewController, hideTabbar: Bool){
+    vc.hidesBottomBarWhenPushed = hideTabbar
+    self.navigationController?.pushViewController(vc, animated: true)
+  }
+  
   func moveToTabbar(_ loginStatus: Bool) {
     let tapbarcontroller = TabBarController(loginStatus)
     tapbarcontroller.modalPresentationStyle = .fullScreen

@@ -1,11 +1,4 @@
 
-//
-//  AppDelegate.swift
-//  STUDYHUB2
-//
-//  Created by HYERYEONG on 2023/08/05.
-//
-
 import UIKit
 
 @main

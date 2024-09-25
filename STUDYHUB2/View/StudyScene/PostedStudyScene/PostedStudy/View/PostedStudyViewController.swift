@@ -167,8 +167,8 @@ final class PostedStudyViewController: CommonNavi{
     
     viewModel.isActivateParticipate
       .subscribe(onNext: { [weak self] in
-        guard let studyID = self?.viewModel.postedStudyData.postDetailData.studyID else { return }
-        $0 ? self?.goToParticipateVC(studyID: studyID) : self?.goToLoginVC()
+        guard let postData = self?.viewModel.postDatas else { return }
+        $0 ? self?.goToParticipateVC(postData) : self?.goToLoginVC()
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -203,8 +203,9 @@ final class PostedStudyViewController: CommonNavi{
       .disposed(by: viewModel.disposeBag)
     
     viewModel.moveToParticipateVC
-      .subscribe(onNext: { [weak self] in
-        self?.goToParticipateVC(studyID: $0)
+      .subscribe(onNext: { [weak self] _ in
+        guard let self = self else { return }
+        self.goToParticipateVC(viewModel.postDatas)
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -294,10 +295,8 @@ extension PostedStudyViewController: BottomSheetDelegate {
     }
   }
   
-  func goToParticipateVC(studyID: Int){
-    let participateVC = ParticipateVC()
-    participateVC.studyId = studyID
-    participateVC.beforeVC = self
+  func goToParticipateVC(_ postData: BehaviorRelay<PostDetailData?>){
+    let participateVC = ParticipateVC(postData)
     self.navigationController?.pushViewController(participateVC, animated: true)
   }
   

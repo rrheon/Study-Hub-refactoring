@@ -26,8 +26,8 @@ class TabBarController: UITabBarController {
     self.delegate = self
      
     let homeVC = addViewController(vc: HomeViewController(checkLoginStatus))
-    let studyVC = addViewController(vc: StudyViewController(loginStatus: checkLoginStatus))
-    let mypageVC = addViewController(vc: MyPageViewController())
+    let studyVC = addViewController(vc: StudyViewController(checkLoginStatus))
+    let mypageVC = addViewController(vc: MyPageViewController(checkLoginStatus))
 
     self.viewControllers = [homeVC, studyVC, mypageVC]
     
@@ -47,16 +47,15 @@ class TabBarController: UITabBarController {
 }
 
 extension TabBarController: UITabBarControllerDelegate {
-  func tabBarController(_ tabBarController: UITabBarController,
-                        didSelect viewController: UIViewController) {
-    // 선택된 탭바 버튼에 따라 실행할 함수를 호출합니다.
+  func tabBarController(
+    _ tabBarController: UITabBarController,
+    didSelect viewController: UIViewController
+  ) {
     if let selectedViewController = viewController as? UINavigationController {
       if let homeViewController = selectedViewController.viewControllers.first as? HomeViewController {
         homeViewController.homeTapBarTapped()
       } else if let studyViewController = selectedViewController.viewControllers.first as? StudyViewController {
         studyViewController.studyTapBarTapped()
-      } else if let myPageViewController = selectedViewController.viewControllers.first as? MyPageViewController {
-        myPageViewController.mypageTapBarTapped()
       }
     }
   }

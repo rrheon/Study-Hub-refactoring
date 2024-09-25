@@ -30,7 +30,7 @@ final class EnterNicknameViewController: CommonNavi {
     radious: 4
   )
 
-  private lazy var characterCountLabel = createLabel(
+  internal lazy var characterCountLabel = createLabel(
     title: "0/10",
     textColor: .bg70,
     fontType: "Pretendard-Medium",
@@ -71,7 +71,6 @@ final class EnterNicknameViewController: CommonNavi {
     
     setupBindings()
     setupActions()
-    nicknameTextField.textField.delegate = self
   }
   
   // MARK: - 네비게이션 바
@@ -103,6 +102,7 @@ final class EnterNicknameViewController: CommonNavi {
       $0.leading.equalToSuperview().offset(20)
     }
     
+    nicknameTextField.textField.delegate = self
     nicknameTextField.snp.makeConstraints {
       $0.top.equalTo(mainTitleView.snp.bottom).offset(130)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -305,9 +305,11 @@ final class EnterNicknameViewController: CommonNavi {
 }
 
 extension EnterNicknameViewController {
-  func textField(_ textField: UITextField,
-                 shouldChangeCharactersIn range: NSRange,
-                 replacementString string: String) -> Bool {
+  func textField(
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
+    replacementString string: String
+  ) -> Bool {
     let currentText = textField.text ?? ""
     guard let stringRange = Range(range, in: currentText) else { return false }
     let changedText = currentText.replacingCharacters(in: stringRange, with: string)
@@ -318,4 +320,5 @@ extension EnterNicknameViewController {
   }
 }
 
+//extension EnterNicknameViewController: EditNicknameProtocol {}
 

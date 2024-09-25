@@ -151,25 +151,26 @@ final class LoginViewController: UIViewController {
   
   func setupActions(){
     exploreButton.rx.tap
-      .subscribe(onNext:  { [weak self] in
-        self?.moveToTabbar(false)
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        self.moveToTabbar(false)
       })
       .disposed(by: viewModel.disposeBag)
     
     signUpButton.rx.tap
-      .subscribe(onNext:  { [weak self] in
+      .subscribe(onNext: { [weak self] in
         self?.moveToOtherVC(vc: AgreementViewController(), naviCheck: true)
       })
       .disposed(by: viewModel.disposeBag)
     
     forgotPasswordButton.rx.tap
-      .subscribe(onNext:  { [weak self] in
-        self?.moveToOtherVC(vc: FindPasswordViewController(), naviCheck: true)
+      .subscribe(onNext: { [weak self] in
+        self?.moveToOtherVC(vc: ConfirmEmailViewController(false), naviCheck: true)
       })
       .disposed(by: viewModel.disposeBag)
     
     loginButton.rx.tap
-      .subscribe(onNext:  { [weak self] in
+      .subscribe(onNext: { [weak self] in
         self?.loginButtonTapped()
       })
       .disposed(by: viewModel.disposeBag)

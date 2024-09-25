@@ -39,15 +39,16 @@ final class EditUserInfoManager {
   }
 
   // MARK: - 유저 닉네임 변경
-  func editUserNickname(_ nickname: String,
-                        completion: @escaping () -> Void) {
-    commonNetworking.moyaNetworking(networkingChoice: .editUserNickName(_nickname: nickname)) { result in
+  
+  func editUserNickname(_ nickname: String, completion: @escaping (Int?) -> Void) {
+    commonNetworking.moyaNetworking(
+      networkingChoice: .editUserNickName(_nickname: nickname),
+      needCheckToken: true
+    ) { result in
       switch result {
       case let .success(response):
-        let result = try? response.map(String.self)
-        print(result)
-                
-        completion()
+        let result = response.response?.statusCode
+        completion(result)
         
       case let .failure(error):
         print(error.localizedDescription)
@@ -56,12 +57,12 @@ final class EditUserInfoManager {
   }
 
   // MARK: - 이메일 중복 확인
-  func checkEmailDuplication(email: String,
-                             completion: @escaping (Bool) -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .checkEmailDuplication(_email: email)) { result in
+  func checkEmailDuplication(email: String, completion: @escaping (Bool) -> Void){
+    commonNetworking.moyaNetworking(
+      networkingChoice: .checkEmailDuplication(_email: email)
+    ) { result in
       switch result {
       case.success(let response):
-        print(response.response)
         switch response.statusCode {
         case 200:
           //가입이 안된경우
@@ -72,7 +73,6 @@ final class EditUserInfoManager {
           // 가입이 된경우
           completion(true)
         }
-        // 성공일 때 nextbuttontapped누를 수 있도록 수정해야함
       case .failure(let response):
         print(response.response)
       }
@@ -111,8 +111,7 @@ final class EditUserInfoManager {
   }
 
   // MARK: - 인증코드 전송
-  func sendEmailCode(email: String,
-                     completion: @escaping () -> Void){
+  func sendEmailCode(email: String, completion: @escaping () -> Void){
     commonNetworking.moyaNetworking(networkingChoice: .sendEmailCode(_email: email)) { result in
       switch result {
       case .success(let response):
