@@ -13,14 +13,16 @@ final class EditPasswordViewModel: CommonViewModel {
   let commonNetworking = CommonNetworking.shared
   
   let userEmail: String
+  let loginStatus: Bool
   
   let firstPassword = BehaviorRelay<String>(value: "")
   let secondPassword = BehaviorRelay<String>(value: "")
   
   let isSuccessChangePassword = PublishRelay<Bool>()
  
-  init(userEmail: String) {
+  init(userEmail: String, loginStatus: Bool = true) {
     self.userEmail = userEmail
+    self.loginStatus = loginStatus
   }
 
   func isValidPassword(_ password: String) -> Bool {

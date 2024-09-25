@@ -93,7 +93,7 @@
 		EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE93562D2B6B927500D662CC /* BookmarkDTO.swift */; };
 		EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */; };
 		EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AC2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift */; };
-		EE98B1B02B3C387A0025C4F8 /* FindPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AF2B3C387A0025C4F8 /* FindPasswordViewController.swift */; };
+		EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */; };
 		EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1B12B3D4FC20025C4F8 /* EditUserInfoManager.swift */; };
 		EE98B1BD2B4805A90025C4F8 /* DeleteIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */; };
 		EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */; };
@@ -121,13 +121,15 @@
 		EEC5FF902C9DBF2100896FEB /* EditNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF8F2C9DBF2100896FEB /* EditNicknameViewModel.swift */; };
 		EEC5FF942C9DBF4000896FEB /* EditMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF932C9DBF4000896FEB /* EditMajorViewModel.swift */; };
 		EEC5FF982C9DBF5D00896FEB /* ConfirmPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF972C9DBF5D00896FEB /* ConfirmPasswordViewModel.swift */; };
-		EEC5FF9B2C9DBF7200896FEB /* FindPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF9A2C9DBF7200896FEB /* FindPasswordViewModel.swift */; };
+		EEC5FF9B2C9DBF7200896FEB /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF9A2C9DBF7200896FEB /* ConfirmEmailViewModel.swift */; };
 		EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF9F2C9DBFAF00896FEB /* DeleteAccountViewModel.swift */; };
 		EEC5FFA22C9DC23500896FEB /* EditNicknameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */; };
 		EEC5FFA42CA27F5500896FEB /* EditUserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFA32CA27F5500896FEB /* EditUserInfoViewModel.swift */; };
 		EEC5FFA62CA2956B00896FEB /* EditPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFA52CA2956B00896FEB /* EditPasswordTextField.swift */; };
 		EEC5FFAC2CA29E9200896FEB /* EditPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFAB2CA29E9200896FEB /* EditPasswordViewController.swift */; };
 		EEC5FFAF2CA29EA500896FEB /* EditPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFAE2CA29EA500896FEB /* EditPasswordViewModel.swift */; };
+		EEC5FFB42CA4036500896FEB /* EnterValidCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFB32CA4036500896FEB /* EnterValidCodeViewController.swift */; };
+		EEC5FFB72CA4039300896FEB /* EnterValidCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFB62CA4039300896FEB /* EnterValidCodeViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -276,7 +278,7 @@
 		EE98B1A82B35276D0025C4F8 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMajorViewController.swift; sourceTree = "<group>"; };
 		EE98B1AC2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPasswordViewController.swift; sourceTree = "<group>"; };
-		EE98B1AF2B3C387A0025C4F8 /* FindPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindPasswordViewController.swift; sourceTree = "<group>"; };
+		EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewController.swift; sourceTree = "<group>"; };
 		EE98B1B12B3D4FC20025C4F8 /* EditUserInfoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoManager.swift; sourceTree = "<group>"; };
 		EE98B1BC2B4805A90025C4F8 /* DeleteIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteIDViewController.swift; sourceTree = "<group>"; };
 		EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
@@ -312,13 +314,15 @@
 		EEC5FF8F2C9DBF2100896FEB /* EditNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF932C9DBF4000896FEB /* EditMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMajorViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF972C9DBF5D00896FEB /* ConfirmPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPasswordViewModel.swift; sourceTree = "<group>"; };
-		EEC5FF9A2C9DBF7200896FEB /* FindPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindPasswordViewModel.swift; sourceTree = "<group>"; };
+		EEC5FF9A2C9DBF7200896FEB /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF9F2C9DBFAF00896FEB /* DeleteAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameProtocol.swift; sourceTree = "<group>"; };
 		EEC5FFA32CA27F5500896FEB /* EditUserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserInfoViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFA52CA2956B00896FEB /* EditPasswordTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordTextField.swift; sourceTree = "<group>"; };
 		EEC5FFAB2CA29E9200896FEB /* EditPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordViewController.swift; sourceTree = "<group>"; };
 		EEC5FFAE2CA29EA500896FEB /* EditPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordViewModel.swift; sourceTree = "<group>"; };
+		EEC5FFB32CA4036500896FEB /* EnterValidCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterValidCodeViewController.swift; sourceTree = "<group>"; };
+		EEC5FFB62CA4039300896FEB /* EnterValidCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterValidCodeViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -1072,8 +1076,8 @@
 		EEC5FF8B2C9DBEDF00896FEB /* FindPasswordScene */ = {
 			isa = PBXGroup;
 			children = (
-				EEC5FF992C9DBF6200896FEB /* View */,
-				EEC5FF9C2C9DBF7500896FEB /* ViewModel */,
+				EEC5FFB02CA4032800896FEB /* ConfirmEmailScene */,
+				EEC5FFB12CA4033900896FEB /* EnterValidCodeScene */,
 			);
 			path = FindPasswordScene;
 			sourceTree = "<group>";
@@ -1138,7 +1142,7 @@
 		EEC5FF992C9DBF6200896FEB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EE98B1AF2B3C387A0025C4F8 /* FindPasswordViewController.swift */,
+				EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1146,7 +1150,7 @@
 		EEC5FF9C2C9DBF7500896FEB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				EEC5FF9A2C9DBF7200896FEB /* FindPasswordViewModel.swift */,
+				EEC5FF9A2C9DBF7200896FEB /* ConfirmEmailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1197,6 +1201,40 @@
 			isa = PBXGroup;
 			children = (
 				EEC5FFAE2CA29EA500896FEB /* EditPasswordViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EEC5FFB02CA4032800896FEB /* ConfirmEmailScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FF992C9DBF6200896FEB /* View */,
+				EEC5FF9C2C9DBF7500896FEB /* ViewModel */,
+			);
+			path = ConfirmEmailScene;
+			sourceTree = "<group>";
+		};
+		EEC5FFB12CA4033900896FEB /* EnterValidCodeScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFB22CA4035200896FEB /* View */,
+				EEC5FFB52CA4036B00896FEB /* ViewModel */,
+			);
+			path = EnterValidCodeScene;
+			sourceTree = "<group>";
+		};
+		EEC5FFB22CA4035200896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFB32CA4036500896FEB /* EnterValidCodeViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FFB52CA4036B00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFB62CA4039300896FEB /* EnterValidCodeViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1620,7 +1658,7 @@
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
 				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteIDViewController.swift in Sources */,
-				EEC5FF9B2C9DBF7200896FEB /* FindPasswordViewModel.swift in Sources */,
+				EEC5FF9B2C9DBF7200896FEB /* ConfirmEmailViewModel.swift in Sources */,
 				EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
@@ -1711,8 +1749,9 @@
 				EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */,
 				EE271F262AD77CD100190E7A /* UIViewcontroller+.swift in Sources */,
 				EE271F2C2AD9250F00190E7A /* UIView+.swift in Sources */,
+				EEC5FFB42CA4036500896FEB /* EnterValidCodeViewController.swift in Sources */,
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
-				EE98B1B02B3C387A0025C4F8 /* FindPasswordViewController.swift in Sources */,
+				EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */,
 				EE07AD902AE106460096890F /* CreatePostManager.swift in Sources */,
 				EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */,
 				EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */,
@@ -1730,6 +1769,7 @@
 				F87377592AA850940055B041 /* SeletMajorViewController.swift in Sources */,
 				EED00B832C54D622000D2E23 /* CheckEmailViewModel.swift in Sources */,
 				EE07ADB52AEFC2B90096890F /* UITextField+.swift in Sources */,
+				EEC5FFB72CA4039300896FEB /* EnterValidCodeViewModel.swift in Sources */,
 				EE0A8B602AFA7FD2001C3F41 /* SearchResultCell.swift in Sources */,
 				EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */,
 				EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */,

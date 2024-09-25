@@ -101,7 +101,7 @@ final class ConfirmPasswordViewController: CommonNavi {
     
     forgotPasswordButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.moveToOtherVCWithSameNavi(vc: FindPasswordViewController(), hideTabbar: true)
+        self?.moveToOtherVCWithSameNavi(vc: ConfirmEmailViewController(true), hideTabbar: true)
       })
       .disposed(by: viewModel.disposeBag)
     

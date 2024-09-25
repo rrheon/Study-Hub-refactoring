@@ -25,8 +25,8 @@ final class EditPasswordViewController: CommonNavi {
   
   private lazy var secondPasswordTextField = EditPasswordTextField(secondTextFieldvalue)
   
-  init(_ userEmail: String) {
-    self.viewModel = EditPasswordViewModel(userEmail: userEmail)
+  init(_ userEmail: String, loginStatus: Bool = true) {
+    self.viewModel = EditPasswordViewModel(userEmail: userEmail, loginStatus: loginStatus)
     super.init()
   }
   
@@ -111,10 +111,7 @@ final class EditPasswordViewController: CommonNavi {
       .drive(onNext: { [weak self] result in
         switch result {
         case true:
-          self?.navigationController?.popViewController(animated: true)
-          self?.navigationController?.popViewController(animated: false)
-
-          self?.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
+          self?.checkLoginStatus()
         case false:
           return
         }
@@ -142,9 +139,23 @@ final class EditPasswordViewController: CommonNavi {
   override func rightButtonTapped(_ sender: UIBarButtonItem) {
     viewModel.storePasswordToServer()
   }
+  
+  func checkLoginStatus(){
+    switch viewModel.loginStatus {
+    case true:
+      self.navigationController?.popViewController(animated: true)
+      self.navigationController?.popViewController(animated: false)
+      
+    case false:
+      logout()
+    }
+    self.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
+  }
 }
 
 extension EditPasswordViewController {
   override func textFieldDidBeginEditing(_ textField: UITextField) {}
   override func textFieldDidEndEditing(_ textField: UITextField) {}
 }
+
+extension EditPasswordViewController: Logout {}

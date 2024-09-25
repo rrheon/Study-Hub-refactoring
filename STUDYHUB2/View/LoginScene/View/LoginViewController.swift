@@ -165,7 +165,7 @@ final class LoginViewController: UIViewController {
     
     forgotPasswordButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.moveToOtherVC(vc: FindPasswordViewController(), naviCheck: true)
+        self?.moveToOtherVC(vc: ConfirmEmailViewController(false), naviCheck: true)
       })
       .disposed(by: viewModel.disposeBag)
     
