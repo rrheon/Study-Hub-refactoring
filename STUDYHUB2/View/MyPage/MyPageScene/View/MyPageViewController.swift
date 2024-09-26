@@ -93,9 +93,10 @@ final class MyPageViewController: CommonNavi {
     
     viewModel.uesrActivityTapped
       .subscribe(onNext: { [weak self] seleted in
+        guard let userData = self?.viewModel.userData else { return }
         switch seleted {
         case .writtenButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyPostViewController(), hideTabbar: true)
+          self?.moveToOtherVCWithSameNavi(vc: MyPostViewController(userData), hideTabbar: true)
         case .participateStudyButton:
           self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(), hideTabbar: true)
         case .requestListButton:

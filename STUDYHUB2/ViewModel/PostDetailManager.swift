@@ -22,9 +22,11 @@ final class PostDetailInfoManager {
     return postDetailData
   }
   
-  func searchSinglePostData(postId: Int,
-                            loginStatus: Bool,
-                            completion: @escaping (PostDetailData) -> Void){
+  func searchSinglePostData(
+    postId: Int,
+    loginStatus: Bool,
+    completion: @escaping (PostDetailData) -> Void
+  ){
     commonNetwork.moyaNetworking(networkingChoice: .searchSinglePost(_postId: postId),
                                  needCheckToken: loginStatus) { result in
       switch result {

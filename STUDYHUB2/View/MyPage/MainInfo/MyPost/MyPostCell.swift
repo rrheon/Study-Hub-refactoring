@@ -12,9 +12,9 @@ protocol MyPostCellDelegate: AnyObject {
 final class MyPostCell: UICollectionViewCell {
   weak var delegate: MyPostCellDelegate?
 
-  var postID: Int?
-  var studyId: Int?
-  var buttonColor: UIColor?
+//  var postID: Int?
+//  var studyId: Int?
+//  var buttonColor: UIColor?
   
   var model: MyPostcontent? {
     didSet {
@@ -118,7 +118,6 @@ final class MyPostCell: UICollectionViewCell {
   
   // MARK: - addsubviews
   private func addSubviews() {
-    // 버튼 스텍뷰
     [
       closeButton,
       seperateLineinStackView,
@@ -127,7 +126,6 @@ final class MyPostCell: UICollectionViewCell {
       buttonStackView.addArrangedSubview($0)
     }
     
-    // 화면구성
     [
       majorLabel,
       menuButton,
@@ -201,31 +199,33 @@ final class MyPostCell: UICollectionViewCell {
   private func bind() {
     if model?.close == true {
       remainLabel.text = "마감됐어요"
-      closeButton.setTitleColor(buttonColor, for: .normal)
+      closeButton.setTitleColor(.bg60, for: .normal)
       closeButton.isEnabled = false
     } else {
       remainCount = model?.remainingSeat ?? 0
-      closeButton.setTitleColor(buttonColor, for: .normal)
+      closeButton.setTitleColor(.o50, for: .normal)
     }
-    
-    majorLabel.text = model?.major.convertMajor(model?.major ?? "" , isEnglish: false)
+  
+    majorLabel.text = convertMajor(model?.major ?? "", toEnglish: false)
     titleLabel.text = model?.title
     infoLabel.text = model?.content
-    postID = model?.postID
-    studyId = model?.studyId
   }
   
   // MARK: - 버튼함수
   @objc func menuButtonTapped(){
-    delegate?.menuButtonTapped(in: self, postID: postID ?? 0)
+    guard let postID = model?.postID else { return }
+    delegate?.menuButtonTapped(in: self, postID: postID)
   }
   
   @objc func closeButtonTapped(){
-    delegate?.closeButtonTapped(in: self, postID: postID ?? 0)
+    guard let postID = model?.postID else { return }
+    delegate?.closeButtonTapped(in: self, postID: postID)
   }
   
   func acceptButtonTapped(){
-    delegate?.acceptButtonTapped(in: self, studyID: studyId ?? 0)
+    guard let studyID = model?.studyId else { return }
+    delegate?.acceptButtonTapped(in: self, studyID: studyID)
   }
 }
 
+extension MyPostCell: ConvertMajor {}

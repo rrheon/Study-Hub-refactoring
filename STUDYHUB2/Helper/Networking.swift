@@ -41,6 +41,7 @@ enum networkingAPI {
   case createMyPost(_ data: CreateStudyRequest)
   case modifyMyPost(_data: UpdateStudyRequest)
   case deleteMyPost(_postId: Int)
+  case deleteMyAllPost
   case searchSinglePost(_postId: Int)
   case searchPostList(_hot: String, text: String,
                       page: Int, size: Int,
@@ -127,6 +128,8 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts"
     case .deleteMyPost(let postId):
       return "/v1/study-posts/\(postId)"
+    case .deleteMyAllPost:
+      return "/v1/all/study-post"
     case .modifyMyPost(_data: _):
       return "/v1/study-posts"
     case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
@@ -209,6 +212,7 @@ extension networkingAPI: TargetType {
         .deleteID,
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
+        .deleteMyAllPost,
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark:
       return .delete
@@ -374,6 +378,7 @@ extension networkingAPI: TargetType {
         .deleteImage,
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
+        .deleteMyAllPost,
         .closePost(_),
         .changeBookMarkStatus(_),
         .deleteMyRequest(studyId: _),
@@ -440,6 +445,7 @@ extension networkingAPI: TargetType {
         .verifyPassword(_),
         .deleteComment(_commentId: _),
         .deleteMyPost(_postId: _),
+        .deleteMyAllPost,
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark,
         .editUserMaojr(_major: _),
