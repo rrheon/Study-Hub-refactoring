@@ -1,21 +1,21 @@
-//
-//  MyPostViewModel.swift
-//  STUDYHUB2
-//
-//  Created by 최용헌 on 9/26/24.
-//
 
 import Foundation
 
 import RxRelay
+
+enum PostCountUpdate {
+  case PLUS
+  case MINUS
+}
 
 final class MyPostViewModel: EditUserInfoViewModel {
   private let myPostDataManager = MyPostInfoManager.shared
   private let detailPostDataManager = PostDetailInfoManager.shared
   
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
-  let postDetailData = PublishRelay<PostDetailData>()
-  
+  let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)
+  let updateMyPostData = BehaviorRelay<PostDetailData?>(value: nil)
+
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
     getMyPostData(size: 5)
@@ -31,31 +31,36 @@ final class MyPostViewModel: EditUserInfoViewModel {
     }
   }
   
-  func getPostDetailData(_ postID: Int){
+  func getPostDetailData(
+    _ postID: Int,
+    completion: @escaping (BehaviorRelay<PostDetailData?>) -> Void
+  ){
     self.detailPostDataManager.searchSinglePostData(
       postId: postID,
       loginStatus: true
     ) { result in
       self.postDetailData.accept(result)
-      //        postedVC.postedData = cellData
-      
-      //      guard let postDatas = cellData else { return }
-      //      let postedData = PostedStudyData(isUserLogin: true, postDetailData: postDatas)
-      //      let postedVC = PostedStudyViewController(postedData)
-      //
-      //      self.navigationController?.pushViewController(postedVC, animated: true)
+      completion(self.postDetailData)
     }
   }
   
-  // 데이터리로드 ->해당 post 마감하면 해당 postid찾아서 데이터만 바꿔주면 될듯
+  func updateMyPost(postID: Int) {
+    var currentData = myPostData.value
+    
+    if let index = currentData.firstIndex(where: { $0.postID == postID }) {
+      currentData[index].close = true
+    }
+    
+    myPostData.accept(currentData)
+  }
+  
   func closeMyPost(_ postID: Int){
     self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
       switch result {
       case .success(let response):
         print(response.response)
         if response.statusCode == 200 {
-          self.getMyPostData(size: 5)
-          //          self.dismiss(animated: true)
+          self.updateMyPost(postID: postID)
         }
       case .failure(let response):
         print(response.response)
@@ -63,22 +68,71 @@ final class MyPostViewModel: EditUserInfoViewModel {
     }
   }
   
+  // MARK: - Delete post
+  
+  func updateMyPostCount(mode: PostCountUpdate) -> Int {
+    guard var postCount = userData.value?.postCount else { return 0 }
+    switch mode {
+    case .PLUS:
+        postCount += 1
+    case .MINUS:
+        postCount = max(postCount - 1, 0)
+    }
+    return postCount
+  }
+  
+  func removePost(withId postID: Int) {
+    var currentPosts = myPostData.value
+    currentPosts.removeAll { $0.postID == postID }
+    myPostData.accept(currentPosts)
+  }
+  
   func deleteMySinglePost(_ postID: Int){
-    guard let postCount = userData.value?.postCount else { return }
-    let newPostCount = postCount - 1
     deleteMyPost(postID) { result in
       if result {
-        super.updateUserData(postCount: newPostCount)
+        super.updateUserData(postCount: self.updateMyPostCount(mode: .MINUS))
+        self.removePost(withId: postID)
       }
     }
   }
   
   func deleteMyAllPost(){
     commonNetworking.moyaNetworking(networkingChoice: .deleteMyAllPost) { result in
-      print(result)
       super.updateUserData(postCount: 0)
+      self.myPostData.accept([])
     }
   }
+  
+  func getEmptyPostData() -> BehaviorRelay<PostDetailData?> {
+    updateMyPostData.accept(nil)
+    return updateMyPostData
+  }
+  
+  func updateMyPost(postData: PostDetailData, addPost: Bool = false) {
+    var currentData = myPostData.value
+    
+    if let index = currentData.firstIndex(where: { $0.postID == postData.postID }) {
+      currentData.remove(at: index)
+    }
+    
+    let newPost = MyPostcontent(
+      close: postData.close,
+      content: postData.content,
+      major: postData.major,
+      postID: postData.postID,
+      remainingSeat: postData.remainingSeat,
+      studyId: postData.studyID,
+      title: postData.title
+    )
+    currentData.append(newPost)
+    
+    myPostData.accept(currentData)
+    
+    if addPost {
+      super.updateUserData(postCount: self.updateMyPostCount(mode: .PLUS))
+    }
+  }
+  
 }
 
 extension MyPostViewModel: DeletePost {}

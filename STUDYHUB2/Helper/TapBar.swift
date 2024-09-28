@@ -51,11 +51,17 @@ extension TabBarController: UITabBarControllerDelegate {
     _ tabBarController: UITabBarController,
     didSelect viewController: UIViewController
   ) {
-    if let selectedViewController = viewController as? UINavigationController {
-      if let homeViewController = selectedViewController.viewControllers.first as? HomeViewController {
+    if let selectedViewController = viewController as? UINavigationController,
+       let firstViewController = selectedViewController.viewControllers.first {
+      switch firstViewController {
+      case let homeViewController as HomeViewController:
         homeViewController.homeTapBarTapped()
-      } else if let studyViewController = selectedViewController.viewControllers.first as? StudyViewController {
+      case let studyViewController as StudyViewController:
         studyViewController.studyTapBarTapped()
+      case let myPageViewController as MyPageViewController:
+        myPageViewController.viewModel.fetchUserData()
+      default:
+        break
       }
     }
   }

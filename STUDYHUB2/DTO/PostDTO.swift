@@ -159,7 +159,7 @@ struct Posts: Codable {
 // MARK: - MyPostcontent
 
 struct MyPostcontent: Codable {
-  let close: Bool
+  var close: Bool
   let content, major: String
   let postID, remainingSeat, studyId: Int
   let title: String

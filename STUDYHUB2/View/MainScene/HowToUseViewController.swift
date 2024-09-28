@@ -156,7 +156,7 @@ final class HowToUseViewController: CommonNavi {
   }
   
   func moveToCreateStudyVC(){
-    let createStudyVC = CreateStudyViewController()
+    let createStudyVC = CreateStudyViewController(mode: .POST)
     createStudyVC.hidesBottomBarWhenPushed = true
     self.navigationController?.pushViewController(createStudyVC, animated: true)
   }

@@ -55,7 +55,6 @@ final class StudyViewController: CommonNavi {
     addButton.backgroundColor = UIColor(hexCode: "FF5935")
     addButton.layer.cornerRadius = 30
     addButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-    addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
     return addButton
   }()
   
@@ -234,6 +233,18 @@ final class StudyViewController: CommonNavi {
         self?.viewModel.fetchPostData(hotType: type, page: 0, size: count, dataUpdate: true)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    viewModel.postData
+      .asDriver(onErrorJustReturn: nil)
+      .drive(onNext: { [weak self] postData in
+        self?.recentButtonTapped()
+        guard let data = postData else { return }
+        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
+        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
+        
+        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   // MARK: -  setupActions
@@ -271,19 +282,20 @@ final class StudyViewController: CommonNavi {
         self?.popularButtonTapped()
       })
       .disposed(by: viewModel.disposeBag)
+    
+    addButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        moveToOtherVCWithSameNavi(
+          vc: CreateStudyViewController(postedData: viewModel.postData, mode: .POST),
+          hideTabbar: true
+        )
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func studyTapBarTapped(){
     viewModel.isNeedFetch.accept(true)
-  }
-  
-  // MARK: - 게시글 작성 버튼 탭
-  
-  @objc func addButtonTapped() {
-    let createStudyVC = CreateStudyViewController()
-    createStudyVC.delegate = self
-    createStudyVC.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(createStudyVC, animated: true)
   }
   
   // MARK: - recent / popular button tap
@@ -360,26 +372,6 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     return CGSize(width: 350, height: 247)
-  }
-}
-
-extension StudyViewController: AfterCreatePost {
-  func afterCreatePost(postId: Int) {
-    viewModel.detailPostDataManager.searchSinglePostData(
-      postId: postId,
-      loginStatus: false
-    ) { result in
-      self.recentButtonTapped()
-      let postedData = PostedStudyData(
-        isUserLogin:self.viewModel.checkLoginStatus.value,
-        postDetailData: result
-      )
-      let postedVC = PostedStudyViewController(postedData)
-      postedVC.hidesBottomBarWhenPushed = true
-      self.navigationController?.pushViewController(postedVC, animated: false)
-      
-      self.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
-    }
   }
 }
 

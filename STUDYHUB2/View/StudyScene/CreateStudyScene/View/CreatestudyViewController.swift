@@ -4,13 +4,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-protocol AfterCreatePost: AnyObject {
-  func afterCreatePost(postId: Int)
-}
-
 final class CreateStudyViewController: CommonNavi {
   let viewModel: CreateStudyViewModel
-  weak var delegate: AfterCreatePost?
 
   private var studyInfoView: StudyInfoView
   private var seletMajorView: SelectMajorView
@@ -22,8 +17,8 @@ final class CreateStudyViewController: CommonNavi {
   
   let scrollView = UIScrollView()
   
-  init(_ postedData: BehaviorRelay<PostDetailData?>? = nil) {
-    self.viewModel = CreateStudyViewModel(postedData)
+  init(postedData: BehaviorRelay<PostDetailData?>? = nil, mode: PostActionList) {
+    self.viewModel = CreateStudyViewModel(postedData, mode: mode)
     self.studyInfoView = StudyInfoView(viewModel)
     self.seletMajorView = SelectMajorView(viewModel)
     self.studyMemeberView = StudyMemberView(viewModel)
@@ -174,10 +169,8 @@ final class CreateStudyViewController: CommonNavi {
     }
     
     viewModel.isSuccessCreateStudy
-      .subscribe(onNext: { [weak self] in
-        guard let postID = Int($0) else { return }
+      .subscribe(onNext: { [weak self] _ in
         self?.navigationController?.popViewController(animated: false)
-        self?.delegate?.afterCreatePost(postId: postID)
       })
       .disposed(by: viewModel.disposeBag)
     

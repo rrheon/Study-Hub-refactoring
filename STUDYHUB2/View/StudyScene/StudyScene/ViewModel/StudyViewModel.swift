@@ -23,6 +23,7 @@ final class StudyViewModel: CommonViewModel {
   
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var isNeedFetch = PublishRelay<Bool>()
+  var postData = BehaviorRelay<PostDetailData?>(value: nil)
   
   private var internalCounter: Int = 0
   
@@ -46,7 +47,8 @@ final class StudyViewModel: CommonViewModel {
     checkLoginStatus.accept(loginStatus)
     self.fetchPostData(hotType: "false")
   }
-  
+
+  // 인기 전체 탭 누를 때 마다 이미 있는 데이터라도 새로운 데이터 계속 추가됨
   func fetchPostData(hotType: String, page: Int = 0, size: Int = 5, dataUpdate: Bool = false){
     postDataManager.getRecentPostDatas(
       hotType: hotType,

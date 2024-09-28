@@ -140,7 +140,7 @@ final class PostedStudyViewController: CommonNavi{
           }
         case .editPost:
           let postData = viewModel.postDatas
-          let modifyVC = CreateStudyViewController(postData)
+          let modifyVC = CreateStudyViewController(postedData: postData, mode: .PUT)
           modifyVC.hidesBottomBarWhenPushed = true
           navigationController?.pushViewController(modifyVC, animated: true)
         case .deleteComment:

@@ -11,10 +11,6 @@ protocol MyPostCellDelegate: AnyObject {
 
 final class MyPostCell: UICollectionViewCell {
   weak var delegate: MyPostCellDelegate?
-
-//  var postID: Int?
-//  var studyId: Int?
-//  var buttonColor: UIColor?
   
   var model: MyPostcontent? {
     didSet {

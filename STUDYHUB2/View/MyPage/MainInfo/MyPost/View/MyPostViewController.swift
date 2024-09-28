@@ -31,6 +31,7 @@ final class MyPostViewController: CommonNavi {
   private lazy var emptyLabel: UILabel = {
     let label = UILabel()
     label.text = "작성한 글이 없어요\n새로운 스터디 활동을 시작해 보세요!"
+    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     label.numberOfLines = 0
     label.textColor = .bg70
     return label
@@ -132,7 +133,11 @@ final class MyPostViewController: CommonNavi {
       view.addSubview(emptyLabel)
       emptyLabel.setLineSpacing(spacing: 15)
       emptyLabel.textAlignment = .center
-      emptyLabel.changeColor(wantToChange: "새로운 스터디 활동을 시작해 보세요!", color: .bg60)
+      emptyLabel.changeColor(
+        wantToChange: "새로운 스터디 활동을 시작해 보세요!",
+        color: .bg60,
+        font: UIFont(name: "Pretendard-Medium", size: 16)
+      )
       emptyLabel.snp.makeConstraints { make in
         make.centerX.equalTo(emptyImage)
         make.top.equalTo(emptyImage.snp.bottom).offset(20)
@@ -158,6 +163,13 @@ final class MyPostViewController: CommonNavi {
           cell.delegate = self
         }
         .disposed(by: viewModel.disposeBag)
+    
+    viewModel.userData
+      .asDriver(onErrorJustReturn: nil)
+      .drive(onNext: { [weak self] userData in
+        self?.totalPostCountLabel.text = "전체 \( userData?.postCount ?? 0)"
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   func setupActions(){
@@ -168,12 +180,44 @@ final class MyPostViewController: CommonNavi {
         self?.makeUIWithPostCount(postCount)
       })
       .disposed(by: viewModel.disposeBag)
+    
+    writePostButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        moveToOtherVCWithSameNavi(
+          vc: CreateStudyViewController(postedData: viewModel.getEmptyPostData(), mode: .POST),
+          hideTabbar: true
+        )
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.updateMyPostData
+      .asDriver(onErrorJustReturn: nil)
+      .drive(onNext: {[weak self] postData in
+        guard let data = postData else { return }
+        self?.viewModel.updateMyPost(postData: data, addPost: true)
+        
+        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
+        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
+        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    viewModel.postDetailData
+      .asDriver(onErrorJustReturn: nil)
+      .drive(onNext: { [weak self] postData in
+        guard let data = postData else { return }
+
+        self?.viewModel.updateMyPost(postData: data)
+      })
+      .disposed(by: viewModel.disposeBag)
   }
   
   private func registerCell() {
     myPostCollectionView.register(MyPostCell.self, forCellWithReuseIdentifier: MyPostCell.id)
     myPostCollectionView.rx.setDelegate(self)
       .disposed(by: viewModel.disposeBag)
+    myPostCollectionView.delegate = self
   }
   
   // MARK: - setupNavigationbar
@@ -240,7 +284,8 @@ extension MyPostViewController: MyPostCellDelegate {
     self.present(popupVC, animated: false)
     
     popupVC.popupView.rightButtonAction = {
-      
+      self.dismiss(animated: true)
+      self.viewModel.closeMyPost(postID)
     }
   }
   
@@ -252,10 +297,6 @@ extension MyPostViewController: MyPostCellDelegate {
   //    }
   //  }
   //
-  // MARK: - 스터디 생성 VC로 이동
-  func moveToCreateVC(){
-    moveToOtherVCWithSameNavi(vc: CreateStudyViewController(), hideTabbar: true)
-  }
 }
 
 extension MyPostViewController: BottomSheetDelegate {
@@ -266,13 +307,21 @@ extension MyPostViewController: BottomSheetDelegate {
     )
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
+    
+    popupVC.popupView.rightButtonAction = {
+      self.dismiss(animated: true)
+      self.viewModel.deleteMySinglePost(postID)
+    }
   }
   
   func secondButtonTapped(postID: Int, checkPost: Bool) {
     self.dismiss(animated: true) {
-      let createVC = CreateStudyViewController()
-      //      createVC.modifyPostID = postID
-      self.navigationController?.pushViewController(createVC, animated: true)
+      self.viewModel.getPostDetailData(postID) { postData in
+        self.moveToOtherVCWithSameNavi(
+          vc: CreateStudyViewController(postedData: postData, mode: .PUT),
+          hideTabbar: true
+        )
+      }
     }
   }
 }
@@ -291,14 +340,6 @@ extension MyPostViewController: BottomSheetDelegate {
 //      }
 //    }
 //  }
-//}
-
-//extension MyPostViewController: PopupViewDelegate {
-//  func afterDeletePost(completion: @escaping () -> Void) {
-//    getMyPostData(size: 5) {
-//      self.myPostCollectionView.reloadData()
-//    }
-////  }
 //}
 
 extension MyPostViewController: ShowBottomSheet {}
