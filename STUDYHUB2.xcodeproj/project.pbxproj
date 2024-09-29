@@ -132,6 +132,7 @@
 		EEC5FFB72CA4039300896FEB /* EnterValidCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFB62CA4039300896FEB /* EnterValidCodeViewModel.swift */; };
 		EEC5FFBC2CA4531200896FEB /* ConfirmDeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFBB2CA4531200896FEB /* ConfirmDeleteViewController.swift */; };
 		EEC5FFC12CA5220E00896FEB /* MyPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */; };
+		EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -327,6 +328,7 @@
 		EEC5FFB62CA4039300896FEB /* EnterValidCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterValidCodeViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFBB2CA4531200896FEB /* ConfirmDeleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmDeleteViewController.swift; sourceTree = "<group>"; };
 		EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostViewModel.swift; sourceTree = "<group>"; };
+		EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -455,7 +457,7 @@
 			path = SelectMajorScene;
 			sourceTree = "<group>";
 		};
-		EE0A8B582AF93255001C3F41 /* MainScene */ = {
+		EE0A8B582AF93255001C3F41 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				EEDDDD012C64D2FC00FA347D /* HomeScene */,
@@ -463,7 +465,7 @@
 				EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */,
 				EE0A8B5B2AF9330F001C3F41 /* DeadLineCell.swift */,
 			);
-			path = MainScene;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */ = {
@@ -797,7 +799,7 @@
 				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* SignupScene */,
 				EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */,
-				EE0A8B582AF93255001C3F41 /* MainScene */,
+				EE0A8B582AF93255001C3F41 /* Home */,
 				F89A01652A87FAE000B4C10D /* StudyScene */,
 				EE3AD8B72C467F01000A8CCA /* SearchScene */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
@@ -940,10 +942,8 @@
 		EEB51E962B107B5600C23AB4 /* Participants */ = {
 			isa = PBXGroup;
 			children = (
-				EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */,
-				EEB51EA22B145B8000C23AB4 /* Wait */,
-				EE35ED6D2B14B7E2008040E2 /* Participate */,
-				EE35ED6E2B14BA95008040E2 /* Refuse */,
+				EEC5FFC42CA7EF2A00896FEB /* View */,
+				EEC5FFC52CA7EF6B00896FEB /* ViewModel */,
 			);
 			name = Participants;
 			path = ../Participants;
@@ -1290,6 +1290,25 @@
 			isa = PBXGroup;
 			children = (
 				EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EEC5FFC42CA7EF2A00896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */,
+				EEB51EA22B145B8000C23AB4 /* Wait */,
+				EE35ED6D2B14B7E2008040E2 /* Participate */,
+				EE35ED6E2B14BA95008040E2 /* Refuse */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FFC52CA7EF6B00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1712,6 +1731,7 @@
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
 				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,
+				EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */,
 				EEC5FF9B2C9DBF7200896FEB /* ConfirmEmailViewModel.swift in Sources */,
 				EEC05ED52B15FA0E001602AE /* UserInfoManager.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,

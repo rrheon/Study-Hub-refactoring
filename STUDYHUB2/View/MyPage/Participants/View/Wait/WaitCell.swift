@@ -18,7 +18,7 @@ protocol ParticipantsCellDelegate: AnyObject {
 final class WaitCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   weak var delegate: ParticipantsCellDelegate?
-  var model: [ApplyUserContent]? {
+  var model: ApplyUserContent? {
     didSet {
       bind()
     }
@@ -34,7 +34,6 @@ final class WaitCell: UICollectionViewCell {
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = "경영학부"
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
@@ -42,7 +41,6 @@ final class WaitCell: UICollectionViewCell {
   
   private lazy var nickNameLabel: UILabel = {
     let label = UILabel()
-    label.text = "경영이"
     label.textColor = .black
     label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     return label
@@ -50,7 +48,6 @@ final class WaitCell: UICollectionViewCell {
   
   private lazy var dateLabel: UILabel = {
     let label = UILabel()
-    label.text = "2023. 9 . 8 신청 "
     label.textColor = .bg70
     label.font = UIFont(name: "Pretendard-Medium", size: 12)
     return label
@@ -60,7 +57,6 @@ final class WaitCell: UICollectionViewCell {
     let textView = UITextView()
     textView.textColor = .bg80
     textView.backgroundColor = .bg20
-    textView.text = "안녕하세요, 저는 경영학부에 재학 중입니다. 지각이나 잠수 없이 열심히 참여하겠습니다. 잘 부탁드립니다 :)"
     textView.font = UIFont(name: "Pretendard-Medium", size: 14)
     textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     return textView
@@ -100,6 +96,7 @@ final class WaitCell: UICollectionViewCell {
   private lazy var seperateLineinStackView = UIView()
 
   // MARK: - init
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     
@@ -192,30 +189,27 @@ final class WaitCell: UICollectionViewCell {
   }
   
   func bind(){
-    guard let model = model else { return }
-    model.map {
-      userId = $0.id
-
-      majorLabel.text = $0.major.convertMajor($0.major, isEnglish: false)
-      nickNameLabel.text = $0.nickname
-      describeTextView.text = $0.introduce
-      dateLabel.text = "\($0.createdDate[0]). \($0.createdDate[1]). \($0.createdDate[2])"
+    guard let data = model else { return }
+    userId = data.id
+    majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
+    nickNameLabel.text = data.nickname
+    describeTextView.text = data.introduce
+    dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
+    
+    if let imageURL = URL(string: data.imageURL) {
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
       
-      if let imageURL = URL(string: $0.imageURL ?? "") {
-        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
-              
-        self.profileImageView.kf.setImage(with: imageURL,
-                                          options: [.processor(processor)]) { result in
-          switch result {
-          case .success(let value):
-            DispatchQueue.main.async {
-              self.profileImageView.image = value.image
-              self.profileImageView.layer.cornerRadius = 20
-              self.profileImageView.clipsToBounds = true
-            }
-          case .failure(let error):
-            print("Image download failed: \(error)")
+      self.profileImageView.kf.setImage(with: imageURL,
+                                        options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
+          DispatchQueue.main.async {
+            self.profileImageView.image = value.image
+            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.clipsToBounds = true
           }
+        case .failure(let error):
+          print("Image download failed: \(error)")
         }
       }
     }

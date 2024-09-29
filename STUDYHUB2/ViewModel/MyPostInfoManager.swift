@@ -15,7 +15,7 @@ final class MyPostInfoManager {
   func fetchMyPostInfo(
     page: Int,
     size: Int,
-    completion: @escaping ([MyPostcontent]?) -> Void
+    completion: @escaping (Posts?) -> Void
   ) {
     let provider = MoyaProvider<networkingAPI>()
     provider.request(.getMyPostList(_page: page, _size: size)) {
@@ -23,7 +23,7 @@ final class MyPostInfoManager {
       case.success(let response):
         do {
           let postContent = try JSONDecoder().decode(MyPostData.self, from: response.data)
-          completion(postContent.posts.myPostcontent)
+          completion(postContent.posts)
         } catch {
           print("Failed to decode JSON: \(error)")
         }

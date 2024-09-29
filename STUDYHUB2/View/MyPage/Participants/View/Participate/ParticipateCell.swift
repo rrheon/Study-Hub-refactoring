@@ -4,10 +4,10 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-final class RefusePersonCell: UICollectionViewCell {
+final class ParticipateCell: UICollectionViewCell {
   static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
-  
-  var model: [ApplyUserContent]? {
+
+  var model: ApplyUserContent? {
     didSet {
       bind()
     }
@@ -37,23 +37,13 @@ final class RefusePersonCell: UICollectionViewCell {
   
   private lazy var dateLabel: UILabel = {
     let label = UILabel()
-    label.text = "2023. 9 . 8 신청 "
+    label.text = "2023. 9 . 8 참여 "
     label.textColor = .bg70
     label.font = UIFont(name: "Pretendard", size: 12)
     return label
   }()
   
-  private lazy var refuseReasonTextView: UITextView = {
-    let textView = UITextView()
-    textView.text = "거절 사유\n이 스터디의 목표와 맞지 않아요"
-    textView.textColor = .bg80
-    textView.font = UIFont(name: "Pretendard", size: 14)
-    textView.backgroundColor = .bg20
-    textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    return textView
-  }()
-  
-  
+ 
   // MARK: - init
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -77,8 +67,7 @@ final class RefusePersonCell: UICollectionViewCell {
       profileImageView,
       majorLabel,
       nickNameLabel,
-      dateLabel,
-      refuseReasonTextView
+      dateLabel
     ].forEach {
       addSubview($0)
     }
@@ -105,23 +94,15 @@ final class RefusePersonCell: UICollectionViewCell {
       $0.top.equalTo(nickNameLabel.snp.bottom)
       $0.leading.equalTo(majorLabel)
     }
-    
-    refuseReasonTextView.snp.makeConstraints {
-      $0.top.equalTo(dateLabel.snp.bottom).offset(10)
-      $0.leading.equalTo(profileImageView)
-      $0.trailing.equalToSuperview().offset(-10)
-      $0.bottom.equalToSuperview().offset(-10)
-    }
   }
   
   func bind(){
-    guard let model = model else { return }
-    model.map {
-      majorLabel.text = $0.major.convertMajor($0.major, isEnglish: false)
-      nickNameLabel.text = $0.nickname
-      dateLabel.text = "\($0.createdDate[0]). \($0.createdDate[1]). \($0.createdDate[2])"
-//      refuseReasonTextView.text = $0.
-      if let imageURL = URL(string: $0.imageURL ) {
+    guard let data = model else { return }
+      majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
+      nickNameLabel.text = data.nickname
+      dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
+      
+    if let imageURL = URL(string: data.imageURL) {
         let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
         
         self.profileImageView.kf.setImage(with: imageURL,
@@ -139,5 +120,5 @@ final class RefusePersonCell: UICollectionViewCell {
         }
       }
     }
-  }
+  
 }

@@ -78,17 +78,22 @@ final class ParticipateManager{
                         size: Int,
                         _ studyId: Int,
                         completion: @escaping (TotalApplyUserData) -> Void){
-    commonNetworing.moyaNetworking(networkingChoice: .searchParticipateInfo(
+    commonNetworing.moyaNetworking(
+      networkingChoice: .searchParticipateInfo(
       inspection: inspection,
       page: page,
       size: size,
-      studyId: studyId),needCheckToken: true) { result in
+      studyId: studyId
+      ),
+      needCheckToken: true
+    ) { result in
         switch result {
         case .success(let response):
           do {
-            
-            let searchResult = try JSONDecoder().decode(TotalApplyUserData.self,
-                                                        from: response.data)
+            let searchResult = try JSONDecoder().decode(
+              TotalApplyUserData.self,
+              from: response.data
+            )
             completion(searchResult)
           } catch {
             print("Failed to decode JSON: \(error)")

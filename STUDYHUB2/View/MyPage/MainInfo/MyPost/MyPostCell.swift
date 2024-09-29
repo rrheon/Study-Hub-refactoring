@@ -22,7 +22,6 @@ final class MyPostCell: UICollectionViewCell {
   
   private lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = "세무회계학과"
     label.textColor = .o50
     label.layer.cornerRadius = 5
     label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
@@ -38,7 +37,6 @@ final class MyPostCell: UICollectionViewCell {
   
   lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "단기 스터디원 구해요!"
     label.textColor = .black
     label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
@@ -46,7 +44,6 @@ final class MyPostCell: UICollectionViewCell {
   
   lazy var infoLabel: UILabel = {
     let label = UILabel()
-    label.text = "내용내용내용"
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
@@ -192,6 +189,8 @@ final class MyPostCell: UICollectionViewCell {
   }
   
   // MARK: - bind
+  
+  
   private func bind() {
     if model?.close == true {
       remainLabel.text = "마감됐어요"
@@ -208,6 +207,8 @@ final class MyPostCell: UICollectionViewCell {
   }
   
   // MARK: - 버튼함수
+  
+  
   @objc func menuButtonTapped(){
     guard let postID = model?.postID else { return }
     delegate?.menuButtonTapped(in: self, postID: postID)

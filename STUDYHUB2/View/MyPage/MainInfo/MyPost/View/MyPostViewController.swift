@@ -264,7 +264,7 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
 
 extension MyPostViewController: MyPostCellDelegate {
   func acceptButtonTapped(in cell: MyPostCell, studyID: Int) {
-    moveToOtherVCWithSameNavi(vc: CheckParticipantsVC(), hideTabbar: true)
+    moveToOtherVCWithSameNavi(vc: CheckParticipantsVC(studyID), hideTabbar: true)
   }
   
   func menuButtonTapped(in cell: MyPostCell, postID: Int) {
@@ -288,15 +288,21 @@ extension MyPostViewController: MyPostCellDelegate {
       self.viewModel.closeMyPost(postID)
     }
   }
-  
-  // MARK: - 스크롤해서 데이터 가져오기
-  //  func fetchMoreData(){
-  //    guard let countData = myPostDatas?.count else { return }
-  //    getMyPostData(size: countData + 5) {
-  //      self.myPostCollectionView.reloadData()
-  //    }
-  //  }
-  //
+}
+
+// MARK: - collectionView
+
+extension MyPostViewController: UICollectionViewDelegate {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let tableView = myPostCollectionView
+    if (tableView.contentOffset.y > (tableView.contentSize.height - tableView.bounds.size.height)){
+      guard let count = viewModel.userData.value?.postCount else { return }
+      if viewModel.isValidScroll {
+        viewModel.isValidScroll = false
+        viewModel.getMyPostData(size: count)
+      }
+    }
+  }
 }
 
 extension MyPostViewController: BottomSheetDelegate {
@@ -325,21 +331,5 @@ extension MyPostViewController: BottomSheetDelegate {
     }
   }
 }
-
-//// MARK: - 스크롤할 때 네트워킹 요청
-//extension MyPostViewController {
-//  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//    let tableView = myPostCollectionView
-//    if (tableView.contentOffset.y > (tableView.contentSize.height - tableView.bounds.size.height)){
-//      let myPostTotalData = myPostDataManager.getMyTotalPostData()
-//
-//      guard let last = myPostTotalData?.posts.last else { return }
-//
-//      if !last {
-//        fetchMoreData()
-//      }
-//    }
-//  }
-//}
 
 extension MyPostViewController: ShowBottomSheet {}

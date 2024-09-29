@@ -281,7 +281,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     
     guard let number = Int(studymemberTextField.text ?? "0") else { return }
     
-    if !(0 < number && number < 51) {
+    if !(1 < number && number < 51) {
       countAlert.isHidden = false
       
       studymemberTextField.layer.borderColor = UIColor.r50.cgColor
@@ -295,7 +295,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   func textFieldDidEndEditing(_ textField: UITextField) {
     guard let number = Int(studymemberTextField.text ?? "0") else { return }
     
-    if !(0 < number && number < 51) {
+    if !(1 < number && number < 51) {
       countAlert.isHidden = false
       
       studymemberTextField.layer.borderColor = UIColor.r50.cgColor

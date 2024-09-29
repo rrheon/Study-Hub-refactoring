@@ -15,7 +15,8 @@ final class MyPostViewModel: EditUserInfoViewModel {
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
   let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)
   let updateMyPostData = BehaviorRelay<PostDetailData?>(value: nil)
-
+  var isValidScroll: Bool = false
+  
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
     getMyPostData(size: 5)
@@ -27,7 +28,8 @@ final class MyPostViewModel: EditUserInfoViewModel {
   func getMyPostData(size: Int) {
     self.myPostDataManager.fetchMyPostInfo(page: 0, size: size) { [weak self] result in
       guard let data = result else { return }
-      self?.myPostData.accept(data)
+      self?.myPostData.accept(data.myPostcontent)
+      self?.isValidScroll = data.last
     }
   }
   

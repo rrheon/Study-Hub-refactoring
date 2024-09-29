@@ -104,7 +104,7 @@ final class CreateStudyViewModel: CommonViewModel {
         let isNoFineDataValid = isNoFine && fineType.isEmpty && fineAmount == 0
         
         guard let member = member else { return }
-        let checkMemeber = 0 < member && member < 51
+        let checkMemeber = 1 < member && member < 51
        
         if isDataFilled &&
             checkMemeber &&
