@@ -350,6 +350,7 @@ final class SearchResultCell: UICollectionViewCell {
         case .failure(let error):
           print("Image download failed: \(error)")
           self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
+          self.profileImageView.layer.cornerRadius = 15
         }
       }
     }
@@ -382,3 +383,4 @@ final class SearchResultCell: UICollectionViewCell {
 }
 
 extension SearchResultCell: Convert{}
+extension SearchResultCell: ManagementImage {}

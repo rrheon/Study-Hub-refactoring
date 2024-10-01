@@ -78,6 +78,7 @@ final class ParticipateCell: UICollectionViewCell {
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(10)
+      $0.height.width.equalTo(50)
     }
     
     majorLabel.snp.makeConstraints {
@@ -116,6 +117,7 @@ final class ParticipateCell: UICollectionViewCell {
             }
           case .failure(let error):
             print("Image download failed: \(error)")
+            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
           }
         }
       }

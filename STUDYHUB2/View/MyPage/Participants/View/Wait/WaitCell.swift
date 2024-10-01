@@ -141,6 +141,7 @@ final class WaitCell: UICollectionViewCell {
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(10)
+      $0.width.height.equalTo(50)
     }
     
     majorLabel.snp.makeConstraints {
@@ -198,18 +199,20 @@ final class WaitCell: UICollectionViewCell {
     
     if let imageURL = URL(string: data.imageURL) {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
-      
-      self.profileImageView.kf.setImage(with: imageURL,
-                                        options: [.processor(processor)]) { result in
+            
+      self.profileImageView.kf.setImage(
+        with: imageURL,
+        options: [.processor(processor)]) { result in
         switch result {
         case .success(let value):
           DispatchQueue.main.async {
             self.profileImageView.image = value.image
-            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.layer.cornerRadius = 15
             self.profileImageView.clipsToBounds = true
           }
         case .failure(let error):
           print("Image download failed: \(error)")
+          self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
         }
       }
     }

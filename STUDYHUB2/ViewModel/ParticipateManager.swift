@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SettinInspection: CustomStringConvertible {
+enum ParticipateStatus: CustomStringConvertible {
   case accept
   case reject
   case standby
@@ -73,11 +73,15 @@ final class ParticipateManager{
   }
   
   // MARK: - 신청한 유저 정보 가져오기
-  func getApplyUserData(inspection: String,
-                        page: Int,
-                        size: Int,
-                        _ studyId: Int,
-                        completion: @escaping (TotalApplyUserData) -> Void){
+  func getApplyUserData(
+    inspection: String,
+    page: Int,
+    size: Int,
+    _ studyId: Int,
+    completion: @escaping (
+      TotalApplyUserData
+    ) -> Void
+  ){
     commonNetworing.moyaNetworking(
       networkingChoice: .searchParticipateInfo(
       inspection: inspection,

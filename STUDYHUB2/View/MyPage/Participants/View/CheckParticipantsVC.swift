@@ -68,7 +68,12 @@ final class CheckParticipantsVC: CommonNavi {
     setupNavigationbar()
     
     registerCell()
+    
+    setupLayout()
+    makeUI()
+    
     setupBinding()
+    setupActions()
   }
   
   func createUIButton(title: String, titleColor: UIColor, underLine: Bool) -> UIButton{
@@ -133,7 +138,7 @@ final class CheckParticipantsVC: CommonNavi {
   // MARK: - makeUI
   
   
-  func makeUI(_ count: Int) {
+  func makeUI() {
     topItemStackView.distribution = .fillEqually
     topItemStackView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -158,11 +163,6 @@ final class CheckParticipantsVC: CommonNavi {
       $0.height.equalTo(waitingCollectionView.snp.height)
     }
     
-    if count == 0 {
-      noParticipateLabel.isHidden = false
-      noParticipateImageView.isHidden = false
-    }
-    
     noParticipateImageView.snp.makeConstraints {
       $0.centerX.equalToSuperview()
       $0.centerY.equalToSuperview().offset(-60)
@@ -179,10 +179,13 @@ final class CheckParticipantsVC: CommonNavi {
     }
   }
   
+  // MARK: - setupBinding
+  
+  
   func setupBinding(){
-    viewModel.applyUserData
+    viewModel.waitingUserData
       .asDriver(onErrorJustReturn: [])
-      .drive(waitingCollectionView.rx.items(
+      .drive(self.waitingCollectionView.rx.items(
         cellIdentifier: WaitCell.id,
         cellType: WaitCell.self
       )) { index, content, cell in
@@ -191,75 +194,86 @@ final class CheckParticipantsVC: CommonNavi {
       }
       .disposed(by: viewModel.disposeBag)
     
-    viewModel.applyUserData
+    viewModel.participateUserData
       .asDriver(onErrorJustReturn: [])
-      .drive(participateCollectionView.rx.items(
+      .drive(self.participateCollectionView.rx.items(
         cellIdentifier: ParticipateCell.id,
         cellType: ParticipateCell.self
       )) { index, content, cell in
         cell.model = content
       }
-      .disposed(by: viewModel.disposeBag)
+      .disposed(by: self.viewModel.disposeBag)
     
-    viewModel.applyUserData
+    viewModel.refuseUserData
       .asDriver(onErrorJustReturn: [])
-      .drive(refuseCollectionView.rx.items(
+      .drive(self.refuseCollectionView.rx.items(
         cellIdentifier: RefusePersonCell.id,
         cellType: RefusePersonCell.self
       )) { index, content, cell in
         cell.model = content
       }
-      .disposed(by: viewModel.disposeBag)
-    
+      .disposed(by: self.viewModel.disposeBag)
+  }
+  
+  func setupActions(){
     viewModel.totalCount
       .asDriver(onErrorJustReturn: 0)
       .drive(onNext: { [weak self] count in
-        self?.setupLayout()
-        self?.makeUI(count)
+        
+        let hidden = count == 0
+        self?.noParticipateLabel.isHidden = !hidden
+        self?.noParticipateImageView.isHidden = !hidden
+        
+        if count == 0 {
+          self?.setupUI()
+        }
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    waitButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        self?.waitButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    participateButton.rx.tap
+      .asDriver()
+      .drive(onNext: { [weak self] in
+        self?.participateButtonTapped()
+      })
+      .disposed(by: viewModel.disposeBag)
+    
+    refuseButton.rx.tap
+      .asDriver()
+      .drive(onNext: {[weak self] in
+        self?.refuseButtonTapped()
       })
       .disposed(by: viewModel.disposeBag)
   }
   
-  // MARK: - collectionView
+  // MARK: - setupcollectionView
   
-  
-  private func setupCollectionView(
-    _ collectionView: UICollectionView,
-    tag: Int,
-    cellType: UICollectionViewCell.Type,
-    cellIdentifier: String
-  ) {
-    collectionView.tag = tag
-    collectionView.delegate = self
-    collectionView.register(cellType, forCellWithReuseIdentifier: cellIdentifier)
-    //    collectionView.rx
-    //      .setDelegate(self)
-    //      .disposed(by: viewModel.disposeBag)
-  }
   
   private func registerCell() {
-    setupCollectionView(
-      waitingCollectionView,
-      tag: 1,
-      cellType: WaitCell.self,
-      cellIdentifier: WaitCell.id
+    waitingCollectionView.delegate = self
+    waitingCollectionView.register(
+      WaitCell.self,
+      forCellWithReuseIdentifier: WaitCell.id
     )
     
-    setupCollectionView(
-      participateCollectionView,
-      tag: 2,
-      cellType: ParticipateCell.self,
-      cellIdentifier: ParticipateCell.id
+    participateCollectionView.delegate = self
+    participateCollectionView.register(
+      ParticipateCell.self,
+      forCellWithReuseIdentifier: ParticipateCell.id
     )
     
-    setupCollectionView(
-      refuseCollectionView,
-      tag: 3,
-      cellType: RefusePersonCell.self,
-      cellIdentifier: RefusePersonCell.id
+    refuseCollectionView.delegate = self
+    refuseCollectionView.register(
+      RefusePersonCell.self,
+      forCellWithReuseIdentifier: RefusePersonCell.id
     )
   }
-  
   
   // MARK: - setupNavigationbar
   
@@ -269,77 +283,72 @@ final class CheckParticipantsVC: CommonNavi {
     leftButtonSetting()
   }
   
-  //  func participateTypeButton(type: SettinInspection, collectionView: UICollectionView){
-  //    setting = type
-  //    settingValue = setting.description
-  //
-  //    getParticipateInfo(type: settingValue) { [weak self] in
-  //      if self?.applyUserData?.applyUserData.content.count == 0 {
-  //        collectionView.isHidden = true
-  //
-  //        if self?.settingValue == "ACCEPT" {
-  //          self?.noParticipateLabel.text = "참여 중인 팀원이 없어요."
-  //        } else if self?.settingValue == "REJECT" {
-  //          self?.noParticipateLabel.text = "회원님이 거절한 참여자가 없어요."
-  //        } else {
-  //          self?.noParticipateLabel.text = "참여를 기다리는 대기자가 없어요."
-  //        }
-  //        self?.noParticipateLabel.isHidden = false
-  //        self?.noParticipateImageView.isHidden = false
-  //      } else {
-  //        self?.noParticipateLabel.isHidden = true
-  //        self?.noParticipateImageView.isHidden = true
-  //
-  //        collectionView.isHidden = false
-  //        collectionView.reloadData()
-  //      }
-  //    }
-  //  }
   
-  // MARK: - 대기인원버튼
-  func waitButtonTapped(){
-    waitButton.resetUnderline()
+  // MARK: - 버튼 탭 공통 처리
+  
+  
+  func handleButtonTap(
+    selectedButton: UIButton,
+    hiddenCollectionViews: [UICollectionView],
+    visibleCollectionView: UICollectionView,
+    type: ParticipateStatus
+  ) {
+    [
+      waitButton,
+      participateButton,
+      refuseButton
+    ].forEach {
+      $0.removeUnderline()
+    }
     
-    self.refuseButton.removeUnderline()
-    self.participateButton.removeUnderline()
+    selectedButton.resetUnderline()
     
-    waitingCollectionView.isHidden = false
-    participateCollectionView.isHidden = true
-    refuseCollectionView.isHidden = true
+    hiddenCollectionViews.forEach { $0.isHidden = true }
+    visibleCollectionView.isHidden = false
     
-    //    participateTypeButton(type: .standby, collectionView: waitingCollectionView)
+    viewModel.getParticipateInfo(type: type)
   }
   
-  // MARK: - 참여인원 버튼
-  func participateButtonTapped(){
-    participateButton.resetUnderline()
-    
-    self.refuseButton.removeUnderline()
-    self.waitButton.removeUnderline()
-    
-    waitingCollectionView.isHidden = true
-    participateCollectionView.isHidden = false
-    refuseCollectionView.isHidden = true
-    
-    
-    //    participateTypeButton(type: .accept, collectionView: participateCollectionView)
+  func waitButtonTapped() {
+    handleButtonTap(
+      selectedButton: waitButton,
+      hiddenCollectionViews: [participateCollectionView, refuseCollectionView],
+      visibleCollectionView: waitingCollectionView,
+      type: .standby
+    )
   }
   
-  // MARK: - 거절된 인원버튼
-  func refusetButtonTapped(){
-    refuseButton.resetUnderline()
-    
-    self.waitButton.removeUnderline()
-    self.participateButton.removeUnderline()
-    
-    waitingCollectionView.isHidden = true
-    participateCollectionView.isHidden = true
-    refuseCollectionView.isHidden = false
-    
-    //    participateTypeButton(type: .reject, collectionView: refuseCollectionView)
+  func participateButtonTapped() {
+    handleButtonTap(
+      selectedButton: participateButton,
+      hiddenCollectionViews: [waitingCollectionView, refuseCollectionView],
+      visibleCollectionView: participateCollectionView,
+      type: .accept
+    )
+  }
+  
+  func refuseButtonTapped() {
+    handleButtonTap(
+      selectedButton: refuseButton,
+      hiddenCollectionViews: [waitingCollectionView, participateCollectionView],
+      visibleCollectionView: refuseCollectionView,
+      type: .reject
+    )
+  }
+  
+  func setupUI(){
+    let status = viewModel.buttonStatus.description
+  
+    switch status {
+    case "ACCEPT":
+      self.noParticipateLabel.text = "참여 중인 팀원이 없어요."
+    case "REJECT":
+      self.noParticipateLabel.text = "회원님이 거절한 참여자가 없어요."
+    default:
+      self.noParticipateLabel.text = "참여를 기다리는 대기자가 없어요."
+    }
   }
 }
-
 
 extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
   func collectionView(
@@ -347,16 +356,19 @@ extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
     layout collectionViewLayout: UICollectionViewLayout,
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
-    switch collectionView.tag {
-    case 1:
+    switch collectionView {
+    case waitingCollectionView:
       return CGSize(width: 350, height: 220)
-    case 2:
+    case participateCollectionView:
       return CGSize(width: 335, height: 86)
-    default:
+    case refuseCollectionView:
       return CGSize(width: 335, height: 174)
+    default:
+      return CGSize(width: 0, height: 0)
     }
   }
 }
+
 
 // MARK: - bottomSheet
 
