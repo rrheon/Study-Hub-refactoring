@@ -5,15 +5,17 @@ protocol WriteRefuseReasonVCDelegate: AnyObject {
   func completeButtonTapped(reason: String, userId: Int)
 }
 
-final class WriteRefuseReasonVC: NaviHelper {
+final class WriteRefuseReasonVC: CommonNavi {
   weak var delegate: WriteRefuseReasonVCDelegate?
   var userId: Int = 0
   
   private lazy var titleLabel: UILabel = {
-    let label = createLabel(title: "해당 참여자를 거절하게 된 이유를 적어주세요 😢",
-                            textColor: .black,
-                            fontType: "Pretendard",
-                            fontSize: 16)
+    let label = createLabel(
+      title: "해당 참여자를 거절하게 된 이유를 적어주세요 😢",
+      textColor: .black,
+      fontType: "Pretendard",
+      fontSize: 16
+    )
     label.numberOfLines = 0
     return label
   }()
@@ -38,10 +40,12 @@ final class WriteRefuseReasonVC: NaviHelper {
     return label
   }()
   
-  private lazy var bottomLabel = createLabel(title: "- 해당 내용은 사용자에게 전송돼요",
-                                             textColor: .bg60,
-                                             fontType: "Pretendard",
-                                             fontSize: 12)
+  private lazy var bottomLabel = createLabel(
+    title: "- 해당 내용은 사용자에게 전송돼요",
+    textColor: .bg60,
+    fontType: "Pretendard",
+    fontSize: 12
+  )
 
   
   private lazy var completeButton: UIButton = {
@@ -56,14 +60,22 @@ final class WriteRefuseReasonVC: NaviHelper {
     return button
   }()
   
-  // MARK: - Lifecycle Methods
+  init(delegate: WriteRefuseReasonVCDelegate?, userId: Int) {
+    self.delegate = delegate
+    self.userId = userId
+    super.init()
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupUI()
     
-    navigationItemSetting()
-    redesignNavigationbar()
+    setupNavigationbar()
   }
   
   // MARK: - UI Setup
@@ -112,11 +124,8 @@ final class WriteRefuseReasonVC: NaviHelper {
     }
   }
   
-  func redesignNavigationbar() {
-    navigationItem.rightBarButtonItems = nil
-    settingNavigationTitle(title: "거절사유",
-                           font: "Pretendard-Bold",
-                           size: 18)
+  func setupNavigationbar() {
+    settingNavigationTitle(title: "거절사유")
   }
   
   // MARK: - Button Action
@@ -163,3 +172,5 @@ extension WriteRefuseReasonVC {
     return changedText.count <= 199
   }
 }
+
+extension WriteRefuseReasonVC: CreateUIprotocol {}

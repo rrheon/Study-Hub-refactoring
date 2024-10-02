@@ -15,7 +15,7 @@ protocol RefuseBottomSheetDelegate: AnyObject {
 
 final class RefuseBottomSheet: UIViewController {
   weak var delegate: RefuseBottomSheetDelegate?
-  var userId: Int = 0
+  var userId: Int
   
   var refuseList = ["이 스터디의 목표와 맞지 않아요",
                     "팀원 조건과 맞지 않아요 (학과, 성별 등)",
@@ -24,14 +24,19 @@ final class RefuseBottomSheet: UIViewController {
   
   private var selectedButtonTag: Int = -1
   
-  private lazy var titleLabel = createLabel(title: "거절 사유",
-                                            textColor: .black,
-                                            fontType: "Pretendard",
-                                            fontSize: 18)
-  private lazy var descibeLabel = createLabel(title: "해당 내용은 신청자에게 전송돼요",
-                                              textColor: .bg70,
-                                              fontType: "Pretendard",
-                                              fontSize: 12)
+  private lazy var titleLabel = createLabel(
+    title: "거절 사유",
+    textColor: .black,
+    fontType: "Pretendard",
+    fontSize: 18
+  )
+  
+  private lazy var descibeLabel = createLabel(
+    title: "해당 내용은 신청자에게 전송돼요",
+    textColor: .bg70,
+    fontType: "Pretendard",
+    fontSize: 12
+  )
   
   private lazy var refuseButton: UIButton = {
     let button = UIButton()
@@ -46,15 +51,28 @@ final class RefuseBottomSheet: UIViewController {
   
   private lazy var reasonTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(RefuseCell.self,
-                       forCellReuseIdentifier: RefuseCell.cellId)
+    tableView.register(RefuseCell.self, forCellReuseIdentifier: RefuseCell.cellId)
     tableView.backgroundColor = .white
     tableView.separatorInset.left = 0
     tableView.layer.cornerRadius = 10
     return tableView
   }()
   
+  
+  init(delegate: RefuseBottomSheetDelegate?, userId: Int) {
+    self.delegate = delegate
+    self.userId = userId
+    
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - viewDidLoad
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -68,6 +86,8 @@ final class RefuseBottomSheet: UIViewController {
   }
   
   // MARK: - setupLayout
+  
+  
   func setupLayout(){
     [
       titleLabel,
@@ -80,6 +100,8 @@ final class RefuseBottomSheet: UIViewController {
   }
   
   // MARK: - makeUI
+  
+  
   func makeUI(){
     titleLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(30)
@@ -107,6 +129,8 @@ final class RefuseBottomSheet: UIViewController {
 }
 
 // MARK: - tableview
+
+
 extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return refuseList.count
@@ -144,8 +168,10 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
     selectedButtonTag = tag
     
     if let selectedCell = reasonTableView.cellForRow(at: IndexPath(row: tag, section: 0)) as? RefuseCell {
+//      let image = selectedCell.checkButton.isSelected ? "ButtonChecked" : "ButtonEmpty"
       selectedCell.checkButton.isSelected.toggle()
-      selectedCell.checkButton.setImage(selectedCell.checkButton.isSelected ? UIImage(named: "ButtonChecked") : UIImage(named: "ButtonEmpty"), for: .normal)
+      let imageName = selectedCell.checkButton.isSelected ? "ButtonChecked" : "ButtonEmpty"
+      selectedCell.checkButton.setImage(UIImage(named: imageName), for: .normal)
     }
     
     updateRefuseButtonState()
@@ -166,7 +192,12 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
     self.dismiss(animated: true)
     
     let refuseReason = refuseList[selectedButtonTag]
-    delegate?.didTapRefuseButton(withReason: refuseReason, reasonNum: selectedButtonTag, userId: userId)
+    delegate?.didTapRefuseButton(
+      withReason: refuseReason,
+      reasonNum: selectedButtonTag,
+      userId: userId
+    )
   }
 }
 
+extension RefuseBottomSheet: CreateUIprotocol {}

@@ -48,7 +48,7 @@
 		EE0B6D122C74E43000FEFEBA /* PopUpViewActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0B6D112C74E43000FEFEBA /* PopUpViewActions.swift */; };
 		EE1E44112B17222200223436 /* MyPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44102B17222200223436 /* MyPostCell.swift */; };
 		EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44152B172ACB00223436 /* MyPostViewController.swift */; };
-		EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */; };
+		EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */; };
 		EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441C2B18666800223436 /* MyParticipateCell.swift */; };
 		EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1B2AD04ACE00190E7A /* TokenManager.swift */; };
 		EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1D2AD04BB300190E7A /* UserToken.swift */; };
@@ -133,6 +133,7 @@
 		EEC5FFBC2CA4531200896FEB /* ConfirmDeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFBB2CA4531200896FEB /* ConfirmDeleteViewController.swift */; };
 		EEC5FFC12CA5220E00896FEB /* MyPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */; };
 		EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */; };
+		EEC5FFCB2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -233,7 +234,7 @@
 		EE0B6D112C74E43000FEFEBA /* PopUpViewActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewActions.swift; sourceTree = "<group>"; };
 		EE1E44102B17222200223436 /* MyPostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostCell.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPost/MyPostCell.swift; sourceTree = SOURCE_ROOT; };
 		EE1E44152B172ACB00223436 /* MyPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostViewController.swift; path = STUDYHUB2/View/MyPage/MainInfo/MyPost/View/MyPostViewController.swift; sourceTree = SOURCE_ROOT; };
-		EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipataeStudyVC.swift; sourceTree = "<group>"; };
+		EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyVC.swift; sourceTree = "<group>"; };
 		EE1E441C2B18666800223436 /* MyParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateCell.swift; sourceTree = "<group>"; };
 		EE271F1B2AD04ACE00190E7A /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		EE271F1D2AD04BB300190E7A /* UserToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserToken.swift; sourceTree = "<group>"; };
@@ -329,6 +330,7 @@
 		EEC5FFBB2CA4531200896FEB /* ConfirmDeleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmDeleteViewController.swift; sourceTree = "<group>"; };
 		EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsViewModel.swift; sourceTree = "<group>"; };
+		EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -493,13 +495,13 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
-		EE1E44172B18635600223436 /* MyParticipateStudy */ = {
+		EE1E44172B18635600223436 /* MyParticipateScene */ = {
 			isa = PBXGroup;
 			children = (
-				EE1E441A2B18641600223436 /* MyParticipataeStudyVC.swift */,
-				EE1E441C2B18666800223436 /* MyParticipateCell.swift */,
+				EEC5FFC82CAC3BD100896FEB /* View */,
+				EEC5FFC92CAC3BDF00896FEB /* ViewModel */,
 			);
-			path = MyParticipateStudy;
+			path = MyParticipateScene;
 			sourceTree = "<group>";
 		};
 		EE271F212AD0584900190E7A /* Extension */ = {
@@ -933,29 +935,27 @@
 			isa = PBXGroup;
 			children = (
 				EEC5FFBD2CA521D700896FEB /* MyPost */,
-				EEB51E962B107B5600C23AB4 /* Participants */,
+				EEC5FFCC2CAD091000896FEB /* RefuseScene */,
+				EEB51E962B107B5600C23AB4 /* ParticipantsScene */,
 			);
 			name = MyPostScene;
 			path = MainInfo;
 			sourceTree = "<group>";
 		};
-		EEB51E962B107B5600C23AB4 /* Participants */ = {
+		EEB51E962B107B5600C23AB4 /* ParticipantsScene */ = {
 			isa = PBXGroup;
 			children = (
 				EEC5FFC42CA7EF2A00896FEB /* View */,
 				EEC5FFC52CA7EF6B00896FEB /* ViewModel */,
 			);
-			name = Participants;
-			path = ../Participants;
+			name = ParticipantsScene;
+			path = ../ParticipantsScene;
 			sourceTree = "<group>";
 		};
 		EEB51EA22B145B8000C23AB4 /* Wait */ = {
 			isa = PBXGroup;
 			children = (
 				EEB51E972B107B7100C23AB4 /* WaitCell.swift */,
-				EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */,
-				EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */,
-				EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */,
 			);
 			path = Wait;
 			sourceTree = "<group>";
@@ -1313,6 +1313,41 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		EEC5FFC82CAC3BD100896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE1E441C2B18666800223436 /* MyParticipateCell.swift */,
+				EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FFC92CAC3BDF00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EEC5FFCC2CAD091000896FEB /* RefuseScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFCD2CAD092E00896FEB /* View */,
+			);
+			path = RefuseScene;
+			sourceTree = "<group>";
+		};
+		EEC5FFCD2CAD092E00896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */,
+				EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */,
+				EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -1569,7 +1604,7 @@
 				EEB51E862B103C2300C23AB4 /* MyInfomationScene */,
 				EE98B1AE2B3BDEB80025C4F8 /* EditInfomationScene */,
 				EEB51E892B103C2300C23AB4 /* MyPostScene */,
-				EE1E44172B18635600223436 /* MyParticipateStudy */,
+				EE1E44172B18635600223436 /* MyParticipateScene */,
 				EEDD81102B7DE2780022302E /* MyRequestList */,
 				EE2908122C770BAC006B28A7 /* ServiceScene */,
 			);
@@ -1760,6 +1795,7 @@
 				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */,
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
+				EEC5FFCB2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift in Sources */,
 				EEC5FF6F2C995E5000896FEB /* UserInfoView.swift in Sources */,
 				EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */,
 				EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */,
@@ -1811,7 +1847,7 @@
 				EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */,
 				EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */,
 				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
-				EE1E441B2B18641600223436 /* MyParticipataeStudyVC.swift in Sources */,
+				EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
 				EE0B6D102C74759E00FEFEBA /* ManagementComment.swift in Sources */,
 				EE07ADB92AEFE6730096890F /* PostedStudyViewController.swift in Sources */,

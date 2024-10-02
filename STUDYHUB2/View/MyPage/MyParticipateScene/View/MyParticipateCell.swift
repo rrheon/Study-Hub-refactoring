@@ -18,7 +18,7 @@ final class MyParticipateCell: UICollectionViewCell {
   
   weak var delegate: MyParticipateCellDelegate?
   
-  var model: ParticipateContent?? {
+  var model: ParticipateContent? {
     didSet {
       bind()
     }
@@ -30,7 +30,6 @@ final class MyParticipateCell: UICollectionViewCell {
   
   lazy var majorLabel: UILabel = {
     let label = UILabel()
-    label.text = " 세무회계학과 "
     label.textColor = .o50
     label.layer.cornerRadius = 5
     label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
@@ -48,7 +47,6 @@ final class MyParticipateCell: UICollectionViewCell {
   
   lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "단기 스터디원 구해요!"
     label.textColor = .black
     label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
@@ -56,7 +54,6 @@ final class MyParticipateCell: UICollectionViewCell {
   
   lazy var infoLabel: UILabel = {
     let label = UILabel()
-    label.text = "내용내용내용"
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
     return label
@@ -147,25 +144,21 @@ final class MyParticipateCell: UICollectionViewCell {
   }
   
   func deleteButtonTapped(){
-    guard var postId = model?.map({ $0.studyID }) else { return}
+    guard let postId = model?.postID else { return}
     self.delegate?.deleteButtonTapped(in: self, postID: postId)
-    print("1")
   }
   
   func moveToChatButtonTapped(){
-    print("@")
     guard let chatURL = NSURL(string: chatURL) else { return }
     self.delegate?.moveToChatUrl(chatURL: chatURL)
   }
   
   func bind(){
     guard let model = model else { return }
-    model.map {
-      majorLabel.text = $0.major
-      titleLabel.text = $0.title
-      infoLabel.text = $0.content
-      chatURL = $0.chatURL
-    }
+    majorLabel.text = model.major
+    titleLabel.text = model.title
+    infoLabel.text = model.content
+    chatURL = model.chatURL
   }
 }
 

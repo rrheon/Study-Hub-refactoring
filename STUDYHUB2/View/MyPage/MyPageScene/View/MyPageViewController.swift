@@ -98,7 +98,7 @@ final class MyPageViewController: CommonNavi {
         case .writtenButton:
           self?.moveToOtherVCWithSameNavi(vc: MyPostViewController(userData), hideTabbar: true)
         case .participateStudyButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(), hideTabbar: true)
+          self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(userData), hideTabbar: true)
         case .requestListButton:
           self?.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(), hideTabbar: true)
         }

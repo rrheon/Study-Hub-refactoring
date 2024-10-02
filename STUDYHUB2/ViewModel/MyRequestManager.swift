@@ -58,15 +58,17 @@ final class MyRequestManager {
   }
   
   // MARK: - 신청한 스터디삭제
-  func deleteRequestStudy(studyId: Int,
-                          comletion: @escaping () -> Void) {
+  
+  
+  func deleteRequestStudy(studyId: Int, comletion: @escaping (Bool) -> Void) {
     commonNetwork.moyaNetworking(networkingChoice: .deleteMyRequest(studyId: studyId)) { result in
       switch result {
       case .success(let response):
         print(response.response)
-        comletion()
+        comletion(true)
       case .failure(let response):
         print(response.response)
+        comletion(false)
       }
     }
   }

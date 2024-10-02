@@ -375,10 +375,7 @@ extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
 
 extension CheckParticipantsVC: ParticipantsCellDelegate {
   func refuseButtonTapped(in cell: WaitCell, userId: Int) {
-    let bottomVC = RefuseBottomSheet()
-    bottomVC.delegate = self
-    bottomVC.userId = userId
-    
+    let bottomVC = RefuseBottomSheet(delegate: self, userId: userId)
     showBottomSheet(bottomSheetVC: bottomVC, size: 387.0)
     present(bottomVC, animated: true, completion: nil)
   }
@@ -396,17 +393,16 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
     popupVC.modalPresentationStyle = .overFullScreen
     self.present(popupVC, animated: false)
     
-    //    popupVC.popupView.rightButtonAction = { [weak self] in
-    //      guard let self = self else { return }
-    //
-    //      let personData = AcceptStudy(rejectedUserId: userId,
-    //                                   studyId: self.studyID)
-    //      self.participateManager.acceptApplyUser(personData: personData) {
-    //        popupVC.dismiss(animated: true)
-    //        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
-    //        self.waitButtonTapped()
-    //      }
-    //    }
+    popupVC.popupView.rightButtonAction = { [weak self] in
+      guard let self = self else { return }
+      
+      let personData = AcceptStudy(rejectedUserId: userId, studyId: viewModel.studyID)
+      viewModel.participateManager.acceptApplyUser(personData: personData) {
+        popupVC.dismiss(animated: true)
+        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+        self.waitButtonTapped()
+      }
+    }
   }
 }
 
@@ -415,29 +411,22 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
 
 extension CheckParticipantsVC: RefuseBottomSheetDelegate {
   func rejectPerson(_ reason: String, _ userId: Int){
-    //    let personData = RejectStudy(
-    //      rejectReason: reason,
-    //      rejectedUserId: userId,
-    //      studyId: studyID
-    //    )
-    //
-    //    participateManager.rejectApplyUser(personData: personData) {
-    //      self.showToast(message: "거절이 완료됐어요", alertCheck: true)
-    //      self.waitButtonTapped()
-    //    }
+    let personData = RejectStudy(
+      rejectReason: reason,
+      rejectedUserId: userId,
+      studyId: viewModel.studyID
+    )
+    
+    viewModel.participateManager.rejectApplyUser(personData: personData) {
+      self.showToast(message: "거절이 완료됐어요", alertCheck: true)
+      self.waitButtonTapped()
+    }
   }
   
   func didTapRefuseButton(withReason reason: String, reasonNum: Int, userId: Int) {
     if reasonNum == 3 {
-      let refuseWriteVC = WriteRefuseReasonVC()
-      refuseWriteVC.delegate = self
-      refuseWriteVC.userId = userId
-      
-      if let navigationController = self.navigationController {
-        navigationController.pushViewController(refuseWriteVC, animated: true)
-      } else {
-        self.present(refuseWriteVC, animated: true, completion: nil)
-      }
+      let refuseWriteVC = WriteRefuseReasonVC(delegate: self, userId: userId)
+      moveToOtherVCWithSameNavi(vc: refuseWriteVC, hideTabbar: false)
     } else {
       rejectPerson(reason, userId)
     }
@@ -449,6 +438,5 @@ extension CheckParticipantsVC: WriteRefuseReasonVCDelegate {
     rejectPerson(reason, userId)
   }
 }
-
 
 extension CheckParticipantsVC: ShowBottomSheet {}
