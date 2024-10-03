@@ -100,7 +100,7 @@ final class MyPageViewController: CommonNavi {
         case .participateStudyButton:
           self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(userData), hideTabbar: true)
         case .requestListButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(), hideTabbar: true)
+          self?.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(userData), hideTabbar: true)
         }
       })
       .disposed(by: viewModel.disposeBag)

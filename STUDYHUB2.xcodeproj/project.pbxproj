@@ -134,6 +134,7 @@
 		EEC5FFC12CA5220E00896FEB /* MyPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */; };
 		EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */; };
 		EEC5FFCB2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */; };
+		EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -331,6 +332,7 @@
 		EEC5FFC02CA5220E00896FEB /* MyPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFC62CA7EF8A00896FEB /* CheckParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyViewModel.swift; sourceTree = "<group>"; };
+		EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -1348,6 +1350,48 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		EEC5FFCE2CAD3AC100896FEB /* MyRequestList */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFCF2CAD3ACC00896FEB /* View */,
+				EEC5FFD02CAD3ADD00896FEB /* ViewModel */,
+			);
+			path = MyRequestList;
+			sourceTree = "<group>";
+		};
+		EEC5FFCF2CAD3ACC00896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */,
+				EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FFD02CAD3ADD00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EEC5FFD32CAD3B0200896FEB /* DetailRejectReasonScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFD42CAD3B1700896FEB /* View */,
+			);
+			path = DetailRejectReasonScene;
+			sourceTree = "<group>";
+		};
+		EEC5FFD42CAD3B1700896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -1373,14 +1417,13 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		EEDD81102B7DE2780022302E /* MyRequestList */ = {
+		EEDD81102B7DE2780022302E /* MyRequestListScene */ = {
 			isa = PBXGroup;
 			children = (
-				EEDD810E2B7DE1A70022302E /* MyRequestListViewController.swift */,
-				EEDD81112B7DE3D70022302E /* MyReqeustCell.swift */,
-				EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */,
+				EEC5FFCE2CAD3AC100896FEB /* MyRequestList */,
+				EEC5FFD32CAD3B0200896FEB /* DetailRejectReasonScene */,
 			);
-			path = MyRequestList;
+			path = MyRequestListScene;
 			sourceTree = "<group>";
 		};
 		EEDDDD012C64D2FC00FA347D /* HomeScene */ = {
@@ -1605,7 +1648,7 @@
 				EE98B1AE2B3BDEB80025C4F8 /* EditInfomationScene */,
 				EEB51E892B103C2300C23AB4 /* MyPostScene */,
 				EE1E44172B18635600223436 /* MyParticipateScene */,
-				EEDD81102B7DE2780022302E /* MyRequestList */,
+				EEDD81102B7DE2780022302E /* MyRequestListScene */,
 				EE2908122C770BAC006B28A7 /* ServiceScene */,
 			);
 			path = MyPage;
@@ -1896,6 +1939,7 @@
 				F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */,
 				EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */,
 				EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */,
+				EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */,
 				EE271F202AD0584100190E7A /* UIColor+.swift in Sources */,
 				EEC5FF812C9C09C300896FEB /* UserInfomationComponent.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,

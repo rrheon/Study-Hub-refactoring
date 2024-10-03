@@ -102,6 +102,8 @@ struct RequestStudyData: Codable {
 }
 
 // MARK: - Content
+
+
 struct RequestStudyContent: Codable {
   let inspection, introduce: String
   let studyID: Int

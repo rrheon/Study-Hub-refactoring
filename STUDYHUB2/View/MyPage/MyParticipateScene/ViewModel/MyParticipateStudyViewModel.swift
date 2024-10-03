@@ -18,8 +18,8 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel {
   var isSuccessToDelete = PublishRelay<Bool>()
   
   init(_ userData: BehaviorRelay<UserDetailData?>) {
-    if let applyCount = userData.value?.applyCount {
-      self.countPostNumber.accept(applyCount)
+    if let participateCount = userData.value?.participateCount {
+      self.countPostNumber.accept(participateCount)
     } else {
       self.countPostNumber.accept(0)
     }

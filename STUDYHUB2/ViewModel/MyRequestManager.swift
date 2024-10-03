@@ -37,15 +37,15 @@ final class MyRequestManager {
   }
   
   // MARK: - 거절이유 가져오기
-  func getMyRejectReason(studyId: Int,
-                         completion: @escaping (RejectReason) -> Void){
-    commonNetwork.moyaNetworking(networkingChoice: .getRejectReason(studyId),
-                                 needCheckToken: true) { result in
+  func getMyRejectReason(studyId: Int, completion: @escaping (RejectReason) -> Void){
+    commonNetwork.moyaNetworking(
+      networkingChoice: .getRejectReason(studyId),
+      needCheckToken: true
+    ) { result in
       switch result{
       case .success(let response):
         do {
-          let searchResult = try JSONDecoder().decode(RejectReason.self,
-                                                      from: response.data)
+          let searchResult = try JSONDecoder().decode(RejectReason.self, from: response.data)
           completion(searchResult)
         } catch {
           print(response.response)

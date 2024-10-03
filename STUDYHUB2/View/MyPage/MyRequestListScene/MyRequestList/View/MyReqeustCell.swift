@@ -41,7 +41,6 @@ final class MyRequestCell: UICollectionViewCell {
   
   lazy var titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "단기 스터디원 구해요!"
     label.textColor = .black
     label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
     return label
@@ -49,7 +48,6 @@ final class MyRequestCell: UICollectionViewCell {
   
   lazy var infoLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16))
-    label.text = "내용내용내용"
     label.textColor = .bg80
     label.backgroundColor = .bg20
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
@@ -100,7 +98,6 @@ final class MyRequestCell: UICollectionViewCell {
   }
   
   private func configure() {
-    print("2")
     requestLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
       $0.leading.equalToSuperview().offset(20)
