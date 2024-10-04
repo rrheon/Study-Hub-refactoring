@@ -1,7 +1,9 @@
 
 import UIKit
 
-final class ServiceUseInfoViewContrller: NaviHelper {
+import SnapKit
+
+final class ServiceUseInfoViewContrller: CommonNavi {
   
   private lazy var mainImageView: UIImageView = {
     let imageView = UIImageView()
@@ -18,7 +20,7 @@ final class ServiceUseInfoViewContrller: NaviHelper {
     view.backgroundColor = .white
     
     makeUI()
-    navigationItemSetting()
+    setupNavigationbar()
   }
   
   func makeUI() {
@@ -48,11 +50,9 @@ final class ServiceUseInfoViewContrller: NaviHelper {
   }
   
   
-  override func navigationItemSetting() {
-    super.navigationItemSetting()
-    
-    settingNavigationTitle(title: "서비스 이용약관")
-    navigationItem.rightBarButtonItem = .none
+  func setupNavigationbar() {
+    settingNavigationTitle(title: "개인정보처리방침")
+    leftButtonSetting()
   }
 }
 

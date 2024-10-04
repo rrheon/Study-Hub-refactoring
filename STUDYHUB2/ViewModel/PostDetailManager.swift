@@ -51,7 +51,7 @@ final class PostDetailInfoManager {
     return commentList
   }
   
-  func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping () -> Void) {
+  func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping (GetCommentList) -> Void) {
     commonNetwork.moyaNetworking(networkingChoice: .getCommentList(
       _postId: postId,
       _page: page,
@@ -61,10 +61,11 @@ final class PostDetailInfoManager {
           do {
             let commentContent = try JSONDecoder().decode(GetCommentList.self, from: response.data)
             self.commentList = commentContent
+            completion(commentContent)
           } catch {
             print("Failed to decode JSON: \(error)")
           }
-          completion()
+          
         case .failure(let response):
           print(response)
         }

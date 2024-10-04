@@ -17,7 +17,7 @@ extension EditableViewProtocol {
     view.layer.borderColor = UIColor.black.cgColor
     view.layer.borderWidth = 1.0
     
-    if let textView = view as? UITextView, textView.textColor == UIColor.lightGray {
+    if let textView = view as? UITextView, textView.textColor == UIColor.bg70 {
       textView.text = nil
       textView.textColor = UIColor.black
     }

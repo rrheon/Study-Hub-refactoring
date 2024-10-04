@@ -136,6 +136,7 @@
 		EEC5FFCB2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */; };
 		EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */; };
 		EEC5FFD92CAE87E100896FEB /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFD82CAE87E100896FEB /* NotificationViewModel.swift */; };
+		EEC5FFDE2CAFCBEF00896FEB /* InquiryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFDD2CAFCBEF00896FEB /* InquiryViewModel.swift */; };
 		EED00B722C5342DD000D2E23 /* CommonNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B712C5342DD000D2E23 /* CommonNavi.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* MajorLoader.swift */; };
@@ -335,6 +336,7 @@
 		EEC5FFCA2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFD82CAE87E100896FEB /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
+		EEC5FFDD2CAFCBEF00896FEB /* InquiryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewModel.swift; sourceTree = "<group>"; };
 		EED00B712C5342DD000D2E23 /* CommonNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavi.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* MajorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorLoader.swift; sourceTree = "<group>"; };
@@ -463,7 +465,7 @@
 			path = SelectMajorScene;
 			sourceTree = "<group>";
 		};
-		EE0A8B582AF93255001C3F41 /* Home */ = {
+		EE0A8B582AF93255001C3F41 /* MainScene */ = {
 			isa = PBXGroup;
 			children = (
 				EEDDDD012C64D2FC00FA347D /* HomeScene */,
@@ -471,7 +473,7 @@
 				EE0A8B592AF932FE001C3F41 /* RecruitCell.swift */,
 				EE0A8B5B2AF9330F001C3F41 /* DeadLineCell.swift */,
 			);
-			path = Home;
+			path = MainScene;
 			sourceTree = "<group>";
 		};
 		EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */ = {
@@ -672,9 +674,9 @@
 			isa = PBXGroup;
 			children = (
 				EEC5FFD52CAE842700896FEB /* NoticeScene */,
-				EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */,
+				EEC5FFDA2CAFCBC000896FEB /* InquiryScene */,
 				EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */,
-				EEDD80FC2B6D12990022302E /* InquiryViewController.swift */,
+				EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */,
 			);
 			path = ServiceScene;
 			sourceTree = "<group>";
@@ -804,7 +806,7 @@
 				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* SignupScene */,
 				EE0A8B612AFCB4DC001C3F41 /* BookMarkScene */,
-				EE0A8B582AF93255001C3F41 /* Home */,
+				EE0A8B582AF93255001C3F41 /* MainScene */,
 				F89A01652A87FAE000B4C10D /* StudyScene */,
 				EE3AD8B72C467F01000A8CCA /* SearchScene */,
 				F89A01662A87FAF600B4C10D /* MyPage */,
@@ -1419,6 +1421,31 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		EEC5FFDA2CAFCBC000896FEB /* InquiryScene */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFDB2CAFCBD600896FEB /* View */,
+				EEC5FFDC2CAFCBDD00896FEB /* ViewModel */,
+			);
+			path = InquiryScene;
+			sourceTree = "<group>";
+		};
+		EEC5FFDB2CAFCBD600896FEB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EEDD80FC2B6D12990022302E /* InquiryViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEC5FFDC2CAFCBDD00896FEB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC5FFDD2CAFCBEF00896FEB /* InquiryViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -1860,6 +1887,7 @@
 				EEDDDD132C6B4AC200FA347D /* CreateUIModel.swift in Sources */,
 				EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */,
 				EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */,
+				EEC5FFDE2CAFCBEF00896FEB /* InquiryViewModel.swift in Sources */,
 				EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */,
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
 				EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */,

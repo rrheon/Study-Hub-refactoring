@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PersonalInfoViewController: NaviHelper {
+final class PersonalInfoViewController: CommonNavi {
   
   private lazy var mainImageView: UIImageView = {
     let imageView = UIImageView()
@@ -22,9 +22,8 @@ final class PersonalInfoViewController: NaviHelper {
     super.viewDidLoad()
     
     view.backgroundColor = .white
-    
+    setupNavigationbar()
     makeUI()
-    navigationItemSetting()
   }
   
   func makeUI() {
@@ -54,11 +53,9 @@ final class PersonalInfoViewController: NaviHelper {
   }
   
   
-  override func navigationItemSetting() {
-    super.navigationItemSetting()
-    
+  func setupNavigationbar() {
     settingNavigationTitle(title: "개인정보처리방침")
-    navigationItem.rightBarButtonItem = .none
+    leftButtonSetting()
   }
 }
 
