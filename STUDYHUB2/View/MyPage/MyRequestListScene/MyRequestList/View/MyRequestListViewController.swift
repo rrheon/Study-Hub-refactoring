@@ -40,7 +40,6 @@ final class MyRequestListViewController: CommonNavi {
     return view
   }()
   
-  
   init(_ userData: BehaviorRelay<UserDetailData?>) {
     self.viewModel = MyRequestListViewModel(userData)
     super.init()

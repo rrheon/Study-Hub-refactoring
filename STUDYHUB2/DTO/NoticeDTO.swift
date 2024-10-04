@@ -8,7 +8,9 @@
 import Foundation
 
 
-// MARK: - MyRequestList
+// MARK: - NoticeData
+
+
 struct NoticeData: Codable {
   let content: [NoticeContent]
   let pageable: Pageable
@@ -19,6 +21,8 @@ struct NoticeData: Codable {
 }
 
 // MARK: - Content
+
+
 struct NoticeContent: Codable {
   let noticeID: Int
   let title, content: String
@@ -30,3 +34,9 @@ struct NoticeContent: Codable {
   }
 }
 
+// MARK: - Notice + 확장여부
+
+struct ExpandedNoticeContent: Codable {
+  var noticeContent: NoticeContent
+  var isExpanded: Bool = false
+}
