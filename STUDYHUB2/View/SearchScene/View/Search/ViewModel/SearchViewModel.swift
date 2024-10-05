@@ -53,7 +53,7 @@ final class SearchViewModel: CommonViewModel {
   // MARK: - 추천어 검색하기
   func searchRecommend(keyword: String){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.recommendSearch(_keyword: keyword)) {
+    provider.request(.recommendSearch(keyword)) {
       switch $0 {
       case .success(let response):
         do {

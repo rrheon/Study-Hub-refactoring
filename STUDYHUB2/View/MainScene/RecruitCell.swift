@@ -179,7 +179,7 @@ final class RecruitPostCell: UICollectionViewCell {
     checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     
-    majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
+    majorLabel.text = convertMajor(data.major, toEnglish: false)
     titleLabel.text = data.title
     remainMemeber.text = "  잔여 \(data.remainingSeat)자리  "
     countMemeberLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
@@ -201,4 +201,4 @@ final class RecruitPostCell: UICollectionViewCell {
   }
 }
 
-
+extension RecruitPostCell: ConvertMajor {}

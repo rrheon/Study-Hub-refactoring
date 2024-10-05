@@ -76,12 +76,14 @@ final class SeletMajorViewController: CommonNavi {
       view.addSubview($0)
     }
   }
+  
   // MARK: - makeUI
+  
   
   func makeUI() {
     searchController.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalToSuperview().offset(10)
+      make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
       make.width.equalToSuperview().multipliedBy(0.95)
     }
     

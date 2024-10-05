@@ -31,7 +31,7 @@ final class MyInformViewController: CommonNavi {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    
+      
     setupNavigationbar()
     
     setUpLayout()
@@ -133,7 +133,7 @@ final class MyInformViewController: CommonNavi {
     case .logout:
       logoutButtonTapped()
     case .deleteAccount:
-      moveToOtherVCWithSameNavi(vc: DeleteIDViewContoller(), hideTabbar: true)
+      moveToOtherVCWithSameNavi(vc: DeleteAccountViewController(), hideTabbar: true)
     case .editProfile:
       editProfileButtonTapped()
     case .deleteProfile:

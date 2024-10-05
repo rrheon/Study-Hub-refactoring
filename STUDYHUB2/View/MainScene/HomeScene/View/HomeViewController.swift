@@ -97,12 +97,14 @@ final class HomeViewController: CommonNavi {
   }
   
   // MARK: -  viewDidLoad
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     view.backgroundColor = .black
     
-//    commonNetworking.delegate = self
+    commonNetworking.delegate = self
     
     setupBindings()
     setupCollectionView()
@@ -120,6 +122,8 @@ final class HomeViewController: CommonNavi {
   }
   
   // MARK: - setuplayout
+  
+  
   func setUpLayout(){
     scrollView.addSubview(mainImageView)
     scrollView.addSubview(detailsButton)
@@ -164,6 +168,8 @@ final class HomeViewController: CommonNavi {
   }
   
   // MARK: - makeUI
+  
+  
   func makeUI(){
     mainImageView.snp.makeConstraints {
       $0.top.leading.trailing.equalTo(scrollView)

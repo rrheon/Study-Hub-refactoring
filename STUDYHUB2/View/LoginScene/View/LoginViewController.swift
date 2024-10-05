@@ -134,7 +134,7 @@ final class LoginViewController: UIViewController {
     }
   }
   
-  // MARK: - 함수
+  // MARK: - setupBinding
   
   func setupBinding(){
     bindTextFieldEvents(textField: emailTextField)

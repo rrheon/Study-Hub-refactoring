@@ -5,7 +5,6 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-// 각 요소들 바인딩 제대로 하기, 데이터가 들어왔을 때
 final class PostedStudyViewController: CommonNavi{
   let viewModel: PostedStudyViewModel
   
@@ -44,6 +43,8 @@ final class PostedStudyViewController: CommonNavi{
     setupNavigation()
     
     view.backgroundColor = .white
+
+    commonNetworking.delegate = self
     
     setupDelegate()
     setupBindings()
@@ -140,9 +141,8 @@ final class PostedStudyViewController: CommonNavi{
           }
         case .editPost:
           let postData = viewModel.postDatas
-          let modifyVC = CreateStudyViewController(postData)
-          modifyVC.hidesBottomBarWhenPushed = true
-          navigationController?.pushViewController(modifyVC, animated: true)
+          let modifyVC = CreateStudyViewController(postedData: postData, mode: .PUT)
+          self.moveToOtherVCWithSameNavi(vc: modifyVC, hideTabbar: true)
         case .deleteComment:
           viewModel.commentManager.deleteComment(commentID: viewModel.postOrCommentID) {
             if $0 {
@@ -160,8 +160,7 @@ final class PostedStudyViewController: CommonNavi{
         let loginStatus = self?.viewModel.isUserLogined
         let postData = PostedStudyData(isUserLogin: loginStatus ?? false, postDetailData: $0)
         let postedStudyVC = PostedStudyViewController(postData)
-        postedStudyVC.hidesBottomBarWhenPushed = true
-        self?.navigationController?.pushViewController(postedStudyVC, animated: true)
+        self?.moveToOtherVCWithSameNavi(vc: postedStudyVC, hideTabbar: true)
       })
       .disposed(by: viewModel.disposeBag)
     
@@ -325,5 +324,6 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
 }
 
-extension PostedStudyViewController: CreateDividerLine {}
 extension PostedStudyViewController: ShowBottomSheet {}
+extension PostedStudyViewController: CreateUIprotocol {}
+extension PostedStudyViewController: CheckLoginDelegate {}

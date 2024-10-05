@@ -13,7 +13,7 @@ final class CalendarViewController: UIViewController {
     fontType: "Pretendard",
     fontSize: 18
   )
-  
+    
   private lazy var previousButton: UIButton = {
     let button = UIButton()
     button.setImage(
@@ -286,3 +286,5 @@ extension CalendarViewController: FSCalendarDelegate,
     }
   }
 }
+
+extension CalendarViewController: CreateUIprotocol {}

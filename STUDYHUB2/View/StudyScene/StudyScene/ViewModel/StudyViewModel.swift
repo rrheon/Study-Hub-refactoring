@@ -23,6 +23,7 @@ final class StudyViewModel: CommonViewModel {
   
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var isNeedFetch = PublishRelay<Bool>()
+  var postData = BehaviorRelay<PostDetailData?>(value: nil)
   
   private var internalCounter: Int = 0
   

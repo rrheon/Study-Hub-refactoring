@@ -124,7 +124,6 @@ final class PostedStudyViewModel: CommonViewModel {
   func participateButtonTapped(completion: @escaping (ParticipateAction) -> Void) {
     userInfoManager.getUserInfo { [weak self] userData in
       let postedData = self?.postedStudyData.postDetailData
-
       if userData?.nickname == nil {
         completion(.goToLoginVC)
         return

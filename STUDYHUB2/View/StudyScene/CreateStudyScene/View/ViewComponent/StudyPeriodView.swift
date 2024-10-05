@@ -178,7 +178,8 @@ final class StudyPeriodView: UIView {
   func setupActions(){
     completeButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.viewModel.createOrModifyPost()
+        guard let mode = self?.viewModel.mode else { return }
+        self?.viewModel.createOrModifyPost(mode: mode)
       })
       .disposed(by: viewModel.disposeBag)
   }

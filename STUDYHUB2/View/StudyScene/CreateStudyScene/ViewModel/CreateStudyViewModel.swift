@@ -3,8 +3,14 @@ import Foundation
 import RxSwift
 import RxRelay
 
+enum PostActionList {
+  case POST
+  case PUT
+}
+
 final class CreateStudyViewModel: CommonViewModel {
   var postedData = BehaviorRelay<PostDetailData?>(value: nil)
+  var mode: PostActionList
   
   lazy var chatLinkValue = BehaviorRelay<String?>(value: nil)
   lazy var studyTitleValue = BehaviorRelay<String?>(value: nil)
@@ -40,12 +46,14 @@ final class CreateStudyViewModel: CommonViewModel {
   var currentPage: Date? = nil
   
   var isCompleteButtonActivate = BehaviorRelay<Bool>(value: false)
-  var isSuccessCreateStudy = PublishRelay<String>()
+  var isSuccessCreateStudy = PublishRelay<Bool>()
   var isSuccessModifyStudy = PublishRelay<Bool>()
   
-  init(_ data: BehaviorRelay<PostDetailData?>? = nil) {
+  init(_ data: BehaviorRelay<PostDetailData?>? = nil, mode: PostActionList) {
+    self.mode = mode
+
     super.init()
-    
+
     if let data = data {
       self.postedData = data
     }
@@ -96,7 +104,7 @@ final class CreateStudyViewModel: CommonViewModel {
         let isNoFineDataValid = isNoFine && fineType.isEmpty && fineAmount == 0
         
         guard let member = member else { return }
-        let checkMemeber = 0 < member && member < 51
+        let checkMemeber = 1 < member && member < 51
        
         if isDataFilled &&
             checkMemeber &&
@@ -147,15 +155,19 @@ final class CreateStudyViewModel: CommonViewModel {
     return value
   }
 
-  func createOrModifyPost(){
-    let mode = (postedData.value == nil) ? "POST" : "PUT"
+  func createOrModifyPost(mode: PostActionList){
     switch mode {
-    case "POST":
+    case .POST:
       let value = createPostValue()
-      return createPost(value) {
-        self.isSuccessCreateStudy.accept($0)
+      return createPost(value) { postID in
+        guard let convertedPostID = Int(postID) else { return }
+        self.isSuccessCreateStudy.accept(true)
+        self.fetchSinglePostDatas(convertedPostID) { updatedPostValue in
+          self.postedData.accept(updatedPostValue)
+        }
       }
-    case "PUT":
+      
+    case .PUT:
       let updateRequestValue = updatePostValue()
       return modifyMyPost(updateRequestValue) {
         self.isSuccessModifyStudy.accept($0)
@@ -163,8 +175,6 @@ final class CreateStudyViewModel: CommonViewModel {
           self.postedData.accept(updatedPostValue)
         }
       }
-    default:
-      return
     }
   }
   

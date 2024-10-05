@@ -140,6 +140,7 @@ final class CommentCell: UITableViewCell {
             }
           case .failure(let error):
             print("Image download failed: \(error)")
+            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
           }
         }
       }

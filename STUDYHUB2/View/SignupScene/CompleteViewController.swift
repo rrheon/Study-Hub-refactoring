@@ -42,7 +42,7 @@ final class CompleteViewController: UIViewController {
     mainImageView.backgroundColor = .black
     mainImageView.snp.makeConstraints {
       $0.centerX.equalToSuperview()
-      $0.top.equalToSuperview().offset(150)
+      $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
       $0.height.width.equalTo(280)
     }
     

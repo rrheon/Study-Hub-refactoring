@@ -69,7 +69,7 @@ final class CheckEmailViewController: CommonNavi {
   // MARK: - makeUI
   func makeUI(){
     mainTitleView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(130)
+      $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     

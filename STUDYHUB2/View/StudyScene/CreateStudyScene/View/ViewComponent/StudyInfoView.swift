@@ -44,7 +44,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   private lazy var studyIntroduceTextView: UITextView = {
     let tv = UITextView()
     tv.text = textViewContent
-    tv.textColor = UIColor.lightGray
+    tv.textColor = .bg70
     tv.font = UIFont.systemFont(ofSize: 15)
     tv.layer.borderWidth = 0.5
     tv.layer.borderColor = UIColor.lightGray.cgColor

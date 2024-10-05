@@ -34,7 +34,7 @@ final class PopupView: UIView {
   
   private let descLabel: UILabel = {
     let label = UILabel()
-    label.font = UIFont(name: "Pretendard-Medimu", size: 14)
+    label.font = UIFont(name: "Pretendard-Medium", size: 14)
     label.numberOfLines = 0
     label.textAlignment = .center
     label.textColor = .bg80
@@ -46,7 +46,7 @@ final class PopupView: UIView {
     let button = UIButton()
     button.setTitleColor(.bg80, for: .normal)
     button.backgroundColor = .bg40
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
     button.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button
@@ -56,7 +56,7 @@ final class PopupView: UIView {
     let button = UIButton()
     button.backgroundColor = .o50
     button.setTitleColor(.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
     button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button
@@ -67,7 +67,7 @@ final class PopupView: UIView {
     button.backgroundColor = .o50
     button.setTitleColor(.white, for: .normal)
     button.setTitle("종료", for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medimu", size: 16)
+    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
     button.addTarget(self, action: #selector(endButtonTapped), for: .touchUpInside)
     button.layer.cornerRadius = 8
     return button
@@ -89,6 +89,7 @@ final class PopupView: UIView {
     
     self.titleLabel.text = title
     self.descLabel.text = desc
+    self.checkEndButton = checkEndButton
     self.leftButton.setTitle(leftButtonTitle, for: .normal)
     self.rightButton.setTitle(rightButtonTitle, for: .normal)
     
@@ -136,13 +137,15 @@ final class PopupView: UIView {
       make.left.right.equalToSuperview().inset(24)
     }
     
-    leftButton.snp.makeConstraints { make in
-      make.height.equalTo(47)
-      make.width.equalTo(rightButton)
-    }
-    
-    rightButton.snp.makeConstraints { make in
-      make.height.equalTo(47)
+    if !checkEndButton {
+      leftButton.snp.makeConstraints { make in
+        make.height.equalTo(47)
+        make.width.equalTo(rightButton)
+      }
+      
+      rightButton.snp.makeConstraints { make in
+        make.height.equalTo(47)
+      }
     }
     
     buttonStack.snp.makeConstraints { make in

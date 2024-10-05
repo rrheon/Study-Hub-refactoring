@@ -40,7 +40,7 @@ protocol ModifyPost: ManagementPost {
 
 extension ModifyPost {
   func showModifyView(vc: UIViewController){
-    let modifyVC = CreateStudyViewController()
+    let modifyVC = CreateStudyViewController(mode: .PUT)
     
     vc.navigationController?.pushViewController(modifyVC, animated: true)
   }

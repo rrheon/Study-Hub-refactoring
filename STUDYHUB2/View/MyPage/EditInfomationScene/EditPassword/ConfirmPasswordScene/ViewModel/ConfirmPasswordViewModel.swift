@@ -22,7 +22,7 @@ final class ConfirmPasswordViewModel: CommonViewModel {
   
   func nextButtonTapped(_ password: String){
     commonNetworking.moyaNetworking(
-      networkingChoice: .verifyPassword(_password: password)) { result in
+      networkingChoice: .verifyPassword(password)) { result in
         switch result {
         case .success(let response):
           switch response.statusCode{
