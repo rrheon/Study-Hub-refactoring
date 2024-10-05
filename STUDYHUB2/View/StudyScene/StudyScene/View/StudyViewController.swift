@@ -74,6 +74,8 @@ final class StudyViewController: CommonNavi {
     
     view.backgroundColor = .white
     
+    commonNetworking.delegate = self
+    
     setupNavigationbar()
     setupCollectionView()
     
@@ -286,10 +288,17 @@ final class StudyViewController: CommonNavi {
     addButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        moveToOtherVCWithSameNavi(
-          vc: CreateStudyViewController(postedData: viewModel.postData, mode: .POST),
-          hideTabbar: true
-        )
+    
+        let loginStatus = viewModel.checkLoginStatus.value
+        switch loginStatus {
+        case true:
+          moveToOtherVCWithSameNavi(
+            vc: CreateStudyViewController(postedData: viewModel.postData, mode: .POST),
+            hideTabbar: true
+          )
+        case false:
+          checkLoginPopup(checkUser: viewModel.checkLoginStatus.value)
+        }
       })
       .disposed(by: viewModel.disposeBag)
   }
@@ -314,7 +323,7 @@ final class StudyViewController: CommonNavi {
     viewModel.isInfiniteScroll = true
     
     resultCollectionView.setContentOffset(.zero, animated: false)
-    viewModel.fetchPostData(hotType: hotType)
+    viewModel.fetchPostData(hotType: hotType, dataUpdate: true)
   }
   
   @objc func recentButtonTapped() {

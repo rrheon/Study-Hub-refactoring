@@ -19,7 +19,7 @@ final class MyRequestListViewModel: EditUserInfoViewModel {
       self.countPostNumber.accept(0)
     }
     super.init(userData: userData)
-    test()
+    getRequestList()
   }
   
   func getRequestList() {

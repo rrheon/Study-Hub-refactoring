@@ -77,6 +77,7 @@ final class ConfirmEmailViewController: CommonNavi {
     settingNavigationTitle(title: "비밀번호 찾기")
     leftButtonSetting()
     rightButtonSetting(imgName: "UnableNextButton", activate: false)
+    navigationController?.navigationBar.backgroundColor = .black
   }
   
   override func leftButtonTapped(_ sender: UIBarButtonItem) {

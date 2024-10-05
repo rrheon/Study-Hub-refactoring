@@ -32,7 +32,6 @@ extension UIButton {
   func setUnderline() {
     guard let title = title(for: .normal) else { return }
     
-    // 기존 제목을 숨기고, 새로운 밑줄 뷰를 추가합니다
     setTitle(nil, for: .normal)
     
     underlineView?.removeFromSuperview()
@@ -57,7 +56,6 @@ extension UIButton {
     }
   }
   
-  // 밑줄을 제거하는 함수
   func removeUnderline() {
     underlineView?.isHidden = true
   }

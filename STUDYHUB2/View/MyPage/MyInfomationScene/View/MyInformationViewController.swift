@@ -31,7 +31,7 @@ final class MyInformViewController: CommonNavi {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
-    
+      
     setupNavigationbar()
     
     setUpLayout()

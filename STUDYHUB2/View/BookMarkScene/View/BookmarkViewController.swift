@@ -297,3 +297,5 @@ extension BookmarkViewController: ParticipatePostDelegate{
     }
   }
 }
+
+extension BookmarkViewController: CreateUIprotocol {}

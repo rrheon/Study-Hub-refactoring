@@ -311,7 +311,8 @@ final class SearchResultCell: UICollectionViewCell {
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     var countMember = data.studyPerson - data.remainingSeat
-    majorLabel.text = " \(data.major.convertMajor(data.major, isEnglish: false)) "
+
+    majorLabel.text = " \(convertMajor(data.major, toEnglish: false) ?? "없음") "
     titleLabel.text = data.title
     periodLabel.text = "\(data.studyStartDate[1])월 \(data.studyStartDate[2])일 ~\(data.studyEndDate[1])월 \(data.studyEndDate[2])일 "
     

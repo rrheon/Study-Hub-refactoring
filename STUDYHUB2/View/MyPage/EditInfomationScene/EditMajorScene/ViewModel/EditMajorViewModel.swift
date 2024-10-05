@@ -34,7 +34,7 @@ final class EditMajorViewModel: EditUserInfoViewModel {
     guard let major = convertMajor(major, toEnglish: true) else { return }
     
     commonNetworking.moyaNetworking(
-      networkingChoice: .editUserMaojr(_major: major),
+      networkingChoice: .editUserMaojr(major),
       needCheckToken: true) { result in
         switch result {
         case .success(let response):

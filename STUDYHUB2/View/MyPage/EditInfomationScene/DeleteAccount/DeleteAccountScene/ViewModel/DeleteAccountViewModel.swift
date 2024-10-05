@@ -19,7 +19,7 @@ final class DeleteAccountViewModel: CommonViewModel {
   func checkValidPassword(){
     let password = password.value
     commonNetworking.moyaNetworking(
-      networkingChoice: .verifyPassword(_password: password)
+      networkingChoice: .verifyPassword(password)
     ) { result in
       switch result {
       case .success(let response):

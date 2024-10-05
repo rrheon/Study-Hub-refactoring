@@ -126,6 +126,8 @@ final class SearchViewController: CommonNavi {
       SeletMajorCell.self,
       forCellReuseIdentifier: SeletMajorCell.cellId
     )
+    
+    commonNetworking.delegate = self
   }
   
   func createSearchViewButton(

@@ -40,9 +40,9 @@ final class EditPasswordViewModel: CommonViewModel {
   func storePasswordToServer(){
     commonNetworking.moyaNetworking(
       networkingChoice: .editUserPassword(
-        _checkPassword: true,
+        checkPassword: true,
         email: userEmail,
-        _password: secondPassword.value
+        password: secondPassword.value
       )
     ) { result in
       switch result {

@@ -224,3 +224,4 @@ final class CreateStudyViewController: CommonNavi {
 }
 
 extension CreateStudyViewController: ShowBottomSheet{}
+extension CreateStudyViewController: CreateUIprotocol {}

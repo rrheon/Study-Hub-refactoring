@@ -27,8 +27,10 @@ final class PostDetailInfoManager {
     loginStatus: Bool,
     completion: @escaping (PostDetailData) -> Void
   ){
-    commonNetwork.moyaNetworking(networkingChoice: .searchSinglePost(_postId: postId),
-                                 needCheckToken: loginStatus) { result in
+    commonNetwork.moyaNetworking(
+      networkingChoice: .searchSinglePost(postId),
+      needCheckToken: loginStatus
+    ) { result in
       switch result {
       case .success(let response):
         do {
@@ -53,9 +55,9 @@ final class PostDetailInfoManager {
   
   func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping (GetCommentList) -> Void) {
     commonNetwork.moyaNetworking(networkingChoice: .getCommentList(
-      _postId: postId,
-      _page: page,
-      _size: size)) { result in
+      postId: postId,
+      page: page,
+      size: size)) { result in
         switch result {
         case .success(let response):
           do {
@@ -73,7 +75,7 @@ final class PostDetailInfoManager {
   }
   
   func getCommentPreview(postId: Int, completion: @escaping ([CommentConetent]) -> Void){
-    commonNetwork.moyaNetworking(networkingChoice: .getPreviewCommentList(_postid: postId)) { result in
+    commonNetwork.moyaNetworking(networkingChoice: .getPreviewCommentList(postId)) { result in
       switch result {
       case .success(let response):
         do {

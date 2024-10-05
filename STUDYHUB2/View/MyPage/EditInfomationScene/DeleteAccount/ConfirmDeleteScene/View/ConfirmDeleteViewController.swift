@@ -148,3 +148,5 @@ final class ConfirmDeleteViewController: CommonNavi {
     }, for: .touchUpInside)
   }
 }
+
+extension ConfirmDeleteViewController: CreateUIprotocol {}

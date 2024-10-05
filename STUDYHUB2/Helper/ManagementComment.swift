@@ -14,7 +14,7 @@ final class CommentManager {
   
   func createComment(content: String, postID: Int, completion: @escaping (Bool) -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.writeComment(_content: content, _postId: postID)) {
+    provider.request(.writeComment(content: content, postId: postID)) {
       switch $0 {
       case .success(let response):
         completion(true)
@@ -27,8 +27,7 @@ final class CommentManager {
   // MARK: - 댓글 수정하기
   func modifyComment(content: String, commentID: Int, completion: @escaping (Bool) -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.modifyComment(_commentId: commentID,
-                                    _content: content)) {
+    provider.request(.modifyComment(commentId: commentID, content: content)) {
       switch $0 {
       case .success(let response):
         completion(true)
@@ -41,7 +40,7 @@ final class CommentManager {
   // MARK: - 댓글 삭제하기
   func deleteComment(commentID: Int, completion: @escaping (Bool) -> Void){
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.deleteComment(_commentId: commentID)) {
+    provider.request(.deleteComment(commentID)) {
       switch $0 {
       case .success(let response):
         completion(true)

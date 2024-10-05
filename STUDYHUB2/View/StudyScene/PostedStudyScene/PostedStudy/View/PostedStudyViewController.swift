@@ -43,6 +43,8 @@ final class PostedStudyViewController: CommonNavi{
     setupNavigation()
     
     view.backgroundColor = .white
+
+    commonNetworking.delegate = self
     
     setupDelegate()
     setupBindings()
@@ -322,5 +324,6 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
 }
 
-extension PostedStudyViewController: CreateDividerLine {}
 extension PostedStudyViewController: ShowBottomSheet {}
+extension PostedStudyViewController: CreateUIprotocol {}
+extension PostedStudyViewController: CheckLoginDelegate {}

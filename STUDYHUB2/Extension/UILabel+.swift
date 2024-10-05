@@ -8,7 +8,9 @@
 import UIKit
 
 extension UILabel {
+  
   // MARK: - 글자색상 일부분 변경
+  
   
   func changeColor(
     wantToChange: String,

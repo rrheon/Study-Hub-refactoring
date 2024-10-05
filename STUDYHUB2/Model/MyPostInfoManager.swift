@@ -18,7 +18,7 @@ final class MyPostInfoManager {
     completion: @escaping (Posts?) -> Void
   ) {
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.getMyPostList(_page: page, _size: size)) {
+    provider.request(.getMyPostList(page: page, size: size)) {
       switch $0 {
       case.success(let response):
         do {
@@ -39,7 +39,7 @@ final class MyPostInfoManager {
   
   func deleteMyPost(postId: Int, completion: @escaping (Bool) -> Void) {
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.deleteMyPost(_postId: postId)) {
+    provider.request(.deleteMyPost(postId)) {
       switch $0 {
       case .success(let response):
         completion(true)

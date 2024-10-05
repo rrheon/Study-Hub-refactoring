@@ -30,39 +30,51 @@ final class PostDataManager {
     }
   }
   
-  func getPostData(hot: String,
-                   text: String? = nil,
-                   page: Int,
-                   size: Int,
-                   titleAndMajor: String,
-                   loginStatus: Bool,
-                   completion: @escaping (PostDataContent) -> Void) {
-    fectchPostData(hot: hot,
-                   text: text,
-                   page: page,
-                   size: size,
-                   titleAndMajor: titleAndMajor,
-                   loginSatus: loginStatus) {
+  func getPostData(
+    hot: String,
+    text: String? = nil,
+    page: Int,
+    size: Int,
+    titleAndMajor: String,
+    loginStatus: Bool,
+    completion: @escaping (
+      PostDataContent
+    ) -> Void
+  ) {
+    fectchPostData(
+      hot: hot,
+      text: text,
+      page: page,
+      size: size,
+      titleAndMajor: titleAndMajor,
+      loginSatus: loginStatus
+    ) {
       guard let data = self.newPostDatas else { return }
       
       completion(data)
     }
   }
   
-  private func fectchPostData(hot: String,
-                              text: String? = nil,
-                              page: Int,
-                              size: Int,
-                              titleAndMajor: String,
-                              loginSatus: Bool,
-                              completion: @escaping () -> Void){
+  private func fectchPostData(
+    hot: String,
+    text: String? = nil,
+    page: Int,
+    size: Int,
+    titleAndMajor: String,
+    loginSatus: Bool,
+    completion: @escaping () -> Void
+  ){
     
-    commonNetworking.moyaNetworking(networkingChoice: .searchPostList(_hot: hot,
-                                                                      text: text ?? "",
-                                                                      page: page,
-                                                                      size: size,
-                                                                      titleAndMajor: titleAndMajor),
-                                    needCheckToken: loginSatus) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .searchPostList(
+        hot: hot,
+        text: text ?? "",
+        page: page,
+        size: size,
+        titleAndMajor: titleAndMajor
+      ),
+      needCheckToken: loginSatus
+    ) { result in
       switch result {
       case.success(let response):
         do {
@@ -80,20 +92,20 @@ final class PostDataManager {
   }
   
   
-  func getNewPostData(_ token: Bool ,
-                      completion: @escaping(PostDataContent) -> Void){
+  func getNewPostData(_ token: Bool , completion: @escaping(PostDataContent) -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "false"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "5"),
                       URLQueryItem(name: "titleAndMajor", value: "false")]
     
-    networkingShared.fetchData(type: "GET",
-                               apiVesrion: "v2",
-                               urlPath: "/study-posts",
-                               queryItems: queryItems,
-                               tokenNeed: token,
-                               createPostData: nil) { (result: Result<PostDataContent,
-                                                       NetworkError>) in
+    networkingShared.fetchData(
+      type: "GET",
+      apiVesrion: "v2",
+      urlPath: "/study-posts",
+      queryItems: queryItems,
+      tokenNeed: token,
+      createPostData: nil
+    ) { (result: Result<PostDataContent, NetworkError> ) in
       switch result {
       case .success(let postData):
         self.newPostDatas = postData

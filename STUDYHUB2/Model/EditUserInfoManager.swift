@@ -42,7 +42,7 @@ final class EditUserInfoManager {
   
   func editUserNickname(_ nickname: String, completion: @escaping (Int?) -> Void) {
     commonNetworking.moyaNetworking(
-      networkingChoice: .editUserNickName(_nickname: nickname),
+      networkingChoice: .editUserNickName(nickname),
       needCheckToken: true
     ) { result in
       switch result {
@@ -59,7 +59,7 @@ final class EditUserInfoManager {
   // MARK: - 이메일 중복 확인
   func checkEmailDuplication(email: String, completion: @escaping (Bool) -> Void){
     commonNetworking.moyaNetworking(
-      networkingChoice: .checkEmailDuplication(_email: email)
+      networkingChoice: .checkEmailDuplication(email)
     ) { result in
       switch result {
       case.success(let response):
@@ -83,8 +83,9 @@ final class EditUserInfoManager {
   func checkValidCode(code: String,
                       email: String,
                       completion: @escaping (String) -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .verifyEmail(_code: code,
-                                                                   _email: email)) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .verifyEmail(code: code,email: email)
+    ) { result in
       switch result {
       case .success(let response):
         let res = String(data: response.data, encoding: .utf8) ?? "No data"
@@ -112,7 +113,7 @@ final class EditUserInfoManager {
 
   // MARK: - 인증코드 전송
   func sendEmailCode(email: String, completion: @escaping () -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .sendEmailCode(_email: email)) { result in
+    commonNetworking.moyaNetworking(networkingChoice: .sendEmailCode(email)) { result in
       switch result {
       case .success(let response):
         completion()
@@ -127,9 +128,12 @@ final class EditUserInfoManager {
   func changePassword(password: String,
                       email: String,
                       completion: @escaping () -> Void){
-    commonNetworking.moyaNetworking(networkingChoice: .editUserPassword(_checkPassword: true,
-                                                                        email: email,
-                                                                        _password: password)) { result in
+    commonNetworking.moyaNetworking(
+      networkingChoice: .editUserPassword(
+        checkPassword: true,
+        email: email,
+        password: password)
+    ) { result in
       switch result {
       case .success(let response):
         print(response.response)

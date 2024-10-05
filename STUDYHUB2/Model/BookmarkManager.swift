@@ -52,7 +52,7 @@ final class BookmarkManager {
                             userId: Int,
                             completion: @escaping (CheckSingleBookmark) -> Void){
     commonNetworking.moyaNetworking(
-      networkingChoice: .searchSingleBookMark(postId, userId)) { result in
+      networkingChoice: .searchSingleBookMark(postId: postId, userId: userId)) { result in
         switch result {
         case .success(let response):
           print(response.response)

@@ -141,11 +141,11 @@ final class SimilarPostCell: UICollectionViewCell {
   }
   
   private func bind() {
-    guard let major = model?.major.convertMajor(model?.major ?? "공통",
-                                                isEnglish: false) else { return }
-    
-    guard let writerMajor = model?.userData.major.convertMajor(model?.userData.major ?? "없음",
-                                                               isEnglish: false) else { return }
+    guard let major = convertMajor(model?.major ?? "없음", toEnglish: false),
+          let writerMajor = convertMajor(
+            model?.userData.major ?? "없음", toEnglish: false
+          ) else { return }
+
     majorLabel.text = "\(major)"
     titleLabel.text = model?.title
     remainMemberNum = model?.remainingSeat ?? 0
@@ -172,3 +172,5 @@ final class SimilarPostCell: UICollectionViewCell {
     }
   }
 }
+
+extension SimilarPostCell: ConvertMajor {}

@@ -105,7 +105,7 @@ final class AgreementViewController: CommonNavi {
   // MARK: - makeUI
   func makeUI(){
     mainTitleView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(130)
+      $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     
@@ -119,11 +119,13 @@ final class AgreementViewController: CommonNavi {
     agreeAllCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllButton.snp.leading).offset(15)
       $0.centerY.equalTo(agreeAllButton)
+      $0.height.width.equalTo(24)
     }
     
     agreeFirstCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllCheckButton.snp.leading)
       $0.top.equalTo(agreeAllCheckButton.snp.bottom).offset(40)
+      $0.height.width.equalTo(24)
     }
     
     firstServiceButton.snp.makeConstraints {
@@ -139,6 +141,7 @@ final class AgreementViewController: CommonNavi {
     agreeSecondCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeFirstCheckButton.snp.leading)
       $0.top.equalTo(agreeFirstCheckButton.snp.bottom).offset(20)
+      $0.height.width.equalTo(24)
     }
     
     secondServiceButton.snp.makeConstraints {

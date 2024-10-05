@@ -117,7 +117,7 @@ final class RefusePersonCell: UICollectionViewCell {
   
   func bind(){
     guard let data = model else { return }
-      majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
+      majorLabel.text = convertMajor(data.major, toEnglish: false)
       nickNameLabel.text = data.nickname
       dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
 //      refuseReasonTextView.text = $0.
@@ -142,3 +142,5 @@ final class RefusePersonCell: UICollectionViewCell {
     }
   }
 }
+
+extension RefusePersonCell: ConvertMajor {}

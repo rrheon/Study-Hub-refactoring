@@ -440,3 +440,4 @@ extension CheckParticipantsVC: WriteRefuseReasonVCDelegate {
 }
 
 extension CheckParticipantsVC: ShowBottomSheet {}
+extension CheckParticipantsVC: CreateUIprotocol {}

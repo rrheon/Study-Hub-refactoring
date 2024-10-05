@@ -37,7 +37,7 @@ final class PostManager {
   
   func modifyPost(data: UpdateStudyRequest, completion: @escaping (Bool) -> Void){
     commonNetworking.moyaNetworking(
-      networkingChoice: .modifyMyPost(_data: data),
+      networkingChoice: .modifyMyPost(data),
       needCheckToken: true
     ) { result in
       switch result {
@@ -51,7 +51,7 @@ final class PostManager {
   
   func deleteMyPost(postId: Int, completion: @escaping (Bool) -> Void) {
     let provider = MoyaProvider<networkingAPI>()
-    provider.request(.deleteMyPost(_postId: postId)) {
+    provider.request(.deleteMyPost(postId)) {
       switch $0 {
       case .success(_):
         completion(true)

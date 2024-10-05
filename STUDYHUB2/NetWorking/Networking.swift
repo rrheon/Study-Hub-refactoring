@@ -20,33 +20,31 @@ enum networkingAPI {
   
   // 유저정보 수정
   case createNewAccount(accountData: CreateAccount)
-  case editUserNickName(_nickname: String)
-  case editUserMaojr(_major: String)
-  case editUserPassword(_checkPassword: Bool, email: String, _password: String)
-  case verifyPassword(_password: String)
-  case verifyEmail(_code: String, _email: String)
-  case checkEmailDuplication(_email: String)
-  case sendEmailCode(_email: String)
+  case editUserNickName(_ nickname: String)
+  case editUserMaojr(_ major: String)
+  case editUserPassword(checkPassword: Bool, email: String, password: String)
+  case verifyPassword(_ password: String)
+  case verifyEmail(code: String, email: String)
+  case checkEmailDuplication(_ email: String)
+  case sendEmailCode(_ email: String)
   case deleteID
   
   // 댓글 관련
-  case getCommentList(_postId: Int, _page: Int, _size: Int)
-  case writeComment(_content: String, _postId: Int)
-  case deleteComment(_commentId: Int)
-  case modifyComment(_commentId: Int, _content: String)
-  case getPreviewCommentList(_postid: Int)
+  case getCommentList(postId: Int, page: Int, size: Int)
+  case writeComment(content: String, postId: Int)
+  case deleteComment(_ commentId: Int)
+  case modifyComment(commentId: Int, content: String)
+  case getPreviewCommentList(_ postid: Int)
   
   // 게시글관련
-  case getMyPostList(_page: Int, _size: Int)
+  case getMyPostList(page: Int, size: Int)
   case createMyPost(_ data: CreateStudyRequest)
-  case modifyMyPost(_data: UpdateStudyRequest)
-  case deleteMyPost(_postId: Int)
+  case modifyMyPost(_ data: UpdateStudyRequest)
+  case deleteMyPost(_ postId: Int)
   case deleteMyAllPost
-  case searchSinglePost(_postId: Int)
-  case searchPostList(_hot: String, text: String,
-                      page: Int, size: Int,
-                      titleAndMajor: String)
-  case recommendSearch(_keyword: String)
+  case searchSinglePost(_ postId: Int)
+  case searchPostList(hot: String, text: String, page: Int, size: Int, titleAndMajor: String)
+  case recommendSearch(_ keyword: String)
   case closePost(_ postId: Int)
   
   // 스터디 참여 신청 관련
@@ -61,7 +59,7 @@ enum networkingAPI {
   
   // 북마크 관련
   case changeBookMarkStatus(_ postId: Int)
-  case searchSingleBookMark(_ postId: Int, _ userId: Int)
+  case searchSingleBookMark(postId: Int, userId: Int)
   case searchBookMarkList(page: Int, size: Int)
   case deleteAllBookMark
   
@@ -92,27 +90,27 @@ extension networkingAPI: TargetType {
       // 유저정보 수정
     case .createNewAccount(accountData: _):
       return "/v1/users/signup"
-    case .editUserNickName(_nickname: _):
+    case .editUserNickName(nickname: _):
       return "/v1/users/nickname"
-    case .editUserMaojr(_major: _):
+    case .editUserMaojr(major: _):
       return "/v1/users/major"
-    case .editUserPassword(_checkPassword: _,email : _, _password: _):
+    case .editUserPassword(checkPassword: _,email : _, password: _):
       return "/v2/users/password"
-    case .verifyPassword(_password: _):
+    case .verifyPassword(password: _):
       return "/v1/users/password/verify"
-    case .verifyEmail(_code:_, _email: _):
+    case .verifyEmail(code:_, email: _):
       return "/v1/email/verify"
-    case .checkEmailDuplication(_email: _):
+    case .checkEmailDuplication(email: _):
       return "/v1/email/duplication"
-    case .sendEmailCode(_email: _):
+    case .sendEmailCode(email: _):
       return "/v1/email"
     case .deleteID:
       return "/v1/users"
       
       // 댓글관련
-    case .writeComment(_content: _ , _postId: _):
+    case .writeComment(content: _ , postId: _):
       return "/v1/comments"
-    case .getCommentList(let postId, _page: _, _size: _):
+    case .getCommentList(let postId, page: _, size: _):
       return "/v1/comments/\(postId)"
     case .deleteComment(let commentId):
       return "/v1/comments/\(commentId)"
@@ -122,7 +120,7 @@ extension networkingAPI: TargetType {
       return "/v1/comments/\(postId)/preview"
       
       // 게시글 관련
-    case .getMyPostList(_page: _, _size: _):
+    case .getMyPostList(page: _, size: _):
       return "/v1/study-posts/mypost"
     case .createMyPost(_):
       return "/v1/study-posts"
@@ -130,9 +128,9 @@ extension networkingAPI: TargetType {
       return "/v1/study-posts/\(postId)"
     case .deleteMyAllPost:
       return "/v1/all/study-post"
-    case .modifyMyPost(_data: _):
+    case .modifyMyPost(data: _):
       return "/v1/study-posts"
-    case .searchPostList(_hot: _, text: _, page: _, size: _, titleAndMajor: _):
+    case .searchPostList(hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return "/v2/study-posts"
     case .searchSinglePost(let postId):
       return "/v2/study-posts/\(postId)"
@@ -181,12 +179,11 @@ extension networkingAPI: TargetType {
   // MARK: - method
   var method: Moya.Method {
     switch self {
-    case .searchSinglePost(_postId: _),
-        .getCommentList(_postId: _, _page: _, _size: _),
-        .getMyPostList(_page: _, _size: _),
-        .recommendSearch(_keyword: _),
-        .searchPostList(_hot: _, text: _,
-                        page: _, size: _, titleAndMajor: _),
+    case .searchSinglePost(postId: _),
+        .getCommentList(postId: _, page: _, size: _),
+        .getMyPostList(page: _, size: _),
+        .recommendSearch(keyword: _),
+        .searchPostList(hot: _, text: _, page: _, size: _, titleAndMajor: _),
         .getMyParticipateList(page: _, size: _),
         .searchParticipateInfo(inspection: _, page: _, size: _, studyId: _),
         .searchBookMarkList(page: _, size: _),
@@ -197,12 +194,12 @@ extension networkingAPI: TargetType {
         .getNotice(page: _, size: _):
       return .get
       
-    case .storeImage(_image: _),
-        .editUserNickName(_nickname: _),
-        .editUserMaojr(_major: _),
-        .editUserPassword(_checkPassword: _, email: _, _password: _),
-        .modifyComment(_commentId: _, _content: _),
-        .modifyMyPost(_data: _),
+    case .storeImage(image: _),
+        .editUserNickName(nickname: _),
+        .editUserMaojr(major: _),
+        .editUserPassword(checkPassword: _, email: _, password: _),
+        .modifyComment(commentId: _, content: _),
+        .modifyMyPost(data: _),
         .closePost(_),
         .rejectParticipate(rejectPersonData: _),
         .acceptParticipate(acceptPersonData: _):
@@ -210,19 +207,19 @@ extension networkingAPI: TargetType {
       
     case .deleteImage,
         .deleteID,
-        .deleteComment(_commentId: _),
-        .deleteMyPost(_postId: _),
+        .deleteComment(commentId: _),
+        .deleteMyPost(postId: _),
         .deleteMyAllPost,
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark:
       return .delete
       
-    case .verifyPassword(_password: _),
-        .verifyEmail(_code: _, _email: _),
-        .checkEmailDuplication(_email: _),
-        .sendEmailCode(_email: _),
-        .writeComment(_content: _, _postId: _),
-        .refreshAccessToken(_refreshToken: _),
+    case .verifyPassword(password: _),
+        .verifyEmail(code: _, email: _),
+        .checkEmailDuplication(email: _),
+        .sendEmailCode(email: _),
+        .writeComment(content: _, postId: _),
+        .refreshAccessToken(refreshToken: _),
         .createNewAccount(accountData: _),
         .participateStudy(introduce: _, studyId: _),
         .changeBookMarkStatus(_),
@@ -240,10 +237,11 @@ extension networkingAPI: TargetType {
       let imageData = image.jpegData(compressionQuality: 0.5)
 //      let formData = MultipartFormBodyPart(provider: .data(imageData!), name: "image",
 //                                           fileName: "image.jpg", mimeType: "image/jpeg")
-      let formData = MultipartFormData(provider: .data(imageData!),
-                                       name: "image",
-                                       fileName: "image.jpg",
-                                       mimeType: "image/jpeg")
+      let formData = MultipartFormData(
+        provider: .data(imageData!),
+        name: "image",
+        fileName: "image.jpg",
+        mimeType: "image/jpeg")
 //      return .uploadMultipartFormData([formData])
       return .uploadMultipart([formData])
       
@@ -275,7 +273,7 @@ extension networkingAPI: TargetType {
       let params = WriteComment(content: content, postId: postId)
       return .requestJSONEncodable(params)
       
-    case .getCommentList(_postId: _, let page, let size):
+    case .getCommentList(postId: _, let page, let size):
       let params: [String : Any] = [ "page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
@@ -399,29 +397,30 @@ extension networkingAPI: TargetType {
     //      }
     //
     //    }
+    
     guard let accessToken = TokenManager.shared.loadAccessToken() else { return nil }
     switch self {
-    case .checkEmailDuplication(_email: _),
-        .sendEmailCode(_email: _),
-        .getCommentList(_postId: _, _page: _, _size: _),
-        .recommendSearch(_keyword: _),
-        .refreshAccessToken(_refreshToken: _),
+    case .checkEmailDuplication(email: _),
+        .sendEmailCode(email: _),
+        .getCommentList(postId: _, page: _, size: _),
+        .recommendSearch(keyword: _),
+        .refreshAccessToken(refreshToken: _),
         .createNewAccount(accountData: _),
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
-        .getPreviewCommentList(_postid: _),
+        .getPreviewCommentList(postid: _),
         .getNotice(page: _, size: _):
       return ["Content-type": "application/json"]
       
-    case .verifyEmail(_code: _, _email: _):
+    case .verifyEmail(code: _, email: _):
       return ["Accept" : "application/json"]
       
-    case .writeComment(_content: _, _postId: _),
-        .modifyComment(_commentId: _, _content: _),
-        .getMyPostList(_page: _, _size: _),
-        .modifyMyPost(_data: _),
+    case .writeComment(content: _, postId: _),
+        .modifyComment(commentId: _, content: _),
+        .getMyPostList(page: _, size: _),
+        .modifyMyPost(data: _),
         .closePost(_),
-        .searchSinglePost(_postId: _),
+        .searchSinglePost(postId: _),
         .participateStudy(introduce: _, studyId: _),
         .getMyParticipateList(page: _, size: _),
         .changeBookMarkStatus(_),
@@ -432,8 +431,7 @@ extension networkingAPI: TargetType {
         .getMyReqeustList(page: _, size: _),
         .getRejectReason(_),
         .searchSingleBookMark(_, _),
-        .searchPostList(_hot: _, text: _, page: _,
-                        size: _, titleAndMajor: _):
+        .searchPostList(hot: _, text: _, page: _, size: _, titleAndMajor: _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       
@@ -443,14 +441,14 @@ extension networkingAPI: TargetType {
     case .deleteImage,
         .deleteID ,
         .verifyPassword(_),
-        .deleteComment(_commentId: _),
-        .deleteMyPost(_postId: _),
+        .deleteComment(commentId: _),
+        .deleteMyPost(postId: _),
         .deleteMyAllPost,
         .deleteMyRequest(studyId: _),
         .deleteAllBookMark,
-        .editUserMaojr(_major: _),
-        .editUserNickName(_nickname: _),
-        .editUserPassword(_checkPassword: _, email: _, _password: _):
+        .editUserMaojr(major: _),
+        .editUserNickName(nickname: _),
+        .editUserPassword(checkPassword: _, email: _, password: _):
       return [ "Authorization": "\(accessToken)"]
       
     default:
@@ -470,10 +468,12 @@ final class Networking {
   typealias NetworkCompletion<T: Codable> = (Result<T, NetworkError>) -> Void
   
   // 네트워킹 요청을 생성하는 메서드
-  func createRequest<T: Codable>(url: URL,
-                                 method: String,
-                                 tokenNeed: Bool,
-                                 createPostData: T?) -> URLRequest {
+  func createRequest<T: Codable>(
+    url: URL,
+    method: String,
+    tokenNeed: Bool,
+    createPostData: T?
+  ) -> URLRequest {
     var request = URLRequest(url: url)
     request.httpMethod = method
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -505,13 +505,15 @@ final class Networking {
   }
   
   // 네트워킹 요청하는 메서드
-  func fetchData<T: Codable>(type: String,
-                             apiVesrion: String,
-                             urlPath: String,
-                             queryItems: [URLQueryItem]?,
-                             tokenNeed: Bool,
-                             createPostData: T?,
-                             completion: @escaping NetworkCompletion<T>) {
+  func fetchData<T: Codable>(
+    type: String,
+    apiVesrion: String,
+    urlPath: String,
+    queryItems: [URLQueryItem]?,
+    tokenNeed: Bool,
+    createPostData: T?,
+    completion: @escaping NetworkCompletion<T>
+  ) {
     var urlComponents = URLComponents()
     urlComponents.scheme = "https"
     urlComponents.host = "studyhub.shop"
@@ -526,10 +528,12 @@ final class Networking {
       return
     }
     
-    let request = createRequest(url: url,
-                                method: type,
-                                tokenNeed: tokenNeed,
-                                createPostData: createPostData)
+    let request = createRequest(
+      url: url,
+      method: type,
+      tokenNeed: tokenNeed,
+      createPostData: createPostData
+    )
     
     URLSession.shared.dataTask(with: request) { data, response, error in
       if let error = error {

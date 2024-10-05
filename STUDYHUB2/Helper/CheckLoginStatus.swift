@@ -17,7 +17,7 @@ extension CommonNetworkingProtocol {
   }
 }
 
-protocol CheckLoginDelegate: AnyObject {
+protocol CheckLoginDelegate: CommonNetworkingProtocol {
   func checkLoginPopup(checkUser: Bool)
 }
 

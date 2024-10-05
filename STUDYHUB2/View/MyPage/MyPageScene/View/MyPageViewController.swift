@@ -27,6 +27,8 @@ final class MyPageViewController: CommonNavi {
     super.viewDidLoad()
     view.backgroundColor = .white
     
+    commonNetworking.delegate = self
+    
     setupNavigationbar()
     setupLayout()
     makeUI()
@@ -93,14 +95,21 @@ final class MyPageViewController: CommonNavi {
     
     viewModel.uesrActivityTapped
       .subscribe(onNext: { [weak self] seleted in
-        guard let userData = self?.viewModel.userData else { return }
-        switch seleted {
-        case .writtenButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyPostViewController(userData), hideTabbar: true)
-        case .participateStudyButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(userData), hideTabbar: true)
-        case .requestListButton:
-          self?.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(userData), hideTabbar: true)
+        guard let userData = self?.viewModel.userData,
+              let self = self else { return }
+        let loginStauts = viewModel.checkLoginStatus.value
+        switch loginStauts {
+        case true:
+          switch seleted {
+          case .writtenButton:
+            self.moveToOtherVCWithSameNavi(vc: MyPostViewController(userData), hideTabbar: true)
+          case .participateStudyButton:
+            self.moveToOtherVCWithSameNavi(vc: MyParticipateStudyVC(userData), hideTabbar: true)
+          case .requestListButton:
+            self.moveToOtherVCWithSameNavi(vc: MyRequestListViewController(userData), hideTabbar: true)
+          }
+        case false:
+          checkLoginPopup(checkUser: false)
         }
       })
       .disposed(by: viewModel.disposeBag)
@@ -140,3 +149,4 @@ final class MyPageViewController: CommonNavi {
 
 extension MyPageViewController: MoveToBookmarkView {}
 extension MyPageViewController: Logout{}
+extension MyPageViewController: CheckLoginDelegate {}

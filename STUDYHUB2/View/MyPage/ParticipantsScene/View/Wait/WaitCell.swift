@@ -192,7 +192,7 @@ final class WaitCell: UICollectionViewCell {
   func bind(){
     guard let data = model else { return }
     userId = data.id
-    majorLabel.text = data.major.convertMajor(data.major, isEnglish: false)
+    majorLabel.text = convertMajor(data.major, toEnglish: false)
     nickNameLabel.text = data.nickname
     describeTextView.text = data.introduce
     dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
@@ -218,3 +218,5 @@ final class WaitCell: UICollectionViewCell {
     }
   }
 }
+
+extension WaitCell: ConvertMajor {}

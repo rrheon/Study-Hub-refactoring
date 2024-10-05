@@ -148,7 +148,7 @@ final class BookMarkCell: UICollectionViewCell {
   }
   
   private func bind() {
-    majorLabel.text = model?.major.convertMajor(model?.major ?? "", isEnglish: false)
+    majorLabel.text = convertMajor(model?.major ?? "없음", toEnglish: false)
     titleLabel.text =  model?.title
     infoLabel.text = model?.content
     remainLabel.text = "잔여 \(model?.remainingSeat ?? 0)자리"
@@ -161,6 +161,6 @@ final class BookMarkCell: UICollectionViewCell {
       enterButton.isEnabled = false
     }
   }
-  
 }
 
+extension BookMarkCell: ConvertMajor {}
