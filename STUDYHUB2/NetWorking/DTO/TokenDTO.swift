@@ -14,6 +14,6 @@ struct RefreshAccessToken: Codable {
 
 // 로그인, 토크 갱신할 때 서버로 부터의 응답
 struct AccessTokenResponse: Codable {
-  let accessToken: String
-  let refreshToken: String
+  let accessToken: String?
+  let refreshToken: String?
 }

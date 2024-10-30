@@ -137,7 +137,7 @@ final class EnterValidCodeViewController: CommonNavi {
         switch valid {
         case true:
           moveToOtherVCWithSameNavi(
-            vc: EditPasswordViewController(email, loginStatus: true),
+            vc: EditPasswordViewController(email, loginStatus: false),
             hideTabbar: true
           )
         case false:

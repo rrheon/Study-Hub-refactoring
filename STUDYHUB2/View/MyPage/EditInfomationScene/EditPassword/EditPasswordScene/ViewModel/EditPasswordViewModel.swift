@@ -36,7 +36,6 @@ final class EditPasswordViewModel: CommonViewModel {
     return firstPassword == secondPassword
   }
   
-  // 왜 안될까남
   func storePasswordToServer(){
     commonNetworking.moyaNetworking(
       networkingChoice: .editUserPassword(

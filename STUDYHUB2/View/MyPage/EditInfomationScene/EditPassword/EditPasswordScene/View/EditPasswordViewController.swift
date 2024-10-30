@@ -111,7 +111,7 @@ final class EditPasswordViewController: CommonNavi {
       .drive(onNext: { [weak self] result in
         switch result {
         case true:
-          self?.checkLoginStatus()
+          self?.checkLoginStatus(checkHomeScene: self?.viewModel.loginStatus ?? false)
         case false:
           return
         }
@@ -140,11 +140,16 @@ final class EditPasswordViewController: CommonNavi {
     viewModel.storePasswordToServer()
   }
   
-  func checkLoginStatus(){
+  func checkLoginStatus(checkHomeScene: Bool){
     switch viewModel.loginStatus {
     case true:
-      self.navigationController?.popViewController(animated: true)
-      self.navigationController?.popViewController(animated: false)
+      if checkHomeScene {
+        self.navigationController?.popViewController(animated: false)
+        self.navigationController?.popViewController(animated: false)
+        self.navigationController?.popViewController(animated: false)
+      }else {
+        logout()
+      }
       
     case false:
       logout()

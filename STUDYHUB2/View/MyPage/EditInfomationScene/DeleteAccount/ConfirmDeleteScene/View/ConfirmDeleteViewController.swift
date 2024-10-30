@@ -65,12 +65,20 @@ final class ConfirmDeleteViewController: CommonNavi {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    view.backgroundColor = .white
     setupLayout()
     makeUI()
     
+    settingNavigationBar()
     setupButtonActions()
   }
 
+  func settingNavigationBar(){
+    leftButtonSetting()
+    
+    settingNavigationTitle(title: "탈퇴하기")
+  }
+  
   func setupLayout(){
     buttonStackView.addArrangedSubview(continueButton)
     buttonStackView.addArrangedSubview(cancelButton)
@@ -100,7 +108,7 @@ final class ConfirmDeleteViewController: CommonNavi {
     )
     
     titleLabel.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(30)
+      $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
       $0.leading.equalToSuperview().offset(20)
     }
     

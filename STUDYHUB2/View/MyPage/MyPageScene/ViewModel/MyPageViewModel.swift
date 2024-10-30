@@ -30,10 +30,14 @@ final class MyPageViewModel: CommonViewModel {
   var uesrActivityTapped = PublishRelay<UserActivity>()
   var serviceTapped = PublishRelay<Service>()
   
+  var serviceURL: String = ""
+  var personalURL: String = ""
+  
   init(_ checkLoginStatus: Bool) {
     self.checkLoginStatus.accept(checkLoginStatus)
     super.init()
     fetchUserData()
+    loadURLs()
   }
   
   func fetchUserData() {
@@ -52,6 +56,15 @@ final class MyPageViewModel: CommonViewModel {
   
   func seletService(_ seletedService: Service) {
     serviceTapped.accept(seletedService)
+  }
+  
+  private func loadURLs() {
+    let urlData = DataLoaderFromPlist()
+    if let serviceURLString = urlData.loadURLs()?["service"],
+       let personalURLString = urlData.loadURLs()?["personal"] {
+      serviceURL = serviceURLString
+      personalURL = personalURLString
+    }
   }
 }
 

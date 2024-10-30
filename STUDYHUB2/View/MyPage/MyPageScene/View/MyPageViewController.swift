@@ -1,5 +1,6 @@
 
 import UIKit
+import SafariServices
 
 import SnapKit
 import RxSwift
@@ -125,9 +126,9 @@ final class MyPageViewController: CommonNavi {
         case .howToUse:
           self?.moveToOtherVCWithSameNavi(vc: HowToUseViewController(loginStatus), hideTabbar: true)
         case .termsOfService:
-          self?.moveToOtherVCWithSameNavi(vc: ServiceUseInfoViewContrller(), hideTabbar: true)
+          self?.moveToPage(url: self?.viewModel.serviceURL ?? "")
         case .privacyPolicy:
-          self?.moveToOtherVCWithSameNavi(vc: PersonalInfoViewController(), hideTabbar: true)
+          self?.moveToPage(url: self?.viewModel.personalURL ?? "")
         }
       })
       .disposed(by: viewModel.disposeBag)
@@ -144,6 +145,13 @@ final class MyPageViewController: CommonNavi {
       isNeedFetch: viewModel.isNeedFetch
     )
     moveToBookmarkView(sender, data: data)
+  }
+  
+  func moveToPage(url: String) {
+    if let url = URL(string: url) {
+      let urlView = SFSafariViewController(url: url)
+      present(urlView, animated: true)
+    }
   }
 }
 

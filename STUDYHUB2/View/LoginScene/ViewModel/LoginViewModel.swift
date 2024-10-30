@@ -15,7 +15,7 @@ class LoginViewModel: CommonViewModel {
   let isValidAccount = PublishRelay<Bool>()
   
   func login(email: String, password: String){
-    guard let loginURL = URL(string: "https://studyhub.shop:443/api/v1/users/login") else {
+    guard let loginURL: URL = URL(string: "https://studyhub.shop:443/api/v1/users/login") else {
       return
     }
     
@@ -25,7 +25,7 @@ class LoginViewModel: CommonViewModel {
     ]
     
     do {
-      let jsonData = try JSONSerialization.data(withJSONObject: loginData, options: [])
+      let jsonData: Data = try JSONSerialization.data(withJSONObject: loginData, options: [])
       
       var request = URLRequest(url: loginURL)
       request.httpMethod = "POST"
@@ -43,8 +43,8 @@ class LoginViewModel: CommonViewModel {
             
             self?.tokenManager.deleteTokens()
             guard let loginResult = self?.tokenManager.saveTokens(
-              accessToken: accessTokenResponse.accessToken,
-              refreshToken: accessTokenResponse.refreshToken) else { return }
+              accessToken: accessTokenResponse.accessToken!,
+              refreshToken: accessTokenResponse.refreshToken!) else { return }
             
             self?.isValidAccount.accept(loginResult)
           } catch {

@@ -133,7 +133,7 @@ final class MyInformViewController: CommonNavi {
     case .logout:
       logoutButtonTapped()
     case .deleteAccount:
-      moveToOtherVCWithSameNavi(vc: DeleteAccountViewController(), hideTabbar: true)
+      moveToOtherVCWithSameNavi(vc: ConfirmDeleteViewController(), hideTabbar: true)
     case .editProfile:
       editProfileButtonTapped()
     case .deleteProfile:
@@ -259,7 +259,7 @@ extension MyInformViewController: UIImagePickerControllerDelegate,
   ) {
     if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
       viewModel.storeProfileToserver(image: image)
-      self.dismiss(animated: true)
+//      self.dismiss(animated: true)
     }
   }
 }
