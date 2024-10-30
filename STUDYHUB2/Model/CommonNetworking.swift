@@ -72,8 +72,8 @@ class CommonNetworking {
             self.tokenManager.deleteTokens()
             
             let saveResult = self.tokenManager.saveTokens(
-              accessToken: refreshResult.accessToken,
-              refreshToken: refreshResult.refreshToken
+              accessToken: refreshResult.accessToken!,
+              refreshToken: refreshResult.refreshToken!
             )
             completion(true)
           }

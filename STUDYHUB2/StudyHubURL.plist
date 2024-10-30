@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>personal</key>
-    <string>https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/InfoImage.imageset/InfoImage.png</string>
-    <key>service</key>
-    <string>https://github.com/rrheon/Study-Hub/blob/main/Study-Hub/Assets.xcassets/serviceImage.imageset/serviceImage.png</string>
+	<key>personal</key>
+	<string>https://past-kileskus-637.notion.site/caefb11a04cb4772b84d5cde393b1117</string>
+	<key>service</key>
+	<string>https://past-kileskus-637.notion.site/e0729e1f57ef4ea2a2d042eaf18f21d5</string>
 </dict>
 </plist>
