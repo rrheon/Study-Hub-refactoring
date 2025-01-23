@@ -7,12 +7,15 @@
 
 import Foundation
 
+
+/// 계정 생성
 final class CreateAccountManager {
+  
   static let shared = CreateAccountManager()
+  
   let commonNetworking = CommonNetworking.shared
   
-  func createNewAccount(accountData: CreateAccount,
-                        completion: @escaping (Bool) -> Void){
+  func createNewAccount(accountData: CreateAccount, completion: @escaping (Bool) -> Void){
     commonNetworking.moyaNetworking(
       networkingChoice: .createNewAccount(accountData: accountData)
     ) { result in

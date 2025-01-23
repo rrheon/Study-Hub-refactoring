@@ -127,8 +127,7 @@ final class PostDataManager {
     }
   }
   
-  func getDeadLinePostData(_ token: Bool,
-                           completion: @escaping(PostDataContent) -> Void){
+  func getDeadLinePostData(_ token: Bool, completion: @escaping(PostDataContent) -> Void){
     let queryItems = [URLQueryItem(name: "hot", value: "true"),
                       URLQueryItem(name: "page", value: "0"),
                       URLQueryItem(name: "size", value: "4"),

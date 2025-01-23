@@ -10,6 +10,8 @@ import UIKit
 import Moya
 
 // MARK: - networkingAPI
+
+/// 사용할 API 목록
 enum networkingAPI {
   // 토큰관련
   case refreshAccessToken(_ refreshToken: String)
@@ -409,6 +411,9 @@ extension networkingAPI: TargetType {
         .searchParticipateInfo(inspection: _ ,page: _, size: _, studyId: _),
         .inquiryQuestion(content: _, title: _, toEmail: _),
         .getPreviewCommentList(postid: _),
+        .searchSinglePost(postId: _),
+        .searchPostList(hot: _, text: _, page: _, size: _, titleAndMajor: _),
+
         .getNotice(page: _, size: _):
       return ["Content-type": "application/json"]
       
@@ -420,7 +425,6 @@ extension networkingAPI: TargetType {
         .getMyPostList(page: _, size: _),
         .modifyMyPost(data: _),
         .closePost(_),
-        .searchSinglePost(postId: _),
         .participateStudy(introduce: _, studyId: _),
         .getMyParticipateList(page: _, size: _),
         .changeBookMarkStatus(_),
@@ -430,8 +434,7 @@ extension networkingAPI: TargetType {
         .acceptParticipate(acceptPersonData: _),
         .getMyReqeustList(page: _, size: _),
         .getRejectReason(_),
-        .searchSingleBookMark(_, _),
-        .searchPostList(hot: _, text: _, page: _, size: _, titleAndMajor: _):
+        .searchSingleBookMark(_, _):
       return ["Content-type": "application/json",
               "Authorization": "\(accessToken)"]
       
@@ -477,17 +480,17 @@ final class Networking {
     var request = URLRequest(url: url)
     request.httpMethod = method
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/json", forHTTPHeaderField: "Accept")
+//    request.setValue("application/json", forHTTPHeaderField: "Accept")
     
-    if tokenNeed == true {
-      guard let token = tokenManager.loadAccessToken() else { return request}
-      request.setValue("\(token)", forHTTPHeaderField: "Authorization")
-      
-      if createPostData != nil {
-        guard let uploadData = try? JSONEncoder().encode(createPostData) else { return request }
-        request.httpBody = uploadData
-      }
-    }
+//    if tokenNeed == true {
+//      guard let token = tokenManager.loadAccessToken() else { return request}
+//      request.setValue("\(token)", forHTTPHeaderField: "Authorization")
+//      
+//      if createPostData != nil {
+//        guard let uploadData = try? JSONEncoder().encode(createPostData) else { return request }
+//        request.httpBody = uploadData
+//      }
+//    }
     
     return request
   }

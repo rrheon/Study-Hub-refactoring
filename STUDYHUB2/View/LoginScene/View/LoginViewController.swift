@@ -69,6 +69,8 @@ final class LoginViewController: UIViewController {
     
     setupBinding()
     setupActions()
+    
+    StudyPostManager.searchAllPost(page: 0, size: 5)
   }
   
   // MARK: - setUpLayout

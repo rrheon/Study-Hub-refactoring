@@ -9,8 +9,13 @@ import Foundation
 
 import Moya
 
+
+///  공용 네트워킹
 class CommonNetworking {
+  
   static let shared = CommonNetworking()
+  
+  /// 토큰 관리
   let tokenManager = TokenManager.shared
   
   weak var delegate: CheckLoginDelegate?
@@ -18,7 +23,8 @@ class CommonNetworking {
   func moyaNetworking(
     networkingChoice: networkingAPI,
     needCheckToken: Bool = false,
-    completion: @escaping (Result<Response, MoyaError>) -> Void) {
+    completion: @escaping (Result<Response, MoyaError>) -> Void
+  ) {
     if needCheckToken {
       checkingAccessToken { checkingToken in
         print("토큰 체크:\(checkingToken)")
@@ -76,12 +82,15 @@ class CommonNetworking {
               refreshToken: refreshResult.refreshToken!
             )
             completion(true)
+          } else {
+            completion(false)
           }
         } catch {
           print("Failed to decode JSON: \(error)")
         }
       case .failure(let error):
         completion(false)
+        print(#fileID, #function, #line," - 에러")
       }
     }
   }

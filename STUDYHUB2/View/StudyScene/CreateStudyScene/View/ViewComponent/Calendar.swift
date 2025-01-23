@@ -44,6 +44,9 @@ final class CalendarViewController: UIViewController {
     return button
   }()
   
+  
+  /// init - 캘린더 init
+  /// - Parameter viewModel: 스터디 생성 ViewModel
   init(viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: .none)
@@ -64,9 +67,12 @@ final class CalendarViewController: UIViewController {
     setupCalendarUI()
     
     view.backgroundColor = .white
-  }
+  }// viewDidLoad
   
   // MARK: - setupLayout
+  
+  
+  /// UI 설정
   func setupLayout() {
     if let cal = calendar {
       view.addSubview(cal)
@@ -102,6 +108,9 @@ final class CalendarViewController: UIViewController {
   }
   
   // MARK: - setupCalendarUI
+  
+  
+  /// 캘린더 UI 설정
   func setupCalendarUI() {
     calendar?.allowsSelection = true
     calendar?.allowsMultipleSelection = false
@@ -193,6 +202,9 @@ final class CalendarViewController: UIViewController {
     calendar.appearance.selectionColor = .o50
   }
   
+  
+  /// 캘린더 페이지 이동
+  /// - Parameter month: 월
   func movePage(month: Int){
     let cal = Calendar.current
     var dateComponents = DateComponents()
@@ -208,16 +220,26 @@ final class CalendarViewController: UIViewController {
     }
   }
   
+  
+  /// 다음 페이지로 이동
+  /// - Parameter sender: UIButton - 다음 페이지 이동 버튼
   @objc private func nextCurrentPage(_ sender: UIButton) {
     movePage(month: 1)
   }
   
+  /// 이전 페이지로 이동
+  /// - Parameter sender: UIButton - 이전 페이지 이동 버튼
   @objc private func prevCurrentPage(_ sender: UIButton) {
     movePage(month: -1)
   }
 
+  
+  /// 완료버튼 action
+  /// - Parameter sender: UIButton - 완료버튼
   @objc private func completeButtonTapped(_ sender: UIButton) {
+    // 선택한 날짜 확인
     guard let data = viewModel.seletedDate else { return }
+    
     if viewModel.isStartDateButton.value {
       viewModel.startDate.accept(data)
     } else {

@@ -84,6 +84,8 @@
 		EE5B2FD72B886BFE00D365A2 /* CommnetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */; };
 		EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */; };
 		EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */; };
+		EE5B932C2D424D74006DC65D /* StudyPostNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */; };
+		EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */; };
 		EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE76149A2C50D82D0008E463 /* AuthTextField.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
@@ -273,6 +275,8 @@
 		EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommnetManager.swift; sourceTree = "<group>"; };
 		EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUseInfoViewController.swift; sourceTree = "<group>"; };
+		EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPostNetworking.swift; sourceTree = "<group>"; };
+		EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPostManager.swift; sourceTree = "<group>"; };
 		EE76149A2C50D82D0008E463 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -1436,6 +1440,8 @@
 			isa = PBXGroup;
 			children = (
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
+				EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */,
+				EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */,
 				EEFD5D222B5F67C300D1CE00 /* DTO */,
 			);
 			path = NetWorking;
@@ -1932,6 +1938,7 @@
 				EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
 				EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */,
+				EE5B932C2D424D74006DC65D /* StudyPostNetworking.swift in Sources */,
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */,
@@ -1993,6 +2000,7 @@
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
+				EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
 				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EEC5FFAF2CA29EA500896FEB /* EditPasswordViewModel.swift in Sources */,
