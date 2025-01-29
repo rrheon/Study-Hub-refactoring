@@ -84,6 +84,29 @@
 		EE5B2FD72B886BFE00D365A2 /* CommnetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */; };
 		EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */; };
 		EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */; };
+		EE5B932C2D424D74006DC65D /* StudyPostNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */; };
+		EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */; };
+		EE5B93352D47B315006DC65D /* ManagementAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93342D47B315006DC65D /* ManagementAPIError.swift */; };
+		EE5B93372D47B87B006DC65D /* StudyHubCommonNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93362D47B87B006DC65D /* StudyHubCommonNetworking.swift */; };
+		EE5B93392D48AA57006DC65D /* StudyPostDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93382D48AA57006DC65D /* StudyPostDTO.swift */; };
+		EE5B933D2D48AAE3006DC65D /* ApplyStudyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B933C2D48AAE3006DC65D /* ApplyStudyDTO.swift */; };
+		EE5B933F2D48AAF2006DC65D /* ApplyStudyNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B933E2D48AAF2006DC65D /* ApplyStudyNetworking.swift */; };
+		EE5B93412D48AAFD006DC65D /* ApplyStudyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93402D48AAFD006DC65D /* ApplyStudyManager.swift */; };
+		EE5B93442D48B611006DC65D /* NewBookmarkDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93432D48B611006DC65D /* NewBookmarkDTO.swift */; };
+		EE5B93462D48B61E006DC65D /* BookmarkNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93452D48B61E006DC65D /* BookmarkNetworking.swift */; };
+		EE5B93482D48B624006DC65D /* NewBookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93472D48B624006DC65D /* NewBookmarkManager.swift */; };
+		EE5B934B2D48BC92006DC65D /* ToStudyHublDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B934A2D48BC92006DC65D /* ToStudyHublDTO.swift */; };
+		EE5B934D2D48BC99006DC65D /* ToStudyHubNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B934C2D48BC99006DC65D /* ToStudyHubNetworking.swift */; };
+		EE5B934F2D48BC9E006DC65D /* ToStudyHubManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B934E2D48BC9E006DC65D /* ToStudyHubManager.swift */; };
+		EE5B93592D4A1416006DC65D /* UserAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93582D4A1416006DC65D /* UserAuthManager.swift */; };
+		EE5B935B2D4A141B006DC65D /* UserAuthDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B935A2D4A141B006DC65D /* UserAuthDTO.swift */; };
+		EE5B935D2D4A1426006DC65D /* UserAuthNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B935C2D4A1426006DC65D /* UserAuthNetworking.swift */; };
+		EE5B93602D4A1825006DC65D /* UserProfileDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B935F2D4A1825006DC65D /* UserProfileDTO.swift */; };
+		EE5B93622D4A182C006DC65D /* UserProfileNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93612D4A182C006DC65D /* UserProfileNetworking.swift */; };
+		EE5B93642D4A1833006DC65D /* UserProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93632D4A1833006DC65D /* UserProfileManager.swift */; };
+		EE5B93692D4A257C006DC65D /* NewCommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93682D4A257C006DC65D /* NewCommentDTO.swift */; };
+		EE5B936B2D4A2584006DC65D /* CommentNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B936A2D4A2584006DC65D /* CommentNetworking.swift */; };
+		EE5B936D2D4A2589006DC65D /* CommentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B936C2D4A2589006DC65D /* CommentManager.swift */; };
 		EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE76149A2C50D82D0008E463 /* AuthTextField.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
@@ -273,6 +296,29 @@
 		EE5B2FD62B886BFE00D365A2 /* CommnetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommnetManager.swift; sourceTree = "<group>"; };
 		EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUseInfoViewController.swift; sourceTree = "<group>"; };
+		EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPostNetworking.swift; sourceTree = "<group>"; };
+		EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPostManager.swift; sourceTree = "<group>"; };
+		EE5B93342D47B315006DC65D /* ManagementAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementAPIError.swift; sourceTree = "<group>"; };
+		EE5B93362D47B87B006DC65D /* StudyHubCommonNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyHubCommonNetworking.swift; sourceTree = "<group>"; };
+		EE5B93382D48AA57006DC65D /* StudyPostDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPostDTO.swift; sourceTree = "<group>"; };
+		EE5B933C2D48AAE3006DC65D /* ApplyStudyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyStudyDTO.swift; sourceTree = "<group>"; };
+		EE5B933E2D48AAF2006DC65D /* ApplyStudyNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyStudyNetworking.swift; sourceTree = "<group>"; };
+		EE5B93402D48AAFD006DC65D /* ApplyStudyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyStudyManager.swift; sourceTree = "<group>"; };
+		EE5B93432D48B611006DC65D /* NewBookmarkDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBookmarkDTO.swift; sourceTree = "<group>"; };
+		EE5B93452D48B61E006DC65D /* BookmarkNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkNetworking.swift; sourceTree = "<group>"; };
+		EE5B93472D48B624006DC65D /* NewBookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBookmarkManager.swift; sourceTree = "<group>"; };
+		EE5B934A2D48BC92006DC65D /* ToStudyHublDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToStudyHublDTO.swift; sourceTree = "<group>"; };
+		EE5B934C2D48BC99006DC65D /* ToStudyHubNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToStudyHubNetworking.swift; sourceTree = "<group>"; };
+		EE5B934E2D48BC9E006DC65D /* ToStudyHubManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToStudyHubManager.swift; sourceTree = "<group>"; };
+		EE5B93582D4A1416006DC65D /* UserAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthManager.swift; sourceTree = "<group>"; };
+		EE5B935A2D4A141B006DC65D /* UserAuthDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthDTO.swift; sourceTree = "<group>"; };
+		EE5B935C2D4A1426006DC65D /* UserAuthNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthNetworking.swift; sourceTree = "<group>"; };
+		EE5B935F2D4A1825006DC65D /* UserProfileDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileDTO.swift; sourceTree = "<group>"; };
+		EE5B93612D4A182C006DC65D /* UserProfileNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileNetworking.swift; sourceTree = "<group>"; };
+		EE5B93632D4A1833006DC65D /* UserProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileManager.swift; sourceTree = "<group>"; };
+		EE5B93682D4A257C006DC65D /* NewCommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCommentDTO.swift; sourceTree = "<group>"; };
+		EE5B936A2D4A2584006DC65D /* CommentNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNetworking.swift; sourceTree = "<group>"; };
+		EE5B936C2D4A2589006DC65D /* CommentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentManager.swift; sourceTree = "<group>"; };
 		EE76149A2C50D82D0008E463 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
@@ -826,6 +872,76 @@
 			name = SearchScene;
 			path = "/Users/yong/Desktop/study-hub-iOS-2/STUDYHUB2/View/SearchScene";
 			sourceTree = "<absolute>";
+		};
+		EE5B933A2D48AA84006DC65D /* StudyPost */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B93382D48AA57006DC65D /* StudyPostDTO.swift */,
+				EE5B932B2D424D74006DC65D /* StudyPostNetworking.swift */,
+				EE5B932D2D428F6E006DC65D /* StudyPostManager.swift */,
+			);
+			path = StudyPost;
+			sourceTree = "<group>";
+		};
+		EE5B933B2D48AAAA006DC65D /* ApplyStudy */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B933C2D48AAE3006DC65D /* ApplyStudyDTO.swift */,
+				EE5B933E2D48AAF2006DC65D /* ApplyStudyNetworking.swift */,
+				EE5B93402D48AAFD006DC65D /* ApplyStudyManager.swift */,
+			);
+			path = ApplyStudy;
+			sourceTree = "<group>";
+		};
+		EE5B93422D48B601006DC65D /* Bookmark */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B93432D48B611006DC65D /* NewBookmarkDTO.swift */,
+				EE5B93452D48B61E006DC65D /* BookmarkNetworking.swift */,
+				EE5B93472D48B624006DC65D /* NewBookmarkManager.swift */,
+			);
+			path = Bookmark;
+			sourceTree = "<group>";
+		};
+		EE5B93492D48BC6F006DC65D /* ToStudyHubNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B934A2D48BC92006DC65D /* ToStudyHublDTO.swift */,
+				EE5B934C2D48BC99006DC65D /* ToStudyHubNetworking.swift */,
+				EE5B934E2D48BC9E006DC65D /* ToStudyHubManager.swift */,
+			);
+			path = ToStudyHubNetworking;
+			sourceTree = "<group>";
+		};
+		EE5B93572D4A1406006DC65D /* UserAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B935A2D4A141B006DC65D /* UserAuthDTO.swift */,
+				EE5B935C2D4A1426006DC65D /* UserAuthNetworking.swift */,
+				EE5B93582D4A1416006DC65D /* UserAuthManager.swift */,
+			);
+			path = UserAuth;
+			sourceTree = "<group>";
+		};
+		EE5B935E2D4A1803006DC65D /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B935F2D4A1825006DC65D /* UserProfileDTO.swift */,
+				EE5B93612D4A182C006DC65D /* UserProfileNetworking.swift */,
+				EE5B93632D4A1833006DC65D /* UserProfileManager.swift */,
+			);
+			path = UserProfile;
+			sourceTree = "<group>";
+		};
+		EE5B93672D4A2566006DC65D /* Commnet */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B93682D4A257C006DC65D /* NewCommentDTO.swift */,
+				EE5B936A2D4A2584006DC65D /* CommentNetworking.swift */,
+				EE5B936C2D4A2589006DC65D /* CommentManager.swift */,
+			);
+			path = Commnet;
+			sourceTree = "<group>";
 		};
 		EE7614972C50D4E60008E463 /* LoginScene */ = {
 			isa = PBXGroup;
@@ -1436,6 +1552,15 @@
 			isa = PBXGroup;
 			children = (
 				EE98B1A82B35276D0025C4F8 /* Networking.swift */,
+				EE5B93362D47B87B006DC65D /* StudyHubCommonNetworking.swift */,
+				EE5B93342D47B315006DC65D /* ManagementAPIError.swift */,
+				EE5B933A2D48AA84006DC65D /* StudyPost */,
+				EE5B933B2D48AAAA006DC65D /* ApplyStudy */,
+				EE5B93422D48B601006DC65D /* Bookmark */,
+				EE5B93492D48BC6F006DC65D /* ToStudyHubNetworking */,
+				EE5B93572D4A1406006DC65D /* UserAuth */,
+				EE5B935E2D4A1803006DC65D /* UserProfile */,
+				EE5B93672D4A2566006DC65D /* Commnet */,
 				EEFD5D222B5F67C300D1CE00 /* DTO */,
 			);
 			path = NetWorking;
@@ -1752,7 +1877,6 @@
 			mainGroup = F80421852A7D6816006C6B87;
 			packageReferences = (
 				EE1E44122B17228B00223436 /* XCRemoteSwiftPackageReference "SnapKit" */,
-				EE98B1B32B43D9BD0025C4F8 /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			productRefGroup = F804218F2A7D6816006C6B87 /* Products */;
 			projectDirPath = "";
@@ -1840,7 +1964,10 @@
 				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
 				EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */,
 				EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */,
+				EE5B936B2D4A2584006DC65D /* CommentNetworking.swift in Sources */,
 				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
+				EE5B934F2D48BC9E006DC65D /* ToStudyHubManager.swift in Sources */,
+				EE5B933F2D48AAF2006DC65D /* ApplyStudyNetworking.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
 				EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */,
@@ -1856,6 +1983,7 @@
 				EEC5FF692C994BEE00896FEB /* ParticipateViewModel.swift in Sources */,
 				EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
+				EE5B93392D48AA57006DC65D /* StudyPostDTO.swift in Sources */,
 				EEFD5D302B639D3200D1CE00 /* CreateAccountManager.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,
 				EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */,
@@ -1871,6 +1999,7 @@
 				EED00B782C534C68000D2E23 /* MajorLoader.swift in Sources */,
 				EEC5FF982C9DBF5D00896FEB /* ConfirmPasswordViewModel.swift in Sources */,
 				EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */,
+				EE5B93592D4A1416006DC65D /* UserAuthManager.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
 				EEFD5D282B600B6500D1CE00 /* PostDTO.swift in Sources */,
 				EE0A8B692B04FED3001C3F41 /* PostDataManager.swift in Sources */,
@@ -1888,10 +2017,12 @@
 				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */,
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
+				EE5B93482D48B624006DC65D /* NewBookmarkManager.swift in Sources */,
 				EEC5FFCB2CAC3BFD00896FEB /* MyParticipateStudyViewModel.swift in Sources */,
 				EEC5FF6F2C995E5000896FEB /* UserInfoView.swift in Sources */,
 				EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */,
 				EE07ADC52AF2414C0096890F /* PopUpViewController.swift in Sources */,
+				EE5B93622D4A182C006DC65D /* UserProfileNetworking.swift in Sources */,
 				EEDDDD2B2C7340B300FA347D /* StudyBottomSheet.swift in Sources */,
 				EEB51E9A2B10931500C23AB4 /* UIButton+.swift in Sources */,
 				EE98B1B22B3D4FC20025C4F8 /* EditUserInfoManager.swift in Sources */,
@@ -1899,6 +2030,7 @@
 				EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */,
 				EEFD5D2C2B600CA000D1CE00 /* ErrorDTO.swift in Sources */,
 				EEC5FF7D2C9C086300896FEB /* MyInfomationViewModel.swift in Sources */,
+				EE5B93462D48B61E006DC65D /* BookmarkNetworking.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */,
 				EEC5FF712C995E9A00896FEB /* UserActivityView.swift in Sources */,
 				EEDDDD112C6B4A5B00FA347D /* DetailInfoConponent.swift in Sources */,
@@ -1911,6 +2043,7 @@
 				EEDD80FF2B6D1B350022302E /* InquiryDTO.swift in Sources */,
 				EEDDDD072C69F4FD00FA347D /* CheckLoginStatus.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
+				EE5B93602D4A1825006DC65D /* UserProfileDTO.swift in Sources */,
 				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
@@ -1919,6 +2052,7 @@
 				EE271F2A2AD8B9FA00190E7A /* String+.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
 				EEC5FF942C9DBF4000896FEB /* EditMajorViewModel.swift in Sources */,
+				EE5B933D2D48AAE3006DC65D /* ApplyStudyDTO.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EEC5FFAC2CA29E9200896FEB /* EditPasswordViewController.swift in Sources */,
 				EEC5FF7F2C9C088700896FEB /* ProfileComponent.swift in Sources */,
@@ -1932,11 +2066,14 @@
 				EEDDDD222C71EEF300FA347D /* ManagementPost.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */,
 				EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */,
+				EE5B932C2D424D74006DC65D /* StudyPostNetworking.swift in Sources */,
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EEFD5D332B654C4200D1CE00 /* ParticipateManager.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */,
+				EE5B93372D47B87B006DC65D /* StudyHubCommonNetworking.swift in Sources */,
 				EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */,
+				EE5B93412D48AAFD006DC65D /* ApplyStudyManager.swift in Sources */,
 				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */,
 				EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */,
@@ -1947,12 +2084,15 @@
 				EE2908062C7600D9006B28A7 /* ShowToastPopup.swift in Sources */,
 				EEFD5D262B5F6C4D00D1CE00 /* CommonNetworking.swift in Sources */,
 				EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */,
+				EE5B93642D4A1833006DC65D /* UserProfileManager.swift in Sources */,
 				EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */,
 				EE271F262AD77CD100190E7A /* UIViewcontroller+.swift in Sources */,
 				EE271F2C2AD9250F00190E7A /* UIView+.swift in Sources */,
+				EE5B93352D47B315006DC65D /* ManagementAPIError.swift in Sources */,
 				EEC5FFB42CA4036500896FEB /* EnterValidCodeViewController.swift in Sources */,
 				EEC5FFBC2CA4531200896FEB /* ConfirmDeleteViewController.swift in Sources */,
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
+				EE5B936D2D4A2589006DC65D /* CommentManager.swift in Sources */,
 				EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */,
 				EE07AD902AE106460096890F /* CreatePostManager.swift in Sources */,
 				EE29081A2C787A32006B28A7 /* SearchViewModel.swift in Sources */,
@@ -1973,6 +2113,7 @@
 				EED00B832C54D622000D2E23 /* CheckEmailViewModel.swift in Sources */,
 				EE07ADB52AEFC2B90096890F /* UITextField+.swift in Sources */,
 				EEC5FFB72CA4039300896FEB /* EnterValidCodeViewModel.swift in Sources */,
+				EE5B935B2D4A141B006DC65D /* UserAuthDTO.swift in Sources */,
 				EE0A8B602AFA7FD2001C3F41 /* SearchResultCell.swift in Sources */,
 				EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */,
 				EE5B2FD52B873C3200D365A2 /* NoticeDTO.swift in Sources */,
@@ -1989,17 +2130,23 @@
 				EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */,
 				EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */,
 				EE271F202AD0584100190E7A /* UIColor+.swift in Sources */,
+				EE5B934B2D48BC92006DC65D /* ToStudyHublDTO.swift in Sources */,
 				EEC5FF812C9C09C300896FEB /* UserInfomationComponent.swift in Sources */,
+				EE5B93692D4A257C006DC65D /* NewCommentDTO.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
+				EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
+				EE5B934D2D48BC99006DC65D /* ToStudyHubNetworking.swift in Sources */,
+				EE5B93442D48B611006DC65D /* NewBookmarkDTO.swift in Sources */,
 				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EEC5FFAF2CA29EA500896FEB /* EditPasswordViewModel.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */,
 				EE93562E2B6B927500D662CC /* BookmarkDTO.swift in Sources */,
 				EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */,
+				EE5B935D2D4A1426006DC65D /* UserAuthNetworking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2139,7 +2286,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AANGG4Q668;
+				DEVELOPMENT_TEAM = YQC68LN7U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = STUDYHUB2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = STUDYHUB;
@@ -2177,7 +2324,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AANGG4Q668;
+				DEVELOPMENT_TEAM = YQC68LN7U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = STUDYHUB2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = STUDYHUB;
@@ -2237,14 +2384,6 @@
 			requirement = {
 				branch = develop;
 				kind = branch;
-			};
-		};
-		EE98B1B32B43D9BD0025C4F8 /* XCRemoteSwiftPackageReference "Moya" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Moya/Moya";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -23,12 +23,16 @@ protocol CreatePost: ManagementPost {
 
 extension CreatePost {
   func createPost(_ postData: CreateStudyRequest, completion: @escaping (String) -> Void) {
-    commonNetworking.refreshAccessToken {
-      if $0 {
-        self.postManagementNetworking.createPost(createPostDatas: postData) {
-          completion($0)
-        }
+  
+    commonNetworking.refreshAccessToken { result in
+      if result {
+        StudyPostManager.shared.createNewPost(with: postData)
       }
+//      if $0 {
+//        self.postManagementNetworking.createPost(createPostDatas: postData) {
+//          completion($0)
+//        }
+//      }
     }
   }
 }
@@ -58,9 +62,7 @@ protocol DeletePost: ManagementPost {
 
 extension DeletePost {
   func deleteMyPost(_ postID: Int, completion: @escaping (Bool) -> Void){
-    postManagementNetworking.deleteMyPost(postId: postID) {
-      completion($0)
-    }
+    StudyPostManager.shared.deletePost(with: postID)
   }
 }
 

@@ -89,16 +89,8 @@ final class CreateStudyViewModel: CommonViewModel {
         let (link, title, introduce, major, member, studyWay, gender) = basicInfo
         let (startDate, endDate, isFine, isNoFine, fineType, fineAmount) = fineInfo
         
-        let isDataFilled = [
-          link,
-          title,
-          introduce,
-          major,
-          studyWay,
-          gender,
-        ].allSatisfy {
-            $0?.isEmpty == false
-          }
+        let isDataFilled = [link, title, introduce, major, studyWay, gender ].allSatisfy { $0?.isEmpty == false }
+        
         let isDatesSelected = startDate != "선택하기" && endDate != "선택하기"
         let isFineDataValid = isFine && !fineType.isEmpty && fineAmount > 0
         let isNoFineDataValid = isNoFine && fineType.isEmpty && fineAmount == 0
@@ -159,11 +151,13 @@ final class CreateStudyViewModel: CommonViewModel {
     switch mode {
     case .POST:
       let value = createPostValue()
+    
+  
       return createPost(value) { postID in
         guard let convertedPostID = Int(postID) else { return }
         self.isSuccessCreateStudy.accept(true)
         self.fetchSinglePostDatas(convertedPostID) { updatedPostValue in
-          self.postedData.accept(updatedPostValue)
+        self.postedData.accept(updatedPostValue)
         }
       }
       

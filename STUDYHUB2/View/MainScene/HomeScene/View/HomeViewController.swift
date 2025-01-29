@@ -115,6 +115,7 @@ final class HomeViewController: CommonNavi {
     
     redesignNavigationbar()
     redesignSearchBar()
+
   }
   
   func homeTapBarTapped(){
