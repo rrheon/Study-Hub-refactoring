@@ -7,12 +7,26 @@
 
 import Foundation
 
+import RxSwift
 import RxRelay
 
-class LoginViewModel: CommonViewModel {
+
+/// 로그인 ViewModel
+class LoginViewModel {
+  let disposeBag: DisposeBag = DisposeBag()
+
   let tokenManager = TokenManager.shared
   
-  let isValidAccount = PublishRelay<Bool>()
+  let isValidAccount: PublishRelay<Bool> = PublishRelay<Bool>()
+  
+  
+  /// 로그인하기
+  /// - Parameters:
+  ///   - email: 사용자의 email
+  ///   - password: 사용자 password
+  func loginToStudyHub(email: String, password: String){
+    UserAuthManager.shared.loginToStudyHub(email: email, password: password)
+  }
   
   func login(email: String, password: String){
     guard let loginURL: URL = URL(string: "https://studyhub.shop:443/api/v1/users/login") else {

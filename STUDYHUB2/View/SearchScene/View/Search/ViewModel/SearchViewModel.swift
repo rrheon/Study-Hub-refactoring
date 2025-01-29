@@ -67,6 +67,7 @@ final class SearchViewModel: CommonViewModel {
         print(response.response)
       }
     }
+//    StudyPostManager.studyPostShared.searchRecommend(with: keyword)
   }
   
   func getPostData(data: RequestPostData){

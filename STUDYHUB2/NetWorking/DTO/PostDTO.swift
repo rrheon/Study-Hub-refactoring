@@ -17,26 +17,19 @@ struct PostDataContent: Codable {
 struct PostDataByInquiries: Codable {
   let content: [Content]
   let pageable: Pageable
-  let size, number: Int
+  let size, number, numberOfElements: Int
   let sort: Sort
-  let numberOfElements: Int
   let first, last, empty: Bool
 }
 
 // 포스트 전체조회 content
 
 struct Content: Codable {
-  let postID: Int
-  let major, title: String
+  let postID, studyPerson, penalty,remainingSeat: Int
+  let major, title,filteredGender,penaltyWay: String
   let studyStartDate, studyEndDate, createdDate: [Int]
-  let studyPerson: Int
-  let filteredGender: String
-  let penalty: Int
-  let penaltyWay: String
-  let remainingSeat: Int
-  let close: Bool
+  let close,bookmarked: Bool
   let userData: UserData
-  var bookmarked: Bool
   
   enum CodingKeys: String, CodingKey {
     case postID = "postId"

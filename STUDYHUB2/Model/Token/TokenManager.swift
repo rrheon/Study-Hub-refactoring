@@ -8,6 +8,7 @@
 import Foundation
 import Security
 
+/// 토큰 관련 매니저
 final class TokenManager {
   
   // MARK: Shared instance
@@ -40,6 +41,12 @@ final class TokenManager {
     ]
   }()
   
+  
+  /// 토큰 저장
+  /// - Parameters:
+  ///   - accessToken: 저장할 accessToken
+  ///   - refreshToken: 저장할 refreshToken
+  /// - Returns: 저장 성공여부
   func saveTokens(accessToken: String, refreshToken: String) -> Bool {
     guard let service = self.service,
           let accessTokenData = accessToken.data(using: .utf8),
@@ -59,11 +66,14 @@ final class TokenManager {
       kSecValueData: refreshTokenData
     ]
     
-    // Keychain에 access token과 refresh token을 저장합니다.
+    // Keychain에 access token과 refresh token을 저장
     return SecItemAdd(accessTokenQuery as CFDictionary, nil) == errSecSuccess &&
            SecItemAdd(refreshTokenQuery as CFDictionary, nil) == errSecSuccess
   }
   
+  
+  /// access token 가져오기
+  /// - Returns: access token
   func loadAccessToken() -> String? {
     guard let service = self.service,
           let query = accessTokenQuery else { return nil }
@@ -77,6 +87,9 @@ final class TokenManager {
     return accessToken
   }
   
+  
+  /// refresh token 가져오기
+  /// - Returns: refresh token
   func loadRefreshToken() -> String? {
     guard let service = self.service,
           let query = refreshTokenQuery else { return nil }
@@ -90,6 +103,9 @@ final class TokenManager {
     return refreshToken
   }
   
+  
+  /// 토큰 삭제하기
+  /// - Returns: 삭제완료 여부
   func deleteTokens() -> Bool {
     guard let service = self.service,
           let accessTokenQuery = accessTokenQuery,

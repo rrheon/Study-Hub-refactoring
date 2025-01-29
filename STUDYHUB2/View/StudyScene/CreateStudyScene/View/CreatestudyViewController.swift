@@ -120,7 +120,7 @@ final class CreateStudyViewController: CommonNavi {
       return
     }
     
-    viewModel.comparePostData() ? super.leftButtonTapped(sender) : backButtonTapped()
+//    viewModel.comparePostData() ? super.leftButtonTapped(sender) : backButtonTapped()
   }
 
   

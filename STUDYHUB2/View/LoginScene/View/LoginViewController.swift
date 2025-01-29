@@ -1,9 +1,12 @@
+
 import UIKit
 
 import SnapKit
 import RxSwift
 import RxCocoa
 
+
+/// 로그인 VC
 final class LoginViewController: UIViewController {
   let viewModel = LoginViewModel()
   
@@ -70,7 +73,8 @@ final class LoginViewController: UIViewController {
     setupBinding()
     setupActions()
     
-    StudyPostManager.searchAllPost(page: 0, size: 5)
+    //    StudyPostManager.studyPostShared.searchMyPost(page: 0, size: 5)
+    print(StudyPostManager.shared.loadAccessToken())
   }
   
   // MARK: - setUpLayout
@@ -235,7 +239,8 @@ final class LoginViewController: UIViewController {
       underLineColor: .g100
     )
   
-    viewModel.login(email: email, password: password)
+//    viewModel.login(email: email, password: password)
+    viewModel.loginToStudyHub(email: email, password: password)
   }
   
   private func handleLoginResult(_ success: Bool) {

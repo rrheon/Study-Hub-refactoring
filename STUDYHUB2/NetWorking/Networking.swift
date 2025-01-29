@@ -237,14 +237,12 @@ extension networkingAPI: TargetType {
       // 파라미터로 요청
     case .storeImage(let image):
       let imageData = image.jpegData(compressionQuality: 0.5)
-//      let formData = MultipartFormBodyPart(provider: .data(imageData!), name: "image",
-//                                           fileName: "image.jpg", mimeType: "image/jpeg")
+
       let formData = MultipartFormData(
         provider: .data(imageData!),
         name: "image",
         fileName: "image.jpg",
         mimeType: "image/jpeg")
-//      return .uploadMultipartFormData([formData])
       return .uploadMultipart([formData])
       
       // 바디에 요청

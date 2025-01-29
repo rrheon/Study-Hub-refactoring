@@ -16,9 +16,8 @@ final class CreateAccountManager {
   let commonNetworking = CommonNetworking.shared
   
   func createNewAccount(accountData: CreateAccount, completion: @escaping (Bool) -> Void){
-    commonNetworking.moyaNetworking(
-      networkingChoice: .createNewAccount(accountData: accountData)
-    ) { result in
+    commonNetworking.moyaNetworking(networkingChoice: .createNewAccount(accountData: accountData))
+    { result in
       switch result {
       case .success(let response):
         print(response.response)

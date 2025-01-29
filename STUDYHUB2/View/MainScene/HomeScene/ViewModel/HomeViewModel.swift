@@ -30,23 +30,23 @@ final class HomeViewModel: CommonViewModel {
   }
   
   func fetchNewPostDatas(){
-    let loginStatus = checkLoginStatus.value
-    postDataManager.getNewPostData(loginStatus) { datas in
-      self.newPostDatas.accept(datas.postDataByInquiries.content)
-    }
+//    let loginStatus = checkLoginStatus.value
+//    postDataManager.getNewPostData(loginStatus) { datas in
+//      self.newPostDatas.accept(datas.postDataByInquiries.content)
+//    }
   }
   
   func fetchDeadLinePostDatas(){
-    let loginStatus = checkLoginStatus.value
-    postDataManager.getDeadLinePostData(loginStatus) { datas in
-      self.deadlinePostDatas.accept(datas.postDataByInquiries.content)
-    }
+//    let loginStatus = checkLoginStatus.value
+//    postDataManager.getDeadLinePostData(loginStatus) { datas in
+//      self.deadlinePostDatas.accept(datas.postDataByInquiries.content)
+//    }
   }
   
   func fectchSinglePostDatas(_ postID: Int){
-    detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: false) {
-      self.singlePostData.accept($0)
-    }
+//    detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: false) {
+//      self.singlePostData.accept($0)
+//    }
   }
 }
 

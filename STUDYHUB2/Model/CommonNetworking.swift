@@ -5,7 +5,7 @@
 //  Created by 최용헌 on 2024/01/23.
 //
 
-import Foundation
+import UIKit
 
 import Moya
 
@@ -49,10 +49,8 @@ class CommonNetworking {
     if checkLogin {
       refreshAccessToken { result in
         switch result {
-        case true:
-          completion(true)
-        case false:
-          self.delegate?.checkLoginPopup(checkUser: checkLogin)
+        case true: completion(true)
+        case false: self.delegate?.checkLoginPopup(checkUser: checkLogin)
         }
       }
     } else {
