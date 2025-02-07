@@ -21,25 +21,27 @@ class UserAuthManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - email: 유저 email
   ///   - password: 유저 password
-  func loginToStudyHub(email: String, password: String){
+  func loginToStudyHub(email: String, password: String, completion: @escaping (AccessTokenResponse) -> Void){
     provider.request(.loginToStudyHub(email: email, password: password)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: AccessTokenResponse.self) { decodedData in
         print(decodedData)
+        completion(decodedData)
       }
     }
   }
   
   /// 계정 생성하기
   /// - Parameter accountData: 계정관련 데이터
-  func createNewAccount(accountData: CreateAccount){
+  /// - Parameter completion: 성공여부 콜백함수
+  func createNewAccount(accountData: CreateAccount, completion: @escaping (Bool) -> Void){
     provider.request(.createNewAccount(accountData: accountData)) { result in
       switch result {
       case .success(let response):
         print(response.response)
-        
+        completion(true)
       case .failure(let response):
         print(response.response)
-        
+        completion(false)
       }
     }
   }
@@ -66,11 +68,24 @@ class UserAuthManager: StudyHubCommonNetworking {
   
   /// AccessToken 갱신하기
   /// - Parameter refreshToken: refreshToken
-  func refreshAccessToken(refreshToken: String){
-    provider.request(.refreshAccessToken(refreshToken: refreshToken)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: AccessTokenResponse.self) { decodedData in
-        print(decodedData)
+  func refreshAccessToken(refreshToken: String) async throws -> Bool {
+    let result = await provider.request(.refreshAccessToken(refreshToken: refreshToken))
+   
+    switch result {
+    case .success(let response):
+      print(#fileID, #function, #line," - \(response.statusCode)")
+      
+      if (200...299).contains( response.statusCode) {
+        let decodedData: AccessTokenResponse = try await self.commonDecodeNetworkResponse(
+          with: result,
+          decode: AccessTokenResponse.self
+        )
+        return true
+      }else {
+        return false
       }
+    case .failure(let err):
+      return false
     }
   }
  
@@ -82,6 +97,7 @@ class UserAuthManager: StudyHubCommonNetworking {
   ///   - completion: 콜백함수
   func checkEmailDuplication(email: String, completion: @escaping (Bool) -> Void){
     provider.request(.checkEmailDuplication(email: email)) { result in
+      print(result)
       switch result {
       case.success(let response):
         switch response.statusCode {

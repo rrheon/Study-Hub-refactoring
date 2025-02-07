@@ -16,7 +16,7 @@ enum UserAuthNetworking{
   case verifyPassword(password: String)                   // 비밀번호 검증
   case refreshAccessToken(refreshToken: String)           // accessToken 발행
   case sendEmailCode(email: String)                       // 이메일 인증코드 전송
-  case checkEmailDuplication(email: String)               // 이메일 중복 검사
+  case checkEmailDuplication(email: String)               // 이메일 중복검사
 //  case sendEmailForVerifyPassword(email: String)          // 비밀번호 검증용 이메일 인증코드 전송
   case verifyEmailAndCode(code: String, email: String)    // 이메일 인증코드 검증
 }
@@ -49,15 +49,15 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
     switch self {
     case .verifyEmailAndCode(let code, let email):
       let params: [String: Any] = ["authCode": code, "email": email]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
 
     case .checkEmailDuplication(let email):
       let params: [String: Any] = ["email": email]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
     case .sendEmailCode(let email):
       let params: [String: Any] = ["email": email]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
 //    case .sendEmailForVerifyPassword(let email):
 //      let params: [String: Any] = ["email": email]
@@ -72,11 +72,11 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
       
     case .verifyPassword(let password):
       let params: [String: Any] = ["password": password]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
     case .refreshAccessToken(let refreshToken):
       let params: [String: Any] = ["refreshToken": refreshToken]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
     }
   }
   

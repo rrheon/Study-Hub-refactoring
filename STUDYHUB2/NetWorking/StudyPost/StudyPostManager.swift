@@ -24,18 +24,14 @@ class StudyPostManager: StudyHubCommonNetworking {
   func searchAllPost(hot: String = "false",
                      titleAndMajor: String = "false",
                      page: Int,
-                     size: Int){
+                     size: Int) async throws -> PostDataContent {
     
     let data: SearchAllPostDTO = SearchAllPostDTO(hot: hot,
                                                   titleAndMajor: titleAndMajor,
                                                   page: page,
                                                   size: size)
-    
-    provider.request(.searchAllPost(searchData: data)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: PostDataContent.self) { decodedData in
-        print(decodedData)
-      }
-    }
+    let result = await provider.request(.searchAllPost(searchData: data))
+    return try await self.commonDecodeNetworkResponse(with: result, decode: PostDataContent.self)
   }
   
   
@@ -43,12 +39,15 @@ class StudyPostManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - postId: 게시글의 PostId
   ///   - completion: API 처리 후 전달
-  func searchSinglePostData(postId: Int, completion: @escaping (PostDetailData) -> Void){
-    provider.request(.searchSinglePost(postId: postId)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: PostDetailData.self) { decodedData in
-        print(decodedData)
-      }
-    }
+  func searchSinglePostData(postId: Int) async throws -> PostDetailData{
+    let result = await provider.request(.searchSinglePost(postId: postId))
+    return try await self.commonDecodeNetworkResponse(with: result, decode: PostDetailData.self)
+//    provider.request(.searchSinglePost(postId: postId)) { result in
+//      self.commonDecodeNetworkResponse(with: result,
+//                                       decode: PostDetailData.self) { decodedData in
+//        completion(decodedData)
+//      }
+//    }
   }
   
   
@@ -59,19 +58,6 @@ class StudyPostManager: StudyHubCommonNetworking {
   func searchMyPost(page: Int, size: Int){
     provider.request(.searchMyPost(page: page, size: size)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: MyPostData.self) { decodedData in
-        print(decodedData)
-      }
-    }
-  }
-  
-  
-  /// 북마크 리스트 가져오기
-  /// - Parameters:
-  ///   - page: 북마크 페이지
-  ///   - size: 북마크 갯수
-  func searchMyBookmarkList(page: Int, size: Int){
-    provider.request(.searchBookmarkList(page: page, size: size)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: BookmarkDatas.self) { decodedData in
         print(decodedData)
       }
     }

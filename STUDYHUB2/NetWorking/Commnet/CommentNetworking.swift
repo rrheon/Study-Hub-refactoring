@@ -12,10 +12,10 @@ import Moya
 /// 이메일관련 네트워킹
 enum CommentNetworking{
   case getCommentList(postId: Int, page: Int, size: Int)         // 댓글 리스즈 조회
-  case writeComment(content: String, postId: Int)       // 댓글 작성
-  case deleteComment(commentId: Int)                    // 댓글 삭제
-  case modifyComment(commentId: Int, content: String)   // 댓글 수정
-  case getPreviewCommentList(postId: Int)             // 댓글 미리보기
+  case writeComment(content: String, postId: Int)                // 댓글 작성
+  case deleteComment(commentId: Int)                             // 댓글 삭제
+  case modifyComment(commentId: Int, content: String)            // 댓글 수정
+  case getPreviewCommentList(postId: Int)                        // 댓글 미리보기
 }
 
 extension CommentNetworking: TargetType, CommonBaseURL {

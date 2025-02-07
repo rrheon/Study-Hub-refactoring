@@ -18,6 +18,7 @@ enum UserProfileNetworking{
   case deleteUserAccount                                // 유저 계정 삭제하기
   case storeUserProfileImage(image: UIImage)            // 유저 프로필 저장
   case deleteUserProfileImage                           // 유저 프로필 삭제
+  case checkNicknameDuplication(nickname: String)         // 닉네임 중복검사
 }
 
 extension UserProfileNetworking: TargetType, CommonBaseURL {
@@ -25,13 +26,15 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
   /// API 별 요청 path
   var path: String {
     switch self {
-    case .loadUserInfo:               return "/v1/users"
-    case .editUserNickName(_):        return "/v1/users/nickname"
-    case .editUserMajor(_):           return "/v1/users/major"
-    case .editUserPassword(_):        return "/v2/users/password"
-    case .deleteUserAccount:          return "/v1/users"
-    case .storeUserProfileImage(_):   return "/v1/users/image"
-    case .deleteUserProfileImage:     return "/v1/users/image"
+    case .loadUserInfo:                   return "/v1/users"
+    case .editUserNickName(_):            return "/v1/users/nickname"
+    case .editUserMajor(_):               return "/v1/users/major"
+    case .editUserPassword(_):            return "/v2/users/password"
+    case .deleteUserAccount:              return "/v1/users"
+    case .storeUserProfileImage(_):       return "/v1/users/image"
+    case .deleteUserProfileImage:         return "/v1/users/image"
+    case .checkNicknameDuplication(_:):   return "/v1/users/duplication-nickname"
+
     }
   }
   
@@ -39,7 +42,8 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
   /// API 별 메소드
   var method: Moya.Method {
     switch self{
-    case .loadUserInfo:
+    case .loadUserInfo,
+        .checkNicknameDuplication(_):
       return .get
       
     case .deleteUserAccount,
@@ -79,6 +83,10 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
         mimeType: "image/jpeg")
       return .uploadMultipart([formData])
       
+    case .checkNicknameDuplication(let nickname):
+      let params: [String: Any] = ["nickname": nickname]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
     default:
       return .requestPlain
     }
@@ -101,10 +109,8 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
     case .storeUserProfileImage(_):
       return [ "Content-Type" : "multipart/form-data",
                "Authorization": "\(UserProfileManager.shared.loadAccessToken() ?? "")" ]
-      
+    default:
+      return .none
     }
-    
-    
-    
   }
 }

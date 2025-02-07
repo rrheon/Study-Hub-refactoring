@@ -11,10 +11,10 @@ import Moya
 
 /// 북마크관련 네트워킹
 enum BookmarkNetworking{
-  case changeBookMarkStatus(postId: Int)
-  case searchSingleBookMarked(postId: Int, userId: Int)
-  case searchBookMarkList(page: Int, size: Int)
-  case deleteAllBookMark
+  case changeBookMarkStatus(postId: Int)                        // 북마크 저장 및 삭제
+  case searchSingleBookMarked(postId: Int, userId: Int)         // 단일 게시글에 대해 북마크여부 조회
+  case searchBookMarkList(page: Int, size: Int)                 // 북마크한 리스트 가져오기
+  case deleteAllBookMark                                        // 모든 북마크 삭제하기
 }
 
 extension BookmarkNetworking: TargetType, CommonBaseURL {
@@ -68,10 +68,10 @@ extension BookmarkNetworking: TargetType, CommonBaseURL {
   var headers: [String : String]? {
     switch self {
     case .deleteAllBookMark:
-      return [ "Authorization": "\(NewBookmarkManager.shared.loadAccessToken() ?? "")"]
+      return [ "Authorization": "\(BookmarkManager.shared.loadAccessToken() ?? "")"]
     default:
       return ["Content-type": "application/json",
-              "Authorization": "\(NewBookmarkManager.shared.loadAccessToken() ?? "")"]
+              "Authorization": "\(BookmarkManager.shared.loadAccessToken() ?? "")"]
     }
   }
   

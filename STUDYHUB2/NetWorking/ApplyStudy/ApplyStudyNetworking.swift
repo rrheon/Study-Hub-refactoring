@@ -12,14 +12,14 @@ import Moya
 
 /// 스터디 신청 관련 네트워킹
 enum ApplyStudyNetworking {
-  case participateStudy(introduce: String, studyId: Int)
-  case getMyParticipateList(page: Int, size: Int)
-  case getMyReqeustList(page: Int, size: Int)
-  case deleteMyRequest(studyId:Int)
-  case searchParticipateInfo(data: StudyApplyUserInfos)
-  case acceptParticipate(acceptPersonData: AcceptStudy)
-  case rejectParticipate(rejectPersonData: RejectStudy)
-  case getRejectReason(_ studyId: Int)
+  case participateStudy(introduce: String, studyId: Int)        // 스터디 참여하기
+  case getMyParticipateList(page: Int, size: Int)               // 참여한 스터디의 리스트 가져오기
+  case getMyReqeustList(page: Int, size: Int)                   // 신청한 스터디 목록 가져오기
+  case deleteMyRequest(studyId:Int)                             // 나의 신청 삭제하기
+  case searchParticipateInfo(data: StudyApplyUserInfos)        // 참여 목록 가져오기
+  case acceptParticipate(acceptPersonData: AcceptStudy)        // 참여 수락하기
+  case rejectParticipate(rejectPersonData: RejectStudy)        // 참여 거절하기
+  case getRejectReason(_ studyId: Int)                         // 스터디 거절사유 가져오기
 }
 
 extension ApplyStudyNetworking: TargetType, CommonBaseURL {

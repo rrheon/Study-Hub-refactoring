@@ -37,6 +37,14 @@ protocol CreateSearchbar {
 }
 
 extension CreateLabel {
+  
+  /// 라벨 생성
+  /// - Parameters:
+  ///   - title: 제목
+  ///   - textColor: 제목 색상
+  ///   - fontType: 폰트
+  ///   - fontSize: 폰트사이즈
+  /// - Returns: 라벨
   func createLabel(
     title: String? = "",
     textColor: UIColor,
@@ -52,6 +60,12 @@ extension CreateLabel {
 }
 
 extension CreateStackView {
+  
+  /// 스택뷰 생성
+  /// - Parameters:
+  ///   - axis:방향
+  ///   - spacing: 여백
+  /// - Returns: <#description#>
   func createStackView(axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView {
     let stackView = UIStackView()
     stackView.axis = axis
@@ -61,6 +75,10 @@ extension CreateStackView {
 }
 
 extension CreateDividerLine {
+  
+  /// 구분 선 생성
+  /// - Parameter height: 높이
+  /// - Returns: UIView
   func createDividerLine(height: CGFloat) -> UIView {
     let dividerLine = UIView()
     dividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
@@ -70,6 +88,10 @@ extension CreateDividerLine {
 }
 
 extension CreateTextField {
+  
+  /// textField 생성
+  /// - Parameter title: 제목
+  /// - Returns: textField
   func createTextField(title: String) -> UITextField {
     let textField = UITextField()
     let placeholderTextAttributes: [NSAttributedString.Key: Any] = [
@@ -94,6 +116,10 @@ extension CreateTextField {
 }
 
 extension CreateButtonInCreatePost {
+  
+  /// 버튼 생성
+  /// - Parameter title: 버튼 제목
+  /// - Returns: 버튼
   func createButton(title: String) -> UIButton {
     let button = UIButton()
     button.setTitle(title, for: .normal)
@@ -107,6 +133,10 @@ extension CreateButtonInCreatePost {
 }
 
 extension CreateSearchbar {
+  
+  /// 서치바 생성
+  /// - Parameter placeholder: placeHolder
+  /// - Returns: 서치바
   func createSearchBar(placeholder: String) -> UISearchBar {
     let bar = UISearchBar()
 

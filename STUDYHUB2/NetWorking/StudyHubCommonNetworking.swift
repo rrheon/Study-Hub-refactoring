@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 // MARK: - common base url
-#warning("jwt- controller, notice, user, user-image, comment, 전부 다 분류 후 다시 분류가 필요")
+#warning("전부 다 분류 후 다시 분류가 필요")
 /// 베이스 URL
 protocol CommonBaseURL {
   var baseURL: URL { get }
@@ -35,10 +35,12 @@ class StudyHubCommonNetworking {
   /// - Parameters:
   ///   - apiResult: api 통신 결과
   ///   - type: 디코딩할 타입
+  ///
+#warning("return으로 바꾸기")
    func commonDecodeNetworkResponse<T: Decodable >(
     with apiResult : Result<Response, MoyaError>,
     decode type: T.Type,
-    completion: @escaping (T.Type) -> Void
+    completion: @escaping (T) -> Void
   ){
     switch apiResult {
     case let .success(response):
@@ -47,7 +49,7 @@ class StudyHubCommonNetworking {
       do {
         let decodedData = try JSONDecoder().decode(type, from: response.data)
         print(decodedData)
-        completion(T.self)
+        completion(decodedData)
       } catch(_) {
         // 디코딩에러
         ApiError.managementError(error: .decodingError)
@@ -60,6 +62,51 @@ class StudyHubCommonNetworking {
         ApiError.badStatus(code: response.statusCode)
       default:
         return
+      }
+    }
+  }
+  
+  func commonDecodeNetworkResponse<T: Decodable>(
+    with apiResult: Result<Response, MoyaError>,
+    decode type: T.Type
+  ) async throws -> T {
+    switch apiResult {
+    case let .success(response):
+      print("Status Code: \(response.statusCode)")
+      
+      do {
+        let decodedData = try JSONDecoder().decode(type, from: response.data)
+        print("Decoded Data: \(decodedData)")
+        return decodedData
+      } catch {
+        print("Decoding Error: \(error.localizedDescription)")
+        ApiError.managementError(error: .decodingError) // 로깅
+        throw ApiError.decodingError
+      }
+      
+    case let .failure(err):
+      print("Network Error: \(err.localizedDescription)")
+      
+      if case .statusCode(let response) = err {
+        ApiError.managementError(error: .badStatus(code: response.statusCode)) // 로깅
+        throw ApiError.badStatus(code: response.statusCode)
+      } else {
+        throw err
+      }
+    }
+  }
+
+}
+
+// MARK: - Moya Request 변환
+
+extension MoyaProvider {
+  
+  /// completion -> async로 변환
+  func request(_ target: Target) async -> Result<Response, MoyaError> {
+    await withCheckedContinuation { continuation in
+      self.request(target) { result in
+        continuation.resume(returning: result)
       }
     }
   }

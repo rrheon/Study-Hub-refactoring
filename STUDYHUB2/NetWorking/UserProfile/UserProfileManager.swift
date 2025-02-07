@@ -119,4 +119,17 @@ class UserProfileManager: StudyHubCommonNetworking, ConvertMajor {
       }
     }
   }
+  
+  /// 닉네임 중복확인
+  /// - Parameters:
+  ///   - nickname: 확인할 닉네임
+  ///   - completion: 콜백함수
+  func checkNicknameDuplication(nickname: String, completion: @escaping (String) -> Void){
+    provider.request(.checkNicknameDuplication(nickname: nickname)) { result in
+      self.commonDecodeNetworkResponse(with: result, decode: DuplicationResponse.self) { result in
+        completion(result.status)
+        print(result.message)
+      }
+    }
+  }
 }

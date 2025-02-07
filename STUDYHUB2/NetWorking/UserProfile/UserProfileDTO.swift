@@ -27,3 +27,8 @@ struct EditUserPasswordDTO: Codable {
 //    case major, nickname, participateCount, postCount
 //  }
 //}
+//// 중복 확인
+//struct DuplicationResponse: Codable {
+//  let status: String
+//  let message: String
+//}

@@ -7,30 +7,27 @@
 
 import UIKit
 
+import RxFlow
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-  let tokenManager = TokenManager.shared
-  let loginManager = CommonNetworking.shared
-  let infoManager = UserInfoManager.shared
   var window: UIWindow?
+  var coordinator = FlowCoordinator()
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
-    window = UIWindow(windowScene: windowScene)
+   
     
-    loginManager.refreshAccessToken { result in
-      DispatchQueue.main.async {
-        switch result {
-        case true:
-          let tabBarController = TabBarController(true)
-          self.window?.rootViewController = tabBarController
-        case false:
-          let loginViewController = LoginViewController()
-          self.window?.rootViewController = loginViewController
-        }
-  
-
-        self.window?.makeKeyAndVisible()
-      }
+    let appFlow = AppFlow() // 흐름
+    let appStepper = AppStepper() // 흐름 트리거
+    
+    // 흐름 및 트리거 연결
+    self.coordinator.coordinate(flow: appFlow, with: appStepper)
+    
+    Flows.use(appFlow, when: .created) { rootVC in
+      let window = UIWindow(windowScene: windowScene)
+      window.rootViewController = rootVC
+      self.window = window
+      window.makeKeyAndVisible()
     }
   }
   
