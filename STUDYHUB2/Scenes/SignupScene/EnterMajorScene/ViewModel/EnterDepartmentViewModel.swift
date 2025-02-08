@@ -9,9 +9,20 @@ import Foundation
 
 import RxCocoa
 import RxSwift
+import RxFlow
 
 /// 학과 입력 ViewModel
-final class EnterDepartmentViewModel: SignupViewModel, ConvertMajor {
+final class EnterDepartmentViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+  
+  static let shared = EnterDepartmentViewModel()
+
+  
+  /// 회원가입 정보
+  var email: String? = nil
+  var gender: String? = nil
+  var nickname: String? = nil
+  var password: String? = nil
   
   /// 입력된 학과
   let enteredMajor: PublishRelay<String> = PublishRelay<String>()
@@ -33,9 +44,8 @@ final class EnterDepartmentViewModel: SignupViewModel, ConvertMajor {
   /// 학과 가져오기
   /// - Parameter enteredMajor: 입력된 학과
   private func loadMajors(_ enteredMajor: String) {
-    let majorDatas = DataLoaderFromPlist()
     
-    if let majors = majorDatas.loadMajorsWithCodes() {
+    if let majors = DataLoaderFromPlist.loadMajorsWithCodes() {
       let filteredMajors = majors.filter { (key, value) -> Bool in
         key.contains(enteredMajor)
       }
@@ -51,7 +61,7 @@ final class EnterDepartmentViewModel: SignupViewModel, ConvertMajor {
           let gender = gender,
           let nickname = nickname,
           let password = password,
-          let major = convertMajor(major, toEnglish: true) else { return }
+          let major = Utils.convertMajor(major, toEnglish: true) else { return }
     let userInfo = CreateAccount(
       email: email,
       gender: gender,

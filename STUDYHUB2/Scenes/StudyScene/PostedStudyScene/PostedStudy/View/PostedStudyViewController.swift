@@ -300,27 +300,27 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
   
   func goToLoginVC(){
-    DispatchQueue.main.async {
-      let popupVC = PopupViewController(
-        title: "로그인이 필요해요",
-        desc: "계속하려면 로그인을 해주세요!",
-        rightButtonTilte: "로그인"
-      )
-      self.present(popupVC, animated: true)
-      
-      popupVC.popupView.rightButtonAction = {
-        self.dismiss(animated: true) {
-          if let navigationController = self.navigationController {
-            navigationController.popToRootViewController(animated: false)
-            
-            let loginVC = LoginViewController()
-            
-            loginVC.modalPresentationStyle = .overFullScreen
-            navigationController.present(loginVC, animated: true, completion: nil)
-          }
-        }
-      }
-    }
+//    DispatchQueue.main.async {
+//      let popupVC = PopupViewController(
+//        title: "로그인이 필요해요",
+//        desc: "계속하려면 로그인을 해주세요!",
+//        rightButtonTilte: "로그인"
+//      )
+//      self.present(popupVC, animated: true)
+//      
+//      popupVC.popupView.rightButtonAction = {
+//        self.dismiss(animated: true) {
+//          if let navigationController = self.navigationController {
+//            navigationController.popToRootViewController(animated: false)
+//            
+//            let loginVC = LoginViewController()
+//            
+//            loginVC.modalPresentationStyle = .overFullScreen
+//            navigationController.present(loginVC, animated: true, completion: nil)
+//          }
+//        }
+//      }
+//    }
   }
 }
 

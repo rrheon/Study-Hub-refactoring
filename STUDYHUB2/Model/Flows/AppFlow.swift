@@ -36,6 +36,7 @@ enum AppStep: Step {
   
   case mainTabIsRequired    // 메인탭바
   case loginScreenIsRequired // 로그인 화면
+  case signupIsRequired // 회원가입 Flow
   
   /*
    필요한 화면
@@ -82,6 +83,8 @@ class AppFlow: Flow {
       return setupMainTabbar()
     case .loginScreenIsRequired:
       return presentLoginScreen()
+    case .signupIsRequired:
+      return self.presentSignupScreen()
     }
   }
   
@@ -117,10 +120,28 @@ class AppFlow: Flow {
   
   /// 로그인 화면 표시
   func presentLoginScreen() -> FlowContributors {
-    let vc = LoginViewController()
+    let viewModel: LoginViewModel = LoginViewModel()
+    let vc = LoginViewController(with: viewModel)
     self.rootViewController.pushViewController(vc, animated: false)
-    return .none
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
+  
+  
+  /// 회원가입 Flow 띄우기
+  func presentSignupScreen() -> FlowContributors {
+    let signupFlow = SignupFlow()
+    
+    Flows.use(signupFlow, when: .ready) { [unowned self] root in
+      root.modalPresentationStyle = .fullScreen
+      self.rootViewController.present(root, animated: true)
+    }
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: signupFlow,
+      withNextStepper: OneStepper(withSingleStep: SignupStep.agreementScreenIsReuqired)
+    ))
+  }
+  
 }
 
 

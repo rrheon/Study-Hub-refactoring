@@ -9,9 +9,12 @@ import Foundation
 
 import RxSwift
 import RxRelay
+import RxFlow
 
 /// 이메일 확인 ViewModel
-final class CheckEmailViewModel {
+final class CheckEmailViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+  
   
   /// 이메일
   let email: PublishRelay<String> = PublishRelay<String>()

@@ -61,9 +61,8 @@ final class MyPageViewModel: Stepper {
   }
   
   private func loadURLs() {
-    let urlData = DataLoaderFromPlist()
-    if let serviceURLString = urlData.loadURLs()?["service"],
-       let personalURLString = urlData.loadURLs()?["personal"] {
+    if let serviceURLString = DataLoaderFromPlist.loadURLs()?["service"],
+       let personalURLString = DataLoaderFromPlist.loadURLs()?["personal"] {
       serviceURL = serviceURLString
       personalURL = personalURLString
     }

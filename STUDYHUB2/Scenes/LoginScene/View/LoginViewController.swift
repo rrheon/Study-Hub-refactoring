@@ -10,7 +10,7 @@ import RxCocoa
 final class LoginViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 
-  let viewModel = LoginViewModel()
+  let viewModel: LoginViewModel
   
   // MARK: - 화면구성
 
@@ -27,7 +27,8 @@ final class LoginViewController: UIViewController {
   private lazy var emailTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "이메일",
     textFieldPlaceholder: "이메일 주소를 입력해주세요 (@inu.ac.kr)",
-    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요")
+    alertLabelTitle: "잘못된 주소예요. 다시 입력해주세요"
+  )
   
   
   /// 이메일 TextField
@@ -38,7 +39,8 @@ final class LoginViewController: UIViewController {
   private lazy var passwordTextFieldValue = SetAuthTextFieldValue(
     labelTitle: "비밀번호",
     textFieldPlaceholder: "비밀번호를 입력해주세요",
-    alertLabelTitle: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)")
+    alertLabelTitle: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
+  )
   
   
   /// 비밀번호 TextField
@@ -79,6 +81,15 @@ final class LoginViewController: UIViewController {
     return signUpButton
   }()
   
+  init(with viewModel: LoginViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: .none, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - ViewDidLoad
   
   override func viewDidLoad() {
@@ -92,6 +103,7 @@ final class LoginViewController: UIViewController {
     setupBinding()
     setupActions()
   } // viewDidLoad
+  
   
   // MARK: - setUpLayout
   
@@ -180,18 +192,21 @@ final class LoginViewController: UIViewController {
   
   /// 버튼 Action 설정
   func setupActions(){
+    
     // 탐색버튼 터치
     exploreButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        guard let self = self else { return }
-        self.moveToTabbar(false)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, _ in
+        vc.viewModel.steps.accept(AppStep.mainTabIsRequired)
       })
       .disposed(by: disposeBag)
+
     
     // 회원가입 버튼 터치
     signUpButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.moveToOtherVC(vc: AgreementViewController(), naviCheck: true)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, _ in
+        vc.viewModel.steps.accept(AppStep.signupIsRequired)
       })
       .disposed(by: disposeBag)
     
@@ -204,8 +219,9 @@ final class LoginViewController: UIViewController {
     
     // 로그인 버튼 터치
     loginButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.loginButtonTapped()
+      .withUnretained(self)
+      .subscribe(onNext: { vc, _ in
+        vc.loginButtonTapped()
       })
       .disposed(by: disposeBag)
   }

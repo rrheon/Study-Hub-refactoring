@@ -2,8 +2,13 @@
 import UIKit
 
 import SnapKit
+import RxFlow
+import RxRelay
 
-final class CompleteViewController: UIViewController {
+/// 회원가입 완료 VC
+final class CompletedSignupViewController: UIViewController, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+  
   
   // MARK: - 화면구성
   private lazy var mainImageView: UIImageView = UIImageView(
@@ -64,13 +69,14 @@ final class CompleteViewController: UIViewController {
   
   // MARK: - 함수
   @objc func startButtonTapped() {
-    navigationController?.viewControllers.removeAll()
+//    navigationController?.viewControllers.removeAll()
     
-    let viewController = LoginViewController()
-    
-    let navigationController = UINavigationController(rootViewController: viewController)
-    navigationController.modalPresentationStyle = .fullScreen
-    
-    present(navigationController, animated: true, completion: nil)
+//    let viewController = LoginViewController()
+//    
+//    let navigationController = UINavigationController(rootViewController: viewController)
+//    navigationController.modalPresentationStyle = .fullScreen
+//    
+//    present(navigationController, animated: true, completion: nil)
+    steps.accept(SignupStep.dismissIsRequired)
   }
 }

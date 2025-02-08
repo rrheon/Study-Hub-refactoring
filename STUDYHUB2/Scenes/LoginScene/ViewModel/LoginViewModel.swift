@@ -7,13 +7,15 @@
 
 import Foundation
 
+import RxFlow
+import RxCocoa
 import RxSwift
 import RxRelay
 
-
 /// 로그인 ViewModel
-class LoginViewModel {
-  
+class LoginViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+
   /// 유효한 계정 여부
   let isValidAccount: PublishRelay<Bool> = PublishRelay<Bool>()
   

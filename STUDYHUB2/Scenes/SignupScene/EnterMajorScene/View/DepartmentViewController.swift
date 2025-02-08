@@ -5,7 +5,8 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-final class DepartmentViewController: CommonNavi {
+/// 회원가입 - 5. 학과입력 VC
+final class DepartmentViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
   let viewModel: EnterDepartmentViewModel
@@ -40,8 +41,8 @@ final class DepartmentViewController: CommonNavi {
 
   private lazy var nextButton = StudyHubButton(title: "다음")
   
-  init(_ value: SignupDataProtocol) {
-    self.viewModel = EnterDepartmentViewModel(value)
+  init(with viewModel: EnterDepartmentViewModel) {
+    self.viewModel = viewModel
     super.init()
   }
   
@@ -147,9 +148,10 @@ final class DepartmentViewController: CommonNavi {
     viewModel.isSuccessCreateAccount
       .subscribe(onNext: { [weak self] _ in
 //        self?.moveToOtherVC(vc: CompleteViewController(), naviCheck: false)
-        let vc = CompleteViewController()
-        vc.modalPresentationStyle = .fullScreen
-        self?.present(vc, animated: true)
+//        let vc = CompletedSignupViewController()
+//        vc.modalPresentationStyle = .fullScreen
+//        self?.present(vc, animated: true)
+        self?.viewModel.steps.accept(SignupStep.completeSignupIsRequired)
       })
       .disposed(by: disposeBag)
   }

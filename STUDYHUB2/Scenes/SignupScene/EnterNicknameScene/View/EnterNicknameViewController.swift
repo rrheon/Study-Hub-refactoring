@@ -5,7 +5,9 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-final class EnterNicknameViewController: CommonNavi {
+
+/// 회원가입 - 4. 닉네임 입력 VC
+final class EnterNicknameViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: EnterNicknameViewModel
   
@@ -49,8 +51,8 @@ final class EnterNicknameViewController: CommonNavi {
   // 다음 버튼
   private lazy var nextButton = StudyHubButton(title: "다음")
   
-  init(_ values: SignupDataProtocol) {
-    self.viewModel = EnterNicknameViewModel(values)
+  init(with viewModel: EnterNicknameViewModel) {
+    self.viewModel = viewModel
     super.init()
   }
   
@@ -265,14 +267,15 @@ final class EnterNicknameViewController: CommonNavi {
     nextButton.rx.tap
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
-        let signupDatas = SignupDats(
-          email: self?.viewModel.email,
-          password: self?.viewModel.password,
-          gender: self?.viewModel.selectedGender,
-          nickname: self?.nicknameTextField.getTextFieldValue()
-        )
-        let departmentVC = DepartmentViewController(signupDatas)
-        self?.navigationController?.pushViewController(departmentVC, animated: true)
+//        let signupDatas = SignupDats(
+//          email: self?.viewModel.email,
+//          password: self?.viewModel.password,
+//          gender: self?.viewModel.selectedGender,
+//          nickname: self?.nicknameTextField.getTextFieldValue()
+//        )
+//        let departmentVC = DepartmentViewController(signupDatas)
+//        self?.navigationController?.pushViewController(departmentVC, animated: true)
+        self?.viewModel.steps.accept(SignupStep.enterMajorScreenIsRequired)
       })
       .disposed(by: disposeBag)
   }

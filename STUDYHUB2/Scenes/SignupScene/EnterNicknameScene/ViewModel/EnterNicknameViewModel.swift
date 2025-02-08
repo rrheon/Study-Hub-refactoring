@@ -9,12 +9,12 @@ import Foundation
 
 import RxSwift
 import RxCocoa
-
+import RxFlow
 
 /// 닉네임 입력 ViewModel
-class EnterNicknameViewModel: SignupViewModel {
-  
-  
+class EnterNicknameViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+
   /// 닉네임 유효성 체크
   let checkValidNickname: PublishRelay<Bool> = PublishRelay<Bool>()
   

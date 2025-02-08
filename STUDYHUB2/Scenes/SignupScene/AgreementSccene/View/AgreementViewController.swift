@@ -15,9 +15,9 @@ import Then
 
 
 /// 회원가입 - 1. 이용약관 동의 VC
-final class AgreementViewController: CommonNavi {
+final class AgreementViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
-  let viewModel = AgreementViewModel()
+  var viewModel: AgreementViewModel
   
   // MARK: - UI
   
@@ -74,9 +74,21 @@ final class AgreementViewController: CommonNavi {
     $0.setImage(UIImage(named: "RightArrow"), for: .normal)
   }
   
+  /// 다음버튼
   private lazy var nextButton = StudyHubButton(title: "다음")
   
+  init(with viewModel: AgreementViewModel) {
+    self.viewModel = AgreementViewModel()
+    super.init(nibName: .none, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - viewdidload
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -92,6 +104,8 @@ final class AgreementViewController: CommonNavi {
   } // viewDidLoad
   
   // MARK: - setupLayout
+  
+  /// Layout 설정
   func setupLayout(){
     [
       mainTitleView,
@@ -110,12 +124,17 @@ final class AgreementViewController: CommonNavi {
   }
   
   // MARK: - makeUI
+  
+  
+  /// UI설정
   func makeUI(){
+    // 인증 Flow customView
     mainTitleView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     
+    // 전체동의 버튼
     agreeAllButton.snp.makeConstraints {
       $0.top.equalTo(mainTitleView.snp.bottom).offset(120)
       $0.leading.equalTo(mainTitleView)
@@ -123,44 +142,52 @@ final class AgreementViewController: CommonNavi {
       $0.height.equalTo(56)
     }
     
+    // 전체동의 버튼
     agreeAllCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllButton.snp.leading).offset(15)
       $0.centerY.equalTo(agreeAllButton)
       $0.height.width.equalTo(24)
     }
     
+    // 서비스 이용약관동의 버튼
     agreeFirstCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllCheckButton.snp.leading)
       $0.top.equalTo(agreeAllCheckButton.snp.bottom).offset(40)
       $0.height.width.equalTo(24)
     }
     
+    // 서비스 이용약관동의 버튼
     firstServiceButton.snp.makeConstraints {
       $0.leading.equalTo(agreeFirstCheckButton.snp.trailing).offset(10)
       $0.centerY.equalTo(agreeFirstCheckButton)
     }
     
+    // 서비스 이용약관동의 페이지 이동 버튼
     goToFirstServicePageButton.snp.makeConstraints {
       $0.trailing.equalToSuperview().offset(-20)
       $0.centerY.equalTo(firstServiceButton)
     }
     
+    // 개인정보 수집 및 이용동의 버튼
     agreeSecondCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeFirstCheckButton.snp.leading)
       $0.top.equalTo(agreeFirstCheckButton.snp.bottom).offset(20)
       $0.height.width.equalTo(24)
     }
     
+    // 개인정보 수집 및 이용동의 버튼
     secondServiceButton.snp.makeConstraints {
       $0.leading.equalTo(agreeSecondCheckButton.snp.trailing).offset(10)
       $0.centerY.equalTo(agreeSecondCheckButton)
     }
     
+    // 개인정보 수집 및 이용동의 페이지 버튼
     goToSecondServicePageButton.snp.makeConstraints {
       $0.trailing.equalToSuperview().offset(-20)
       $0.centerY.equalTo(secondServiceButton)
     }
     
+    // 다음화면 이동버튼
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -170,35 +197,49 @@ final class AgreementViewController: CommonNavi {
   }
   
   // MARK: - navigation
+  
+  /// 네비게이션 바 설정
   func navigationSetting() {
     settingNavigationTitle(title: "회원가입")
     leftButtonSetting()
   }
   
-  func leftButtonTapped(_ sender: UIBarButtonItem) {
-    dismiss(animated: true)
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.dismissIsRequired)
   }
   
+  /// 네비게이션 바 왼쪽 아이탬 터치
+  func leftButtonTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.dismissIsRequired)
+  }
+  
+  /// 바인딩
   private func setupBindings() {
-    // 동의 체크여부
+    // 모든 동의사항 체크여부
     viewModel.agreeAllCheckButtonState
-      .subscribe(onNext: { [weak self] isSelected in
-        self?.setButtonUI(self!.agreeAllCheckButton, status: isSelected)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, isSelected in
+        vc.setButtonUI(vc.agreeAllCheckButton, status: isSelected)
       })
       .disposed(by: disposeBag)
     
+    // 첫번째 동의사항 체크여부
     viewModel.agreeFirstCheckButtonState
-      .subscribe(onNext: { [weak self] isSelected in
-        self?.setButtonUI(self!.agreeFirstCheckButton, status: isSelected)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, isSelected in
+        vc.setButtonUI(vc.agreeFirstCheckButton, status: isSelected)
       })
       .disposed(by: disposeBag)
     
+    // 두 번째 동의사항 체크여부
     viewModel.agreeSecondCheckButtonState
-      .subscribe(onNext: { [weak self] isSelected in
-        self?.setButtonUI(self!.agreeSecondCheckButton, status: isSelected)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, isSelected in
+        vc.setButtonUI(vc.agreeSecondCheckButton, status: isSelected)
       })
       .disposed(by: disposeBag)
     
+    // 다음 버튼 활성화 여부
     viewModel.nextButtonStatus
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] status in
@@ -208,56 +249,71 @@ final class AgreementViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   private func setupActions() {
+    // 모든 동의사항 버튼
     agreeAllCheckButton.rx.tap
-      .bind { [weak self] in
-        self?.viewModel.toggleAllAgreement()
+      .withUnretained(self)
+      .bind { vc , _  in
+        vc.viewModel.toggleAllAgreement()
       }
       .disposed(by: disposeBag)
     
+    // 첫 번째 동의 버튼
     agreeFirstCheckButton.rx.tap
-      .bind { [weak self] in
-        self?.viewModel.toggleAgreement(for: self!.viewModel.agreeFirstCheckButtonState)
+      .withUnretained(self)
+      .bind { vc, _ in
+        vc.viewModel.toggleAgreement()
       }
       .disposed(by: disposeBag)
     
+    // 두 번째 동의 버튼
     agreeSecondCheckButton.rx.tap
-      .bind { [weak self] in
-        self?.viewModel.toggleAgreement(for: self!.viewModel.agreeSecondCheckButtonState)
+      .withUnretained(self)
+      .bind { vc, _ in
+        vc.viewModel.toggleAgreement(for: false)
       }
       .disposed(by: disposeBag)
     
+    // 서비스 이용약관 페에지로 이동 버튼
     goToFirstServicePageButton.rx.tap
-      .bind { [weak self] in
-        self?.moveToPage(button: self!.goToFirstServicePageButton)
+      .withUnretained(self)
+      .bind { vc, _ in
+        guard let url: URL = URL(string: vc.viewModel.serviceURL) else { return }
+        
+        vc.viewModel.steps.accept(SignupStep.safariIsRequired(url: url))
       }
       .disposed(by: disposeBag)
     
+    // 개인정보 수집 및 이용동의 이동 버튼
     goToSecondServicePageButton.rx.tap
-      .bind { [weak self] in
-        self?.moveToPage(button: self!.goToSecondServicePageButton)
+      .withUnretained(self)
+      .bind { vc, _ in
+        guard let url: URL = URL(string: vc.viewModel.personalURL) else { return }
+        
+        vc.viewModel.steps.accept(SignupStep.safariIsRequired(url: url))
+        
       }.disposed(by: disposeBag)
     
+    // 다음버튼
     nextButton.rx.tap
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
-      .bind { [weak self] in
-        let signUpVC = CheckEmailViewController()
-        self?.navigationController?.pushViewController(signUpVC, animated: true)
+      .withUnretained(self)
+      .bind { vc, _ in
+        print(self.viewModel)
+        self.viewModel.steps.accept(SignupStep.enterEmailScreenIsRequired)
       }
       .disposed(by: disposeBag)
+
   }
   
+  
+  /// 체크버튼 셋팅
+  /// - Parameters:
+  ///   - button: 동의 버튼 들
+  ///   - status: 상태
   func setButtonUI(_ button: UIButton, status: Bool ){
     let image = UIImage(named: status ? "ButtonChecked" : "ButtonEmpty")
     button.setImage(image, for: .normal)
-  }
-  
-  func moveToPage(button: UIButton) {
-    let url = button == goToFirstServicePageButton ? viewModel.serviceURL : viewModel.personalURL
-    
-    if let url = URL(string: url) {
-      let urlView = SFSafariViewController(url: url)
-      present(urlView, animated: true)
-    }
   }
 }

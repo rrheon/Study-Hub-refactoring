@@ -51,7 +51,6 @@
 		EE271F282AD7852900190E7A /* TapBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F272AD7852900190E7A /* TapBar.swift */; };
 		EE271F2A2AD8B9FA00190E7A /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F292AD8B9FA00190E7A /* String+Ext.swift */; };
 		EE271F2C2AD9250F00190E7A /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F2B2AD9250F00190E7A /* UIView+Ext.swift */; };
-		EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B43C2C55419B00057475 /* SignupViewModel.swift */; };
 		EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4412C5787EB00057475 /* EnterPasswordViewModel.swift */; };
 		EE27B4442C57ACA700057475 /* EnterPasswordTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */; };
 		EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */; };
@@ -118,6 +117,7 @@
 		EEB07A032D5503020009246D /* HomeFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A022D5503020009246D /* HomeFlow.swift */; };
 		EEB07A052D5503070009246D /* StudyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A042D5503070009246D /* StudyFlow.swift */; };
 		EEB07A072D55030C0009246D /* MypageFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A062D55030C0009246D /* MypageFlow.swift */; };
+		EEB07A2E2D5724F10009246D /* SignupFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A2D2D5724F10009246D /* SignupFlow.swift */; };
 		EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */; };
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+Ext.swift */; };
@@ -185,7 +185,7 @@
 		F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421C92A7D9534006C6B87 /* EnterPasswordViewController.swift */; };
 		F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421CB2A7D9BC3006C6B87 /* EnterNicknameViewController.swift */; };
 		F80421CE2A7DA2F3006C6B87 /* DepartmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80421CD2A7DA2F3006C6B87 /* DepartmentViewController.swift */; };
-		F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8085D3D2A7E9E270067D4DE /* CompleteViewController.swift */; };
+		F8085D3E2A7E9E270067D4DE /* CompletedSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8085D3D2A7E9E270067D4DE /* CompletedSignupViewController.swift */; };
 		F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8085D402A815DCD0067D4DE /* HomeViewController.swift */; };
 		F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8085D432A81846C0067D4DE /* StudyViewController.swift */; };
 		F86E031F2A8BBAE600164976 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E031E2A8BBAE600164976 /* SearchViewController.swift */; };
@@ -244,7 +244,6 @@
 		EE271F272AD7852900190E7A /* TapBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBar.swift; sourceTree = "<group>"; };
 		EE271F292AD8B9FA00190E7A /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
 		EE271F2B2AD9250F00190E7A /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
-		EE27B43C2C55419B00057475 /* SignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewModel.swift; sourceTree = "<group>"; };
 		EE27B4412C5787EB00057475 /* EnterPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordViewModel.swift; sourceTree = "<group>"; };
 		EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordTextField.swift; sourceTree = "<group>"; };
 		EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameViewModel.swift; sourceTree = "<group>"; };
@@ -315,6 +314,7 @@
 		EEB07A022D5503020009246D /* HomeFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFlow.swift; sourceTree = "<group>"; };
 		EEB07A042D5503070009246D /* StudyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyFlow.swift; sourceTree = "<group>"; };
 		EEB07A062D55030C0009246D /* MypageFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageFlow.swift; sourceTree = "<group>"; };
+		EEB07A2D2D5724F10009246D /* SignupFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupFlow.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditnicknameViewController.swift; sourceTree = "<group>"; };
 		EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsVC.swift; sourceTree = "<group>"; };
@@ -389,7 +389,7 @@
 		F80421C92A7D9534006C6B87 /* EnterPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasswordViewController.swift; sourceTree = "<group>"; };
 		F80421CB2A7D9BC3006C6B87 /* EnterNicknameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameViewController.swift; sourceTree = "<group>"; };
 		F80421CD2A7DA2F3006C6B87 /* DepartmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepartmentViewController.swift; sourceTree = "<group>"; };
-		F8085D3D2A7E9E270067D4DE /* CompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteViewController.swift; sourceTree = "<group>"; };
+		F8085D3D2A7E9E270067D4DE /* CompletedSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedSignupViewController.swift; sourceTree = "<group>"; };
 		F8085D402A815DCD0067D4DE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F8085D432A81846C0067D4DE /* StudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewController.swift; sourceTree = "<group>"; };
 		F8085D452A8184800067D4DE /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
@@ -971,6 +971,7 @@
 				EEB07A022D5503020009246D /* HomeFlow.swift */,
 				EEB07A042D5503070009246D /* StudyFlow.swift */,
 				EEB07A062D55030C0009246D /* MypageFlow.swift */,
+				EEB07A2D2D5724F10009246D /* SignupFlow.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -1733,14 +1734,13 @@
 		F80421C42A7D7C25006C6B87 /* SignupScene */ = {
 			isa = PBXGroup;
 			children = (
-				EE27B43C2C55419B00057475 /* SignupViewModel.swift */,
 				EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */,
 				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
 				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
 				EE27B43E2C57876C00057475 /* EnterPasswordScene */,
 				EE27B4452C57EC9F00057475 /* EnterNicknameScene */,
 				EE27B44C2C5B709500057475 /* EnterMajorScene */,
-				F8085D3D2A7E9E270067D4DE /* CompleteViewController.swift */,
+				F8085D3D2A7E9E270067D4DE /* CompletedSignupViewController.swift */,
 			);
 			path = SignupScene;
 			sourceTree = "<group>";
@@ -1937,6 +1937,7 @@
 				EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */,
 				EEB07A032D5503020009246D /* HomeFlow.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
+				EEB07A2E2D5724F10009246D /* SignupFlow.swift in Sources */,
 				EE5B93392D48AA57006DC65D /* StudyPostDTO.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,
 				EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */,
@@ -2072,7 +2073,6 @@
 				EE5B93692D4A257C006DC65D /* CommentDTO.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
-				EE27B43D2C55419B00057475 /* SignupViewModel.swift in Sources */,
 				EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */,
 				EE271F282AD7852900190E7A /* TapBar.swift in Sources */,
 				EE5B934D2D48BC99006DC65D /* ToStudyHubNetworking.swift in Sources */,
@@ -2080,7 +2080,7 @@
 				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EEC5FFAF2CA29EA500896FEB /* EditPasswordViewModel.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
-				F8085D3E2A7E9E270067D4DE /* CompleteViewController.swift in Sources */,
+				F8085D3E2A7E9E270067D4DE /* CompletedSignupViewController.swift in Sources */,
 				EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */,
 				EE5B935D2D4A1426006DC65D /* UserAuthNetworking.swift in Sources */,
 			);

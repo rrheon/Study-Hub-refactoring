@@ -5,10 +5,11 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 이메일 확인 VC
-final class CheckEmailViewController: CommonNavi {
+/// 회원가입 - 2. 이메일 확인 VC
+final class CheckEmailViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
-  let viewModel = CheckEmailViewModel()
+  
+  let viewModel: CheckEmailViewModel
   
   private lazy var mainTitleView = AuthTitleView(pageNumber: "2/5",
                                                  pageTitle: "이메일을 입력해주세요",
@@ -40,6 +41,15 @@ final class CheckEmailViewController: CommonNavi {
   private lazy var codeTextField = AuthTextField(setValue: codeTextFieldValue)
   
   private lazy var nextButton = StudyHubButton(title: "다음")
+  
+  init(with viewModel: CheckEmailViewModel){
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: .none)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -126,6 +136,7 @@ final class CheckEmailViewController: CommonNavi {
   
   private func setupBindings() {
     emailTextField.textField.rx.text.orEmpty
+      .compactMap({ $0 })
       .bind(to: viewModel.email)
       .disposed(by: disposeBag)
     
@@ -221,7 +232,7 @@ final class CheckEmailViewController: CommonNavi {
                                           title: "이메일 코드를 메일로 보내드렸어요.",
                                           textColor: .g80,
                                           underLineColor: .g100)
-    if self.viewModel.resend {
+    if self.viewModel.resend == true {
       self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
     }
     
@@ -248,8 +259,9 @@ final class CheckEmailViewController: CommonNavi {
   
   // MARK: - 비밀번호 설정화면으로 이동
   func goToPasswordVC(_ email: String){
-    let signupDatas = SignupDats(email: email)
-    let passwordVC = EnterPasswordViewController(signupDatas)
-    navigationController?.pushViewController(passwordVC, animated: true)
+//    let signupDatas = SignupDats(email: email)
+//    let passwordVC = EnterPasswordViewController(signupDatas)
+//    navigationController?.pushViewController(passwordVC, animated: true)
+    viewModel.steps.accept(SignupStep.enterPasswordScreenIsRequired)
   }
 }

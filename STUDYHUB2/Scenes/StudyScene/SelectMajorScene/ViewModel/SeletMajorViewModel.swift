@@ -23,8 +23,7 @@ final class SeletMajorViewModel {
   }
   
   private func loadMajors(_ enteredMajor: String) {
-    let majorDatas = DataLoaderFromPlist()
-    if let majors = majorDatas.loadMajorsWithCodes() {
+    if let majors = DataLoaderFromPlist.loadMajorsWithCodes() {
       let filteredMajors = majors.filter { (key, value) -> Bool in
         key.contains(enteredMajor)
       }

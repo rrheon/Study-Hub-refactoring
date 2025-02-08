@@ -5,8 +5,10 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class EnterPasswordViewController: CommonNavi {
+/// 회원가입 - 3. 비밀번호 입력 VC
+final class EnterPasswordViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
+  
   var viewModel: EnterPasswordViewModel
   
   // MARK: - 화면구성
@@ -41,9 +43,9 @@ final class EnterPasswordViewController: CommonNavi {
   
   private lazy var nextButton = StudyHubButton(title: "다음")
   
-  init(_ values: SignupDataProtocol) {
-    self.viewModel = EnterPasswordViewModel(values)
-    super.init()
+  init(with viewModel: EnterPasswordViewModel){
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -120,13 +122,14 @@ final class EnterPasswordViewController: CommonNavi {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        let signupDatas = SignupDats(
-          email: viewModel.email,
-          password: passwordTextField.getTextFieldValue()
-        )
-        
-        let nicknameVC = EnterNicknameViewController(signupDatas)
-        navigationController?.pushViewController(nicknameVC, animated: true)
+//        let signupDatas = SignupDats(
+//          email: viewModel.email,
+//          password: passwordTextField.getTextFieldValue()
+//        )
+//        
+//        let nicknameVC = EnterNicknameViewController(signupDatas)
+//        navigationController?.pushViewController(nicknameVC, animated: true)
+        viewModel.steps.accept(SignupStep.enterNicknameScreenIsRequired)
       })
       .disposed(by: disposeBag)
   }

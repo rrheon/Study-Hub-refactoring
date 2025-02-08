@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+/// StudyHub 메인 CustomButton - 주황색 버튼
 final class StudyHubButton: UIButton {
   
   init(title: String, fontSize: CGFloat = 16, radious: CGFloat = 6) {

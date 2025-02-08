@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
+
+/// 인증 Flow CustomView - 페이지 넘버, 제목,  내용
 final class AuthTitleView: UIView {
   private let pageNumber: String
   private let pageTitle: String

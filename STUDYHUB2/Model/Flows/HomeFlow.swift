@@ -63,3 +63,17 @@ class HomeFlow: Flow {
   }
   
 }
+
+/// HomeStepper - 리모컨
+class HomeStepper: Stepper {
+  let steps: PublishRelay<Step> = PublishRelay()
+  
+  /// 로그인 여부에 따라 초기 화면 설정
+  var initialStep: Step {
+    return HomeStep.homeIsRequired
+  }
+  
+  func navigate(to step: AppStep) {
+    self.steps.accept(step)
+  }
+}

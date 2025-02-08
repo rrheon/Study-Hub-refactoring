@@ -3,10 +3,12 @@ import Foundation
 
 import RxSwift
 import RxCocoa
-
+import RxFlow
 
 /// 이용약관동의 ViewModel
-class AgreementViewModel {
+class AgreementViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   var serviceURL: String = ""
   var personalURL: String = ""
   
@@ -22,7 +24,6 @@ class AgreementViewModel {
   init(){
     self.loadURLs()
   }
-  
   
   /// 다음버튼 상태
   var nextButtonStatus: Observable<Bool> {
@@ -40,18 +41,18 @@ class AgreementViewModel {
   
   
   /// 개별항목 동의
-  /// - Parameter button: 동의버튼
-  func toggleAgreement(for button: BehaviorRelay<Bool>) {
-    let newState = !button.value
-    button.accept(newState)
+  /// - Parameter button: 첫번째 동의버튼 인지 - 아니면 두 번째 동의버튼
+  func toggleAgreement(for firstBtn: Bool = true) {
+    let btnState: BehaviorRelay<Bool> = firstBtn ? agreeFirstCheckButtonState : agreeSecondCheckButtonState
+    let newState = !btnState.value
+    btnState.accept(newState)
   }
   
   
   /// 이용약관 및 개인정보처리방침 URL 불러오기
   private func loadURLs() {
-    let urlData = DataLoaderFromPlist()
-    if let serviceURLString = urlData.loadURLs()?["service"],
-       let personalURLString = urlData.loadURLs()?["personal"] {
+    if let serviceURLString = DataLoaderFromPlist.loadURLs()?["service"],
+       let personalURLString = DataLoaderFromPlist.loadURLs()?["personal"] {
       serviceURL = serviceURLString
       personalURL = personalURLString
     }
