@@ -32,9 +32,6 @@ protocol CreateButtonInCreatePost {
   func createButton(title: String) -> UIButton
 }
 
-protocol CreateSearchbar {
-  func createSearchBar(placeholder: String) -> UISearchBar
-}
 
 extension CreateLabel {
   
@@ -132,14 +129,20 @@ extension CreateButtonInCreatePost {
   }
 }
 
-extension CreateSearchbar {
-  
+
+protocol CreateUIprotocol: CreateLabel,
+                           CreateStackView,
+                           CreateTextField,
+                           CreateDividerLine,
+                           CreateButtonInCreatePost{}
+
+extension UISearchBar {
   /// 서치바 생성
   /// - Parameter placeholder: placeHolder
   /// - Returns: 서치바
-  func createSearchBar(placeholder: String) -> UISearchBar {
+  class func createSearchBar(placeholder: String) -> UISearchBar {
     let bar = UISearchBar()
-
+    
     bar.placeholder = placeholder
     bar.searchTextField.font = UIFont(name: "Pretendard-Medium", size: 20)
     
@@ -161,10 +164,3 @@ extension CreateSearchbar {
     return bar
   }
 }
-
-protocol CreateUIprotocol: CreateLabel,
-                           CreateStackView,
-                           CreateTextField,
-                           CreateDividerLine,
-                           CreateButtonInCreatePost,
-                           CreateSearchbar{}

@@ -42,6 +42,12 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
   // MARK: - toast message, 이미지가 뒤에 나오고 있음 앞으로 빼기, 이미지 없을 때도 있음
   
   
+  /// Toast Popup 띄우기
+  /// - Parameters:
+  ///   - message: Toast Popup 메세지
+  ///   - imageCheck: 이미지 사용 여부(기본값 true)
+  ///   - alertCheck:경고 이미지 설정 ->  true = 성공 이미지 false = 경고 이미지(기본값 true)
+  ///   - large:팝업 사이즈 -> true = 큰 팝업(74) false = 작은 팝업(56) (기본값 false)
   func showToast(
     message: String,
     imageCheck: Bool = true,
@@ -79,6 +85,7 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       make.height.equalTo(size)
     }
     
+    // 이미지 여부에 따라 UI 설정
     if imageCheck {
       imageView.snp.makeConstraints { make in
         make.centerY.equalTo(toastContainer)
@@ -86,6 +93,7 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
       }
     }
     
+    // 라벨 UI 설정
     toastLabel.snp.makeConstraints { make in
       make.centerY.equalTo(toastContainer)
       if imageCheck {
@@ -124,10 +132,10 @@ extension UIViewController: UITextFieldDelegate, UITextViewDelegate {
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
-  func moveToTabbar(_ loginStatus: Bool) {
-    let tapbarcontroller = TabBarController(loginStatus)
-    tapbarcontroller.modalPresentationStyle = .fullScreen
-    
-    self.present(tapbarcontroller, animated: true, completion: nil)
-  }
+//  func moveToTabbar(_ loginStatus: Bool) {
+//    let tapbarcontroller = TabBarController(loginStatus)
+//    tapbarcontroller.modalPresentationStyle = .fullScreen
+//    
+//    self.present(tapbarcontroller, animated: true, completion: nil)
+//  }
 }

@@ -13,14 +13,10 @@ import RxRelay
 
 /// 홈 화면 Step
 enum HomeStep: Step {
-  case homeIsRequired
-  
-  /*
-  필요한 화면
-   
-   검색화면
-   검색결과화면
-  */
+  case homeIsRequired          // 홈화면
+  case enterSearchIsRequired   // 검색화면
+  case resultSearchIsRequired  // 검색결과화면
+  case popScreenIsRequired     // 현재화면 pop
 }
 
 
@@ -52,6 +48,12 @@ class HomeFlow: Flow {
     switch step {
     case .homeIsRequired:
       return setHomeScreen()
+    case .enterSearchIsRequired:
+      return navToEnterSearchScreen()
+    case .resultSearchIsRequired:
+      return navToResultSearchScreen()
+    case .popScreenIsRequired:
+      return popCurrentScreen()
     }
   }
  
@@ -62,6 +64,28 @@ class HomeFlow: Flow {
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
+  
+  /// 검색어 입력 화면으로 이동
+  private func navToEnterSearchScreen() -> FlowContributors {
+    let viewModel: SearchViewModel = SearchViewModel()
+    let vc = EnterSearchViewController(viewModel: viewModel)
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 검색어 결과 화면으로 이동
+  private func navToResultSearchScreen() -> FlowContributors {
+    let viewModel: SearchViewModel = SearchViewModel()
+    let vc = ResultSearchViewController(with: viewModel)
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 현재화면 pop
+  private func popCurrentScreen() -> FlowContributors {
+    self.rootViewController.popViewController(animated: true)
+    return .none
+  }
 }
 
 /// HomeStepper - 리모컨

@@ -7,79 +7,75 @@
 import UIKit
 
 import SnapKit
+import Then
 
+/// 북마크 셀에서 참여하기 action을 위한 프로토콜
 protocol ParticipatePostDelegate: AnyObject {
+  
+  /// 참여하기 버튼 터치 시
+  /// - Parameters:
+  ///   - studyId: 스터디의 StudyId
+  ///   - postId: 스터디의 PostId
   func participateButtonTapped(studyId: Int, postId: Int)
 }
 
+/// 북마크 셀
 final class BookMarkCell: UICollectionViewCell {
-  
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
-  
   weak var postDelegate: ParticipatePostDelegate?
   
   var model: BookmarkContent? { didSet { bind()} }
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .o50
-    label.layer.cornerRadius = 5
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
-    return label
-  }()
+  /// 학과 라벨
+  private lazy var majorLabel: UILabel = UILabel().then {
+    $0.textColor = .o50
+    $0.layer.cornerRadius = 5
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+  }
   
-  private lazy var bookMarkButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
-    button.addAction(UIAction { _ in
+  /// 북마크 버튼
+  private lazy var bookMarkButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
+    $0.addAction(UIAction { _ in
 //      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
       BookmarkManager.shared.bookmarkTapped(with: self.model?.postID ?? 0) {
         print("북")
       }
     }, for: .touchUpInside)
-    return button
-  }()
+  } 
   
-  private lazy var titleLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .black
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    return label
-  }()
+  /// 스터디의 제목 라벨
+  private lazy var titleLabel: UILabel = UILabel().then{
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var infoLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
+  /// 스터디의 내용 라벨
+  private lazy var infoLabel: UILabel = UILabel().then{
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
   
-  var remainCount: Int = 4
-  private lazy var remainLabel: UILabel = {
-    let label = UILabel()
-    label.text = "잔여 \(remainCount)자리"
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard-Medium", size: 12)
-    return label
-  }()
+  /// 잔여 자리 라벨
+  private lazy var remainLabel: UILabel = UILabel().then{
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
   
-  private lazy var enterButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("신청하기", for: .normal)
-    button.setTitleColor(UIColor.o50, for: .normal)
-    button.layer.cornerRadius = 5
-    button.layer.borderWidth = 1
-    button.layer.borderColor = UIColor.o40.cgColor
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    button.addAction(UIAction { _ in
+  /// 스터디 참여하기 버튼
+  private lazy var enterButton: UIButton = UIButton().then{
+   $0.setTitle("신청하기", for: .normal)
+   $0.setTitleColor(UIColor.o50, for: .normal)
+   $0.layer.cornerRadius = 5
+   $0.layer.borderWidth = 1
+   $0.layer.borderColor = UIColor.o40.cgColor
+   $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+   $0.addAction(UIAction { _ in
       self.postDelegate?.participateButtonTapped(
         studyId: self.model?.studyID ?? 0,
         postId: self.model?.postID ?? 0
       )
     }, for: .touchUpInside)
-    return button
-  }()
-  
+  }
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -95,6 +91,8 @@ final class BookMarkCell: UICollectionViewCell {
     fatalError()
   }
   
+  
+  /// Layout 설정
   private func addSubviews() {
     
     [
@@ -109,6 +107,8 @@ final class BookMarkCell: UICollectionViewCell {
     }
   }
   
+  
+  /// UI설정
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
@@ -149,8 +149,10 @@ final class BookMarkCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
+  
+  /// 데이터 바인딩
   private func bind() {
-    majorLabel.text = convertMajor(model?.major ?? "없음", toEnglish: false)
+    majorLabel.text = Utils.convertMajor(model?.major ?? "없음", toEnglish: false)
     titleLabel.text =  model?.title
     infoLabel.text = model?.content
     remainLabel.text = "잔여 \(model?.remainingSeat ?? 0)자리"
@@ -164,5 +166,3 @@ final class BookMarkCell: UICollectionViewCell {
     }
   }
 }
-
-extension BookMarkCell: ConvertMajor {}

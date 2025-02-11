@@ -8,6 +8,7 @@
 import Foundation
 
 import RxRelay
+import RxFlow
 
 protocol BookMarkDataProtocol {
   var loginStatus: Bool { get }
@@ -26,26 +27,35 @@ struct BookMarkData: BookMarkDataProtocol {
 
 
 /// 북마크 ViewModel
-final class BookmarkViewModel {
+final class BookmarkViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay()
+
 //  let detailPostDataManager = PostDetailInfoManager.shared
 //  let bookmarkManager = BookmarkManager.shared
   
-  var data: BookMarkDataProtocol
+//  var data: BookMarkDataProtocol
   var bookmarkDatas = PublishRelay<[BookmarkContent]>()
-  var postData = PublishRelay<PostDetailData>()
+//  var postData = PublishRelay<PostDetailData>()
   var totalCount = PublishRelay<Int>()
-  var isNeedFetch: PublishRelay<Bool>
+//  var isNeedFetch: PublishRelay<Bool>
   
   var bookmarkList: [BookmarkContent] = []
   var defaultRequestNum = 100
   let loginStatus: Bool
   
-  init(_ data: BookMarkDataProtocol) {
-    self.data = data
-    self.loginStatus = data.loginStatus
-    self.isNeedFetch = data.isNeedFetch
-    
-    self.getBookmarkList()
+  init() {
+//    self.data = data
+//    self.loginStatus = data.loginStatus
+//    self.isNeedFetch = data.isNeedFetch
+//
+    loginStatus = TokenManager.shared.loadAccessToken()?.first != nil
+    if loginStatus {
+      self.getBookmarkList()
+    }else {
+      self.totalCount.accept(0)
+      self.bookmarkDatas.accept([])
+      self.bookmarkList = []
+    }
   }
   
   #warning("무한 스크롤로 변경")

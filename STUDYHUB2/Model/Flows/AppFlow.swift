@@ -37,11 +37,11 @@ enum AppStep: Step {
   case mainTabIsRequired    // 메인탭바
   case loginScreenIsRequired // 로그인 화면
   case signupIsRequired // 회원가입 Flow
-  
+  case bookmarkScreenIsRequired // 북마크 화면
+  case popCurrentScreen // 현재화면 pop
   /*
    필요한 화면
    
-   회원가입 flow
    캘린더
    팝업 - toast / 일반
    이용약관
@@ -84,7 +84,11 @@ class AppFlow: Flow {
     case .loginScreenIsRequired:
       return presentLoginScreen()
     case .signupIsRequired:
-      return self.presentSignupScreen()
+      return presentSignupScreen()
+    case .bookmarkScreenIsRequired:
+      return navToBookmarkScreen()
+    case .popCurrentScreen:
+      return popCurrentScreen()
     }
   }
   
@@ -122,7 +126,8 @@ class AppFlow: Flow {
   func presentLoginScreen() -> FlowContributors {
     let viewModel: LoginViewModel = LoginViewModel()
     let vc = LoginViewController(with: viewModel)
-    self.rootViewController.pushViewController(vc, animated: false)
+    self.rootViewController.navigationBar.isHidden = true
+    self.rootViewController.setViewControllers([vc], animated: false)
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
@@ -142,13 +147,30 @@ class AppFlow: Flow {
     ))
   }
   
+  
+  /// 북마크 화면으로 이동
+  private func navToBookmarkScreen() -> FlowContributors {
+    let viewModel: BookmarkViewModel = BookmarkViewModel()
+    let vc = BookmarkViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 현재화면 pop
+  private func popCurrentScreen() -> FlowContributors {
+    self.rootViewController.navigationBar.isHidden = true
+    self.rootViewController.popViewController(animated: true)
+    return .none
+  }
 }
 
 
 /// 전체 AppStepper - 리모컨
 class AppStepper: Stepper {
   let steps: PublishRelay<Step> = PublishRelay()
-  
+  private let disposBag = DisposeBag()
+
   /// 로그인 상태 확인
   var isUserLoginStatus: Bool {
     return TokenManager.shared.loadAccessToken()?.first != nil
@@ -161,5 +183,17 @@ class AppStepper: Stepper {
   
   func navigate(to step: AppStep) {
     self.steps.accept(step)
+  }
+  
+  func readyToEmitSteps() {
+    Observable.merge(
+      NotificationCenter.default
+        .rx
+        .notification(.navToBookmarkScreen)
+        .map{ _ in AppStep.bookmarkScreenIsRequired }
+    )
+    .bind(to: self.steps)
+    .disposed(by: disposBag)
+    
   }
 }

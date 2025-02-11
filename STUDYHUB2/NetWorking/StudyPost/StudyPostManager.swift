@@ -113,12 +113,9 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   /// 검색어 추천
   /// - Parameter keyword: 검색어
-  func searchRecommend(with keyword: String){
-    provider.request(.recommendSearch(keyword: keyword)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: RecommendList.self) { decodedData in
-        print(decodedData)
-      }
-    }
+  func searchRecommend(with keyword: String) async throws -> RecommendList {
+    let result = await provider.request(.recommendSearch(keyword: keyword))
+    return try await self.commonDecodeNetworkResponse(with: result, decode: RecommendList.self)
   }
   
   /// 작성한 모든 게시글 삭제

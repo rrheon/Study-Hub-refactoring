@@ -182,12 +182,13 @@ final class LoginViewController: UIViewController {
     
     // 로그인 버튼 터치 후 유효한 계정 판단
     viewModel.isValidAccount
-      .asDriver(onErrorJustReturn: true)
-      .drive(onNext: { [weak self] in
-        guard let self = self else { return }
-        self.handleLoginResult($0)
+      .withUnretained(self)
+      .asDriver(onErrorJustReturn: (self, false)) // 튜플 형태로 맞춤
+      .drive(onNext: { vc, result in
+        result ? vc.viewModel.steps.accept(AppStep.mainTabIsRequired) : vc.failToLogin()
       })
       .disposed(by: disposeBag)
+    
   }
   
   /// 버튼 Action 설정
@@ -279,6 +280,7 @@ final class LoginViewController: UIViewController {
       return
     }
     
+    // 이메일 TextField 경고라벨 세팅
     emailTextField.alertLabelSetting(
       hidden: true,
       title: "",
@@ -286,6 +288,7 @@ final class LoginViewController: UIViewController {
       underLineColor: .g100
     )
     
+    // 비밀번호 TextField 경고라벨 세팅
     passwordTextField.alertLabelSetting(
       hidden: true,
       title: "",
@@ -293,24 +296,15 @@ final class LoginViewController: UIViewController {
       underLineColor: .g100
     )
   
-//    viewModel.login(email: email, password: password)
     viewModel.loginToStudyHub(email: email, password: password)
   }
   
-  
-  /// 로그인 결과 처리
-  /// - Parameter success: 로그인 성공 여부
-  private func handleLoginResult(_ success: Bool) {
-    success ? moveToTabbar(success) : failToLogin()
-  }
-  
-  
-  /// 로그인 실패 시
+  /// 로그인 실패 시 경고라벨 활성화
   func failToLogin(){
-    emailTextField.alertLabelSetting(hidden: false, title: "잘못된 주소예요. 다시 입력해주세요")
-    passwordTextField.alertLabelSetting(
-      hidden: false,
-      title: "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
-    )
+    let emailAlertTitle: String = "잘못된 주소예요. 다시 입력해주세요"
+    emailTextField.alertLabelSetting(hidden: false, title: emailAlertTitle)
+    
+    let passwordAlertTitle: String = "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
+    passwordTextField.alertLabelSetting(hidden: false, title: passwordAlertTitle)
   }
 }

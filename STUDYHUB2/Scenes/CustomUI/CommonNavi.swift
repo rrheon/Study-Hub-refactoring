@@ -1,18 +1,6 @@
 
 import UIKit
 
-extension UINavigationController {
-  
-  /// 스크롤 시 네비게이션 바 색상 변경 방지
-  func configurationNavigationBar(){
-    let navigationBarAppearance = UINavigationBarAppearance()
-    navigationBarAppearance.configureWithTransparentBackground()
-    UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-    UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
-  }
-}
-
-
 extension UIViewController {
   
   /// 왼쪽 아이템 버튼 설정
@@ -86,6 +74,13 @@ extension UIViewController {
     }
   }
   
+  /// 스크롤 시 네비게이션 바 색상 변경 방지
+  func configurationNavigationBar(){
+    let navigationBarAppearance = UINavigationBarAppearance()
+    navigationBarAppearance.configureWithTransparentBackground()
+    UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+    UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+  }
 }
 
 class CommonNavi: UIViewController {
