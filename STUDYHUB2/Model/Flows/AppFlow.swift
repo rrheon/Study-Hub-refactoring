@@ -34,11 +34,13 @@ enum AppStep: Step {
     }
   }
   
-  case mainTabIsRequired    // 메인탭바
-  case loginScreenIsRequired // 로그인 화면
-  case signupIsRequired // 회원가입 Flow
-  case bookmarkScreenIsRequired // 북마크 화면
-  case popCurrentScreen // 현재화면 pop
+  case mainTabIsRequired                          // 메인탭바
+  case loginScreenIsRequired                      // 로그인 화면
+  case signupIsRequired                           // 회원가입 Flow
+  case bookmarkScreenIsRequired                   // 북마크 화면
+  case howToUseScreenIsRequired                   // 이용방법 화면
+  case studyDetailScreenIsRequired(postID: Int)                // 스터디 상세 화면
+  case popCurrentScreen                           // 현재화면 pop
   /*
    필요한 화면
    
@@ -48,7 +50,7 @@ enum AppStep: Step {
    스터디 상세화면
    댓글화면
    참여하기
-   스터디 생성
+   스터디 생성 flow
    학과검색
    프로필 화면
    닉네임/ 학과/비밀번호 변경화면
@@ -89,6 +91,10 @@ class AppFlow: Flow {
       return navToBookmarkScreen()
     case .popCurrentScreen:
       return popCurrentScreen()
+    case .howToUseScreenIsRequired:
+      return navToHowToUseScreen()
+    case .studyDetailScreenIsRequired(let postID):
+      return navToStudyDetailScreen(postID: postID)
     }
   }
   
@@ -157,6 +163,26 @@ class AppFlow: Flow {
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
+  
+  /// 이용방법 화면으로 이동
+  private func navToHowToUseScreen() -> FlowContributors {
+#warning("vc에 로그인 상태를 주입하지 말고 작성하기 버튼을 누를 때 로그인 여부를 판단해야함")
+    let vc = HowToUseViewController(false)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNext: vc))
+  }
+  
+  
+  /// 스터디 디테일 화면으로 이동
+  private func navToStudyDetailScreen(postID: Int) -> FlowContributors {
+    let viewModel: PostedStudyViewModel = PostedStudyViewModel(with: postID)
+    let vc = PostedStudyViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
   /// 현재화면 pop
   private func popCurrentScreen() -> FlowContributors {
     self.rootViewController.navigationBar.isHidden = true
@@ -187,10 +213,13 @@ class AppStepper: Stepper {
   
   func readyToEmitSteps() {
     Observable.merge(
-      NotificationCenter.default
-        .rx
-        .notification(.navToBookmarkScreen)
-        .map{ _ in AppStep.bookmarkScreenIsRequired }
+      NotificationCenter.default.rx.notification(.navToBookmarkScreen).map{ _ in AppStep.bookmarkScreenIsRequired },
+      NotificationCenter.default.rx.notification(.navToHowToUseScreen).map { _ in AppStep.howToUseScreenIsRequired},
+      NotificationCenter.default.rx.notification(.navToStudyDetailScrenn).compactMap { notification in
+        guard let postID = notification.userInfo?["postID"] as? Int else { return nil}
+        return AppStep.studyDetailScreenIsRequired(postID: postID)
+      }
+
     )
     .bind(to: self.steps)
     .disposed(by: disposBag)

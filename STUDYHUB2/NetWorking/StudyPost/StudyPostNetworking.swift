@@ -86,6 +86,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
     case .searchAllPost(let searchData):
       let parmas: [String: Any] = [
         "hot" : searchData.hot,
+        "text" : searchData.text,
         "page": searchData.page,
         "size": searchData.size,
         "titleAndMajor": searchData.titleAndMajor

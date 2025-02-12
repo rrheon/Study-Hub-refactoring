@@ -196,12 +196,12 @@ final class MyPostViewController: CommonNavi {
     viewModel.updateMyPostData
       .asDriver(onErrorJustReturn: nil)
       .drive(onNext: {[weak self] postData in
-        guard let data = postData else { return }
-        self?.viewModel.updateMyPost(postData: data, addPost: true)
-        
-        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
-        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
-        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
+//        guard let data = postData else { return }
+//        self?.viewModel.updateMyPost(postData: data, addPost: true)
+//        
+//        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
+//        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
+//        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
       })
       .disposed(by: disposeBag)
     

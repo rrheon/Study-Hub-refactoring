@@ -12,6 +12,12 @@ extension UILabel {
   // MARK: - 글자색상 일부분 변경
   
   
+  /// 글자색상 일부분 변경
+  /// - Parameters:
+  ///   - wantToChange: 변경을 원하는 부분
+  ///   - color: 변경할 색상
+  ///   - font: 변경할 폰트
+  ///   - lineSpacing: 여백
   func changeColor(
     wantToChange: String,
     color: UIColor,
@@ -48,10 +54,7 @@ extension UILabel {
     attributeString.addAttribute(
       .paragraphStyle,
       value: style,
-      range: NSRange(
-        location: 0,
-        length: attributeString.length
-      )
+      range: NSRange(location: 0, length: attributeString.length)
     )
     attributedText = attributeString
   }

@@ -11,7 +11,7 @@ import Foundation
 
 /// 스터디 모두 조회 DTO
 struct SearchAllPostDTO: Codable {
-  let hot, titleAndMajor: String
+  let hot, text, titleAndMajor: String
   let page, size: Int
 }
 

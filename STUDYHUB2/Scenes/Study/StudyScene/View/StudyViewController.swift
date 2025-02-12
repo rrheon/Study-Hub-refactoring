@@ -230,12 +230,12 @@ final class StudyViewController: UIViewController {
     viewModel.postData
       .asDriver(onErrorJustReturn: nil)
       .drive(onNext: { [weak self] postData in
-        self?.recentButtonTapped()
-        guard let data = postData else { return }
-        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
-        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
-        
-        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
+//        self?.recentButtonTapped()
+//        guard let data = postData else { return }
+//        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
+//        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
+//        
+//        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
       })
       .disposed(by: disposeBag)
   }

@@ -11,9 +11,7 @@ import SnapKit
 import Kingfisher
 
 final class SimilarPostCell: UICollectionViewCell {
-  
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
-  
+    
   var model: RelatedPost? { didSet { bind() } }
   var postID: Int?
   

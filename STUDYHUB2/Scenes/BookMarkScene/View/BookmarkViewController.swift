@@ -7,8 +7,10 @@ import RxCocoa
 import Then
 
 /// 북마크 VC
+#warning("북마크 작업, ")
 final class BookmarkViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: BookmarkViewModel
 
   /// 전체 북마크 갯수 라벨
@@ -27,17 +29,9 @@ final class BookmarkViewController: UIViewController {
   }
   
   /// 북마크한 게시글이 없을 때 이미지뷰
-  private lazy var emptyMainImageView: UIImageView = UIImageView().then {
-    $0.image = UIImage(named: "EmptyBookMarkImg")
-  }
-  
-  /// 북마크한 게시글이 없을 때 라벨
-  private lazy var emptyMainLabel: UILabel = UILabel().then {
-    $0.text = "북마크 글이 없어요\n관심있는 스터디를 저장해 보세요!"
-    $0.textColor = .bg70
-    $0.font = UIFont(name: "Pretendard", size: 16)
-  }
-  
+  private lazy var emptyView = EmptyResultView(imageName: "EmptyBookMarkImg",
+                                               title: "북마크 글이 없어요\n관심있는 스터디를 저장해 보세요!")
+
   /// 북마크한 게시글이 없을 때 로그인 버튼
   private lazy var loginButton = StudyHubButton(title: "로그인하기")
   
@@ -75,8 +69,13 @@ final class BookmarkViewController: UIViewController {
     
     setupNavigationbar()
     
+    setupLayout(count: 0)
+    makeUI(loginStatus: viewModel.loginStatus, count: 0)
+    
     setupBinding()
     setupActions()
+    
+    viewModel.fetchBookmarkData()
     
     registerCell()
   } // viewDidLoad
@@ -158,26 +157,17 @@ final class BookmarkViewController: UIViewController {
   }
   
   // MARK: - setupLayout
+  
+  
   func setupLayout(count: Int){
     if count > 0 {
-      [
-        totalCountLabel,
-        deleteAllButton,
-        scrollView
-      ].forEach {
-        view.addSubview($0)
-      }
+      [totalCountLabel, deleteAllButton, scrollView]
+        .forEach { view.addSubview($0) }
       
       scrollView.addSubview(bookMarkCollectionView)
     } else {
-      [
-        totalCountLabel,
-        deleteAllButton,
-        emptyMainImageView,
-        emptyMainLabel
-      ].forEach {
-        view.addSubview($0)
-      }
+      [ totalCountLabel, deleteAllButton, emptyView, loginButton]
+        .forEach { view.addSubview($0) }
     }
   }
   
@@ -210,6 +200,23 @@ final class BookmarkViewController: UIViewController {
     }
   }
   
+  /// 데이터가 없을 때 UI설정
+  func noDataUI(loginStatus: Bool){
+    emptyView.snp.makeConstraints {
+      $0.top.equalTo(view.snp.top).offset(150)
+      $0.height.equalTo(250)
+      $0.leading.trailing.equalToSuperview().inset(30)
+    }
+
+    loginButton.isHidden = loginStatus
+    loginButton.snp.makeConstraints {
+      $0.top.equalTo(emptyView.snp.bottom).offset(40)
+      $0.centerX.equalToSuperview()
+      $0.width.equalTo(100)
+      $0.height.equalTo(47)
+    }
+  }
+
   /// 셀 등록
   private func registerCell() {
     bookMarkCollectionView.rx.setDelegate(self)
@@ -220,34 +227,7 @@ final class BookmarkViewController: UIViewController {
       forCellWithReuseIdentifier: BookMarkCell.cellID
     )
   }
-  
-  /// 데이터가 없을 때 UI설정
-  func noDataUI(loginStatus: Bool){
-    view.addSubview(emptyMainImageView)
     
-    emptyMainImageView.snp.makeConstraints { make in
-      make.centerX.equalToSuperview()
-      make.centerY.equalToSuperview().offset(-50)
-    }
-    
-    view.addSubview(emptyMainLabel)
-    emptyMainLabel.numberOfLines = 2
-    emptyMainLabel.textAlignment = .center
-    emptyMainLabel.changeColor(wantToChange: "관심있는 스터디를 저장해 보세요!", color: .bg60)
-    emptyMainLabel.snp.makeConstraints { make in
-      make.top.equalTo(emptyMainImageView.snp.bottom).offset(20)
-      make.centerX.equalTo(emptyMainImageView)
-    }
-    
-    view.addSubview(loginButton)
-    loginButton.isHidden = loginStatus
-    loginButton.snp.makeConstraints {
-      $0.top.equalTo(emptyMainLabel.snp.bottom).offset(20)
-      $0.leading.trailing.equalTo(emptyMainLabel)
-      $0.height.equalTo(47)
-    }
-  }
-  
   // MARK: - 북마크 전체 삭제
   
   /// 전체삭제 버튼 탭

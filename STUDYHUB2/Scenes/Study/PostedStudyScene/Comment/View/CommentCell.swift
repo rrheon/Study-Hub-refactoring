@@ -10,7 +10,6 @@ protocol CommentCellDelegate: AnyObject {
 final class CommentCell: UITableViewCell {
   weak var delegate: CommentCellDelegate?
   
-  static let cellId = "CommentCell"
   var model: CommentConetent? { didSet { bind() } }
   var commentId: Int?
   var userNickname: String?

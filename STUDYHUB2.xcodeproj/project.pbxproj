@@ -121,6 +121,7 @@
 		EEB07A4D2D5B0A620009246D /* UICollectionViewCell+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A4C2D5B0A620009246D /* UICollectionViewCell+Ext.swift */; };
 		EEB07A552D5B0F010009246D /* ResultSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A542D5B0F010009246D /* ResultSearchViewController.swift */; };
 		EEB07A5D2D5B3E6F0009246D /* Notification+Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A5C2D5B3E6F0009246D /* Notification+Name.swift */; };
+		EEB07A5F2D5B95EC0009246D /* EmptyResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB07A5E2D5B95EC0009246D /* EmptyResultView.swift */; };
 		EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */; };
 		EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */; };
 		EEB51E9A2B10931500C23AB4 /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E992B10931500C23AB4 /* UIButton+Ext.swift */; };
@@ -320,6 +321,7 @@
 		EEB07A4C2D5B0A620009246D /* UICollectionViewCell+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewCell+Ext.swift"; sourceTree = "<group>"; };
 		EEB07A542D5B0F010009246D /* ResultSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultSearchViewController.swift; sourceTree = "<group>"; };
 		EEB07A5C2D5B3E6F0009246D /* Notification+Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Name.swift"; sourceTree = "<group>"; };
+		EEB07A5E2D5B95EC0009246D /* EmptyResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultView.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditnicknameViewController.swift; sourceTree = "<group>"; };
 		EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsVC.swift; sourceTree = "<group>"; };
@@ -903,6 +905,7 @@
 				EE07ADCE2AF325F80096890F /* UILabelPadding.swift */,
 				EED00B712C5342DD000D2E23 /* CommonNavi.swift */,
 				EEA53A3C2C524C8E00C8FEFF /* StudyHubButton.swift */,
+				EEB07A5E2D5B95EC0009246D /* EmptyResultView.swift */,
 			);
 			path = CustomUI;
 			sourceTree = "<group>";
@@ -1936,6 +1939,7 @@
 				EE27B4422C5787EB00057475 /* EnterPasswordViewModel.swift in Sources */,
 				EEB07A032D5503020009246D /* HomeFlow.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
+				EEB07A5F2D5B95EC0009246D /* EmptyResultView.swift in Sources */,
 				EEB07A2E2D5724F10009246D /* SignupFlow.swift in Sources */,
 				EE5B93392D48AA57006DC65D /* StudyPostDTO.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,

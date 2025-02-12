@@ -17,7 +17,7 @@ final class EnterSearchViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
   var viewModel: SearchViewModel
-    
+  
   /// 서치바
   private lazy var searchBar = UISearchBar.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
   
@@ -27,6 +27,10 @@ final class EnterSearchViewController: UIViewController {
     $0.separatorInset.left = 0
     $0.layer.cornerRadius = 10
   })
+  
+  /// 결과값이 없을 때의 view
+  private lazy var emptyResultView = EmptyResultView()
+  
   
   init(viewModel: SearchViewModel) {
     self.viewModel = viewModel
@@ -46,7 +50,7 @@ final class EnterSearchViewController: UIViewController {
     
     setupDelegate()
     setupNavigationbar()
-  
+    
     setupSearchBar()
     makeUI()
     
@@ -56,7 +60,7 @@ final class EnterSearchViewController: UIViewController {
   
   /// UI설정
   func makeUI() {
-    
+    // 서치바
     view.addSubview(searchBar)
     searchBar.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
@@ -64,6 +68,7 @@ final class EnterSearchViewController: UIViewController {
       make.trailing.equalToSuperview().offset(-10)
     }
     
+    // 검색어 테이블뷰
     view.addSubview(resultTableView)
     resultTableView.snp.makeConstraints { make in
       make.top.equalTo(searchBar.snp.bottom).offset(10)
@@ -75,14 +80,15 @@ final class EnterSearchViewController: UIViewController {
   /// delegate설정
   func setupDelegate(){
     searchBar.delegate = self
-  
+    
     resultTableView.delegate = self
     resultTableView.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
   }
   
-
   
-  // MARK: - 서치바 재설정
+  // MARK: - 서치바 설정
+  
+  /// 서치바 설정
   func setupSearchBar(){
     if let searchBarTextField = searchBar.value(forKey: "searchField") as? UITextField {
       searchBarTextField.backgroundColor = .bg30
@@ -98,7 +104,7 @@ final class EnterSearchViewController: UIViewController {
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
-  /// 네비게이션 왼쪽버튼 탭
+  /// 네비게이션 왼쪽버튼 탭 - pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
     viewModel.steps.accept(HomeStep.popScreenIsRequired)
   }
@@ -112,14 +118,8 @@ final class EnterSearchViewController: UIViewController {
   
   /// 바인딩 설정
   func setupBinding(){
-//    viewModel.isNeedFetchToSearchVC
-//      .asDriver(onErrorJustReturn: true)
-//      .drive(onNext: { [weak self] _ in
-//        guard let keyword = self?.viewModel.searchKeyword else { return }
-//        self?.keyWordTapped(keyword: keyword)
-//      })
-//      .disposed(by: disposeBag)
-   
+    
+    // 검색어
     viewModel.recommendList
       .asDriver(onErrorJustReturn: [])
       .drive(resultTableView.rx.items(
@@ -127,14 +127,24 @@ final class EnterSearchViewController: UIViewController {
         cellType: SeletMajorCell.self)) { index, content, cell in
           cell.model = content
           cell.setupImage()
+          cell.selectionStyle = .none
         }
         .disposed(by: disposeBag)
     
-//    viewModel.recommendList
-//      .subscribe(onNext: { [weak self] in
-//        self?.noSearchDataUI(count: $0.count)
-//      })
-//      .disposed(by: disposeBag)
+    viewModel.recommendList
+      .withUnretained(self)
+      .asDriver(onErrorJustReturn: (self, []))
+      .drive(onNext: { (vc, list) in
+                
+        vc.view.addSubview(vc.emptyResultView)
+        vc.emptyResultView.isHidden = list.count != 0
+        vc.resultTableView.isHidden = list.count == 0
+        vc.emptyResultView.snp.makeConstraints {
+          $0.top.equalTo(vc.searchBar.snp.bottom).offset(80)
+          $0.centerX.equalToSuperview()
+        }
+      })
+      .disposed(by: disposeBag)
     
   }
   
@@ -142,52 +152,48 @@ final class EnterSearchViewController: UIViewController {
   
   /// Actions 설정
   func setupActions(){
+    // 검색어 셀 터치 시 해당 검색어 관련 스터디 불러오기
     resultTableView.rx.modelSelected(String.self)
+      .withUnretained(self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] item in
-        self?.keyWordTapped(keyword: item)
+      .subscribe(onNext: { (vc, keyword) in
+        print(#fileID, #function, #line," - \(keyword)")
+        
+        vc.viewModel.fectchPostData(with: keyword)
+        vc.viewModel.steps.accept(HomeStep.resultSearchIsRequired)
       })
       .disposed(by: disposeBag)
+  }
+  
+  func noSearchDataUI(count: Int){
+    view.addSubview(emptyResultView)
+    emptyResultView.isHidden = false
+    emptyResultView.snp.makeConstraints {
+      $0.centerY.equalToSuperview()
+      $0.centerX.equalToSuperview()
+    }
     
-
   }
-
-
   
-  
-
-  
-
-  
-
-  
-  func keyWordTapped(keyword: String){
-//    viewModel.searchKeyword = keyword
-//    
-//    let data = RequestPostData(
-//      hot: "false",
-//      text: keyword,
-//      page: 0,
-//      size: 5,
-//      titleAndMajor: "true"
-//    )
-//    viewModel.getPostData(data: data)
-  }
 }
 
 // MARK: - 서치바 함수
 extension EnterSearchViewController: UISearchBarDelegate {
-  // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-    searchBar.resignFirstResponder()
+  
+  // 검색 시 실시간으로 호출 - 비어있지 않는 경우만
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)  {
+    if !searchText.isEmpty {
+      Task {
+        await viewModel.searchRecommend(keyword: searchText)
+      }
+    }
   }
 }
 
 // MARK: - tableView cell 함수
 extension EnterSearchViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 70
+    return 50
   }
 }
 
@@ -198,30 +204,17 @@ extension EnterSearchViewController: UITableViewDelegate {
 
 extension EnterSearchViewController {
   // MARK: - 네트워킹 기다릴 때
-//   func waitingNetworking(){
-//     view.addSubview(activityIndicator)
-//     
-//     activityIndicator.snp.makeConstraints {
-//       $0.centerX.centerY.equalToSuperview()
-//     }
-//     
-//     activityIndicator.startAnimating()
-//   }
-//
-//
-//   
-
+  //   func waitingNetworking(){
+  //     view.addSubview(activityIndicator)
+  //
+  //     activityIndicator.snp.makeConstraints {
+  //       $0.centerX.centerY.equalToSuperview()
+  //     }
+  //
+  //     activityIndicator.startAnimating()
+  //   }
+  //
+  //
+  //
+  
 }
-
-extension EnterSearchViewController {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//    if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height)){
-//      if viewModel.isInfiniteScroll {
-//        viewModel.isInfiniteScroll = false
-//        fetchMoreData(hotType: "false", titleAndMajor: "true")
-//      }
-//    }
-  }
-}
-
-extension EnterSearchViewController: CreateUIprotocol {}

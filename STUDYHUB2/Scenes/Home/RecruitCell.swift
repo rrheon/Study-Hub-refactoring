@@ -3,6 +3,8 @@ import UIKit
 
 import SnapKit
 
+
+/// 새로 모집중인 스터디 셀
 final class RecruitPostCell: UICollectionViewCell {
   
   var model: Content? { didSet { bind() } }
@@ -159,6 +161,8 @@ final class RecruitPostCell: UICollectionViewCell {
     checkBookmarked = false
   }
 
+  
+  /// 북마크 버튼 탭
   private func bookmarkTapped(){
     guard let postID = self.model?.postID else { return }
     
@@ -173,33 +177,29 @@ final class RecruitPostCell: UICollectionViewCell {
     }
   }
   
+  /// 데이터 바인딩
   private func bind() {
     guard let data = model else { return }
-    var studyPersonCount = data.studyPerson - data.remainingSeat
-    
-    checkBookmarked = data.bookmarked
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-    
-    majorLabel.text = convertMajor(data.major, toEnglish: false)
-    titleLabel.text = data.title
+   
+    /// 스터디 참여 인원
+    let studyPersonCount = data.studyPerson - data.remainingSeat
     remainMemeber.text = "  잔여 \(data.remainingSeat)자리  "
     countMemeberLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
+    countMemeberLabel.changeColor(wantToChange: "\(studyPersonCount)", color: .o50)
     
-    let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty) 원"
-    fineCountLabel.text = "\(fineText)"
-    
+    /// 북마크 여부
+    let bookmarkImage =  data.bookmarked ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
-    countMemeberLabel.changeColor(
-      wantToChange: "\(studyPersonCount)",
-      color: .o50
-    )
-    
-    fineCountLabel.changeColor(
-      wantToChange: "\(data.penalty)",
-      color: .o50
-    )
+    /// 학과
+    majorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
+   
+    /// 스터디 제목
+    titleLabel.text = data.title
+  
+    /// 벌금
+    let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty) 원"
+    fineCountLabel.text = "\(fineText)"
+    fineCountLabel.changeColor(wantToChange: "\(data.penalty)", color: .o50)
   }
 }
-
-extension RecruitPostCell: ConvertMajor {}

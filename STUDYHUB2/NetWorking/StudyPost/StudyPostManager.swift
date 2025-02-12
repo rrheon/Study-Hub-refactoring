@@ -23,10 +23,12 @@ class StudyPostManager: StudyHubCommonNetworking {
   ///   - size: 가져올 갯수
   func searchAllPost(hot: String = "false",
                      titleAndMajor: String = "false",
-                     page: Int,
-                     size: Int) async throws -> PostDataContent {
+                     title: String = "",
+                     page: Int = 0,
+                     size: Int = 5) async throws -> PostDataContent {
     
     let data: SearchAllPostDTO = SearchAllPostDTO(hot: hot,
+                                                  text: title,
                                                   titleAndMajor: titleAndMajor,
                                                   page: page,
                                                   size: size)

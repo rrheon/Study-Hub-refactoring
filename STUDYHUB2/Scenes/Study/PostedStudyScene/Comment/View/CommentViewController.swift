@@ -11,7 +11,7 @@ final class CommentViewController: CommonNavi {
   
   private lazy var commentTableView: UITableView = {
     let tableView = UITableView()
-    tableView.register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellId)
+    tableView.register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellID)
     tableView.backgroundColor = .white
     tableView.separatorStyle = .none
     
@@ -147,7 +147,7 @@ final class CommentViewController: CommonNavi {
     viewModel.commentList
       .asDriver(onErrorJustReturn: [])
       .drive(commentTableView.rx.items(
-        cellIdentifier: CommentCell.cellId,
+        cellIdentifier: CommentCell.cellID,
         cellType: CommentCell.self)
       ) { index, content, cell in
         cell.model = content

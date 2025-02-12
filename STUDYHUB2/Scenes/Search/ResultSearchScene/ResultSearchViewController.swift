@@ -18,12 +18,11 @@ class ResultSearchViewController: UIViewController {
   var viewModel: SearchViewModel
   let disposeBag: DisposeBag = DisposeBag()
 
-
   /// 서치바
   private lazy var searchBar = UISearchBar.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
   
   /// 검색결과 필터링 버튼 - 제목일치(기본값)
-  private lazy var allButton = createSearchViewButton(
+  private lazy var titleButton = createSearchViewButton(
     title: "제목",
     titleColor: .white,
     backgorundColor: .black
@@ -76,18 +75,25 @@ class ResultSearchViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    self.view.backgroundColor = .white
+    
+    setupNavigationbar()
+    setupSearchBar()
+    
+    setupDelegate()
+    
+    setupBinding()
+    setupActions()
+    
     makeUI()
   } // viewDidLoad
   
-  
+
   // MARK: - UI설정
   func makeUI(){
-    
-    navigationController?.navigationBar.topItem?.title = "검색결과"
-    navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
     [
-      allButton,
+      searchBar,
+      titleButton,
       popularButton,
       majorButton,
       scrollView
@@ -97,22 +103,29 @@ class ResultSearchViewController: UIViewController {
     
     scrollView.addSubview(resultCollectionView)
     
-    allButton.snp.makeConstraints {
-      $0.top.equalTo(searchBar.snp.bottom)
+    searchBar.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(10)
+      make.leading.equalToSuperview().offset(10)
+      make.trailing.equalToSuperview().offset(-10)
+      make.height.equalTo(58)
+    }
+    
+    titleButton.snp.makeConstraints {
+      $0.top.equalTo(searchBar.snp.bottom).offset(10)
       $0.leading.equalTo(searchBar.snp.leading).offset(10)
       $0.height.equalTo(34)
       $0.width.equalTo(57)
     }
     
     popularButton.snp.makeConstraints {
-      $0.top.equalTo(allButton)
-      $0.leading.equalTo(allButton.snp.trailing).offset(10)
+      $0.top.equalTo(titleButton)
+      $0.leading.equalTo(titleButton.snp.trailing).offset(10)
       $0.height.equalTo(34)
       $0.width.equalTo(57)
     }
     
     majorButton.snp.makeConstraints {
-      $0.top.equalTo(allButton)
+      $0.top.equalTo(titleButton)
       $0.leading.equalTo(popularButton.snp.trailing).offset(10)
       $0.height.equalTo(34)
       $0.width.equalTo(57)
@@ -125,10 +138,30 @@ class ResultSearchViewController: UIViewController {
     }
     
     scrollView.snp.makeConstraints { make in
-      make.top.equalTo(allButton.snp.bottom).offset(20)
+      make.top.equalTo(titleButton.snp.bottom).offset(20)
       make.leading.trailing.equalTo(view)
       make.bottom.equalTo(view.safeAreaLayoutGuide)
     }
+  }
+  
+  /// 네비게이션 바 설정
+  func setupNavigationbar(){
+    leftButtonSetting()
+    settingNavigationTitle(title: "검색결과") // 타이틀 색상이 안보임
+    self.navigationController?.navigationBar.isTranslucent = false
+  }
+  
+  /// 서치바 설정
+  func setupSearchBar(){
+    if let searchBarTextField = searchBar.value(forKey: "searchField") as? UITextField {
+      searchBarTextField.backgroundColor = .bg30
+      searchBarTextField.layer.borderColor = UIColor.clear.cgColor
+    }
+  }
+  
+  /// 네비게이션 바 왼쪽버튼 탭
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(HomeStep.popScreenIsRequired)
   }
   
   /// delegate 설정
@@ -140,7 +173,6 @@ class ResultSearchViewController: UIViewController {
       SearchResultCell.self,
       forCellWithReuseIdentifier: SearchResultCell.cellID
     )
-    
   }
   
   
@@ -160,8 +192,7 @@ class ResultSearchViewController: UIViewController {
     button.setTitleColor(titleColor, for: .normal)
     button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
     button.backgroundColor = backgorundColor
-    button.layer.cornerRadius = 20
-    
+    button.layer.cornerRadius = 16
     return button
   }
   
@@ -205,7 +236,7 @@ class ResultSearchViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    allButton.rx.tap
+    titleButton.rx.tap
       .subscribe(onNext: { [weak self] in
         self?.allButtonTapped()
       })
@@ -243,26 +274,26 @@ class ResultSearchViewController: UIViewController {
   
   // MARK: - 전체버튼 눌렸을 때
   func allButtonTapped() {
-    updateButtonColors(selectedButton: allButton, deselectedButtons: [popularButton, majorButton])
+    updateButtonColors(selectedButton: titleButton, deselectedButtons: [popularButton, majorButton])
     
     buttonTapped(hot: "false", titleAndMajor: "true")
   }
   
   // MARK: - 인기버튼 눌렸을 때
   func popularButtonTapped() {
-    updateButtonColors(selectedButton: popularButton, deselectedButtons: [allButton, majorButton])
+    updateButtonColors(selectedButton: popularButton, deselectedButtons: [titleButton, majorButton])
   
     buttonTapped(hot: "true", titleAndMajor: "true")
   }
   
   // MARK: - 학과버튼 눌렸을 때
   func majorButtonTapped() {
-    updateButtonColors(selectedButton: majorButton, deselectedButtons: [allButton, popularButton])
+    updateButtonColors(selectedButton: majorButton, deselectedButtons: [titleButton, popularButton])
     
     buttonTapped(hot: "false", titleAndMajor: "false")
   }
   
-  // 버튼 색상 업데이트 함수
+  /// 버튼 색상 업데이트 함수
   private func updateButtonColors(selectedButton: UIButton, deselectedButtons: [UIButton]) {
     
     selectedButton.setTitleColor(.white, for: .normal)
@@ -382,10 +413,10 @@ extension ResultSearchViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - 서치바 함수
+
 extension ResultSearchViewController: UISearchBarDelegate {
-  // 검색(Search) 버튼을 눌렀을 때 호출되는 메서드
+  /// 검색버튼 터치 시 pop
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    guard let keyword = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-    searchBar.resignFirstResponder()
+    viewModel.steps.accept(HomeStep.popScreenIsRequired)
   }
 }

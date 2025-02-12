@@ -6,6 +6,11 @@ import RxSwift
 import RxCocoa
 import Then
 
+/*
+ 셀 터치 시 상세 스터디 페이지로 이동
+ 북마크 가능하게 수정
+ 무한스크롤 구현 - 북마크, 검색
+ */
 /// 홈 VC - 메인
 final class HomeViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
@@ -49,7 +54,7 @@ final class HomeViewController: UIViewController {
   
   // MARK: - collectionview
   
-  // 모집중인 스터디 collectionview
+  /// 모집중인 스터디 collectionview
   private lazy var recrutingCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .horizontal
@@ -66,14 +71,17 @@ final class HomeViewController: UIViewController {
   
   // MARK: - 마감이 입박한 스터디
   
+  /// 마감이 임박한 스터디 이미지
   private let deadLineImg: UIImageView = UIImageView().then {
     $0.image = UIImage(named: "FireImg")
     $0.contentMode = .scaleAspectFit
     $0.tintColor = UIColor(hexCode: "FF5935")
   }
   
+  /// 마감이 임박한 스터디 라벨
   private lazy var deadLineLabel = createHomeLabel(title: "마감이 임박한 스터디예요", changeLength: 2)
 
+  /// 마감이 임박한 스터디 컬렉션 뷰
   private lazy var deadLineCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -103,16 +111,16 @@ final class HomeViewController: UIViewController {
     view.backgroundColor = .black
 
 
-//    Task {
-//      do {
-//        async let newPostData: () = viewModel.fetchNewPostDatas()
-//        async let deadLinePostData: () = viewModel.fetchDeadLinePostDatas()
-//      
-//        await newPostData
-//        await deadLinePostData
-//      }
-//    }
-//    
+    Task {
+      do {
+        async let newPostData: () = viewModel.fetchNewPostDatas()
+        async let deadLinePostData: () = viewModel.fetchDeadLinePostDatas()
+      
+        await newPostData
+        await deadLinePostData
+      }
+    }
+    
     setupBindings()
     setupCollectionView()
     setupActions()
@@ -133,20 +141,18 @@ final class HomeViewController: UIViewController {
     scrollView.addSubview(mainImageView)
     scrollView.addSubview(detailsButton)
 
-    [newStudyLabel,allButton].forEach {
-      newStudyTopStackView.addArrangedSubview($0)
-    }
+    [ newStudyLabel, allButton ]
+      .forEach { newStudyTopStackView.addArrangedSubview($0) }
         
-    [newStudyTopStackView, UIView(), recrutingCollectionView].forEach {
-      newStudyTotalStackView.addArrangedSubview($0)
-    }
+    [ newStudyTopStackView, UIView(), recrutingCollectionView ]
+      .forEach { newStudyTotalStackView.addArrangedSubview($0) }
     
     
-    [deadLineImg,deadLineLabel, UIView()].forEach {
-      deadLineStackView.addArrangedSubview($0)
-    }
+    [deadLineImg,deadLineLabel, UIView()]
+      .forEach { deadLineStackView.addArrangedSubview($0) }
     
     [
+      UIView(),
       searchBar,
       newStudyTotalStackView,
       deadLineStackView,
@@ -230,11 +236,11 @@ final class HomeViewController: UIViewController {
   
   // MARK: - 네비게이션바 설정
   
-  
+  /// 네비게이션 바 세팅
   func setupNavigationbar(){
     leftButtonSetting(imgName: "LogoImage", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
-    settingNavigationbar(false)
+//    settingNavigationbar(false)
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
@@ -308,6 +314,11 @@ final class HomeViewController: UIViewController {
         .subscribe(onNext: { (vc, item) in
             let postID = item.postID
 #warning("스터디 상세 화면으로 이동")
+          NotificationCenter.default.post(name: .navToStudyDetailScrenn,
+                                          object: nil,
+                                          userInfo: ["postID" : postID]
+          )
+
         })
         .disposed(by: disposeBag)
 
@@ -327,6 +338,7 @@ final class HomeViewController: UIViewController {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { vc, _ in
 #warning("알아보기 화면으로 이동")
+        NotificationCenter.default.post(name: .navToHowToUseScreen, object: nil)
 
       })
       .disposed(by: disposeBag)
@@ -356,15 +368,9 @@ final class HomeViewController: UIViewController {
   
   // MARK: -  북마크 버튼 탭
   
-  func rightButtonTapped(_ sender: UIBarButtonItem) {
-    let data = BookMarkData(
-      loginStatus: viewModel.checkLoginStatus.value,
-      isNeedFetch: viewModel.isNeedFetchDatas
-    )
-    
-//    let bookmarkViewController = BookmarkViewController(data)
-//    bookmarkViewController.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(bookmarkViewController, animated: true)
+  /// 네비게이션 바 오른쪽 버튼 탭 - 북마크 화면으로 이동
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+    NotificationCenter.default.post(name: .navToBookmarkScreen, object: nil)
   }
   
   // MARK: - 서치바 재설정

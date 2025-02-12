@@ -4,7 +4,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class CreateStudyViewController: CommonNavi {
+final class CreateStudyViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: CreateStudyViewModel
 
@@ -26,7 +26,7 @@ final class CreateStudyViewController: CommonNavi {
     self.studyWayView = StudyWayView(viewModel)
     self.studyPeroioudView = StudyPeriodView(viewModel)
 
-    super.init(true)
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -187,13 +187,13 @@ final class CreateStudyViewController: CommonNavi {
   @objc func departmentArrowButtonTapped() {
     let departmentselectVC = SeletMajorViewController(seletedMajor: viewModel.selectedMajor)
     
-    if let navigationController = self.navigationController {
-      navigationController.pushViewController(departmentselectVC, animated: true)
-    } else {
-      let navigationController = UINavigationController(rootViewController: departmentselectVC)
-      navigationController.modalPresentationStyle = .fullScreen
-      present(navigationController, animated: true, completion: nil)
-    }
+//    if let navigationController = self.navigationController {
+//      navigationController.pushViewController(departmentselectVC, animated: true)
+//    } else {
+//      let navigationController = UINavigationController(rootViewController: departmentselectVC)
+//      navigationController.modalPresentationStyle = .fullScreen
+//      present(navigationController, animated: true, completion: nil)
+//    }
   }
   
   @objc func calendarButtonTapped() {

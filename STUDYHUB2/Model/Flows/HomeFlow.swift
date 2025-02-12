@@ -67,7 +67,7 @@ class HomeFlow: Flow {
   
   /// 검색어 입력 화면으로 이동
   private func navToEnterSearchScreen() -> FlowContributors {
-    let viewModel: SearchViewModel = SearchViewModel()
+    let viewModel: SearchViewModel = SearchViewModel.shared
     let vc = EnterSearchViewController(viewModel: viewModel)
     self.rootViewController.pushViewController(vc, animated: true)
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
@@ -75,7 +75,7 @@ class HomeFlow: Flow {
   
   /// 검색어 결과 화면으로 이동
   private func navToResultSearchScreen() -> FlowContributors {
-    let viewModel: SearchViewModel = SearchViewModel()
+    let viewModel: SearchViewModel = SearchViewModel.shared
     let vc = ResultSearchViewController(with: viewModel)
     self.rootViewController.pushViewController(vc, animated: true)
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))

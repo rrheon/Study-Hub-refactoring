@@ -10,55 +10,49 @@ import Foundation
 import RxRelay
 import RxFlow
 
-protocol BookMarkDataProtocol {
-  var loginStatus: Bool { get }
-  var isNeedFetch: PublishRelay<Bool> { get }
-}
-
-struct BookMarkData: BookMarkDataProtocol {
-  var loginStatus: Bool
-  var isNeedFetch: PublishRelay<Bool>
-  
-  init(loginStatus: Bool, isNeedFetch: PublishRelay<Bool>) {
-    self.loginStatus = loginStatus
-    self.isNeedFetch = isNeedFetch
-  }
-}
-
-
 /// 북마크 ViewModel
 final class BookmarkViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
-
-//  let detailPostDataManager = PostDetailInfoManager.shared
-//  let bookmarkManager = BookmarkManager.shared
   
-//  var data: BookMarkDataProtocol
+  //  let detailPostDataManager = PostDetailInfoManager.shared
+  //  let bookmarkManager = BookmarkManager.shared
+  
+  //  var data: BookMarkDataProtocol
   var bookmarkDatas = PublishRelay<[BookmarkContent]>()
-//  var postData = PublishRelay<PostDetailData>()
+  //  var postData = PublishRelay<PostDetailData>()
   var totalCount = PublishRelay<Int>()
-//  var isNeedFetch: PublishRelay<Bool>
+  //  var isNeedFetch: PublishRelay<Bool>
   
   var bookmarkList: [BookmarkContent] = []
   var defaultRequestNum = 100
   let loginStatus: Bool
   
   init() {
-//    self.data = data
-//    self.loginStatus = data.loginStatus
-//    self.isNeedFetch = data.isNeedFetch
-//
-    loginStatus = TokenManager.shared.loadAccessToken()?.first != nil
-    if loginStatus {
-      self.getBookmarkList()
-    }else {
-      self.totalCount.accept(0)
-      self.bookmarkDatas.accept([])
-      self.bookmarkList = []
+    
+    loginStatus = false
+    
+ 
+  }
+  
+  func fetchBookmarkData() {
+    Task {
+      do {
+        let login = try await UserAuthManager.shared.checkValidAccessToken()
+        login ? getBookmarkList() : clearBookmarkList()
+      } catch {
+        print("Error refreshing token: \(error)")
+        clearBookmarkList()
+      }
     }
   }
   
-  #warning("무한 스크롤로 변경")
+  private func clearBookmarkList() {
+    self.totalCount.accept(0)
+    self.bookmarkDatas.accept([])
+    self.bookmarkList = []
+  }
+  
+#warning("무한 스크롤로 변경")
   /// 북마크 리스트 가져오기
   func getBookmarkList(){
     Task {
@@ -70,7 +64,7 @@ final class BookmarkViewModel: Stepper {
       }
     }
   }
- 
+  
   /// 북마크 버튼 탭 - 북마크 삭제
   /// - Parameter postID: 해당 스터디의 postID
   func deleteButtonTapped(postID: Int){
@@ -89,9 +83,9 @@ final class BookmarkViewModel: Stepper {
   ///   - postID: 스터디의 postID
   ///   - loginStatus: 로그인상태
   func searchSingePostData(postID: Int, loginStatus: Bool){
-//    StudyPostManager.shared.searchSinglePostData(postId: postID) { postData in
-//      self.postData.accept(postData)
-//    }
+    //    StudyPostManager.shared.searchSinglePostData(postId: postID) { postData in
+    //      self.postData.accept(postData)
+    //    }
   }
 }
 

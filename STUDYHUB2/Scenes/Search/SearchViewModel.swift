@@ -12,6 +12,8 @@ import RxFlow
 
 /// 검색 ViewModel
 final class SearchViewModel: Stepper {
+  static let shared = SearchViewModel()
+  
   var steps: PublishRelay<Step> = PublishRelay()
 
   /// 검색어 리스트
@@ -34,7 +36,15 @@ final class SearchViewModel: Stepper {
     }
   }
   
-  func getPostData(){
+  /// 검색어와 관련된 스터디 불러오기
+  /// - Parameter selectedKeyword: 키워드
+  func fectchPostData(with selectedKeyword: String){
+    Task {
+      do {
+        let data = try await StudyPostManager.shared.searchAllPost(title: selectedKeyword)
+        postDatas.accept(data.postDataByInquiries.content)
+      }
+    }
 //    postDataManager.getPostData(
 //      hot: data.hot,
 //      text: data.text,

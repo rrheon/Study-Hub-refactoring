@@ -1,20 +1,28 @@
+
 import UIKit
 
+import RxFlow
+import RxRelay
 import SnapKit
 import Then
 
-final class HowToUseViewController: CommonNavi {
-
+/// 이용방법 VC
+final class HowToUseViewController: UIViewController, Stepper {
+  var steps: PublishRelay<Step>
+  
   let loginStatus: Bool
   
   // MARK: - 화면구성
-  private let headerContentStackView: UIStackView = {
-    let headerContentStackView = UIStackView()
-    headerContentStackView.axis = .vertical
-    headerContentStackView.spacing = 0
-    return headerContentStackView
-  }()
   
+  /// 이용방법 이미지를 담을 스택뷰
+  private let totalStackView: UIStackView = UIStackView().then{
+    $0.axis = .vertical
+    $0.spacing = 0
+    $0.alignment = .fill
+    $0.distribution = .fillProportionally
+  }
+  
+  /// 이용방법 이미지
   private lazy var howToUseImg1 = createImageView("HowToUseImg1")
   private lazy var howToUseImg2 = createImageView("HowToUseImg2")
   private lazy var howToUseImg3 = createImageView("HowToUseImg3")
@@ -24,16 +32,15 @@ final class HowToUseViewController: CommonNavi {
   private lazy var howToUseImg7 = createImageView("HowToUseImg7")
   private lazy var howToUseImg8 = createImageView("HowToUseImg8")
   
+  /// 게시글 작성하기 버튼
   private lazy var writeButton = StudyHubButton(title: "작성하기")
   
-  private let scrollView: UIScrollView = {
-    let scrollView = UIScrollView()
-    return scrollView
-  }()
+  private let scrollView: UIScrollView = UIScrollView()
   
-  override init(_ loginStatus: Bool) {
+  init(_ loginStatus: Bool) {
     self.loginStatus = loginStatus
-    super.init(true)
+    self.steps = PublishRelay<Step>()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -41,23 +48,38 @@ final class HowToUseViewController: CommonNavi {
   }
   
   // MARK: - viewdidload
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .black
     
-    navigationItemSetting()
+    setupNavigationbar()
     
     setUpLayout()
     makeUI()
-  }
+    
+    writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
+  } // viewDidLoad
   
   // MARK: - navigationbar
-  func navigationItemSetting() {
+  
+  /// 네비게이션 바 세팅
+  func setupNavigationbar() {
     leftButtonSetting()
     settingNavigationTitle(title: "이용방법")
+
+    self.navigationController?.navigationBar.isTranslucent = false
+  }
+  
+  /// 네비게이션 바 왼쪽 탭 - 현재 화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    steps.accept(AppStep.popCurrentScreen)
   }
   
   // MARK: - setupLayout
+  
+  /// layout 설정
   func setUpLayout(){
     view.backgroundColor = .white
     view.addSubview(scrollView)
@@ -73,84 +95,51 @@ final class HowToUseViewController: CommonNavi {
       howToUseImg8,
       writeButton
     ].forEach {
-      headerContentStackView.addArrangedSubview($0)
+      totalStackView.addArrangedSubview($0)
     }
     
-    scrollView.addSubview(headerContentStackView)
+    scrollView.addSubview(totalStackView)
   }
 
-  // MARK: - makeui
+  // MARK: - makeUI
+  
+  /// Ui 설정
   func makeUI(){
-    headerContentStackView.snp.makeConstraints { make in
-      make.top.equalTo(scrollView)
-      make.leading.trailing.bottom.equalTo(scrollView)
-      make.width.equalTo(scrollView)
+    /// 전체 스택뷰
+    totalStackView.snp.makeConstraints {
+      $0.top.equalTo(scrollView)
+      $0.bottom.equalTo(scrollView.contentLayoutGuide)
+      $0.leading.trailing.equalTo(scrollView.frameLayoutGuide)
     }
     
+    /// 이미지1
     howToUseImg1.snp.makeConstraints { make in
       make.height.equalTo(305)
-      make.leading.trailing.equalTo(headerContentStackView)
     }
-    
-    howToUseImg2.snp.makeConstraints { make in
-      make.height.equalTo(650)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg3.snp.makeConstraints { make in
-      make.height.equalTo(600)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg4.snp.makeConstraints { make in
-      make.height.equalTo(900)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg5.snp.makeConstraints { make in
-      make.height.equalTo(300)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg6.snp.makeConstraints { make in
-      make.height.equalTo(400)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg7.snp.makeConstraints { make in
-      make.height.equalTo(700)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    howToUseImg8.snp.makeConstraints { make in
-      make.height.equalTo(250)
-      make.leading.trailing.equalTo(headerContentStackView)
-    }
-    
-    writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
+
+    /// 작성하기 버튼
     writeButton.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.top.equalTo(howToUseImg8.snp.bottom).offset(40)
-      make.leading.equalTo(headerContentStackView).offset(20)
-      make.trailing.equalTo(headerContentStackView)
       make.height.equalTo(55)
-      make.width.equalTo(400)
     }
     
+    /// 스크롤 뷰
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide)
-      make.leading.trailing.bottom.equalTo(view)
+      make.leading.trailing.bottom.equalToSuperview()
     }
   }
 
+  /// 이용방법 이미지 생성하기
   func createImageView(_ imageName: String) -> UIImageView{
     let imageView = UIImageView(image: UIImage(named: imageName))
-    imageView.contentMode = .scaleAspectFill
+    imageView.contentMode = .scaleAspectFit
     imageView.clipsToBounds = true
     return imageView
   }
   
   // MARK: - 작성하기버튼
+  
+  /// 작성하기 버튼 탭
   @objc func writeButtonTapped() {
     loginStatus ? moveToCreateStudyVC() : showPopupView()
   }
