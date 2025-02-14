@@ -21,17 +21,18 @@ final class HomeViewModel: Stepper {
  
   /// 마감이 임박한 스터디
   var deadlinePostDatas = BehaviorRelay<[Content]>(value: [])
-  
-  var userInfo = PublishRelay<UserDetailData>()
+
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var singlePostData = PublishRelay<PostDetailData>()
   var isNeedFetchDatas = PublishRelay<Bool>()
 
   
   init() {
-    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
-    checkLoginStatus.accept(isLoginStatus)
-//    
+    /// 북마크 상태 체크를 위함
+//    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken().first != nil
+//    checkLoginStatus.accept(isLoginStatus)
+
+//
 //    Task {
 //      await fetchNewPostDatas()
 //    }

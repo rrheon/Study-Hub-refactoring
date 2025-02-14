@@ -24,20 +24,24 @@ extension CommonBaseURL {
 
 /// 공용 네트워킹
 class StudyHubCommonNetworking {
-    
-  /// AccessToken 가져오기
-  /// - Returns: Access Token
-  func loadAccessToken() -> String?  {
-    return TokenManager.shared.loadAccessToken()
-  }
+  
+//  /// AccessToken 가져오기
+//  /// - Returns: 새롭게 갱신된 Access Token (갱신 실패 시 nil)
+//  func loadAccessToken(completion: @escaping (Bool) -> Void){
+//    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return  }
+//    UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { result in
+//      completion(result)
+//    }
+//  }
+
+ 
   
   /// API 통신 후 결과처리 - 디코딩
   /// - Parameters:
   ///   - apiResult: api 통신 결과
   ///   - type: 디코딩할 타입
   ///
-#warning("return으로 바꾸기")
-   func commonDecodeNetworkResponse<T: Decodable >(
+   func commonDecodeNetworkResponse<T: Decodable>(
     with apiResult : Result<Response, MoyaError>,
     decode type: T.Type,
     completion: @escaping (T) -> Void

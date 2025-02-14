@@ -11,44 +11,29 @@ import RxRelay
 import RxSwift
 import RxFlow
 
+/// 전체 스터디 ViewModel
 final class StudyViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
   static let shared = StudyViewModel()
   
+  /// 전체 게시글 데이터
   var postDatas = BehaviorRelay<[Content]>(value: [])
   
-  lazy var postCount = Observable<Int>.create { observer in
-    observer.onNext(self.postDatas.value.count)
-    observer.onCompleted()
-    return Disposables.create()
+  /// 전체 게시글 갯수
+  var postCount: Observable<Int> {
+    return postDatas.map { $0.count }
   }
   
-  var checkLoginStatus = BehaviorRelay<Bool>(value: false)
-  var isNeedFetch = PublishRelay<Bool>()
-  var postData = BehaviorRelay<PostDetailData?>(value: nil)
-  
-  private var internalCounter: Int = 0
-  
-  var counter: Int {
-    get {
-      internalCounter += 1
-      return internalCounter
-    }
-    set {
-      internalCounter = newValue
-    }
-  }
-  
-  var searchType: String = "false"
+  /// 스터디 무한스크롤 여부
   var isInfiniteScroll = true
-  var isLastData = false
-  lazy var postCounts: Int? = 0
   
   init() {
-    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
-    checkLoginStatus.accept(isLoginStatus)
+//    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
+//    checkLoginStatus.accept(isLoginStatus)
 //    fetchPostData(hotType: "false")
+    print(#fileID, #function, #line," - 111111111111111")
+
   }
   
   func fetchPostData(hotType: String, page: Int = 0, size: Int = 5, dataUpdate: Bool = false){
@@ -73,7 +58,5 @@ final class StudyViewModel: Stepper {
 //    }
   }
   
-  func resetCounter(){
-    internalCounter = 0
-  }
+
 }

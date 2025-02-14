@@ -34,13 +34,16 @@ enum AppStep: Step {
     }
   }
   
-  case mainTabIsRequired                          // 메인탭바
-  case loginScreenIsRequired                      // 로그인 화면
-  case signupIsRequired                           // 회원가입 Flow
-  case bookmarkScreenIsRequired                   // 북마크 화면
-  case howToUseScreenIsRequired                   // 이용방법 화면
-  case studyDetailScreenIsRequired(postID: Int)                // 스터디 상세 화면
-  case popCurrentScreen                           // 현재화면 pop
+  case mainTabIsRequired                                                       // 메인탭바
+  case loginScreenIsRequired                                                  // 로그인 화면
+  case signupIsRequired                                                       // 회원가입 Flow
+  case bookmarkScreenIsRequired                                                // 북마크 화면
+  case howToUseScreenIsRequired                                               // 이용방법 화면
+  case studyDetailScreenIsRequired(postID: Int)                               // 스터디 상세 화면
+  case commentDetailScreenIsRequired(postID: Int)                           // 댓글 전체화면
+  case bottomSheetIsRequired(postOrCommnetID: Int, type: BottomSheetCase)   // BottomSheet
+  case popCurrentScreen(navigationbarHidden: Bool)                           // 현재화면 pop
+  case dismissCurrentScreen                                                 // 현재화면 dismiss
   /*
    필요한 화면
    
@@ -89,12 +92,19 @@ class AppFlow: Flow {
       return presentSignupScreen()
     case .bookmarkScreenIsRequired:
       return navToBookmarkScreen()
-    case .popCurrentScreen:
-      return popCurrentScreen()
+    case .popCurrentScreen(let navigationbarHidden):
+      return popCurrentScreen(navigationbarHidden: navigationbarHidden)
     case .howToUseScreenIsRequired:
       return navToHowToUseScreen()
     case .studyDetailScreenIsRequired(let postID):
       return navToStudyDetailScreen(postID: postID)
+    case .bottomSheetIsRequired(let postOrCommentID, let type):
+      return presentBottomSheet(postOrCommentID: postOrCommentID, type: type)
+    case .dismissCurrentScreen:
+      self.rootViewController.dismiss(animated: true)
+      return .none
+    case .commentDetailScreenIsRequired(let postID):
+      return navToCommentDetailScreen(postID: postID)
     }
   }
   
@@ -183,9 +193,35 @@ class AppFlow: Flow {
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
+  
+  /// 전체댓글 화면으로 이동
+  /// - Parameter postID: 스터디의 postID
+  private func navToCommentDetailScreen(postID: Int) -> FlowContributors {
+    let viewModel: CommentViewModel = CommentViewModel(with: postID)
+    let vc = CommentViewController(with: viewModel)
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// BottomSheet 띄우기
+  /// - Parameters:
+  ///   - postOrCommentID: postID 혹은 댓글ID
+  ///   - type: 종류 - 게시글 수정 및 삭제 / 댓글 수정 및 삭제
+  private func presentBottomSheet(postOrCommentID: Int, type: BottomSheetCase) -> FlowContributors {
+    let vc = BottomSheet(with: postOrCommentID, type: type)
+    showBottomSheet(bottomSheetVC: vc, size: 228.0)
+    
+    if let topVC = self.rootViewController.viewControllers.last as? BottomSheetDelegate {
+      vc.delegate = topVC
+    }
+    
+    self.rootViewController.present(vc, animated: true)
+    return .none
+  }
+  
   /// 현재화면 pop
-  private func popCurrentScreen() -> FlowContributors {
-    self.rootViewController.navigationBar.isHidden = true
+  private func popCurrentScreen(navigationbarHidden: Bool = true) -> FlowContributors {
+    self.rootViewController.navigationBar.isHidden = navigationbarHidden
     self.rootViewController.popViewController(animated: true)
     return .none
   }
@@ -199,7 +235,7 @@ class AppStepper: Stepper {
 
   /// 로그인 상태 확인
   var isUserLoginStatus: Bool {
-    return TokenManager.shared.loadAccessToken()?.first != nil
+    return TokenManager.shared.loadRefreshToken()?.first != nil 
   }
   
   /// 로그인 여부에 따라 초기 화면 설정
@@ -226,3 +262,5 @@ class AppStepper: Stepper {
     
   }
 }
+
+extension AppFlow: ShowBottomSheet {}

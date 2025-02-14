@@ -6,6 +6,7 @@ import RxSwift
 import RxCocoa
 import Then
 
+/// 스터디 상세VC 메인 component 
 final class PostedStudyMainComponent: UIView {
 
   let disposeBag: DisposeBag = DisposeBag()
@@ -84,7 +85,6 @@ final class PostedStudyMainComponent: UIView {
     
     setupLayout()
     configureUI()
-    setupBinding()
     setupUIData(data)
   }
   
@@ -205,17 +205,6 @@ final class PostedStudyMainComponent: UIView {
   }
   
   // MARK: - setupBinding
-  
-  /// 바인딩
-  func setupBinding(){
-//    viewModel.postDatas
-//      .asDriver()
-//      .drive(onNext: { [weak self] in
-//        guard let data = $0 else { return }
-//        self?.setupUIData(data)
-//      })
-//      .disposed(by: disposeBag)
-  }
   
   /// UI 별 데이터 세팅
   func setupUIData(_ data: PostDetailData){

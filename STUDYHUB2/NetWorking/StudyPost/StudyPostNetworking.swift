@@ -27,6 +27,8 @@ enum StudyPostNetworking {
 
 
 extension StudyPostNetworking: TargetType, CommonBaseURL {
+
+  
   /// API 별 path
   var path: String {
     switch self {
@@ -100,6 +102,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
   
   /// API 별 헤더 설정
   var headers: [String : String]? {
+    TokenManager.shared.loadAccessToken()
     switch self {
     case .searchMyPost(_, _),
         .createNewPost(_),
@@ -108,7 +111,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
         .closePost(_),
         .deleteAllPost:
       return ["Content-type": "application/json",
-              "Authorization": "\(StudyPostManager.shared.loadAccessToken() ?? "")"]
+              "Authorization": "\(TokenManager.shared.loadAccessToken())"]
     default:
       return ["Content-type": "application/json"]
     }

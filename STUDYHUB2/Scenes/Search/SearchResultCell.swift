@@ -15,7 +15,7 @@ import Then
 /// 스터디 검색결과 Cell
 final class SearchResultCell: UICollectionViewCell {
     
-  var model: Content? { didSet { bind() } }
+  var cellData: Content? { didSet { bind() } }
   
   var checkBookmarked: Bool?
   var loginStatus: Bool = false
@@ -264,7 +264,7 @@ final class SearchResultCell: UICollectionViewCell {
   
   /// 북마크 터치 시
   private func bookmarkTapped(){
-    let postID = model?.postID ?? 0
+    let postID = cellData?.postID ?? 0
     BookmarkManager.shared.bookmarkTapped(with: postID) {
       
     }
@@ -277,7 +277,7 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   private func bind() {
-    guard let data = model else { return }
+    guard let data = cellData else { return }
     
     checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"

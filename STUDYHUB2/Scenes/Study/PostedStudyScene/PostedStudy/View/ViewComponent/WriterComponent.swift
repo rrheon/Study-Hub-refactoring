@@ -76,8 +76,8 @@ final class PostedStudyWriterComponent: UIView {
     
     super.init(frame: .zero)
     
-    self.setupLayout()
-    self.setupBinding()
+    setupLayout()
+    setupUIData(data)
   }
   
   required init?(coder: NSCoder) {
@@ -125,17 +125,6 @@ final class PostedStudyWriterComponent: UIView {
     totalWriterInfoStackView.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
-  }
-  
-  /// 바인딩
-  func setupBinding(){
-//    viewModel.postDatas
-//      .asDriver()
-//      .drive(onNext: {[weak self] in
-//        guard let data = $0 else { return }
-//        self?.setupUIData(data)
-//      })
-//      .disposed(by: disposeBag)
   }
   
   /// UI에 데이터 세팅

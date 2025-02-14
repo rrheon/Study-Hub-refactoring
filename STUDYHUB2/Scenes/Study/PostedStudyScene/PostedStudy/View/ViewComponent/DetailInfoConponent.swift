@@ -24,6 +24,7 @@ final class PostedStudyDetailInfoComponent: UIView {
   lazy var introduceStudyDeatilLabel = UILabel().then {
     $0.textColor = .bg80
     $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+    $0.numberOfLines = 0
   }
   
   /// 구분선
@@ -99,8 +100,9 @@ final class PostedStudyDetailInfoComponent: UIView {
     self.postedData = data
     
     super.init(frame: .zero)
+    
     setupLayout()
-    setupBinding()
+    setupUIData(data)
   }
   
   required init?(coder: NSCoder) {
@@ -153,11 +155,7 @@ final class PostedStudyDetailInfoComponent: UIView {
     let imageView = UIImageView(image: UIImage(named: imageName))
     imageView.contentMode = .left
     
-    let stackView = UIStackView().then {
-      $0.axis = .horizontal
-      $0.spacing = 10
-    }
-    
+    let stackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 10)
     stackView.addArrangedSubview(imageView)
     stackView.addArrangedSubview(contentLabel)
     stackView.addArrangedSubview(UIView())
@@ -170,25 +168,12 @@ final class PostedStudyDetailInfoComponent: UIView {
   
   /// 학과 스택뷰 생성
   private func createMajorStackView() -> UIStackView {
-    let stackView = UIStackView().then {
-      $0.axis = .vertical
-      $0.spacing = 10
-    }
+    let stackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
     stackView.addArrangedSubview(majorTitleLabel)
     stackView.addArrangedSubview(majorLabel)
     stackView.addArrangedSubview(UIView())
     stackView.alignment = .leading
     return stackView
-  }
-  
-  /// 바인딩
-  func setupBinding(){
-//    viewModel.postDatas
-//      .subscribe(onNext: { [weak self] in
-//        guard let data = $0 else { return }
-//        self?.setupUIData(data)
-//      })
-//      .disposed(by: disposeBag)
   }
   
   /// 기간 가져오기

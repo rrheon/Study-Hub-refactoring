@@ -9,15 +9,18 @@ import UIKit
 
 import SnapKit
 import Kingfisher
+import Then
 
+/// 유사한 게시글 셀
 final class SimilarPostCell: UICollectionViewCell {
     
   var model: RelatedPost? { didSet { bind() } }
   var postID: Int?
   
+  
+  /// 스터디 관련 학과라벨
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
-    label.text = "세무회계학과"
     label.textColor = .o50
     label.backgroundColor = .o10
     label.layer.cornerRadius = 5
@@ -26,52 +29,48 @@ final class SimilarPostCell: UICollectionViewCell {
     return label
   }()
   
-  private lazy var titleLabel: UILabel = {
-    let label = UILabel()
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    label.textColor = .black
-    return label
-  }()
+  /// 스터디 제목라벨
+  private lazy var titleLabel: UILabel = UILabel().then {
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    $0.textColor = .black
+  }
   
   var remainMemberNum: Int = 0 {
     didSet {
-      remainMemeber.text = "\(remainMemberNum)자리 남았어요"
+      remainMemeberLabel.text = "\(remainMemberNum)자리 남았어요"
     }
   }
   
-  private lazy var remainMemeber: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
+  /// 남은자리 라벨
+  private lazy var remainMemeberLabel: UILabel = UILabel().then {
+   $0.textColor = .bg80
+   $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
   
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.layer.cornerRadius = 15
-    imageView.image = UIImage(named: "ProfileAvatar_change")
-    imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-    return imageView
-  }()
+  /// 작성자의 프로필 이미지
+  private lazy var profileImageView: UIImageView = UIImageView().then {
+   $0.layer.cornerRadius = 15
+   $0.image = UIImage(named: "ProfileAvatar_change")
+   $0.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+  }
   
+  /// 작성자의 전공라벨
   private lazy var writerMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
     label.textColor = .bg80
     label.backgroundColor = .bg30
     label.layer.cornerRadius = 10
-    label.text = "정보통신공학과"
     label.font = UIFont(name: "Pretendard-Medium", size: 12)
     label.clipsToBounds = true
     return label
   }()
    
-  private lazy var nickNameLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg80
-    label.text = "비어있음"
-    label.font = UIFont(name: "Pretendard-Medium", size: 12)
-    return label
-  }()
+  /// 사용자의 닉네임 라벨
+  private lazy var nickNameLabel: UILabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.text = "비어있음"
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
  
   
   override init(frame: CGRect) {
@@ -87,11 +86,12 @@ final class SimilarPostCell: UICollectionViewCell {
     fatalError()
   }
   
+  /// layout 설정
   private func addSubviews() {
     [
       majorLabel,
       titleLabel,
-      remainMemeber,
+      remainMemeberLabel,
       profileImageView,
       writerMajorLabel,
       nickNameLabel
@@ -100,6 +100,7 @@ final class SimilarPostCell: UICollectionViewCell {
     }
   }
   
+  /// UI 설정
   private func configure() {
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(15)
@@ -112,7 +113,7 @@ final class SimilarPostCell: UICollectionViewCell {
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
-    remainMemeber.snp.makeConstraints { make in
+    remainMemeberLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(5)
       make.leading.equalTo(majorLabel.snp.leading)
     }
@@ -138,11 +139,11 @@ final class SimilarPostCell: UICollectionViewCell {
     self.layer.cornerRadius = 10
   }
   
+  /// 데이터 바인딩
   private func bind() {
-    guard let major = convertMajor(model?.major ?? "없음", toEnglish: false),
-          let writerMajor = convertMajor(
-            model?.userData.major ?? "없음", toEnglish: false
-          ) else { return }
+    guard let major = Utils.convertMajor(model?.major ?? "없음", toEnglish: false),
+          let writerMajor = Utils.convertMajor(model?.userData.major ?? "없음", toEnglish: false)
+          else { return }
 
     majorLabel.text = "\(major)"
     titleLabel.text = model?.title
@@ -171,4 +172,3 @@ final class SimilarPostCell: UICollectionViewCell {
   }
 }
 
-extension SimilarPostCell: ConvertMajor {}

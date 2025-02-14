@@ -204,7 +204,7 @@ class ResultSearchViewController: UIViewController {
       .drive(resultCollectionView.rx.items(
         cellIdentifier: SearchResultCell.cellID,
         cellType: SearchResultCell.self)) { index, content, cell in
-          cell.model = content
+          cell.cellData = content
 //          cell.loginStatus = self.viewModel.isUserLogin
         }
         .disposed(by: disposeBag)

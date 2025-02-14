@@ -9,10 +9,10 @@ import Foundation
 
 import Moya
 
-
+/// 네트워킹 작업 전에 토큰을 재발급 받아서 들고가기 , 일단 네트워킹 하고 에러나면 재요청 -> 401 만료 , 500 로그인 x
 /// 댓글 관련 네트워킹
-class CommentManager1: StudyHubCommonNetworking {
-  static let shared = CommentManager1()
+class CommentManager: StudyHubCommonNetworking {
+  static let shared = CommentManager()
 
   let provider = MoyaProvider<CommentNetworking>()
   
@@ -26,8 +26,10 @@ class CommentManager1: StudyHubCommonNetworking {
     provider.request(.writeComment(content: content, postId: postID)) { result in
       switch result {
       case .success(let response):
+        print(response.statusCode)
         completion(true)
       case .failure(let response):
+
         completion(false)
       }
     }
@@ -78,7 +80,7 @@ class CommentManager1: StudyHubCommonNetworking {
   func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping (GetCommentList) -> Void) {
     provider.request(.getCommentList(postId: postId, page: page, size: size)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: GetCommentList.self) { decodedData in
-        print(decodedData)
+        completion(decodedData)
       }
     }
   }
@@ -89,11 +91,14 @@ class CommentManager1: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - postId:스터디의 postId
   ///   - completion: 콜백함수
-  func getCommentPreview(postId: Int, completion: @escaping ([CommentConetent]) -> Void){
-    provider.request(.getPreviewCommentList(postId: postId)){ result in
-      self.commonDecodeNetworkResponse(with: result, decode: [CommentConetent].self) { decodedData in
-        print(decodedData)
-      }
-    }
+  func getCommentPreview(postId: Int) async throws -> [CommentConetent] {
+    let result = await provider.request(.getPreviewCommentList(postId: postId))
+    return try await self.commonDecodeNetworkResponse(with: result, decode: [CommentConetent].self)
+//
+//    provider.request(.getPreviewCommentList(postId: postId)){ result in
+//      self.commonDecodeNetworkResponse(with: result, decode: [CommentConetent].self) { decodedData in
+//        completion(decodedData)
+//      }
+//    }
   }
 }

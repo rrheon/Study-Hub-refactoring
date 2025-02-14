@@ -6,7 +6,7 @@ import RxCocoa
 import RxSwift
 
 /// 스터디 상세 VC
-final class PostedStudyViewController: UIViewController{
+final class PostedStudyViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -52,7 +52,6 @@ final class PostedStudyViewController: UIViewController{
     
     view.backgroundColor = .white
     
-    setupDelegate()
     setupBindings()
     
     setUpLayout()
@@ -66,17 +65,26 @@ final class PostedStudyViewController: UIViewController{
     mainComponent = PostedStudyMainComponent(with: data)
     detailInfoComponent = PostedStudyDetailInfoComponent(with: data)
     writerComponent = PostedStudyWriterComponent(with: data)
-    commentComponent = PostedStudyCommentComponent(with: data)
-    similarStudyComponent = SimilarStudyComponent(with: data)
+    commentComponent = PostedStudyCommentComponent(with: viewModel)
+    similarStudyComponent = SimilarStudyComponent(with: viewModel)
+        
+    setupDelegate()
   }
   
   /// 네비게이션 바 세팅
   func setupNavigationbar(){
     leftButtonSetting()
-    /// 작성자가의 포스트인 경우 오른쪽 버튼
-    //    if let isUsersPost = viewModel.postDatas.value?.usersPost, isUsersPost {
-    //      rightButtonSetting(imgName: "RightButtonImg")
-    //    }
+    self.navigationController?.navigationBar.isTranslucent = false
+    
+    /// 작성자가의 포스트인 경우 오른쪽 버튼 - 바텀시트 작업
+    if let isUsersPost = viewModel.postDatas.value?.usersPost {
+      rightButtonSetting(imgName: "RightButtonImg")
+    }
+  }
+  
+  /// 네비게이션 바 왼쪽 아이템 터치 - 현재 화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
   }
   
   // MARK: - setUpLayout
@@ -129,7 +137,7 @@ final class PostedStudyViewController: UIViewController{
     similarStudyComponent.snp.makeConstraints {
       $0.top.equalTo(commentComponent.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
-      $0.height.equalTo(280)
+      $0.height.equalTo(350)
     }
     
     pageStackView.snp.makeConstraints {
@@ -147,17 +155,20 @@ final class PostedStudyViewController: UIViewController{
   // MARK: - setupBindings
   
   
+  /// 바인딩
   func setupBindings(){
+    /// 스터디 디테일 데이터
     viewModel.postDatas
-      .compactMap { $0 } // nil이 아닐 때만 실행
-      .observe(on: MainScheduler.instance) // UI 업데이트는 메인 스레드에서
-      .subscribe(onNext: { [weak self] data in
-        self?.setupComponents(with: data) // 🔥 네트워크 완료 후 UI 설정
-        self?.setUpLayout()
-        self?.makeUI()
+      .withUnretained(self)
+      .compactMap { $0 }
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { (vc, data) in
+        vc.setupComponents(with: data)
+        vc.setUpLayout()
+        vc.makeUI()
       })
       .disposed(by: disposeBag)
-    
+
     //    viewModel.postDatas
     //      .subscribe(onNext: { [weak self] in
     //        if $0?.usersPost == false {
@@ -249,6 +260,7 @@ final class PostedStudyViewController: UIViewController{
   private func setupDelegate() {
     guard let commentComponent = commentComponent,
           let similarStudyComponent = similarStudyComponent else { return }
+    
     /// 댓글 테이블뷰
     commentComponent.commentTableView.rx.setDelegate(self)
       .disposed(by: disposeBag)
@@ -303,38 +315,26 @@ extension PostedStudyViewController: UITableViewDelegate  {
   }
 }
 
+// MARK: - 댓글 , 게시글 편집 bottomSheet Delegate
+// 터치하면 화면 내리기, 토스트팝업
 extension PostedStudyViewController: BottomSheetDelegate {
-  func firstButtonTapped(postID: Int, checkPost: Bool) {
-    //    viewModel.postOrCommentID = postID
-    //    let action: PopupActionType = checkPost ? .deletePost : .deleteComment
-    //    let title = action == .deletePost ? "글을 삭제할까요?" : "댓글을 삭제할까요?"
-    //    let popupVC = PopupViewController(
-    //      title: title,
-    //      dataStream: viewModel.dataFromPopupView,
-    //      selectAction: action)
-    //
-    //    popupVC.modalPresentationStyle = .overFullScreen
-    //
-    //    self.present(popupVC, animated: true)
+  
+  /// BottomSheet의 첫 번째 버튼 탭 - 댓글 삭제
+  /// - Parameter postOrCommentID: commentID
+  func firstButtonTapped(postOrCommentID: Int) {
+    viewModel.deleteComment(with: postOrCommentID)
   }
   
-  func secondButtonTapped(postID: Int, checkPost: Bool) {
-    //    viewModel.postOrCommentID = postID
-    //    let action: PopupActionType = checkPost ? .editPost : .editComment
-    //    if action == .editPost {
-    //      let popupVC = PopupViewController(
-    //        title: "글을 수정할까요?",
-    //        leftButtonTitle: "아니요",
-    //        rightButtonTilte: "네",
-    //        dataStream: viewModel.dataFromPopupView,
-    //        selectAction: .editPost)
-    //      popupVC.modalPresentationStyle = .overFullScreen
-    //
-    //      self.present(popupVC, animated: true)
-    //    } else {
-    //      commentComponent.commentButton.setTitle("수정", for: .normal)
-    //    }
+  /// BottomSheet의 두 번째 버튼 탭 - 댓글 수정
+  /// - Parameter postOrCommentID: commentID
+  func secondButtonTapped(postOrCommentID: Int) {
+    // 현재 화면 내리기
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+
+    commentComponent?.commentButton.setTitle("수정", for: .normal)
+    viewModel.commentID = postOrCommentID
   }
+
   
   func goToParticipateVC(_ postData: BehaviorRelay<PostDetailData?>){
     let participateVC = ParticipateVC(postData)

@@ -101,14 +101,15 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
         .editUserNickName(_),
         .deleteUserAccount,
         .deleteUserProfileImage:
-      return ["Authorization": "\(UserProfileManager.shared.loadAccessToken() ?? "")"]
+      return ["Authorization": ""]
       
     case .loadUserInfo:
-      return ["Content-type": "application/json"]
+      return ["Content-type": "application/json",
+              "Authorization": ""]
       
     case .storeUserProfileImage(_):
       return [ "Content-Type" : "multipart/form-data",
-               "Authorization": "\(UserProfileManager.shared.loadAccessToken() ?? "")" ]
+               "Authorization": "" ]
     default:
       return .none
     }

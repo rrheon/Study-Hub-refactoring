@@ -92,7 +92,7 @@ final class BookmarkViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽버튼 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen)
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
   }
   
   /// 바인딩 설정
@@ -144,6 +144,7 @@ final class BookmarkViewController: UIViewController {
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
         vc.viewModel.steps.accept(AppStep.loginScreenIsRequired)
+        _ = TokenManager.shared.deleteTokens()
       })
       .disposed(by: disposeBag)
     

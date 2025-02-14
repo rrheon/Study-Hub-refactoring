@@ -74,7 +74,7 @@ final class HowToUseViewController: UIViewController, Stepper {
   
   /// 네비게이션 바 왼쪽 탭 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen)
+    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
   }
   
   // MARK: - setupLayout

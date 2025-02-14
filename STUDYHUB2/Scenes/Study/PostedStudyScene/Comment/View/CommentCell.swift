@@ -1,71 +1,70 @@
+
 import UIKit
 
 import SnapKit
 import Kingfisher
+import Then
 
+/// 댓글 Cell Delegate
 protocol CommentCellDelegate: AnyObject {
-  func menuButtonTapped(in cell: CommentCell, commentId: Int)
+  
+  /// 메뉴 버튼 탭 - 본인이 쓴 댓글 수정 및 삭제
+  /// - Parameters:
+  ///   - commentID: 댓글의 ID
+  func menuButtonTapped(commentID: Int)
 }
 
+
+/// 댓글 Cell
 final class CommentCell: UITableViewCell {
   weak var delegate: CommentCellDelegate?
   
+  var loginUserName: String? = nil
   var model: CommentConetent? { didSet { bind() } }
-  var commentId: Int?
-  var userNickname: String?
   
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.layer.cornerRadius = 15
-    imageView.image = UIImage(named: "ProfileAvatar_change")
-    return imageView
-  }()
+  /// 작성자의 프로필 이미지뷰
+  private lazy var profileImageView: UIImageView = UIImageView().then {
+    $0.layer.cornerRadius = 15
+    $0.image = UIImage(named: "ProfileAvatar_change")
+  }
   
-  private lazy var nickNameLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg90
-    label.text = model?.commentedUserData.nickname
-    label.font = UIFont(name: "Pretendard", size: 16)
-    return label
-  }()
+  /// 작성자의 닉네임 라벨
+  private lazy var nickNameLabel: UILabel = UILabel().then {
+    $0.textColor = .bg90
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
-  private lazy var postCommentDate: UILabel = {
-    let label = UILabel()
-    label.text = "2023.9.8"
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 10)
-    return label
-  }()
+  /// 댓글이 작성된 날짜 라벨
+  private lazy var postCommentDate: UILabel = UILabel().then {
+   $0.textColor = .bg70
+   $0.font = UIFont(name: "Pretendard", size: 10)
+  }
   
-  private lazy var menuButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "MenuButton"), for: .normal)
-    button.addAction(UIAction { _ in
-      self.menuButtonTapped()
-    }, for: .touchUpInside)
-    return button
-  }()
+  /// 메뉴 버튼 - 댓글 수정, 삭제
+  private lazy var menuButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "MenuButton"), for: .normal)
+  }
   
-  private lazy var commentLabel: UILabel = {
-    let label = UILabel()
-    label.text = "댓글댓글"
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard", size: 14)
-    return label
-  }()
+  /// 댓글 내용 라벨
+  private lazy var commentLabel: UILabel = UILabel().then {
+   $0.textColor = .bg80
+   $0.font = UIFont(name: "Pretendard", size: 14)
+  }
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
     addSubviews()
     configure()
+    
+    menuButton.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  
+  /// layout 세팅
   private func addSubviews() {
     [
       profileImageView,
@@ -78,6 +77,7 @@ final class CommentCell: UITableViewCell {
     }
   }
   
+  /// UI설정
   private func configure() {
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(10)
@@ -108,23 +108,30 @@ final class CommentCell: UITableViewCell {
     }
   }
   
+  /// 데이터 바인딩
   private func bind() {
-    DispatchQueue.main.async {
-      self.commentId = self.model?.commentID
+    guard let data = model else { return }
+      /// 작성자의 닉네임
+      self.nickNameLabel.text = data.commentedUserData.nickname
       
-      self.nickNameLabel.text = self.model?.commentedUserData.nickname
+    print(#fileID, #function, #line," - \(loginUserName)")
+
       
-      if self.nickNameLabel.text != self.userNickname {
-        self.menuButton.isHidden = true
-      }
-      
-      self.commentLabel.text = self.model?.content
-      
-      guard let createeData = self.model?.createdDate else { return }
-      self.postCommentDate.text = "\(createeData[0]). \(createeData[1]). \(createeData[2])"
+  /// 사용자가 작성한 댓글이라면 수정이 가능한 메뉴 표시
+    
+    self.menuButton.isHidden = !data.usersComment
       
       
-      if let imageURL = URL(string: self.model?.commentedUserData.imageURL ?? "") {
+      /// 댓글 내용
+      self.commentLabel.text = data.content
+      
+      /// 작성된 날짜
+
+      self.postCommentDate.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
+      
+      
+      /// 이미지
+    if let imageURL = URL(string: data.commentedUserData.imageURL ?? "") {
         let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
         
         KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
@@ -143,10 +150,12 @@ final class CommentCell: UITableViewCell {
           }
         }
       }
-    }
+    
   }
   
-  func menuButtonTapped(){
-    self.delegate?.menuButtonTapped(in: self, commentId: commentId ?? 0)
+  /// 댓글의 메뉴 버튼 탭
+  @objc func menuButtonTapped(){
+    guard let commentID = model?.commentID else { return }
+    self.delegate?.menuButtonTapped(commentID: commentID)
   }
 }

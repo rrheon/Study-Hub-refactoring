@@ -9,87 +9,24 @@ enum CommentActionList {
   case modify
 }
 
-final class CommentViewModel {
+/// 댓글 전체 ViewModel - PostedStudyViewModel을 상속받는건 어떤지
+final class CommentViewModel: PostedStudyViewModel {
   
-  var postID: Int = 0
-  var commentID: Int? = nil
-  var userData: UserDetailData?
-  
-  var commentList = BehaviorRelay<[CommentConetent]>(value: [])
-  var commentCount = BehaviorRelay<Int>(value: 0)
-  var commentContent = BehaviorRelay<String?>(value: nil)
-  var commentActionStatus = PublishRelay<CommentActionList>()
-  var isNeedFetch: PublishRelay<Bool>?
-  
-  init(isNeedFetch: PublishRelay<Bool>?, postID: Int) {
-    self.isNeedFetch = isNeedFetch
+  override init(with postID: Int) {
+    super.init(with: postID)
+    
     self.postID = postID
-    
-    
     getCommentList()
-    getUserData()
   }
   
-  func getUserData(){
-    //    userDataManager.getUserInfo { result in
-    //      guard let data = result else { return }
-    //      self.userData = data
-    //    }
-  }
-  
-  func getCommentList(){
-    //    detailPostDataManager.getCommentList(postId: postID, page: 0, size: 100) { result in
-    //      self.commentList.accept(result.content)
-    //      self.commentCount.accept(result.numberOfElements)
-    //    }
-  }
-  
-  // MARK: - 댓글 작성하기
-  
-  
-  func createComment(){
-    guard let content = commentContent.value else { return }
-    //    commentManager.createComment(content: content, postID: postID) { result in
-    //      self.updateCommentList(result)
-    //      if result {
-    //        self.commentActionStatus.accept(.create)
-    //      }
-    //
-    //    }
-  }
-  
-  // MARK: - 댓글 수정하기
-  
-  
-  func modifyComment(_ commentID: Int){
-    guard let content = commentContent.value else { return }
-    //    commentManager.modifyComment(content: content, commentID: commentID) { result in
-    //      self.updateCommentList(result)
-    //      if result {
-    //        self.commentActionStatus.accept(.modify)
-    //      }
-    //    }
-    //  }
-    
-    // MARK: - 댓글 삭제하기
-    
-    
-    func deleteComment(commentId: Int){
-      //    commentManager.deleteComment(commentID: commentId) { result in
-      //      self.updateCommentList(result)
-      //      if result {
-      //        self.commentActionStatus.accept(.delete)
-      //      }
-      //    }
-    }
-    
-    func updateCommentList(_ result: Bool){
-      switch result {
-      case true:
-        getCommentList()
-      case false:
-        return
-      }
+  /// 댓글 전체 리스트 가져오기
+  /// - Parameters:
+  ///   - page: 가져올 page
+  ///   - size: 가져올 댓글 갯수
+  func getCommentList(page: Int = 0, size: Int = 10){
+    /// last 가 false이면 데이터가 더 있음 true이면 없음
+    CommentManager.shared.getCommentList(postId: postID, page: page, size: size) { comments in
+      self.commentDatas.accept(comments.content)
     }
   }
 }

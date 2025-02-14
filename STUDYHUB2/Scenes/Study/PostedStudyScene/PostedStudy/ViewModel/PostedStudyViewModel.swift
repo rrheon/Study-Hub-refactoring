@@ -32,63 +32,52 @@ struct PostedStudyData: PostedStudyViewData {
 }
 
 /// 스터디 상세 ViewModel
-final class PostedStudyViewModel: Stepper {
+class PostedStudyViewModel: Stepper  {
   var steps: PublishRelay<Step> = PublishRelay()
   
   
 //  var postedStudyData: PostedStudyViewData
   
-  var postDatas = BehaviorRelay<PostDetailData?>(value: nil)
-//  var commentDatas = PublishRelay<[CommentConetent]>()
-//  var relatedPostDatas = BehaviorRelay<[RelatedPost]>(value: [])
-//  
-//  var countComment = PublishRelay<Int>()
-//  var countRelatedPost = BehaviorRelay<Int>(value: 0)
-//  var commentTextFieldValue = BehaviorRelay<String>(value: "")
-//  let dataFromPopupView = PublishRelay<PopupActionType>()
-//  var singlePostData = PublishRelay<PostDetailData>()
-//  
-//  var postOrCommentID: Int = 0
-//  var userNickanme: String = ""
-//  
-//  var isBookmarked = BehaviorRelay<Bool>(value: false)
-//  var isMyPost = PublishRelay<Bool>()
-//  var isNeedFetch: PublishRelay<Bool>?
-//  var isActivateParticipate = PublishRelay<Bool>()
-//  var isUserLogined: Bool
-//  
-//  var showToastMessage = PublishRelay<String>()
-//  var showBottomSheet = PublishRelay<Int>()
-//  var moveToCommentVC = PublishRelay<CommentViewController>()
-//  var moveToLoginVC = PublishRelay<Bool>()
-//  var moveToParticipateVC = PublishRelay<Int>()
-//  
-  init(with postID: Int) {
-    
-//    let postedData = postedStudyData.postDetailData
-//    postDatas.accept(postedData)
-//    isMyPost.accept(postedData.usersPost)
-//    relatedPostDatas.accept(postedData.relatedPost)
-//    isBookmarked.accept(postedData.bookmarked)
-
-//    isNeedFetch = data.isNeedFechData
-//    isUserLogined = data.isUserLogin
-//    
-    
-//    getUserInfo()
-//    fetchCommentDatas()
-//    countRelatedPosts()
-//
-    fetchStudyDeatilData(with: postID)
-    
+  /// 게시글의 postID
+  var postID: Int
+  
+  /// 게시글의 상세 데이터
+  var postDatas: BehaviorRelay<PostDetailData?> = BehaviorRelay<PostDetailData?>(value: nil)
+  
+  /// 게시글의 댓글 데이터
+  var commentDatas: BehaviorRelay<[CommentConetent]?> = BehaviorRelay<[CommentConetent]?>(value: nil)
+  
+  /// 게시글의 댓글 갯수
+  var commentCount: Observable<Int> {
+    return commentDatas.map { $0?.count ?? 0 }
   }
 
+  /// 댓글의 ID - 수정용
+  var commentID: Int? = nil
+
+  var loginUserData: BehaviorRelay<UserDetailData?> = BehaviorRelay<UserDetailData?>(value: nil)
+
+  init(with postID: Int) {
+    self.postID = postID
+    
+//    Task {
+//      await TokenManager.shared.refreshAccessTokenIfNeeded()
+//    }
+
+    // 유저 정보를 못가져옴
+    UserProfileManager.shared.fetchUserInfoToServer { userData in
+      self.loginUserData.accept(userData)
+      
+      self.fetchCommentDatas(with: postID)
+      self.fetchStudyDeatilData(with: postID)
+    }
+  }
+  
   
   /// 스터디 데이터 가져오기
   func fetchStudyDeatilData(with postID: Int){
     Task {
       let postedData: PostDetailData = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
-      print(postedData)
       postDatas.accept(postedData)
     }
   }
@@ -99,25 +88,64 @@ final class PostedStudyViewModel: Stepper {
   }
   
   
-  /// 댓글 가져오기
-  func fetchCommentDatas(){
-//    guard let postID = postDatas.value?.postID else { return }
-//    detailPostDataManager.getCommentPreview(postId: postID) { [weak self] comments in
-//      self?.commentDatas.accept(comments)
-//      
-//      let commentCount = comments.filter { $0.commentID != nil }.count
-//      self?.countComment.accept(commentCount)
-//    }
+  /// 댓글 미리보기 가져오기(스터디 디테일에서 보여주는 댓글들)
+  func fetchCommentDatas(with postID: Int){
+    Task {
+      let comments: [CommentConetent] = try await CommentManager.shared.getCommentPreview(postId: postID)
+      commentDatas.accept(comments)
+    }
   }
   
   
-  /// 사용자 정보 가져오기
-  func getUserInfo(){
-//    userInfoManager.getUserInfo {
-//      guard let nickname = $0?.nickname else { return }
-//      self.userNickanme = nickname
-//    }
+  /// 새로운 댓글 작성하기
+  /// - Parameter content: 댓글 내용
+  func createNewComment(with content: String){
+    CommentManager.shared.createComment(content: content, postID: postID) { result in
+      if result {
+        self.fetchCommentDatas(with: self.postID)
+      }
+    }
   }
+  
+  
+  /// 댓글 삭제하기
+  /// - Parameters:
+  ///   - commentID: 댓글  ID
+  func deleteComment(with commentID: Int){
+    // 현재 화면 내리기
+    self.steps.accept(AppStep.dismissCurrentScreen)
+    
+    CommentManager.shared.deleteComment(commentID: commentID) { result in
+      print("댓글 삭제 여부 - \(result)")
+      
+ 
+      
+      // 댓글 삭제 후 데이터 수정
+      if result {
+        var datas = self.commentDatas.value
+        datas?.removeAll(where: { $0.commentID == commentID})
+        
+        self.commentDatas.accept(datas)
+      }
+    }
+  }
+  
+  /// 댓글 수정하기
+  /// - Parameters:
+  ///   - commentID: 댓글ID
+  ///   - content: 수정할 댓글 내용
+  func modifyComment(content: String) {
+    guard let commentID = self.commentID else { return }
+    CommentManager.shared.modifyComment(content: content, commentID: commentID) { result in
+      
+      if result {
+        self.fetchCommentDatas(with: self.postID)
+      }
+    }
+  }
+  
+  
+
   
   
   /// 내 포스트 삭제하기
@@ -142,6 +170,14 @@ final class PostedStudyViewModel: Stepper {
   }
   
   func participateButtonTapped(completion: @escaping (ParticipateAction) -> Void) {
+    /*
+     마감된 스터디 -> self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
+     로그인이 안되어 있는 경우 -> 로그인 팝업 -> 로그인화면
+     성별제한 ->  self.viewModel.showToastMessage.accept("이 스터디는 성별 제한이 있는 스터디예요")
+     참여 -> 참여화면으로 이동
+
+     */
+
 //    userInfoManager.getUserInfo { [weak self] userData in
 //      let postedData = self?.postedStudyData.postDetailData
 //      if userData?.nickname == nil {

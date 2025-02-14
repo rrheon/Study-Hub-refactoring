@@ -36,11 +36,11 @@ final class MyPageViewModel: Stepper {
   var personalURL: String = ""
   
   init() {
-    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
-    self.checkLoginStatus.accept(isLoginStatus)
+//    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
+//    self.checkLoginStatus.accept(isLoginStatus)
     fetchUserData()
     loadURLs()
-  }
+    }
   
   func fetchUserData() {
 //    userInfoManager.getUserInfo { result in

@@ -6,11 +6,12 @@ import RxSwift
 import RxCocoa
 import Then
 
+#warning("댓글 작업하기")
 /// 게시글 댓글 component
 final class PostedStudyCommentComponent: UIView {
   let disposeBag: DisposeBag = DisposeBag()
-  var postedData: PostDetailData
-
+  var viewModel: PostedStudyViewModel
+  
   /// 댓글 라벨
   private lazy var commentLabel = UILabel().then {
     $0.text = "댓글 0"
@@ -25,11 +26,9 @@ final class PostedStudyCommentComponent: UIView {
   }
   
   /// 댓글 라벨 스택뷰
-  private lazy var commentLabelStackView = UIStackView().then {
-    $0.axis = .horizontal
-    $0.spacing = 10
-  }
-  
+  private lazy var commentLabelStackView = StudyHubUI.createStackView(axis: .horizontal,
+                                                                      spacing: 10)
+
   /// 댓글 테이블 뷰
   lazy var commentTableView: UITableView =  UITableView().then {
     $0.register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellID)
@@ -38,10 +37,7 @@ final class PostedStudyCommentComponent: UIView {
   }
   
   /// 댓글 스택뷰
-  private lazy var commentStackView = UIStackView().then {
-    $0.axis = .vertical
-    $0.spacing = 10
-  }
+  private lazy var commentStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   
   /// 구분선
   private lazy var divideLineTopTextField = StudyHubUI.createDividerLine(height: 1.0)
@@ -56,13 +52,11 @@ final class PostedStudyCommentComponent: UIView {
   private lazy var divideLineUnderTextField = StudyHubUI.createDividerLine(height: 8.0)
   
   /// 댓글 버튼 스택뷰
-  private lazy var commentButtonStackView = UIStackView().then {
-    $0.axis = .horizontal
-    $0.spacing = 8
-  }
+  private lazy var commentBtnStackView = StudyHubUI.createStackView(axis: .horizontal,spacing: 8)
+
   
-  init(with data: PostDetailData) {
-    self.postedData = data
+  init(with viewModel: PostedStudyViewModel) {
+    self.viewModel = viewModel
     
     super.init(frame: .zero)
     
@@ -70,6 +64,10 @@ final class PostedStudyCommentComponent: UIView {
     makeUI()
     setupBinding()
     setupActions()
+    
+    commentTextField.delegate = self
+    
+    commentButton.unableButton(false, backgroundColor: .o30, titleColor: .white)
   }
   
   required init?(coder: NSCoder) {
@@ -88,14 +86,14 @@ final class PostedStudyCommentComponent: UIView {
     commentStackView.addArrangedSubview(commentTableView)
     
     /// 댓글 입력 TextField, 버튼
-    commentButtonStackView.addArrangedSubview(commentTextField)
-    commentButtonStackView.addArrangedSubview(commentButton)
+    commentBtnStackView.addArrangedSubview(commentTextField)
+    commentBtnStackView.addArrangedSubview(commentButton)
     
     [
       commentLabelStackView,
       commentStackView,
       divideLineTopTextField,
-      commentButtonStackView,
+      commentBtnStackView,
       divideLineUnderTextField
     ].forEach {
       addSubview($0)
@@ -135,147 +133,142 @@ final class PostedStudyCommentComponent: UIView {
       $0.width.equalTo(65)
     }
     
-    commentButtonStackView.snp.makeConstraints {
+    commentBtnStackView.snp.makeConstraints {
       $0.top.equalTo(divideLineTopTextField.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview().inset(20)
     }
     
     divideLineUnderTextField.snp.makeConstraints {
-      $0.top.equalTo(commentButtonStackView.snp.bottom).offset(20)
+      $0.top.equalTo(commentBtnStackView.snp.bottom).offset(20)
       $0.leading.trailing.equalToSuperview()
     }
   }
   
   // MARK: -  setupBinding
   
-  
+  /// 바인딩
   func setupBinding(){
-//    viewModel.countComment
-//      .asDriver(onErrorJustReturn: 0)
-//      .drive(onNext: { [weak self] count in
-//        self?.commentLabel.text = "댓글 \(count)"
-//
-//        let value = count <= 8 ? count : 8
-//        self?.snp.remakeConstraints {
-//          $0.height.equalTo(value * 86 + 160)
-//        }
-//        
-//        self?.commentTableView.snp.remakeConstraints {
-//          $0.height.equalTo(value * 86)
-//        }
-//      
-//        let hideButton = count == 0 ? true : false
-//        self?.moveToCommentViewButton.isHidden = hideButton
-//      })
-//      .disposed(by: disposeBag)
-//    
-//    viewModel.commentDatas
-//      .bind(to: commentTableView.rx.items(
-//        cellIdentifier: CommentCell.cellId,
-//        cellType: CommentCell.self)) { index, content, cell in
-//          cell.model = content
-//          cell.userNickname = self.viewModel.userNickanme
-//          cell.delegate = self
-//          cell.selectionStyle = .none
-//          cell.contentView.isUserInteractionEnabled = false
-//        }
-//        .disposed(by: disposeBag)
-//    
-//    commentTextField.rx.text.orEmpty
-//      .bind(to: viewModel.commentTextFieldValue)
-//      .disposed(by: disposeBag)
-//    
-//    viewModel.commentTextFieldValue
-//      .subscribe(onNext: { [weak self] in
-//        self?.commentButton.unableButton(
-//          !$0.isEmpty,
-//          backgroundColor: .o30,
-//          titleColor: .white
-//        )
-//      })
-//      .disposed(by: disposeBag)
-//    
-//    viewModel.isNeedFetch?
-//      .asDriver(onErrorJustReturn: true)
-//      .drive(onNext: { [weak self] in
-//        if $0 == true{
-//          self?.viewModel.fetchCommentDatas()
-//        }
-//      })
-//      .disposed(by: disposeBag)
+
+    /// 댓글 갯수
+    viewModel.commentCount
+      .asDriver(onErrorJustReturn: 0)
+      .drive(onNext: { [weak self] count in
+        self?.commentLabel.text = "댓글 \(count)"
+
+        let value: Int = count  <= 8 ? count : 8
+        self?.snp.remakeConstraints {
+          $0.height.equalTo(value * 86 + 160)
+        }
+        
+        self?.commentTableView.snp.remakeConstraints {
+          $0.height.equalTo(value * 86)
+        }
+      
+        let hideButton = count == 0 ? true : false
+        self?.moveToCommentViewButton.isHidden = hideButton
+      })
+      .disposed(by: disposeBag)
+    
+    /// 댓글 데이터들 바인딩
+    viewModel.commentDatas
+      .compactMap { $0 }
+      .bind(to: commentTableView.rx.items(
+        cellIdentifier: CommentCell.cellID,
+        cellType: CommentCell.self)
+      ) { index, content, cell in
+        cell.model = content
+        cell.delegate = self
+        cell.selectionStyle = .none
+        cell.contentView.isUserInteractionEnabled = false
+      }
+      .disposed(by: disposeBag)
+
+    viewModel.loginUserData
+      .asDriver()
+      .drive(onNext: { _ in
+        self.commentTableView.reloadData()
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - setupActions
   
   /// Actions 설정
   func setupActions(){
-//    commentButton.rx.tap
-//      .subscribe(onNext: { [weak self] in
-//        guard let postID = self?.viewModel.postDatas.value?.postID,
-//              let content = self?.viewModel.commentTextFieldValue.value,
-//              let commentID = self?.viewModel.postOrCommentID else { return }
-//        let title = self?.commentButton.currentTitle
-//        
-//        switch title {
-//        case "수정":
-//          self?.modifyComment(content: content, commentID: commentID)
-//        case "등록":
-//          self?.createComment(content: content, postID: postID)
-//        case .none:
-//          return
-//        case .some(_):
-//          return
-//        }
-//      })
-//      .disposed(by: disposeBag)
-//    
-//    moveToCommentViewButton.rx.tap
-//      .subscribe(onNext: { [weak self] in
-//        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
-//        let commentVC = CommentViewController(
-//          postId: postID,
-//          nickname: self?.viewModel.userNickanme,
-//          isNeedFetch: self?.viewModel.isNeedFetch ?? nil
-//        )
-//        commentVC.hidesBottomBarWhenPushed = true
-//        self?.viewModel.moveToCommentVC.accept(commentVC)
-//      })
-//      .disposed(by: disposeBag)
+    
+    // 댓글 작성 / 수정 버튼 탭
+    commentButton.rx.tap
+      .withUnretained(self)
+      .subscribe(onNext: { (vc, _) in
+        
+        guard let commentContent = vc.commentTextField.text,
+              let title = vc.commentButton.currentTitle else { return }
+        
+        /// 버튼 제목에 따라 다른 댓글 작업 수행
+        switch title {
+          case "수정":        vc.viewModel.modifyComment(content: commentContent)
+          case "등록":        vc.viewModel.createNewComment(with: commentContent)
+          default: return
+        }
+        vc.settingComment()
+      })
+      .disposed(by: disposeBag)
+
+    // 모든 댓글 VC로 이동
+    moveToCommentViewButton.rx.tap
+      .withUnretained(self)
+      .subscribe(onNext: { (vc, _) in
+        vc.viewModel.steps.accept(
+          AppStep.commentDetailScreenIsRequired(postID: vc.viewModel.postID))
+      })
+      .disposed(by: disposeBag)
   }
   
-  func createComment(content: String, postID: Int) {
-//    viewModel.commentManager.createComment(
-//      content: content,
-//      postID: postID
-//    ) { [weak self] success in
-//      guard success else { return }
-//      self?.settingComment(mode: "생성")
-//    }
-  }
-  
-  func modifyComment(content: String, commentID: Int) {
-//    viewModel.commentManager.modifyComment(
-//      content: content,
-//      commentID: commentID
-//    ) { [weak self] success in
-//      self?.settingComment(mode: "수정")
-//    }
-  }
-  
-  func settingComment(mode: String){
+  func settingComment(){
+    /// PushlishRelay 로 댓글데이터 처리 -> 초기값이 없어서 UI가 께짐
+    /// BehaviorRelay로 처리 -> 초기값을 빈 배열로 설정해서 UI를 잡고 데이터를 넣어줌
+    /// 다시 불러오지 말고 마지막 데이터 교체해주기 x -> 댓글 ID를 알 수 없음
 //    viewModel.fetchCommentDatas()
 //    let message = mode == "생성" ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
 //    viewModel.showToastMessage.accept(message)
 //    
 //    commentButton.setTitle("등록", for: .normal)
-//    commentTextField.text = nil
-//    commentTextField.resignFirstResponder()
+    commentTextField.text = nil
+    commentTextField.resignFirstResponder()
   }
 }
 
+// MARK: - 댓글 Cell Delegate
+
+
+/// 댓글 편집관련
 extension PostedStudyCommentComponent: CommentCellDelegate {
-  func menuButtonTapped(in cell: CommentCell, commentId: Int) {
-//    viewModel.showBottomSheet.accept(commentId)
+  
+  /// 메뉴버튼 탭
+  /// - Parameter commentID: 댓글의 ID
+  func menuButtonTapped(commentID: Int) {
+    /// BottomSheet 띄우기
+    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: commentID,
+                                                          type: .postOrComment))
   }
 }
 
+// MARK: - TextField Delegate
+
+
+/// 댓글 입력 TextField Delegate - 댓글 입력 시 버튼 활성화
+extension PostedStudyCommentComponent: UITextFieldDelegate {
+  func textFieldDidChangeSelection(_ textField: UITextField) {
+    /// 댓글 내용
+    let comment: String? = textField.text
+    
+    /// 버튼활성화 여부
+    let activateBtn: Bool = comment?.isEmpty == nil || comment != "" ? true : false
+    
+    /// 버튼 활성화에 따른 배경색
+    let backgroundColor: UIColor = activateBtn ? .o60 : .o30
+    
+    commentButton.unableButton(activateBtn, backgroundColor: backgroundColor, titleColor: .white)
+  }
+  
+}

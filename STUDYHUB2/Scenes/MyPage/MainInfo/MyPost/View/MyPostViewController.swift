@@ -270,10 +270,10 @@ extension MyPostViewController: MyPostCellDelegate {
   }
   
   func menuButtonTapped(in cell: MyPostCell, postID: Int) {
-    let bottomSheetVC = BottomSheet(postID: postID)
-    bottomSheetVC.delegate = self
-    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-    present(bottomSheetVC, animated: true, completion: nil)
+//    let bottomSheetVC = BottomSheet(postID: postID)
+//    bottomSheetVC.delegate = self
+//    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
+//    present(bottomSheetVC, animated: true, completion: nil)
   }
   
   func closeButtonTapped(in cell: MyPostCell, postID: Int){
@@ -308,30 +308,38 @@ extension MyPostViewController: UICollectionViewDelegate {
 }
 
 extension MyPostViewController: BottomSheetDelegate {
-  func firstButtonTapped(postID: Int, checkPost: Bool) {
-    let popupVC = PopupViewController(
-      title: "이 글을 삭제할까요?",
-      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
-    )
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+  func firstButtonTapped(postOrCommentID: Int) {
     
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      self.viewModel.deleteMySinglePost(postID)
-    }
   }
   
-  func secondButtonTapped(postID: Int, checkPost: Bool) {
-    self.dismiss(animated: true) {
-      self.viewModel.getPostDetailData(postID) { postData in
-        self.moveToOtherVCWithSameNavi(
-          vc: CreateStudyViewController(postedData: postData, mode: .PUT),
-          hideTabbar: true
-        )
-      }
-    }
+  func secondButtonTapped(postOrCommentID: Int) {
+  
   }
+  
+//  func firstButtonTapped(postID: Int, checkPost: Bool) {
+//    let popupVC = PopupViewController(
+//      title: "이 글을 삭제할까요?",
+//      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
+//    )
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      self.viewModel.deleteMySinglePost(postID)
+//    }
+//  }
+//  
+//  func secondButtonTapped(postID: Int, checkPost: Bool) {
+//    self.dismiss(animated: true) {
+//      self.viewModel.getPostDetailData(postID) { postData in
+//        self.moveToOtherVCWithSameNavi(
+//          vc: CreateStudyViewController(postedData: postData, mode: .PUT),
+//          hideTabbar: true
+//        )
+//      }
+//    }
+//  }
 }
 
 extension MyPostViewController: ShowBottomSheet {}

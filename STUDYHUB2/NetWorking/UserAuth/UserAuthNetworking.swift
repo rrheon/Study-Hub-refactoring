@@ -83,18 +83,16 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
   
   /// API 별 헤더
   var headers: [String : String]? {
+    
     switch self {
     case .verifyEmailAndCode(_, _):
       return ["Accept" : "application/json"]
     
     case .verifyPassword(_):
-      return ["Authorization": "\(UserAuthManager.shared.loadAccessToken() ?? "")"]
+      return ["Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
 
     default:
       return ["Content-type": "application/json"]
     }
   }
-  
-  
-  
 }

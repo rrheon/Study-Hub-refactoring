@@ -33,22 +33,44 @@ enum ApiError: Error {
   
   /// API 에러 처리
   /// - Parameter error: 발생한 API 에러
-  static func managementError(error: Self) {
-      // 에러 메시지를 출력하거나 특정 처리를 수행
-      print("API Error: \(error.info)")
+  static func managementError(error: Self) -> String {
+    switch error {
+    case .unAuthorize:
+      return "인증 실패: 다시 로그인해주세요."
       
-      // 추가적인 에러 처리 로직을 여기에 추가할 수 있습니다.
-      switch error {
-      case .unAuthorize:
-          // 인증 실패 시 로그아웃 처리 등의 추가 로직
-          print("사용자를 로그아웃 처리합니다.")
-      case .badStatus(let code):
-          // 상태 코드에 따라 추가 행동
-          if code == 404 {
-              print("페이지를 찾을 수 없습니다.")
-          }
-      default:
-          break
+    case .badStatus(let code):
+      switch code {
+      case 400: return ApiError.decodingError.info
+      case 401: return "인증되지 않은 요청입니다. 다시 로그인하세요."
+      case 403: return "접근이 거부되었습니다."
+      case 404: return "요청한 페이지를 찾을 수 없습니다."
+      case 500: return "로그인 정보가 만료되었습니다."
+      default: return "서버 오류 발생 (코드: \(code))"
       }
+    default:
+      return error.info
+    }
+  }
+  
+  /// 서버 응답 처리하기
+  /// - Parameter statusCode: 상태코드
+  /// - Returns: 에러 및 응답 반환
+  func handleResponse(statusCode: Int) -> Result<Void, ApiError> {
+    switch statusCode {
+    case 200...299:
+      return .success(())
+    case 400:
+      return .failure(.badStatus(code: 400))
+    case 401:
+      return .failure(.unAuthorize)
+    case 403:
+      return .failure(.badStatus(code: 403))
+    case 404:
+      return .failure(.badStatus(code: 404))
+    case 500:
+      return .failure(.badStatus(code: 500))
+    default:
+      return .failure(.unKnownError(nil))
+    }
   }
 }

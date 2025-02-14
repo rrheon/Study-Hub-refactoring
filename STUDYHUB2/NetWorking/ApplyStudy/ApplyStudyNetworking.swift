@@ -104,10 +104,10 @@ extension ApplyStudyNetworking: TargetType, CommonBaseURL {
         .getRejectReason(_),
         .getMyReqeustList(_, _):
       return ["Content-type": "application/json",
-              "Authorization": "\(ApplyStudyManager.shared.loadAccessToken() ?? "")"]
+              "Authorization": ""]
       
     case .deleteMyRequest(_):
-      return [ "Authorization": "\(ApplyStudyManager.shared.loadAccessToken() ?? "")"]
+      return [ "Authorization": ""]
 
     default:
       return ["Content-type": "application/json"]

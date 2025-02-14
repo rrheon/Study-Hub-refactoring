@@ -145,15 +145,15 @@ final class MyInformViewController: CommonNavi {
   }
   
   func editProfileButtonTapped(){
-    let bottomSheetVC = BottomSheet(
-      postID: 0,
-      firstButtonTitle: "사진 촬영하기" ,
-      secondButtonTitle: "앨범에서 선택하기",
-      checkPost: false
-    )
-    bottomSheetVC.delegate = self
-    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-    present(bottomSheetVC, animated: true, completion: nil)
+//    let bottomSheetVC = BottomSheet(
+//      postID: 0,
+//      firstButtonTitle: "사진 촬영하기" ,
+//      secondButtonTitle: "앨범에서 선택하기",
+//      checkPost: false
+//    )
+//    bottomSheetVC.delegate = self
+//    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
+//    present(bottomSheetVC, animated: true, completion: nil)
   }
 
 
@@ -197,11 +197,11 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
-  func firstButtonTapped(postID: Int, checkPost: Bool) {
+  func firstButtonTapped(postOrCommentID postID: Int) {
     requestCameraAccess()
   }
   
-  func secondButtonTapped(postID: Int, checkPost: Bool) {
+  func secondButtonTapped(postOrCommentID postID: Int) {
     requestPhotoLibraryAccess()
   }
   

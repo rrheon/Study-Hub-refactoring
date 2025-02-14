@@ -56,7 +56,7 @@ extension CommentNetworking: TargetType, CommonBaseURL {
     switch self {
     case .writeComment(let content, let postId):
       let params: [String : Any] = [ "content": content, "postId": postId]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
     case .getCommentList(postId: _, let page, let size):
       let params: [String : Any] = [ "page": page, "size": size]
@@ -64,7 +64,7 @@ extension CommentNetworking: TargetType, CommonBaseURL {
       
     case .modifyComment(let commentId, let content):
       let params: [String : Any] = [ "commentId": commentId, "content": content]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
     default:
       return .requestPlain
@@ -75,16 +75,22 @@ extension CommentNetworking: TargetType, CommonBaseURL {
   
   /// API 별 헤더
   var headers: [String : String]? {
+    let accessToken = TokenManager.shared.loadAccessToken()
+#warning("accessToken이 만료된 경우 refresh로 갱신 후 다시 요청해야하는데 이걸 어떻게 할까")
     switch self {
     case .deleteComment(_):
-      return ["Authorization": "\(CommentManager1.shared.loadAccessToken() ?? "")"]
+      return ["Authorization": "\(accessToken ?? "")"]
     case .writeComment(_, _),
-        .modifyComment(_, _):
-      return [ "Content-Type" : "multipart/form-data",
-               "Authorization": "\(CommentManager1.shared.loadAccessToken() ?? "")" ]
+        .modifyComment(_, _),
+        .getPreviewCommentList(_):
+      return [ "Content-Type" : "application/json",
+               "Authorization": "\(accessToken ?? "")" ]
+      
     default:
       return ["Content-type": "application/json"]
     }
   }
+  
+
 }
   

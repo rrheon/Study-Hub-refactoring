@@ -37,8 +37,8 @@ final class BookmarkViewModel: Stepper {
   func fetchBookmarkData() {
     Task {
       do {
-        let login = try await UserAuthManager.shared.checkValidAccessToken()
-        login ? getBookmarkList() : clearBookmarkList()
+//        await TokenManager.shared.refreshAccessTokenIfNeeded()
+        getBookmarkList()
       } catch {
         print("Error refreshing token: \(error)")
         clearBookmarkList()

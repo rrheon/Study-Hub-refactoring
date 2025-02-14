@@ -16,14 +16,14 @@ class UserAuthManager: StudyHubCommonNetworking {
   
   let provider = MoyaProvider<UserAuthNetworking>()
   
-  /// 유효한 AccessToken인지 확인하기
-  /// - Returns: 유효성 여부
-  func checkValidAccessToken() async throws -> Bool {
-    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return  false}
-    
-    return try await UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken)
-  }
-  
+//  /// 유효한 AccessToken인지 확인하기
+//  /// - Returns: 유효성 여부
+//  func checkValidAccessToken() async throws -> Bool {
+//    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return  false}
+//    
+//    return try await UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken)
+//  }
+//  
   
   /// 로그인하기
   /// - Parameters:
@@ -76,26 +76,32 @@ class UserAuthManager: StudyHubCommonNetworking {
   
   /// AccessToken 갱신하기
   /// - Parameter refreshToken: refreshToken
-  func refreshAccessToken(refreshToken: String) async throws -> Bool {
-    let result = await provider.request(.refreshAccessToken(refreshToken: refreshToken))
-   
-    switch result {
-    case .success(let response):
-      print(#fileID, #function, #line," - \(response.statusCode)")
-      
-      if (200...299).contains( response.statusCode) {
-        let decodedData: AccessTokenResponse = try await self.commonDecodeNetworkResponse(
-          with: result,
-          decode: AccessTokenResponse.self
-        )
-        return true
-      }else {
-        return false
+  func refreshAccessToken(refreshToken: String, completion: @escaping (AccessTokenResponse?) -> Void) {
+    provider.request(.refreshAccessToken(refreshToken: refreshToken)) { result in
+      switch result {
+      case .success(let response):
+        print(#fileID, #function, #line, " - \(response.statusCode)")
+        
+        if (200...299).contains(response.statusCode) {
+          do {
+            let decodedData = try JSONDecoder().decode(AccessTokenResponse.self, from: response.data)
+  
+            completion(decodedData) // ✅ 성공 시 갱신된 accessToken 반환
+          } catch {
+            print("❌ Token decoding failed: \(error)")
+            completion(nil)
+          }
+        } else {
+          completion(nil) // ❌ 실패 시 nil 반환
+        }
+        
+      case .failure(let error):
+        print("❌ Token refresh request failed: \(error)")
+        completion(nil)
       }
-    case .failure(let err):
-      return false
     }
   }
+
  
   // MARK: - 이메일 중복 확인
   

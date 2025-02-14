@@ -68,10 +68,10 @@ extension BookmarkNetworking: TargetType, CommonBaseURL {
   var headers: [String : String]? {
     switch self {
     case .deleteAllBookMark:
-      return [ "Authorization": "\(BookmarkManager.shared.loadAccessToken() ?? "")"]
+      return [ "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
     default:
       return ["Content-type": "application/json",
-              "Authorization": "\(BookmarkManager.shared.loadAccessToken() ?? "")"]
+              "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
     }
   }
   

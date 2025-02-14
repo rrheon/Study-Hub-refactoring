@@ -11,17 +11,22 @@ import Moya
 
 
 /// 사용자 프로필 관련 네트워킹
-class UserProfileManager: StudyHubCommonNetworking, ConvertMajor {
+class UserProfileManager: StudyHubCommonNetworking {
   static let shared = UserProfileManager()
   
   let provider = MoyaProvider<UserProfileNetworking>()
   
+  override init() {
+    print(#fileID, #function, #line," - 유저프로필매니져")
+    
+  }
+
   
-  /// 사용자의 정보 가져오기
-  func loadUserInfo(){
+  /// 서버에서 사용자의 정보 가져오기
+  func fetchUserInfoToServer(completion: @escaping (UserDetailData) -> Void){
     provider.request(.loadUserInfo) { result in
       self.commonDecodeNetworkResponse(with: result, decode: UserDetailData.self) { decodedData in
-        print(decodedData)
+        completion(decodedData)
       }
     }
   }
@@ -68,7 +73,7 @@ class UserProfileManager: StudyHubCommonNetworking, ConvertMajor {
   /// 사용자의 학과 변경
   /// - Parameter major: 변경할 학과
   func changeMajor(major: String){
-    guard let major = convertMajor(major, toEnglish: true) else { return }
+    guard let major = Utils.convertMajor(major, toEnglish: true) else { return }
     
     provider.request(.editUserMajor(major: major)) { result in
       switch result {

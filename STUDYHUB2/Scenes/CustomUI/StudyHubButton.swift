@@ -28,6 +28,12 @@ final class StudyHubButton: UIButton {
     self.layer.cornerRadius = radious
   }
   
+  
+  /// 버튼 활성화/비활성화
+  /// - Parameters:
+  ///   - check: 활성화 여부 - true 버튼 활성화 , false 버튼비활성화
+  ///   - backgroundColor: 배경색
+  ///   - titleColor: 제목 색상
   func unableButton(_ check: Bool, backgroundColor: UIColor = .o60, titleColor: UIColor = .g70){
     self.isEnabled = check
     self.backgroundColor = check ? .o50 : backgroundColor
@@ -42,9 +48,9 @@ class StudyHubUI {
   /// 구분 선 생성
   /// - Parameter height: 높이
   /// - Returns: UIView
-  class func createDividerLine(height: CGFloat) -> UIView {
+  class func createDividerLine(bgColor: UIColor = UIColor(hexCode: "#F3F5F6") ,height: CGFloat) -> UIView {
     let dividerLine = UIView()
-    dividerLine.backgroundColor = UIColor(hexCode: "#F3F5F6")
+    dividerLine.backgroundColor = bgColor
     dividerLine.heightAnchor.constraint(equalToConstant: height).isActive = true
     return dividerLine
   }
