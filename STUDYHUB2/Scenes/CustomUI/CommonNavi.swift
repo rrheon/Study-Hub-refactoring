@@ -71,7 +71,7 @@ extension UIViewController {
       ]
       
       self.navigationController?.navigationBar.standardAppearance = appearance
-      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+//      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
   }
   
@@ -81,6 +81,7 @@ extension UIViewController {
     navigationBarAppearance.configureWithTransparentBackground()
     UINavigationBar.appearance().standardAppearance = navigationBarAppearance
     UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+    
   }
 }
 

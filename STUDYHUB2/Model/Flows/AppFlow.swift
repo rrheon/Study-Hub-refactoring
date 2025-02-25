@@ -11,6 +11,10 @@ import RxFlow
 import RxSwift
 import RxRelay
 
+
+// MARK: - step
+
+
 /// App 전체 화면이동
 enum AppStep: Step {
   
@@ -41,7 +45,10 @@ enum AppStep: Step {
   case howToUseScreenIsRequired                                               // 이용방법 화면
   case studyDetailScreenIsRequired(postID: Int)                               // 스터디 상세 화면
   case commentDetailScreenIsRequired(postID: Int)                           // 댓글 전체화면
+  case studyFormScreenIsRequired(data: PostDetailData?)                     // 스터디 생성,수정 화면
+  case selectMajorScreenIsRequired(seletedMajor: BehaviorRelay<String?>)    // 학과 선택화면
   case bottomSheetIsRequired(postOrCommnetID: Int, type: BottomSheetCase)   // BottomSheet
+  case calendarIsRequired(viewModel: CreateStudyViewModel, selectType: Bool)  // 캘린더화면
   case popCurrentScreen(navigationbarHidden: Bool)                           // 현재화면 pop
   case dismissCurrentScreen                                                 // 현재화면 dismiss
   /*
@@ -70,6 +77,8 @@ enum AppStep: Step {
    */
 }
 
+// MARK: - Flow
+
 
 /// App 전체 Flow
 class AppFlow: Flow {
@@ -77,7 +86,12 @@ class AppFlow: Flow {
     return self.rootViewController
   }
   
-  var rootViewController: UINavigationController = UINavigationController()
+  lazy var rootViewController: UINavigationController = {
+    let nav = UINavigationController()
+    nav.configurationNavigationBar()
+    return nav
+  }()
+  
   var tabBarController: UITabBarController = UITabBarController()
   
   func navigate(to step: any Step) -> FlowContributors {
@@ -105,6 +119,12 @@ class AppFlow: Flow {
       return .none
     case .commentDetailScreenIsRequired(let postID):
       return navToCommentDetailScreen(postID: postID)
+    case .studyFormScreenIsRequired(let data):
+      return navTostudyFormScreen(data: data)
+    case .selectMajorScreenIsRequired(let seletedMajor):
+      return navToSelectMajorScreen(major: seletedMajor)
+    case .calendarIsRequired(let viewModel, let selectType):
+      return presentCalendarScreen(viewModel: viewModel, selectType: selectType)
     }
   }
   
@@ -203,6 +223,27 @@ class AppFlow: Flow {
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
+  
+  /// 스터디 생성 / 수정 화면으로 이동
+  /// - Parameter data: 스터디 데이터 - nil -> 스터디 생성 , 데이터 존재 -> 스터디 수정
+  private func navTostudyFormScreen(data: PostDetailData? = nil) -> FlowContributors {
+    let viewModel: CreateStudyViewModel = CreateStudyViewModel(data: data)
+    let vc = CreateStudyViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 학과 선택 화면으로 이동
+  /// - Parameter major: 선택된 학과가 있는 경우
+  private func navToSelectMajorScreen(major: BehaviorRelay<String?>) -> FlowContributors {
+    let viewModel: SeletMajorViewModel = SeletMajorViewModel(enteredMajor: major)
+    let vc = SeletMajorViewController(with: viewModel)
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
   /// BottomSheet 띄우기
   /// - Parameters:
   ///   - postOrCommentID: postID 혹은 댓글ID
@@ -219,7 +260,20 @@ class AppFlow: Flow {
     return .none
   }
   
+  
+  /// 캘린더 띄우기
+  /// - Parameter viewModel: 스터디 생성 viewModel
+  /// - Parameter selectType: 선택타입 - true - 시작날짜 선택 / false - 종료날짜 선택
+  private func presentCalendarScreen(viewModel: CreateStudyViewModel,
+                                     selectType: Bool = true) -> FlowContributors {
+    let calendarVC = CalendarViewController(viewModel: viewModel, selectStartData: selectType)
+    showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
+    self.rootViewController.present(calendarVC, animated: true)
+    return .none
+  }
+  
   /// 현재화면 pop
+  /// - Parameter navigationbarHidden: 상단 네비게이션 바 숨기기 여부
   private func popCurrentScreen(navigationbarHidden: Bool = true) -> FlowContributors {
     self.rootViewController.navigationBar.isHidden = navigationbarHidden
     self.rootViewController.popViewController(animated: true)
@@ -227,6 +281,7 @@ class AppFlow: Flow {
   }
 }
 
+// MARK: - Stepper
 
 /// 전체 AppStepper - 리모컨
 class AppStepper: Stepper {
@@ -249,13 +304,35 @@ class AppStepper: Stepper {
   
   func readyToEmitSteps() {
     Observable.merge(
-      NotificationCenter.default.rx.notification(.navToBookmarkScreen).map{ _ in AppStep.bookmarkScreenIsRequired },
-      NotificationCenter.default.rx.notification(.navToHowToUseScreen).map { _ in AppStep.howToUseScreenIsRequired},
-      NotificationCenter.default.rx.notification(.navToStudyDetailScrenn).compactMap { notification in
+      /// 북마크 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToBookmarkScreen)
+        .map{ _ in AppStep.bookmarkScreenIsRequired },
+      
+      /// 이용방법 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToHowToUseScreen)
+        .map { _ in AppStep.howToUseScreenIsRequired},
+      
+      /// 스터디 상세화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToStudyDetailScrenn)
+        .compactMap { notification in
         guard let postID = notification.userInfo?["postID"] as? Int else { return nil}
         return AppStep.studyDetailScreenIsRequired(postID: postID)
-      }
-
+      },
+      
+      /// 스터디 생성 및 수정 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToCreateOrModifyScreen)
+        .map({ notification in
+          let postData = notification.userInfo?["postData"] as? PostDetailData?
+          return AppStep.studyFormScreenIsRequired(data: postData ?? nil)
+        })
     )
     .bind(to: self.steps)
     .disposed(by: disposBag)

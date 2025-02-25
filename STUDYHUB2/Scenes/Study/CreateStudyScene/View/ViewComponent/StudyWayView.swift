@@ -4,96 +4,116 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
+
+/// 스터디 방법 View
 final class StudyWayView: UIView, UITextFieldDelegate {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CreateStudyViewModel
   
-  private lazy var studymethodLabel = createLabel(
-    title: "스터디 방식",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  
-  private lazy var studyMethodDivierLine = createDividerLine(height: 1)
+  /// 스터디 방식 제목 라벨
+  private lazy var studymethodLabel = UILabel().then {
+    $0.text = "스터디 방식"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 구분선
+  private lazy var studyMethodDivierLine = StudyHubUI.createDividerLine(height: 1)
   
   // MARK: - 대면 여부
-  private lazy var meetLabel = createLabel(
-    title: "대면 여부",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
   
-  private lazy var meetDescribeLabel = createLabel(
-    title: "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12
-  )
+  /// 대면 여부 라벨
+  private lazy var meetLabel = UILabel().then {
+    $0.text = "대면 여부"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 대면 여부 설명 라벨
+  private lazy var meetDescribeLabel = UILabel().then {
+    $0.text = "대면이나 혼합일 경우, 관련 내용에 대한 계획을 소개에 적어주세요"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
   
-  private lazy var contactButton = createButton(title: "대면")
-  private lazy var untactButton = createButton(title: "비대면")
-  private lazy var mixmeetButton = createButton(title: "혼합")
+  /// 스터디 대면 방식 선택 버튼
+  private lazy var contactButton = StudyHubUI.createButton(title: "대면")
+  private lazy var untactButton = StudyHubUI.createButton(title: "비대면")
+  private lazy var mixmeetButton = StudyHubUI.createButton(title: "혼합")
   
   // MARK: - 벌금
-  private lazy var fineLabel = createLabel(
-    title: "벌금",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
   
-  private lazy var haveFineButton = createFineButton()
+  
+  /// 벌금 라벨
+  private lazy var fineLabel = UILabel().then {
+    $0.text = "벌금"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+  
+  /// 벌금 있을 때의 버튼
+  private lazy var haveFineButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+    $0.tintColor = UIColor(hexCode: "#FF5530")
+  }
 
-  private lazy var haveFineLabel = createLabel(
-    title: "있어요",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
+  /// 벌금 있을 때의 라벨
+  private lazy var haveFineLabel = UILabel().then {
+    $0.text = "있어요"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
   
-  private lazy var noFineButton = createFineButton()
+  /// 벌금 없을 때의 버튼
+  private lazy var noFineButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+    $0.tintColor = UIColor(hexCode: "#FF5530")
+  }
 
-  private lazy var noFineLabel = createLabel(
-    title: "없어요",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
-  
-  private lazy var fineTypeLabel = createLabel(
-    title: "어떤 벌금인가요?",
-    textColor: .bg90,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
-  
-  private lazy var fineTypesTextField = createTextField(title: "지각비, 결석비 등")
+  /// 벌금 없을  때의 라벨
+  private lazy var noFineLabel = UILabel().then {
+    $0.text = "없어요"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
 
-  private lazy var fineAmountLabel = createLabel(
-    title: "얼마인가요?",
-    textColor: .bg90,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
+  /// 벌금 종류 라벨
+  private lazy var fineTypeLabel = UILabel().then {
+    $0.text = "어떤 벌금인가요?"
+    $0.textColor = .bg90
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
+
+  /// 벌금 종류 입력 TextField
+  private lazy var fineTypesTextField = StudyHubUI.createTextField(title: "지각비, 결석비 등")
+
+  /// 금액 라벨
+  private lazy var fineAmountLabel = UILabel().then {
+    $0.text = "얼마인가요?"
+    $0.textColor = .bg90
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
   
-  private lazy var fineAmountTextField = createTextField(title: "금액을 알려주세요")
+  /// 벌금 입력 TextField
+  private lazy var fineAmountTextField = StudyHubUI.createTextField(title: "금액을 알려주세요")
   
-  private lazy var fineAmountCountLabel = createLabel(
-    title: "원",
-    textColor: .bg80,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 14
-  )
+  /// 벌금 단위 라벨
+  private lazy var fineAmountCountLabel = UILabel().then {
+    $0.text = "원"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
   
-  private lazy var maxFineLabel = createLabel(
-    title: "최대 99,999원",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12
-  )
+  /// 최대 벌금 라벨
+  private lazy var maxFineLabel = UILabel().then {
+    $0.text = "최대 99,999원"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
   
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
@@ -111,6 +131,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// layout 설정
   func setupLayout(){
     [
       studymethodLabel,
@@ -136,6 +157,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     }
   }
   
+  /// UI 설정
   func makeUI(){
     studymethodLabel.snp.makeConstraints {
       $0.top.equalToSuperview()
@@ -243,131 +265,117 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     setupFineUI(true)
   }
   
+  /// 바인딩
   func setupBinding(){
+    /// 벌금 선택 여부에 따라 UI 변경
     viewModel.isFineButton
-      .asDriver()
+      .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] isFine in
         guard let self = self else { return }
 //        updateFineButtonUI()
         setupFineUI(!isFine)
       })
       .disposed(by: disposeBag)
-    
-    fineTypesTextField.rx.text.orEmpty
-      .bind(to: viewModel.fineTypeValue)
-      .disposed(by: disposeBag)
-    
-    fineAmountTextField.rx.text.orEmpty
-      .compactMap { Int($0) }
-      .bind(to: viewModel.fineAmountValue)
-      .disposed(by: disposeBag)
   }
   
+  /// 수정 시 UI 설정
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
-    [
-      contactButton,
-      untactButton,
-      mixmeetButton
-    ].forEach {
-      if $0.titleLabel?.text == convertStudyWay(wayToStudy: postValue.studyWay) {
+   
+    [ contactButton, untactButton, mixmeetButton]
+      .forEach {
+        if $0.titleLabel?.text == Utils.convertStudyWay(wayToStudy: postValue.studyWay) {
         updateButtonSelection(selectedButton: $0)
       }
     }
     
     if postValue.penaltyWay != "" {
       viewModel.isFineButton.accept(true)
-      
       fineTypesTextField.text = postValue.penaltyWay
       fineAmountTextField.text = String(postValue.penalty)
     } else {
-      viewModel.isNoFineButton.accept(true)
+      viewModel.isFineButton.accept(false)
     }
-    updateFineButtonUI()
-
   }
   
+  /// 버튼 Actions 설정
   func setupActions() {
-    let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
-      (mixmeetButton, viewModel.isMixButton),
-      (contactButton, viewModel.isContactButton),
-      (untactButton, viewModel.isUntactButton)
-    ]
+    /// 스터디 방식 버튼 처리
+    let mixBtnTap = mixmeetButton.rx.tap.map { self.mixmeetButton }
+    let contactBtnTap = contactButton.rx.tap.map { self.contactButton }
+    let untactBtnTap = untactButton.rx.tap.map { self.untactButton }
     
-    buttonsWithStates.forEach { button, state in
-      button.rx.tap
-        .subscribe(onNext: { [weak self] in
-          guard let self = self else { return }
-          self.updateButtonSelection(selectedButton: button)
-        })
-        .disposed(by: disposeBag)
-    }
     
-    let fineButtonsWithStates: [(UIButton, Bool)] = [
-      (haveFineButton, viewModel.isFineButton.value),
-      (noFineButton, viewModel.isNoFineButton.value)
-    ]
+    /// 방출된 스트림 바인딩
+    Observable.merge(mixBtnTap, contactBtnTap, untactBtnTap)
+      .bind(to: viewModel.selectedStudyWayValue)
+      .disposed(by: disposeBag)
+
+    /// 스터디 방식 바인딩
+    viewModel.selectedStudyWayValue
+      .compactMap({ $0 })
+      .subscribe(onNext: { [weak self] btn in
+        self?.updateButtonColors(with: btn)
+        self?.updateButtonSelection(selectedButton: btn)
+        self?.updateButtonSelection(selectedButton: btn)
+      })
+      .disposed(by: disposeBag)
+  
     
-    fineButtonsWithStates.forEach { button, isSelected in
-      button.rx.tap
-        .asDriver()
-        .drive(onNext: { [weak self] in
-          guard let self = self else { return }
-          viewModel.isFineButton.accept(button == haveFineButton)
-          viewModel.isNoFineButton.accept(button == noFineButton)
-          updateFineButtonUI()
-        })
-        .disposed(by: disposeBag)
-    }
+    /// 벌금 선택 버튼 처리
+    Observable.merge(
+      haveFineButton.rx.tap.map { true },
+      noFineButton.rx.tap.map { false }
+    )
+    .bind(to: viewModel.isFineButton)
+    .disposed(by: disposeBag)
+    
+    /// 벌금 버튼 UI 업데이트 반영
+    viewModel.isFineButton
+      .withUnretained(self)
+      .subscribe(onNext: { (view, selected) in
+        view.haveFineButton.setImage(UIImage(named: selected ? "ButtonChecked" : "ButtonEmpty"),
+                                     for: .normal)
+        view.noFineButton.setImage(UIImage(named: selected ? "ButtonEmpty" : "ButtonChecked"),
+                                   for: .normal)
+      })
+      .disposed(by: disposeBag)
   }
   
-  func updateFineButtonUI() {
-    let buttonsWithStates: [(UIButton, Bool)] = [
-      (haveFineButton, viewModel.isFineButton.value),
-      (noFineButton, viewModel.isNoFineButton.value)
-    ]
-    
-    buttonsWithStates.forEach { button, isSelected in
-      let seletedImage = UIImage(named: isSelected ? "ButtonChecked" : "ButtonEmpty")
-      button.setImage(seletedImage, for: .normal)
-    }
-  }
   
-  func updateButtonColors() {
-    let buttonsWithStates: [(UIButton, Bool)] = [
-      (mixmeetButton, viewModel.isMixButton.value),
-      (contactButton, viewModel.isContactButton.value),
-      (untactButton, viewModel.isUntactButton.value)
-    ]
+  /// 버튼 색상 업데이트
+  func updateButtonColors(with selectedBtn: UIButton) {
+    /// 선택한 버튼 색상 업데이트
+    let buttons: [UIButton] = [mixmeetButton, contactButton, untactButton]
     
-    buttonsWithStates.forEach { button, isSelected in
+    buttons.forEach { button in
+      let isSelected = button == selectedBtn
+      
       button.layer.borderColor = isSelected ? UIColor.o40.cgColor : UIColor.bg50.cgColor
       button.setTitleColor(isSelected ? .o50 : .bg70, for: .normal)
     }
   }
   
+
+  /// 선택된 스터디방식에 따른 값 반환
   func studyWayButtonTapped(_ button: UIButton) -> String {
     switch button {
-    case contactButton:
-      return "CONTACT"
-    case untactButton:
-      return "UNTACT"
-    default:
-      return "MIX"
+    case contactButton:    return "CONTACT"
+    case untactButton:     return "UNTACT"
+    default:               return "MIX"
     }
   }
 
+  /// 버튼이 선택되었을 때 데이터 업데이트
   func updateButtonSelection(selectedButton: UIButton) {
-    viewModel.isMixButton.accept(selectedButton == mixmeetButton)
-    viewModel.isContactButton.accept(selectedButton == contactButton)
-    viewModel.isUntactButton.accept(selectedButton == untactButton)
-    
     let studyWay = studyWayButtonTapped(selectedButton)
-    viewModel.seletedStudyWayValue.accept(studyWay)
     
-    updateButtonColors()
+    var updatedData = viewModel.createStudyData.value
+    updatedData?.studyWay = studyWay
+    viewModel.createStudyData.accept(updatedData)
   }
   
+  /// Delegate 설정
   func setupDelegate(){
     fineTypesTextField.delegate = self
     fineAmountTextField.delegate = self
@@ -377,6 +385,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     didBeginEditing(view: textField)
   }
   
+  /// 벌금의 최대 금액 제한
   func textFieldDidEndEditing(_ textField: UITextField) {
     if textField == fineAmountTextField {
       if let number = Int(fineAmountTextField.text ?? "0"), number >= 99999 {
@@ -386,13 +395,24 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     didEndEditing(view: textField)
   }
   
-  func createFineButton() -> UIButton {
-    let button = UIButton()
-    button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.tintColor = UIColor(hexCode: "#FF5530")
-    return button
+  /// TextField 별 입력
+  func textFieldDidChangeSelection(_ textField: UITextField) {
+    guard let content = textField.text,
+          var updatedData = viewModel.createStudyData.value else { return }
+    
+    /// 벌금 금액 업데이트
+    if textField == fineAmountTextField {
+      updatedData.penalty = Int(content) ?? 0
+    } else if textField == fineTypesTextField {
+      /// 벌금 설명 업데이트
+      updatedData.penaltyWay = content
+    }
+    
+    viewModel.createStudyData.accept(updatedData)
   }
+
   
+  /// 벌금 있을 때 UI 설정
   func setupFineUI(_ hidden: Bool){
     [
       fineTypeLabel,
@@ -407,6 +427,4 @@ final class StudyWayView: UIView, UITextFieldDelegate {
   }
 }
 
-extension StudyWayView: CreateUIprotocol{}
 extension StudyWayView: EditableViewProtocol{}
-extension StudyWayView: ConvertStudyWay {}

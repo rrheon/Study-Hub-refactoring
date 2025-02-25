@@ -56,7 +56,7 @@ final class SimilarStudyComponent: UIView {
     setupBinding()
     setupActions()
     
-    similarCollectionView.showsVerticalScrollIndicator = false
+    similarCollectionView.showsHorizontalScrollIndicator = false
   }
   
   required init?(coder: NSCoder) {

@@ -14,7 +14,7 @@ class StudyPostManager: StudyHubCommonNetworking {
   static let shared = StudyPostManager()
   
   let provider = MoyaProvider<StudyPostNetworking>()
-#warning("네트워킹 전 토큰 확인하고 해야하는 것들 체크해야함 -> 애초에 함수에서 토큰을 메게변수로 받으면 안되나?")
+  
   /// 모든 스터디 게시글 조회하기
   /// - Parameters:
   ///   - hot: true - 인기순, false - 인기순 x
@@ -70,9 +70,20 @@ class StudyPostManager: StudyHubCommonNetworking {
   /// - Parameter data: 스터디 관련 데이터
   func createNewPost(with data: CreateStudyRequest){
     provider.request(.createNewPost(newData: data)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: CreateStudyRequest.self) { decodedData in
-        print(decodedData)
+      switch result {
+      case .success(let response):
+        print(response.description)
+        print(response.response)
+        /// 게시 후 postID 반환해야함
+        let strData = String(data: response.data, encoding: .utf8)
+        print(strData)
+        
+      case .failure(let err):
+        print(err)
       }
+//      self.commonDecodeNetworkResponse(with: result, decode: StudyDTO.self) { decodedData in
+//        print(decodedData)
+//      }
     }
   }
   

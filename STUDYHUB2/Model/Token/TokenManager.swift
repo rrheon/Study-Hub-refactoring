@@ -22,12 +22,6 @@ final class TokenManager {
   private let refreshTokenAccount = "refreshToken"
   private let service = Bundle.main.bundleIdentifier
   
-//  /// 비동기적으로 AccessToken 갱신
-//  func refreshAccessTokenIfNeeded() async {
-//    guard let refreshToken = loadRefreshToken() else { return }
-//    _ = try? await UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) 
-//  }
-  
   private lazy var accessTokenQuery: [CFString: Any]? = {
     guard let service = self.service else { return nil }
     return [

@@ -4,40 +4,49 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
+
+/// 관련 학과선택 View
 final class SelectMajorView: UIView {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CreateStudyViewModel
   
-  private lazy var selectMajorDividerLine = createDividerLine(height: 8)
+  /// 구분선
+  private lazy var selectMajorDividerLine = StudyHubUI.createDividerLine(height: 8)
 
-  private lazy var selectMajorLabel = createLabel(
-    title: "관련 학과 선택",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  
+  /// 관련 학과 선택 라벨
+  private lazy var selectMajorLabel = UILabel().then {
+    $0.text = "관련 학과 선택"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+ /// 선택된 학과 라벨
   private lazy var selectedMajorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
     label.textColor = .bg80
     label.font = UIFont(name: "Pretendard-Medium", size: 14)
+    label.clipsToBounds = true
+    label.layer.cornerRadius = 15
+    label.backgroundColor = .bg30
+    label.textAlignment = .left
+    label.adjustsFontSizeToFitWidth = true
     return label
   }()
   
-  private lazy var cancelButton: UIButton = {
-    let button = UIButton()
-    let img = UIImage(named: "DeleteImg")
-    button.setImage(img, for: .normal)
-    return button
-  }()
+  /// 학과 선택 취소 버튼
+  private lazy var cancelButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "DeleteImg"), for: .normal)
+  }
   
-  private lazy var selectMajorButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-    button.tintColor = .black
-    return button
-  }()
+  /// 학과 선택 화면으로 이동 버튼
+  private lazy var selectMajorButton: UIButton = UIButton().then {
+   $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+   $0.tintColor = .black
+  }
     
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
@@ -54,19 +63,16 @@ final class SelectMajorView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// layout 설정
   func setupLayout(){
-    [
-      selectMajorDividerLine,
-      selectMajorLabel,
-      selectMajorButton
-    ].forEach {
-      self.addSubview($0)
-    }
+    [ selectMajorDividerLine, selectMajorLabel, selectMajorButton]
+      .forEach { self.addSubview($0) }
     
     selectedMajorLabel.isHidden = true
     cancelButton.isHidden = true
   }
   
+  /// UI 설정
   func makeUI(){
     selectMajorDividerLine.snp.makeConstraints {
       $0.top.equalToSuperview()
@@ -84,19 +90,25 @@ final class SelectMajorView: UIView {
     }
   }
   
+  /// 스터디 수정 시 UI 설정
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
-    let major = convertMajor(postValue.major, toEnglish: false)
+    let major = Utils.convertMajor(postValue.major, toEnglish: false)
     viewModel.selectedMajor.accept(major)
   }
   
+  /// Actions 설정
   func setupActions(){
+    /// 학과선택 버튼 -> 학과선택 화면으로 이동
     selectMajorButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.viewModel.isMoveToSeletMajor.accept(true)
+      .withUnretained(self)
+      .subscribe(onNext: { (view ,_) in
+        let major = view.viewModel.selectedMajor
+        view.viewModel.steps.accept(AppStep.selectMajorScreenIsRequired(seletedMajor: major))
       })
       .disposed(by: disposeBag)
     
+    /// 학과선택 취소버튼
     cancelButton.rx.tap
       .subscribe(onNext: { [weak self] in
         self?.cancelButtonTapped()
@@ -104,26 +116,31 @@ final class SelectMajorView: UIView {
       .disposed(by: disposeBag)
   }
   
+  /// 바인딩 설정
   func setupBinding(){
+    /// 선택된 학과
     viewModel.selectedMajor
-      .subscribe(onNext: { [weak self] in
-        guard let major = $0 else { return }
-        self?.addDepartmentButton(major)
+      .withUnretained(self)
+      .subscribe(onNext: { (vc, major) in
+        guard let _major = major else { return }
+        let convertedMajor = Utils.convertMajor(_major, toEnglish: true)
+        
+        /// 스터디 데이터에 넣기
+        var updatedData = vc.viewModel.createStudyData.value
+        updatedData?.major = convertedMajor ?? ""
+        vc.viewModel.createStudyData.accept(updatedData)
+        
+        /// 학과 UI 추가
+        vc.addDepartmentButton(_major)
       })
       .disposed(by: disposeBag)
   }
   
+  /// 학과 추가
   func addDepartmentButton(_ major: String) {
     selectedMajorLabel.text = "  \(major)  "
-    selectedMajorLabel.clipsToBounds = true
-    selectedMajorLabel.layer.cornerRadius = 15
-    selectedMajorLabel.backgroundColor = .bg30
-    selectedMajorLabel.textAlignment = .left
-    selectedMajorLabel.adjustsFontSizeToFitWidth = true
-    
+
     self.addSubview(selectedMajorLabel)
-    self.addSubview(cancelButton)
-    
     selectedMajorLabel.isHidden = false
     selectedMajorLabel.snp.makeConstraints { make in
       make.top.equalTo(selectMajorLabel.snp.bottom).offset(20)
@@ -131,6 +148,7 @@ final class SelectMajorView: UIView {
       make.height.equalTo(30)
     }
     
+    self.addSubview(cancelButton)
     cancelButton.isHidden = false
     cancelButton.snp.makeConstraints { make in
       make.centerY.equalTo(selectedMajorLabel.snp.centerY)
@@ -140,6 +158,7 @@ final class SelectMajorView: UIView {
     self.layoutIfNeeded()
   }
   
+  /// 학과 취소 버튼
   @objc func cancelButtonTapped(){
     selectedMajorLabel.isHidden = true
     cancelButton.isHidden = true
@@ -150,5 +169,3 @@ final class SelectMajorView: UIView {
   }
 }
 
-extension SelectMajorView: CreateUIprotocol {}
-extension SelectMajorView: ConvertMajor {}

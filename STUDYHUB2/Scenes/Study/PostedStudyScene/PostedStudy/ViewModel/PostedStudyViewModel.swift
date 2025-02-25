@@ -12,24 +12,6 @@ enum ParticipateAction {
   case goToParticipateVC
 }
 
-protocol PostedStudyViewData: CommonViewData {
-  var postDetailData: PostDetailData { get }
-}
-
-struct PostedStudyData: PostedStudyViewData {
-  var isUserLogin: Bool
-  var postDetailData: PostDetailData
-  var isNeedFechData: PublishRelay<Bool>?
- 
-  init(isUserLogin: Bool,
-       postDetailData: PostDetailData,
-       isNeedFechData: PublishRelay<Bool>? = nil
-  ) {
-    self.isUserLogin = isUserLogin
-    self.postDetailData = postDetailData
-    self.isNeedFechData = isNeedFechData
-  }
-}
 
 /// 스터디 상세 ViewModel
 class PostedStudyViewModel: Stepper  {

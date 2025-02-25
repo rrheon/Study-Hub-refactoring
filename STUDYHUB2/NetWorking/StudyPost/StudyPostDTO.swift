@@ -18,21 +18,21 @@ struct SearchAllPostDTO: Codable {
 
 /// 게시글 DTO
 struct StudyDTO: Codable {
-  var chatUrl,content, gender, major,studyEndDate,studyStartDate, studyWay, title: String
-  var close: Bool
-  var penalty, studyPerson: Int
-  let penaltyWay: String?
+  var chatUrl,content, gender, major, studyEndDate, studyStartDate, studyWay, title: String?
+  var close: Bool?
+  var penalty, studyPerson: Int?
+  var penaltyWay: String?
 }
 
 /// 게시글 수정 DTO
 struct UpdateStudyDTO: Codable {
-  let postId: Int // 수정 요청에만 필요한 속성
-  let studyRequest: StudyDTO
+  var postId: Int // 수정 요청에만 필요한 속성
+  var studyRequest: StudyDTO
 }
 
 /// 게시글 생성 DTO
 struct CreateStudyDTO: Codable {
-  let studyRequest: StudyDTO
+  var studyRequest: StudyDTO
 }
 
 

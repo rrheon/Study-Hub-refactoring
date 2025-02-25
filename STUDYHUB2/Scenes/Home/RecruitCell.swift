@@ -7,7 +7,7 @@ import SnapKit
 /// 새로 모집중인 스터디 셀
 final class RecruitPostCell: UICollectionViewCell {
   
-  var model: Content? { didSet { bind() } }
+  var model: PostData? { didSet { bind() } }
   var checkBookmarked: Bool?
   var loginStatus: Bool? = false
   
@@ -79,10 +79,11 @@ final class RecruitPostCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    setViewShadow(backView: self)
     addSubviews()
     
     configure()
+    
+    setViewShadow(backView: self)
   }
   
   @available(*, unavailable)
@@ -147,10 +148,10 @@ final class RecruitPostCell: UICollectionViewCell {
     }
     
     backgroundColor = .white
-    
-    self.layer.borderWidth = 0.1
-    self.layer.borderColor = UIColor.cellShadow.cgColor
-    self.layer.cornerRadius = 10
+//    
+//    self.layer.borderWidth = 0.1
+//    self.layer.borderColor = UIColor.cellShadow.cgColor
+//    self.layer.cornerRadius = 20
   }
   
   // MARK: - 셀 재사용 관련

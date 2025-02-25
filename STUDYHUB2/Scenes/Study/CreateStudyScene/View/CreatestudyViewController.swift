@@ -1,25 +1,40 @@
+
 import UIKit
 
 import SnapKit
 import RxSwift
 import RxCocoa
 
+/// 스터디 생성 VC
 final class CreateStudyViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CreateStudyViewModel
 
+  /// 채팅방 링크, 스터디 제목, 스터디 소개 View
   private var studyInfoView: StudyInfoView
+  
+  /// 관련학과 선택 View
   private var seletMajorView: SelectMajorView
+  
+  /// 스터디 팀원 View
   private var studyMemeberView: StudyMemberView
+  
+  /// 스터디 방식 View
   private var studyWayView: StudyWayView
+  
+  /// 스터디 기간 View
   private var studyPeroioudView: StudyPeriodView
   
-  private lazy var pageStackView = createStackView(axis: .vertical, spacing: 10)
+  /// 전체 StackView
+  private lazy var pageStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   
   let scrollView = UIScrollView()
   
-  init(postedData: BehaviorRelay<PostDetailData?>? = nil, mode: PostActionList) {
-    self.viewModel = CreateStudyViewModel(postedData, mode: mode)
+  init(with viewModel: CreateStudyViewModel) {
+    self.viewModel = viewModel
+    
     self.studyInfoView = StudyInfoView(viewModel)
     self.seletMajorView = SelectMajorView(viewModel)
     self.studyMemeberView = StudyMemberView(viewModel)
@@ -47,19 +62,14 @@ final class CreateStudyViewController: UIViewController {
     makeUI()
     
     setupBinding()
-  }
+  } // viewDidLoad
+  
   
   // MARK: - setUpLayout
+  
   func setUpLayout(){
-    [
-      studyInfoView,
-      seletMajorView,
-      studyMemeberView,
-      studyWayView,
-      studyPeroioudView
-    ].forEach {
-      pageStackView.addArrangedSubview($0)
-    }
+    [ studyInfoView, seletMajorView, studyMemeberView, studyWayView, studyPeroioudView]
+      .forEach { pageStackView.addArrangedSubview($0) }
     
     scrollView.addSubview(pageStackView)
     
@@ -109,30 +119,24 @@ final class CreateStudyViewController: UIViewController {
     }
   }
   
+  /// 네비게이션 바 세팅
   func setupNavigationbar() {
     let navigationTitle = viewModel.postedData.value == nil ? "스터디 만들기" : "수정하기"
     leftButtonSetting()
     settingNavigationTitle(title: navigationTitle)
+    self.navigationController?.navigationBar.isTranslucent = false
   }
   
-  func leftButtonTapped(_ sender: UIBarButtonItem) {
-    guard let _ = viewModel.postedData.value else {
-      return
-    }
-    
-//    viewModel.comparePostData() ? super.leftButtonTapped(sender) : backButtonTapped()
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    self.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+#warning("수정하거나 작성하다가 나가면 경고창")
   }
-
   
   // MARK: - setupBinding
   
+  /// 바인딩
   func setupBinding() {
-    viewModel.isMoveToSeletMajor
-      .subscribe(onNext: { [weak self] _ in
-        self?.departmentArrowButtonTapped()
-      })
-      .disposed(by: disposeBag)
-    
+    /// 학과가 선택된 경우
     viewModel.selectedMajor
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self]  in
@@ -144,6 +148,7 @@ final class CreateStudyViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
+    /// 벌금 여부에 따른 UI 설정
     viewModel.isFineButton
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self]  in
@@ -154,26 +159,16 @@ final class CreateStudyViewController: UIViewController {
         }
       })
       .disposed(by: disposeBag)
-    
-    [
-      viewModel.isStartDateButton,
-      viewModel.isEndDateButton
-    ].forEach {
-      $0.asDriver(onErrorJustReturn: false)
-        .drive(onNext: { [weak self] in
-          if $0 {
-            self?.calendarButtonTapped()
-          }
-        })
-        .disposed(by: disposeBag)
-    }
-    
+
+  
+    /// 스터디가 생성되었을 때
     viewModel.isSuccessCreateStudy
       .subscribe(onNext: { [weak self] _ in
         self?.navigationController?.popViewController(animated: false)
       })
       .disposed(by: disposeBag)
     
+    /// 스터디가 수정되었을 때
     viewModel.isSuccessModifyStudy
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] _ in
@@ -182,25 +177,6 @@ final class CreateStudyViewController: UIViewController {
         self.showToast(message: "글이 수정됐어요.", alertCheck: true)
       })
       .disposed(by: disposeBag)
-  }
-
-  @objc func departmentArrowButtonTapped() {
-    let departmentselectVC = SeletMajorViewController(seletedMajor: viewModel.selectedMajor)
-    
-//    if let navigationController = self.navigationController {
-//      navigationController.pushViewController(departmentselectVC, animated: true)
-//    } else {
-//      let navigationController = UINavigationController(rootViewController: departmentselectVC)
-//      navigationController.modalPresentationStyle = .fullScreen
-//      present(navigationController, animated: true, completion: nil)
-//    }
-  }
-  
-  @objc func calendarButtonTapped() {
-    let calendarVC = CalendarViewController(viewModel: viewModel)
-
-    showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
-    self.present(calendarVC, animated: true, completion: nil)
   }
   
   func backButtonTapped(){
@@ -223,5 +199,3 @@ final class CreateStudyViewController: UIViewController {
   }
 }
 
-extension CreateStudyViewController: ShowBottomSheet{}
-extension CreateStudyViewController: CreateUIprotocol {}

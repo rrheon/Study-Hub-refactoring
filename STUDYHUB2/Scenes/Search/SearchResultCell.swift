@@ -15,7 +15,7 @@ import Then
 /// 스터디 검색결과 Cell
 final class SearchResultCell: UICollectionViewCell {
     
-  var cellData: Content? { didSet { bind() } }
+  var cellData: PostData? { didSet { bind() } }
   
   var checkBookmarked: Bool?
   var loginStatus: Bool = false
@@ -255,10 +255,6 @@ final class SearchResultCell: UICollectionViewCell {
     }
     
     backgroundColor = .white
-    
-    self.layer.borderWidth = 0.1
-    self.layer.borderColor = UIColor.cellShadow.cgColor
-    self.layer.cornerRadius = 10
   }
   
   

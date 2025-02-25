@@ -186,10 +186,10 @@ final class MyPostViewController: CommonNavi {
     writePostButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        moveToOtherVCWithSameNavi(
-          vc: CreateStudyViewController(postedData: viewModel.getEmptyPostData(), mode: .POST),
-          hideTabbar: true
-        )
+//        moveToOtherVCWithSameNavi(
+//          vc: CreateStudyViewController(postedData: viewModel.getEmptyPostData() ),
+//          hideTabbar: true
+//        )
       })
       .disposed(by: disposeBag)
     

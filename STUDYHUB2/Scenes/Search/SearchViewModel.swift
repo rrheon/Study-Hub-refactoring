@@ -20,7 +20,7 @@ final class SearchViewModel: Stepper {
   var recommendList: PublishRelay<[String]> = PublishRelay<[String]>()
   
   /// 검색된 스터디 리스트
-  var postDatas: PublishRelay<[Content?]> = PublishRelay<[Content?]>()
+  var postDatas: PublishRelay<[PostData?]> = PublishRelay<[PostData?]>()
 
   init() {
     

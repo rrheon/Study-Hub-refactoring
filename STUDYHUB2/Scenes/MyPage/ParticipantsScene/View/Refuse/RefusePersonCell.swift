@@ -58,12 +58,13 @@ final class RefusePersonCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    setViewShadow(backView: self)
     
     self.backgroundColor = .white
     
     setupLayout()
     makeUI()
+    setViewShadow(backView: self)
+
   }
   
   @available(*, unavailable)

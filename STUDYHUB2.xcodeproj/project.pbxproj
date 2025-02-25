@@ -57,7 +57,6 @@
 		EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */; };
 		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
 		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
-		EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */; };
 		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
 		EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */; };
 		EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908302C81A002006B28A7 /* SelectMajorView.swift */; };
@@ -65,7 +64,7 @@
 		EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908342C81A3EE006B28A7 /* StudyWayView.swift */; };
 		EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */; };
 		EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */; };
-		EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */; };
+		EE29083D2C86F407006B28A7 /* SelectMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29083C2C86F407006B28A7 /* SelectMajorViewModel.swift */; };
 		EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */; };
 		EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
@@ -171,7 +170,7 @@
 		EEDDDD132C6B4AC200FA347D /* CreateUIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD122C6B4AC200FA347D /* CreateUIProtocol.swift */; };
 		EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */; };
 		EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */; };
-		EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Convert.swift */; };
+		EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Utils.swift */; };
 		EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */; };
 		EEDDDD292C7313EE00FA347D /* PopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD282C7313EE00FA347D /* PopupViewModel.swift */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ParticipateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */; };
@@ -253,7 +252,6 @@
 		EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
 		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
-		EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViewProtocol.swift; sourceTree = "<group>"; };
 		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
 		EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyInfoView.swift; sourceTree = "<group>"; };
 		EE2908302C81A002006B28A7 /* SelectMajorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMajorView.swift; sourceTree = "<group>"; };
@@ -261,7 +259,7 @@
 		EE2908342C81A3EE006B28A7 /* StudyWayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyWayView.swift; sourceTree = "<group>"; };
 		EE2908362C81A4BD006B28A7 /* StudyPeriodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyPeriodView.swift; sourceTree = "<group>"; };
 		EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextProtocol.swift; sourceTree = "<group>"; };
-		EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeletMajorViewModel.swift; sourceTree = "<group>"; };
+		EE29083C2C86F407006B28A7 /* SelectMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMajorViewModel.swift; sourceTree = "<group>"; };
 		EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementDate.swift; sourceTree = "<group>"; };
 		EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarComponent.swift; sourceTree = "<group>"; };
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
@@ -376,7 +374,7 @@
 		EEDDDD122C6B4AC200FA347D /* CreateUIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUIProtocol.swift; sourceTree = "<group>"; };
 		EEDDDD142C6B4D8800FA347D /* WriterComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriterComponent.swift; sourceTree = "<group>"; };
 		EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentComponent.swift; sourceTree = "<group>"; };
-		EEDDDD1A2C6CA05900FA347D /* Convert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convert.swift; sourceTree = "<group>"; };
+		EEDDDD1A2C6CA05900FA347D /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowBottomSheet.swift; sourceTree = "<group>"; };
 		EEDDDD282C7313EE00FA347D /* PopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewModel.swift; sourceTree = "<group>"; };
 		EEFD5D1E2B5E40C900D1CE00 /* ParticipateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateVC.swift; sourceTree = "<group>"; };
@@ -447,14 +445,13 @@
 			children = (
 				EEDDDD122C6B4AC200FA347D /* CreateUIProtocol.swift */,
 				EE2908382C86DFBC006B28A7 /* EditTextProtocol.swift */,
-				EEDDDD1A2C6CA05900FA347D /* Convert.swift */,
+				EEDDDD1A2C6CA05900FA347D /* Utils.swift */,
 				EED00B772C534C68000D2E23 /* MajorLoader.swift */,
 				EEC5FF842C9C108400896FEB /* Logout.swift */,
 				EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */,
 				EEC5FF742C9960B600896FEB /* ManagementImage.swift */,
 				EE2908052C7600D9006B28A7 /* ShowToastPopup.swift */,
 				EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */,
-				EE2908232C7ADE30006B28A7 /* CommonViewProtocol.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -744,7 +741,7 @@
 		EE29083B2C86F3E1006B28A7 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				EE29083C2C86F407006B28A7 /* SeletMajorViewModel.swift */,
+				EE29083C2C86F407006B28A7 /* SelectMajorViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1948,7 +1945,7 @@
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
 				EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */,
-				EEDDDD1B2C6CA05900FA347D /* Convert.swift in Sources */,
+				EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */,
@@ -2039,7 +2036,7 @@
 				EE5B936D2D4A2589006DC65D /* CommentManager.swift in Sources */,
 				EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */,
 				EEB07A552D5B0F010009246D /* ResultSearchViewController.swift in Sources */,
-				EE29083D2C86F407006B28A7 /* SeletMajorViewModel.swift in Sources */,
+				EE29083D2C86F407006B28A7 /* SelectMajorViewModel.swift in Sources */,
 				EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */,
 				EEC5FFC12CA5220E00896FEB /* MyPostViewModel.swift in Sources */,
 				EE1E44112B17222200223436 /* MyPostCell.swift in Sources */,
@@ -2078,7 +2075,6 @@
 				EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */,
 				EE5B934D2D48BC99006DC65D /* ToStudyHubNetworking.swift in Sources */,
 				EE5B93442D48B611006DC65D /* BookmarkDTO.swift in Sources */,
-				EE2908242C7ADE30006B28A7 /* CommonViewProtocol.swift in Sources */,
 				EEC5FFAF2CA29EA500896FEB /* EditPasswordViewModel.swift in Sources */,
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompletedSignupViewController.swift in Sources */,

@@ -66,8 +66,8 @@ final class HomeViewController: UIViewController {
     return view
   }()
   
-  private lazy var newStudyTopStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var newStudyTotalStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var newStudyTopStackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 10)
+  private lazy var newStudyTotalStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   
   // MARK: - 마감이 입박한 스터디
   
@@ -93,8 +93,8 @@ final class HomeViewController: UIViewController {
     return view
   }()
   
-  private lazy var deadLineStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var totalStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var deadLineStackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 10)
+  private lazy var totalStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
   
   
@@ -111,16 +111,16 @@ final class HomeViewController: UIViewController {
     view.backgroundColor = .black
 
 
-    Task {
-      do {
-        async let newPostData: () = viewModel.fetchNewPostDatas()
-        async let deadLinePostData: () = viewModel.fetchDeadLinePostDatas()
-      
-        await newPostData
-        await deadLinePostData
-      }
-    }
-    
+//    Task {
+//      do {
+//        async let newPostData: () = viewModel.fetchNewPostDatas()
+//        async let deadLinePostData: () = viewModel.fetchDeadLinePostDatas()
+//      
+//        await newPostData
+//        await deadLinePostData
+//      }
+//    }
+//    
     setupBindings()
     setupCollectionView()
     setupActions()
@@ -141,25 +141,20 @@ final class HomeViewController: UIViewController {
     scrollView.addSubview(mainImageView)
     scrollView.addSubview(detailsButton)
 
+    /// 새로운 스터디
     [ newStudyLabel, allButton ]
       .forEach { newStudyTopStackView.addArrangedSubview($0) }
-        
+    
     [ newStudyTopStackView, UIView(), recrutingCollectionView ]
       .forEach { newStudyTotalStackView.addArrangedSubview($0) }
     
-    
+    /// 마감이 임박한 스터디의 라벨
     [deadLineImg,deadLineLabel, UIView()]
       .forEach { deadLineStackView.addArrangedSubview($0) }
     
-    [
-      UIView(),
-      searchBar,
-      newStudyTotalStackView,
-      deadLineStackView,
-      deadLineCollectionView
-    ].forEach {
-      totalStackView.addArrangedSubview($0)
-    }
+    /// vc전체 UI
+    [ UIView(), searchBar, newStudyTotalStackView, deadLineStackView, deadLineCollectionView]
+      .forEach { totalStackView.addArrangedSubview($0) }
     
     scrollView.addSubview(totalStackView)
     
@@ -240,8 +235,6 @@ final class HomeViewController: UIViewController {
   func setupNavigationbar(){
     leftButtonSetting(imgName: "LogoImage", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
-//    settingNavigationbar(false)
-    self.navigationController?.navigationBar.isTranslucent = false
   }
   
   /// collectionView 설정
@@ -263,6 +256,9 @@ final class HomeViewController: UIViewController {
       DeadLineCell.self,
       forCellWithReuseIdentifier: DeadLineCell.cellID
     )
+    
+    recrutingCollectionView.showsHorizontalScrollIndicator = false
+    
   }
   
   /// 바인딩
@@ -308,7 +304,7 @@ final class HomeViewController: UIViewController {
   /// Actions 설정
   func setupActions(){
     /// 새로 모집중인 스터디 셀 터치 시
-    recrutingCollectionView.rx.modelSelected(Content.self)
+    recrutingCollectionView.rx.modelSelected(PostData.self)
         .throttle(.seconds(1), scheduler: MainScheduler.instance)
         .withUnretained(self)
         .subscribe(onNext: { (vc, item) in
@@ -324,7 +320,7 @@ final class HomeViewController: UIViewController {
 
     /// 마감이 임박한 스터디 셀 터치 시
 
-    deadLineCollectionView.rx.modelSelected(Content.self)
+    deadLineCollectionView.rx.modelSelected(PostData.self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .withUnretained(self)
       .subscribe(onNext: { (vc, item) in
@@ -355,17 +351,6 @@ final class HomeViewController: UIViewController {
       .disposed(by: disposeBag)
   }
   
-  func moveToPostedStudyVC(postData: PostDetailData){
-    let postData = PostedStudyData(
-      isUserLogin: viewModel.checkLoginStatus.value,
-      postDetailData: postData,
-      isNeedFechData: viewModel.isNeedFetchDatas
-    )
-//    let postedStudyVC = PostedStudyViewController(postData)
-//    postedStudyVC.hidesBottomBarWhenPushed = true
-//    navigationController?.pushViewController(postedStudyVC, animated: true)
-  }
-  
   // MARK: -  북마크 버튼 탭
   
   /// 네비게이션 바 오른쪽 버튼 탭 - 북마크 화면으로 이동
@@ -394,6 +379,7 @@ extension HomeViewController: UISearchBarDelegate {
   }
 }
 
+/// 스터디 셀 크기 - 최근 등록된 스터디, 마감이 임박한 스터디
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
@@ -407,5 +393,3 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     }
   }
 }
-
-extension HomeViewController: CreateUIprotocol {}

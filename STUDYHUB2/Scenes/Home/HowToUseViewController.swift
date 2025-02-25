@@ -145,9 +145,9 @@ final class HowToUseViewController: UIViewController, Stepper {
   }
   
   func moveToCreateStudyVC(){
-    let createStudyVC = CreateStudyViewController(mode: .POST)
-    createStudyVC.hidesBottomBarWhenPushed = true
-    self.navigationController?.pushViewController(createStudyVC, animated: true)
+//    let createStudyVC = CreateStudyViewController()
+//    createStudyVC.hidesBottomBarWhenPushed = true
+//    self.navigationController?.pushViewController(createStudyVC, animated: true)
   }
  
   func showPopupView(){

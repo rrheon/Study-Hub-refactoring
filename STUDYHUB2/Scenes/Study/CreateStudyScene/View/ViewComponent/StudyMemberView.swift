@@ -4,70 +4,83 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
+/// 스터디 팀원 View
 final class StudyMemberView: UIView, UITextFieldDelegate {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CreateStudyViewModel
   
-  private lazy var studyMemeberTopLine = createDividerLine(height: 8)
-  private lazy var studymemberLabel = createLabel(
-    title: "스터디 팀원",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  private lazy var studyMemeberUnderLine = createDividerLine(height: 1)
+  /// 스터디 팀원 구분선
+  private lazy var studyMemeberTopLine = StudyHubUI.createDividerLine(height: 8)
+  
+  /// 스터디 팀원 제목 라벨
+  private lazy var studymemberLabel = UILabel().then {
+    $0.text = "스터디 팀원"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+  
+  /// 스터디 팀원 구분선
+  private lazy var studyMemeberUnderLine = StudyHubUI.createDividerLine(height: 1)
   
   // MARK: - 인원
-  private lazy var studymemberTitleLabel = createLabel(
-    title: "인원",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
   
-  private lazy var studyMemberDescibeLabel = createLabel(
-    title: "본인 제외 최대 50명",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12
-  )
-    
-  private lazy var studymemberTextField = createTextField(title: "스터디 인원을 알려주세요")
   
-  private lazy var countLabel = createLabel(
-    title: "명",
-    textColor: .bg80,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 14
-  )
+  /// 스터디 인원 제목 라벨
+  private lazy var studymemberTitleLabel = UILabel().then {
+    $0.text = "인원"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var countAlert = createLabel(
-    title: "1명부터 가능해요(본인 제외)",
-    textColor: .r50,
-    fontType: "Pretendard",
-    fontSize: 12
-  )
-  
+  /// 스터디 인원 설명 라벨
+  private lazy var studyMemberDescibeLabel = UILabel().then {
+    $0.text = "본인 제외 최대 50명"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
+
+  /// 스터디 인원 TextField
+  private lazy var studymemberTextField = StudyHubUI.createTextField(title: "스터디 인원을 알려주세요")
+ 
+  /// 스터디인원 label
+  private lazy var countLabel = UILabel().then {
+    $0.text = "명"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
+ 
+  /// 스터디 인원 Alert Lael
+  private lazy var countAlert = UILabel().then {
+    $0.text = "1명부터 가능해요(본인 제외)"
+    $0.textColor = .r50
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
+
   // MARK: - 성별
-  private lazy var genderLabel = createLabel(
-    title: "성별",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
   
-  private lazy var genderDescribeLabel = createLabel(
-    title: "참여자의 성별 선택",
-    textColor: .bg70,
-    fontType: "Pretendard-Medium",
-    fontSize: 12
-  )
-  
-  private lazy var allGenderButton = createButton(title: "무관")
-  private lazy var maleOnlyButton = createButton(title: "남자만")
-  private lazy var femaleOnlyButton = createButton(title: "여자만")
-  private lazy var genderButtonDividerLine = createDividerLine(height: 8)
+  /// 성별 제목 라벨
+  private lazy var genderLabel = UILabel().then {
+    $0.text = "성별"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+ /// 성별 내용 라벨
+  private lazy var genderDescribeLabel = UILabel().then {
+    $0.text = "참여자의 성별 선택"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
+ 
+  /// 성별 선택 버튼
+  private lazy var allGenderButton = StudyHubUI.createButton(title: "무관")
+  private lazy var maleOnlyButton = StudyHubUI.createButton(title: "남자만")
+  private lazy var femaleOnlyButton = StudyHubUI.createButton(title: "여자만")
+  private lazy var genderButtonDividerLine = StudyHubUI.createDividerLine(height: 8)
  
   init(_ viewModel: CreateStudyViewModel) {
     self.viewModel = viewModel
@@ -76,7 +89,9 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     self.setupLayout()
     self.makeUI()
     self.setupModifyUI()
-    self.setupDelegate()
+    
+    studymemberTextField.delegate = self
+    
     self.setupActions()
     self.setupBinding()
   }
@@ -85,6 +100,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// layout 설정
   func setupLayout(){
     [
       studyMemeberTopLine,
@@ -106,6 +122,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     }
   }
   
+  /// UI설정
   func makeUI(){
     studyMemeberTopLine.snp.makeConstraints {
       $0.top.equalToSuperview()
@@ -187,127 +204,115 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     }
   }
   
+  /// 스터디 수정 시 UI  설정
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
-    [
-      allGenderButton,
-      maleOnlyButton,
-      femaleOnlyButton
-    ].forEach {
-      if $0.titleLabel?.text == convertGenderType(postValue.filteredGender) {
-        updateButtonSelection(selectedButton: $0)
-      }
-    }
+    
     studymemberTextField.text = String(postValue.studyPerson)
   }
   
-  func convertGenderType(_ gender: String) -> String{
-    let convertGender = convertGender(gender: gender)
-    switch convertGender {
-    case "남자":
-      return "남자만"
-    case "여자":
-      return "여자만"
-    default:
-      return "무관"
-    }
-  }
-  
+  /// 바인딩
   func setupBinding(){
+    /// 스터디 인원
     studymemberTextField.rx.text.orEmpty
-      .map({ Int($0) })
-      .bind(to: viewModel.studyMemberValue)
+      .compactMap({ Int($0) })
+      .withUnretained(self)
+      .subscribe(onNext: { (view, text) in
+        var updatedData = view.viewModel.createStudyData.value
+        updatedData?.studyPerson = text
+        view.viewModel.createStudyData.accept(updatedData)
+      })
+      .disposed(by: disposeBag)
+  }
+
+  
+  /// actions 설정
+  func setupActions() {
+    /// 선택한 성별버튼의 스트림 방출
+    let allGenderTap = allGenderButton.rx.tap.map { self.allGenderButton }
+    let maleOnlyTap = maleOnlyButton.rx.tap.map { self.maleOnlyButton }
+    let femaleOnlyTap = femaleOnlyButton.rx.tap.map { self.femaleOnlyButton }
+    
+    /// 방출된 스트림 바인딩
+    Observable.merge(allGenderTap, maleOnlyTap, femaleOnlyTap)
+      .bind(to: viewModel.selectedGenderButton)
+      .disposed(by: disposeBag)
+    
+    /// 선택된 성별 버튼
+    viewModel.selectedGenderButton
+      .compactMap({ $0 })
+      .subscribe(onNext: { [weak self] btn in
+        self?.updateButtonColors(with: btn)
+        self?.updateGenderValue(with: btn)
+      })
       .disposed(by: disposeBag)
   }
   
-  func setupActions() {
-    let buttonsWithStates: [(UIButton, BehaviorRelay<Bool>)] = [
-      (allGenderButton, viewModel.isAllGenderButton),
-      (maleOnlyButton, viewModel.isMaleOnlyButton),
-      (femaleOnlyButton, viewModel.isFemaleOnlyButton)
-    ]
+  /// 버튼 색상 업데이트
+  func updateButtonColors(with selectedBtn: UIButton) {
+    /// 선택한 버튼 색상 업데이트
+    let buttons: [UIButton] = [allGenderButton, maleOnlyButton, femaleOnlyButton]
     
-    buttonsWithStates.forEach { button, state in
-      button.rx.tap
-        .subscribe(onNext: { [weak self] in
-          guard let self = self else { return }
-          self.updateButtonSelection(selectedButton: button)
-        })
-        .disposed(by: disposeBag)
-    }
-  }
-  
-  func updateButtonColors() {
-    let buttonsWithStates: [(UIButton, Bool)] = [
-      (allGenderButton, viewModel.isAllGenderButton.value),
-      (maleOnlyButton, viewModel.isMaleOnlyButton.value),
-      (femaleOnlyButton, viewModel.isFemaleOnlyButton.value)
-    ]
-    
-    buttonsWithStates.forEach { button, isSelected in
+    buttons.forEach { button in
+      let isSelected = button == selectedBtn
+      
       button.layer.borderColor = isSelected ? UIColor.o40.cgColor : UIColor.bg50.cgColor
       button.setTitleColor(isSelected ? .o50 : .bg70, for: .normal)
     }
   }
   
-  func updateButtonSelection(selectedButton: UIButton) {
-    viewModel.isAllGenderButton.accept(selectedButton == allGenderButton)
-    viewModel.isMaleOnlyButton.accept(selectedButton == maleOnlyButton)
-    viewModel.isFemaleOnlyButton.accept(selectedButton == femaleOnlyButton)
+  /// 버튼에 따라 성별 값 넣어주기
+  func updateGenderValue(with selectedBtn: UIButton){
+    /// 선택한 버튼에 따라 값 넣어주기
+    var selectedGender: String
     
-    let selectedGender = genderButtonTapped(selectedButton)
-    viewModel.seletedGenderValue.accept(selectedGender)
-    
-    updateButtonColors()
-  }
-  
-  func genderButtonTapped(_ button: UIButton) -> String {
-    switch button {
-    case maleOnlyButton:
-      return "MALE"
-    case femaleOnlyButton:
-      return "FEMALE"
-    default:
-      return "NULL"
+    switch selectedBtn {
+      case allGenderButton:   selectedGender = "NULL"
+      case maleOnlyButton:    selectedGender = "MALE"
+      case femaleOnlyButton:  selectedGender = "FEMALE"
+      default: return
     }
+    
+    var updatedData = viewModel.createStudyData.value
+    updatedData?.gender = selectedGender
+    viewModel.createStudyData.accept(updatedData)
   }
 
-  func setupDelegate(){
-    studymemberTextField.delegate = self
+  /// 스터디인원제한
+  func limitStudyMember(textField: UITextField){
+    guard let number = Int(studymemberTextField.text ?? "0") else { return }
+
+    /// 스터디 인원 1~50명 제한
+    if !(1 < number && number < 51) {
+      countAlert.isHidden = false
+      
+      studymemberTextField.layer.borderColor = UIColor.r50.cgColor
+      studymemberTextField.text = ""
+    } else {
+      didEndEditing(view: textField)
+      countAlert.isHidden = true
+      
+      /// 제한되는 범위에 속하지 않을 경우 값 넣어주기
+      guard let studyPersonNum = textField.text,
+            let _studyPersonNum = Int(studyPersonNum) else { return }
+      var updatedData = viewModel.createStudyData.value
+      updatedData?.studyPerson = _studyPersonNum
+      viewModel.createStudyData.accept(updatedData)
+    }
   }
-  
+  /// textField 입력 시
   func textFieldDidBeginEditing(_ textField: UITextField) {
     didBeginEditing(view: textField)
     countAlert.isHidden = true
     
-    guard let number = Int(studymemberTextField.text ?? "0") else { return }
-    
-    if !(1 < number && number < 51) {
-      countAlert.isHidden = false
-      
-      studymemberTextField.layer.borderColor = UIColor.r50.cgColor
-      studymemberTextField.text = ""
-    } else {
-      didEndEditing(view: textField)
-      countAlert.isHidden = true
-    }
+    /// 스터디 인원 1~50명 제한
+    limitStudyMember(textField: textField)
   }
   
+  /// TextField입력 종료 시
   func textFieldDidEndEditing(_ textField: UITextField) {
-    guard let number = Int(studymemberTextField.text ?? "0") else { return }
-    
-    if !(1 < number && number < 51) {
-      countAlert.isHidden = false
-      
-      studymemberTextField.layer.borderColor = UIColor.r50.cgColor
-      studymemberTextField.text = ""
-    } else {
-      didEndEditing(view: textField)
-      countAlert.isHidden = true
-    }
+    limitStudyMember(textField: textField)
   }
 }
 
-extension StudyMemberView: CreateUIprotocol {}
 extension StudyMemberView: EditableViewProtocol {}
-extension StudyMemberView: ConvertGender {}

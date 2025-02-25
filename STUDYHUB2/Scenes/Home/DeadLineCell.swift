@@ -4,7 +4,7 @@ import UIKit
 import SnapKit
 
 final class DeadLineCell: UICollectionViewCell {  
-  var model: Content? { didSet { bind() } }
+  var model: PostData? { didSet { bind() } }
   
   var checkBookmarked: Bool?
   var loginStatus: Bool = false
@@ -58,9 +58,9 @@ final class DeadLineCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    setViewShadow(backView: self)
     setupLayout()
     makeUI()
+    setViewShadow(backView: self)
   }
   
   @available(*, unavailable)
@@ -115,10 +115,6 @@ final class DeadLineCell: UICollectionViewCell {
     }
     
     backgroundColor = .white
-    
-    self.layer.borderWidth = 0.1
-    self.layer.borderColor = UIColor.cellShadow.cgColor
-    self.layer.cornerRadius = 10
   }
   
   // MARK: - 셀 재사용 관련

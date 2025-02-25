@@ -16,15 +16,6 @@ class UserAuthManager: StudyHubCommonNetworking {
   
   let provider = MoyaProvider<UserAuthNetworking>()
   
-//  /// 유효한 AccessToken인지 확인하기
-//  /// - Returns: 유효성 여부
-//  func checkValidAccessToken() async throws -> Bool {
-//    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return  false}
-//    
-//    return try await UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken)
-//  }
-//  
-  
   /// 로그인하기
   /// - Parameters:
   ///   - email: 유저 email

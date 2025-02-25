@@ -4,40 +4,49 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
+/// 스터디 기간 View
 final class StudyPeriodView: UIView {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CreateStudyViewModel
   
-  private lazy var periodTopDivideLine = createDividerLine(height: 8)
+  /// 구분선
+  private lazy var periodTopDivideLine = StudyHubUI.createDividerLine(height: 8)
 
-  private lazy var periodLabel = createLabel(
-    title: "기간",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 기간 라벨
+  private lazy var periodLabel = UILabel().then {
+    $0.text = "기간"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var periodUnderDividerLine = createDividerLine(height: 1)
+  /// 구분선
+  private lazy var periodUnderDividerLine = StudyHubUI.createDividerLine(height: 1)
   
-  private lazy var startLabel = createLabel(
-    title: "시작하는 날",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 스터디 시작하는 날짜 라벨
+  private lazy var startLabel = UILabel().then {
+    $0.text = "시작하는 날"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
+  /// 스터디 시작하는 날짜 선택 버튼
   private lazy var startDateButton = createDateButton()
   
-  private lazy var endLabel = createLabel(
-    title: "종료하는 날",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 스터디 종료하는 날짜 라벨
+  private lazy var endLabel = UILabel().then {
+    $0.text = "종료하는 날"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
+  /// 스터디 종료하는 날짜 선택 버튼
   private lazy var endDateButton = createDateButton()
   
+  /// 스터디 생성 완료하기 버튼
   private lazy var completeButton = StudyHubButton(title: "완료하기")
   
   init(_ viewModel: CreateStudyViewModel) {
@@ -56,6 +65,7 @@ final class StudyPeriodView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// Layout 설정
   func setupLayout(){
     [
       periodTopDivideLine,
@@ -71,6 +81,7 @@ final class StudyPeriodView: UIView {
     }
   }
   
+  /// UI설정
   func makeUI(){
     periodTopDivideLine.snp.makeConstraints {
       $0.top.equalToSuperview()
@@ -118,6 +129,7 @@ final class StudyPeriodView: UIView {
     }
   }
   
+  /// 수정 시 UI 설정
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
     let changedStartDate = viewModel.changeDate(postValue.studyStartDate)
@@ -129,6 +141,7 @@ final class StudyPeriodView: UIView {
     viewModel.endDate.accept(changedEndDate)
   }
 
+  /// 날짜 선택 버튼 생성하기
   func createDateButton() -> UIButton {
     let button = UIButton()
     let image = UIImage(named: "RightArrow")
@@ -145,20 +158,29 @@ final class StudyPeriodView: UIView {
     return button
   }
   
+  /// 날짜 선택 버튼 action 설정하기
   func setupDateButtonActions() {
-    setupButtonAction(
-      startDateButton,
-      selectedState: viewModel.isStartDateButton,
-      otherState: viewModel.isEndDateButton
-    )
+    /// 시작날짜 선택 버튼 탭
+    startDateButton.rx.tap
+      .withUnretained(self)
+      .subscribe { (view, _) in
+        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
+                                                               selectType: true))
+      }
+      .disposed(by: disposeBag)
     
-    setupButtonAction(
-      endDateButton,
-      selectedState: viewModel.isEndDateButton,
-      otherState: viewModel.isStartDateButton
-    )
+    /// 종료날짜 선택 버튼 탭
+    endDateButton.rx.tap
+      .withUnretained(self)
+      .subscribe { (view, _) in
+        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
+                                                               selectType: false))
+
+      }
+      .disposed(by: disposeBag)
   }
   
+  /// 날짜 선택 버튼 action 설정하기
   private func setupButtonAction(
     _ button: UIButton,
     selectedState: BehaviorRelay<Bool>,
@@ -175,40 +197,66 @@ final class StudyPeriodView: UIView {
         }
       })
       .disposed(by: disposeBag)
+    
+    
   }
   
+  /// Actions 설정
   func setupActions(){
     completeButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        guard let mode = self?.viewModel.mode else { return }
-        self?.viewModel.createOrModifyPost(mode: mode)
+//        guard let mode = self?.viewModel.mode else { return }
+//        self?.viewModel.createOrModifyPost(mode: mode)
+        self?.viewModel.createNewStudyPost()
       })
       .disposed(by: disposeBag)
   }
   
+  /// 바인딩
   private func setupBinding(){
+    /// 스터디 시작날짜
     viewModel.startDate
       .asDriver(onErrorJustReturn: "선택하기")
-      .drive(onNext: { [weak self] in
+      .drive(onNext: { [weak self] startDate in
         guard let self = self else { return }
-        uiUpdate(startDateButton, title: $0)
+        uiUpdate(startDateButton, title: startDate)
+        
+        if startDate != "선택하기" {
+          var updatedData = viewModel.createStudyData.value
+          updatedData?.studyStartDate = startDate
+          viewModel.createStudyData.accept(updatedData)
+        }
       })
       .disposed(by: disposeBag)
     
+    /// 스터디 종료날짜
     viewModel.endDate
       .asDriver(onErrorJustReturn: "선택하기")
-      .drive(onNext: { [weak self] in
+      .drive(onNext: { [weak self] endDate in
         guard let self = self else { return }
-        uiUpdate(endDateButton, title: $0)
+        uiUpdate(endDateButton, title: endDate)
+        
+        if endDate != "선택하기" {
+          var updatedData = viewModel.createStudyData.value
+          updatedData?.studyEndDate = endDate
+          viewModel.createStudyData.accept(updatedData)
+        }
       })
       .disposed(by: disposeBag)
     
-    viewModel.isCompleteButtonActivate
-      .asDriver()
-      .drive(onNext: {[weak self] in
-        guard let self = self else { return }
-        let backgroundColor: UIColor = $0 ? .o50 : .o30
-        completeButton.unableButton($0, backgroundColor: backgroundColor, titleColor: .white)
+    /// 스터디 생성 데이터
+    viewModel.createStudyData
+      .withUnretained(self)
+      .asDriver(onErrorJustReturn: (self, nil))
+      .drive(onNext: { (view,createData) in
+        /// 생성가능 여부 체크
+        let checkValid = view.viewModel.checkValidCreateStudyData(with: createData)
+        
+        /// 완료버튼 활성화 여부 체크
+        let backgroundColor: UIColor = checkValid ? .o50 : .o30
+        view.completeButton.unableButton(checkValid,
+                                         backgroundColor: backgroundColor,
+                                         titleColor: .white)
       })
       .disposed(by: disposeBag)
   }
@@ -219,5 +267,3 @@ final class StudyPeriodView: UIView {
     button.setTitleColor(titleColor, for: .normal)
   }
 }
-
-extension StudyPeriodView: CreateUIprotocol{}

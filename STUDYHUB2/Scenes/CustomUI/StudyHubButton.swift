@@ -44,6 +44,7 @@ final class StudyHubButton: UIButton {
 }
 
 
+/// StudyHub UI 관련 class
 class StudyHubUI {
   /// 구분 선 생성
   /// - Parameter height: 높이
@@ -84,11 +85,31 @@ class StudyHubUI {
   /// - Parameters:
   ///   - axis:방향
   ///   - spacing: 여백
-  /// - Returns: <#description#>
+  /// - Returns: 스택뷰
   class func createStackView(axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView {
     let stackView = UIStackView()
     stackView.axis = axis
     stackView.spacing = spacing
     return stackView
+  }
+  
+  /// 버튼 생성
+  /// - Parameters:
+  ///   - title: 버튼제목
+  ///   - titleColor: 제목색상
+  ///   - borderColor: 테두리색상
+  class func createButton(
+    title: String,
+    titleColor: String = "#A1AAB0",
+    borderColor: String = "#D8DCDE"
+  ) -> UIButton {
+    let button = UIButton()
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(UIColor(hexCode: titleColor), for: .normal)
+    button.layer.borderWidth = 1
+    button.layer.borderColor = UIColor(hexCode: borderColor).cgColor
+    button.layer.cornerRadius = 5
+    button.backgroundColor = .white
+    return button
   }
 }

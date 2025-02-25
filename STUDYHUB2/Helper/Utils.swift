@@ -50,12 +50,21 @@ class Utils {
   /// - Returns: 반환할 이미지 문자열
   class func convertGenderImage(_ gender: String) -> String{
     switch gender {
-    case "MALE":
-      return "MenGenderImage"
-    case "FEMALE":
-      return "GenderImage"
-    default:
-      return "GenderMixImg"
+    case "MALE":     return "MenGenderImage"
+    case "FEMALE":   return "GenderImage"
+    default:         return "GenderMixImg"
+    }
+  }
+  
+  /// 스터디 생성 시 성별 타입 반환
+  /// - Parameter gender: 성별
+  /// - Returns: 반환값
+  class func convertGenderType(_ gender: String) -> String{
+    let convertGender = Utils.convertGender(gender: gender)
+    switch convertGender {
+    case "남자":  return "남자만"
+    case "여자":  return "여자만"
+    default:     return "무관"
     }
   }
   
@@ -72,6 +81,19 @@ class Utils {
     
     return english ? filteredMajors.values.first : filteredMajors.keys.first
   }
+  
+  
+  /// plist에서 일치하는 학과 가져오기
+  /// - Parameter enteredMajor: 입력된 학과
+  /// - Returns: 일치하는 학과
+  class func loadMajors(_ enteredMajor: String) -> [String] {
+    guard let majors = DataLoaderFromPlist.loadMajorsWithCodes() else { return [] }
+    
+    let filteredMajors = majors.keys.filter { $0.contains(enteredMajor) }
+    
+    return filteredMajors
+  }
+
 }
 
 protocol ConvertStudyWay {

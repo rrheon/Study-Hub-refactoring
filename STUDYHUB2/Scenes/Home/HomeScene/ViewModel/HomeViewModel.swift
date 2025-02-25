@@ -17,10 +17,10 @@ final class HomeViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
 
   /// 새로 모집중인 스터디
-  var newPostDatas = BehaviorRelay<[Content]>(value: [])
+  var newPostDatas = BehaviorRelay<[PostData]>(value: [])
  
   /// 마감이 임박한 스터디
-  var deadlinePostDatas = BehaviorRelay<[Content]>(value: [])
+  var deadlinePostDatas = BehaviorRelay<[PostData]>(value: [])
 
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var singlePostData = PublishRelay<PostDetailData>()
@@ -47,7 +47,6 @@ final class HomeViewModel: Stepper {
       self.newPostDatas.accept(result.postDataByInquiries.content)
     } catch {
       print(#fileID, #function, #line," - \(error)")
-
     }
   }
   

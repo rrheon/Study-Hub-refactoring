@@ -1,152 +1,93 @@
 import Foundation
+import UIKit
 
 import RxSwift
 import RxRelay
+import RxFlow
 
-enum PostActionList {
-  case POST
-  case PUT
-}
-
-final class CreateStudyViewModel {
+/// 스터디 생성 ViewModel
+final class CreateStudyViewModel: Stepper {
+  static let shared = CreateStudyViewModel()
+  
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  var disposeBag: DisposeBag = DisposeBag()
+  
+  /// 스터디 수정 시 게시글 데이터
   var postedData = BehaviorRelay<PostDetailData?>(value: nil)
-  var mode: PostActionList
   
-  lazy var chatLinkValue = BehaviorRelay<String?>(value: nil)
-  lazy var studyTitleValue = BehaviorRelay<String?>(value: nil)
-  lazy var studyIntroduceValue = BehaviorRelay<String?>(value: nil)
+  /// 스터디 생성 데이터
+  var createStudyData: BehaviorRelay<CreateStudyRequest?> = BehaviorRelay<CreateStudyRequest?>(value: CreateStudyRequest())
   
-  var isMoveToSeletMajor = PublishRelay<Bool>()
+  /// 선택된 학과
   var selectedMajor = BehaviorRelay<String?>(value: nil)
   
+  /// 스터디인원
   lazy var studyMemberValue = BehaviorRelay<Int?>(value: nil)
   
-  var isAllGenderButton = BehaviorRelay<Bool>(value: false)
-  var isMaleOnlyButton = BehaviorRelay<Bool>(value: false)
-  var isFemaleOnlyButton = BehaviorRelay<Bool>(value: false)
-  var seletedGenderValue = BehaviorRelay<String?>(value: nil)
+  /// 선택된 성별버튼
+  var selectedGenderButton = BehaviorRelay<UIButton?>(value: nil)
+
+ /// 선택된 스터디 방식 버튼
+  var selectedStudyWayValue = BehaviorRelay<UIButton?>(value: nil)
   
-  var isMixButton = BehaviorRelay<Bool>(value: false)
-  var isContactButton = BehaviorRelay<Bool>(value: false)
-  var isUntactButton = BehaviorRelay<Bool>(value: false)
-  var seletedStudyWayValue = BehaviorRelay<String?>(value: nil)
+  /// 벌금 선택 여부
+  var isFineButton = PublishRelay<Bool>()
   
-  var isFineButton = BehaviorRelay<Bool>(value: false)
-  var isNoFineButton = BehaviorRelay<Bool>(value: false)
-  lazy var fineTypeValue = BehaviorRelay<String>(value: "")
-  lazy var fineAmountValue = BehaviorRelay<Int>(value: 0)
-  
-  var isStartDateButton = BehaviorRelay<Bool>(value: false)
-  var isEndDateButton = BehaviorRelay<Bool>(value: false)
+  /// 스터디 시작날짜
   var startDate = BehaviorRelay<String>(value: "선택하기")
+  
+  /// 스터디 종료날짜
   var endDate = BehaviorRelay<String>(value: "선택하기")
   
-  var seletedDate: String? = nil
-  var selectedDay: Int = 0
-  var currentPage: Date? = nil
-  
-  var isCompleteButtonActivate = BehaviorRelay<Bool>(value: false)
   var isSuccessCreateStudy = PublishRelay<Bool>()
   var isSuccessModifyStudy = PublishRelay<Bool>()
   
-  init(_ data: BehaviorRelay<PostDetailData?>? = nil, mode: PostActionList) {
-    self.mode = mode
-
-
+  init(data: PostDetailData? = nil) {
+    /// 스터디 수정 시 데이터 넣어주기
     if let data = data {
-      self.postedData = data
+      self.postedData.accept(data)
     }
+  }
+  
+  
+  /// 새로운 스터디 생성하기
+  func createNewStudyPost(){
+    var updatedData = self.createStudyData.value
+    updatedData?.close = false
+    updatedData?.penalty = 0
+    updatedData?.penaltyWay = ""
+    self.createStudyData.accept(updatedData)
     
-    setupBindings()
+    guard let data = createStudyData.value else { return }
+
+    print(data)
+    /// close - false,   벌금은 nil
+    StudyPostManager.shared.createNewPost(with: data)
+  }
+  
+  
+  /// 스터디 생성가능 여부 체크
+  /// - Parameter data: 생성할 스터디 데이터
+  /// - Returns: 생성가능 여부
+  func checkValidCreateStudyData(with data: CreateStudyRequest?) -> Bool {
+      guard let data = data else { return false }
+
+      return !(data.chatUrl.isEmpty) &&
+             !(data.content.isEmpty) &&
+             !(data.gender.isEmpty) &&
+             !(data.major.isEmpty) &&
+             !(data.studyEndDate.isEmpty) &&
+             (data.studyPerson != 0) &&
+             !(data.studyStartDate.isEmpty) &&
+             !(data.studyWay.isEmpty) &&
+             !(data.title.isEmpty)
   }
 
-  
-  func setupBindings() {
-    let basicInfo = Observable.combineLatest(
-      chatLinkValue.asObservable(),
-      studyTitleValue.asObservable(),
-      studyIntroduceValue.asObservable(),
-      selectedMajor.asObservable(),
-      studyMemberValue.asObservable(),
-      seletedStudyWayValue.asObservable(),
-      seletedGenderValue.asObservable()
-    )
-    
-    let fineInfo = Observable.combineLatest(
-      startDate.asObservable(),
-      endDate.asObservable(),
-      isFineButton.asObservable(),
-      isNoFineButton.asObservable(),
-      fineTypeValue.asObservable(),
-      fineAmountValue.asObservable()
-    )
-    
-//    Observable.combineLatest(basicInfo, fineInfo)
-//      .subscribe(onNext: { [weak self] (basicInfo, fineInfo) in
-//        guard let self = self else { return }
-//        
-//        let (link, title, introduce, major, member, studyWay, gender) = basicInfo
-//        let (startDate, endDate, isFine, isNoFine, fineType, fineAmount) = fineInfo
-//        
-//        let isDataFilled = [link, title, introduce, major, studyWay, gender ].allSatisfy { $0?.isEmpty == false }
-//        
-//        let isDatesSelected = startDate != "선택하기" && endDate != "선택하기"
-//        let isFineDataValid = isFine && !fineType.isEmpty && fineAmount > 0
-//        let isNoFineDataValid = isNoFine && fineType.isEmpty && fineAmount == 0
-//        
-//        guard let member = member else { return }
-//        let checkMemeber = 1 < member && member < 51
-//       
-//        if isDataFilled &&
-//            checkMemeber &&
-//            isDatesSelected &&
-//            (isFineDataValid || isNoFineDataValid) {
-//          self.isCompleteButtonActivate.accept(true)
-//        } else {
-//          self.isCompleteButtonActivate.accept(false)
-//        }
-//      })
-//      .disposed(by: disposeBag)
-  }
-  
-  func createPostValue() -> CreateStudyRequest{
-    let value = CreateStudyRequest(
-      chatUrl: chatLinkValue.value ?? "",
-      close: false,
-      content: studyIntroduceValue.value ?? "",
-      gender: seletedGenderValue.value ?? "",
-      major: convertMajor(selectedMajor.value ?? "", toEnglish: true) ?? "",
-      penalty: fineAmountValue.value,
-      penaltyWay: fineTypeValue.value,
-      studyEndDate: endDate.value,
-      studyPerson: studyMemberValue.value ?? 0,
-      studyStartDate: startDate.value,
-      studyWay: seletedStudyWayValue.value ?? "",
-      title: studyTitleValue.value ?? ""
-    )
-    return value
-  }
-  
-  func updatePostValue() -> UpdateStudyRequest{
-    let value = UpdateStudyRequest(
-      chatUrl: chatLinkValue.value ?? "",
-      close: false,
-      content: studyIntroduceValue.value ?? "",
-      gender: seletedGenderValue.value ?? "",
-      major: convertMajor(selectedMajor.value ?? "", toEnglish: true) ?? "",
-      penalty: fineAmountValue.value,
-      penaltyWay: fineTypeValue.value,
-      postId: postedData.value?.postID ?? 0,
-      studyEndDate: endDate.value,
-      studyPerson: studyMemberValue.value ?? 0,
-      studyStartDate: startDate.value,
-      studyWay: seletedStudyWayValue.value ?? "",
-      title: studyTitleValue.value ?? ""
-    )
-    return value
-  }
 
-  func createOrModifyPost(mode: PostActionList){
+  
+
+  func createOrModifyPost(){
 //    switch mode {
 //    case .POST:
 //      let value = createPostValue()
@@ -176,14 +117,13 @@ final class CreateStudyViewModel {
     let changedDate = convertedDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
     return changedDate
   }
-  
-  func comparePostData() -> Bool{
-    let request = createPostValue()
-    let detail = postedData.value
-    
-    return request == detail?.toCreateStudyRequest()
-  }
+//  
+//  func comparePostData() -> Bool{
+////    let request = createPostValue()
+//    let detail = postedData.value
+//    
+//    return request == detail?.toCreateStudyRequest()
+//  }
 }
 
 extension CreateStudyViewModel: ManagementDate {}
-extension CreateStudyViewModel: ConvertMajor {}

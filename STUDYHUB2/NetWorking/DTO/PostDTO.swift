@@ -15,16 +15,17 @@ struct PostDataContent: Codable {
 }
 
 struct PostDataByInquiries: Codable {
-  let content: [Content]
+  var content: [PostData]
   let pageable: Pageable
   let size, number, numberOfElements: Int
   let sort: Sort
-  let first, last, empty: Bool
+  let first, empty: Bool
+  var last: Bool
 }
 
 // 포스트 전체조회 content
 
-struct Content: Codable {
+struct PostData: Codable {
   let postID, studyPerson, penalty,remainingSeat: Int
   let major, title,filteredGender,penaltyWay: String
   let studyStartDate, studyEndDate, createdDate: [Int]
@@ -100,15 +101,21 @@ struct RelatedPost: Codable {
 // MARK: - 게시글 생성 시
 
 struct CreateStudyRequest: Codable {
-  var chatUrl: String
-  var close: Bool
-  var content, gender, major: String
-  var penalty: Int
-  let penaltyWay: String?
-  var studyEndDate: String
-  var studyPerson: Int
-  var studyStartDate, studyWay, title: String
+    var chatUrl: String = ""
+    var close: Bool = false
+    var content: String = ""
+    var gender: String = ""
+    var major: String = ""
+    var penalty: Int = 0
+    var penaltyWay: String? = nil
+    var studyEndDate: String = ""
+    var studyPerson: Int = 0
+    var studyStartDate: String = ""
+    var studyWay: String = ""
+    var title: String = ""
 }
+
+
 
 
 // MARK: - 게시글 수정 시

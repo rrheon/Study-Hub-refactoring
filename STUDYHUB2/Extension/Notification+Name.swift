@@ -17,4 +17,10 @@ extension Notification.Name {
   
   /// 스터디 디테일 화면으로 이동
   static let navToStudyDetailScrenn = Notification.Name("navToStudyDetailScrenn")
+  
+  /// 스터디 생성 및 수정 화면으로 이동
+  static let navToCreateOrModifyScreen = Notification.Name("navToCreateOrModifyScreen")
+  
+  /// 학과선택 화면으로 이동
+  static let navToSelectMajorScreen = Notification.Name("navToSelectMajorScreen")
 }

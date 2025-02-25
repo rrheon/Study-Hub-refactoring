@@ -24,23 +24,41 @@ extension CommonBaseURL {
 
 /// 공용 네트워킹
 class StudyHubCommonNetworking {
+  /// 타이머
+  var timer: Timer?
   
-//  /// AccessToken 가져오기
-//  /// - Returns: 새롭게 갱신된 Access Token (갱신 실패 시 nil)
-//  func loadAccessToken(completion: @escaping (Bool) -> Void){
-//    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return  }
-//    UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { result in
-//      completion(result)
-//    }
-//  }
+  init(){
+    print(#fileID, #function, #line," - test")
 
- 
+    registerCheckValidAccessToken()
+  }
+  
+  
+  /// 주기적으로 AccessToken 갱신 - 5분간격
+  func registerCheckValidAccessToken(){
+    timer = Timer.scheduledTimer(timeInterval: 300.0,
+                                 target: self,
+                                 selector: #selector(fetchAccessToken),
+                                 userInfo: nil,
+                                 repeats: true)
+  }
+  
+  
+  /// AccessToken 다시 받아오기
+  @objc private func fetchAccessToken(){
+    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return }
+    UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
+      if let accessToken = tokens?.accessToken,
+         let refreshToken = tokens?.refreshToken {
+        _ = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+      }
+    }
+  }
   
   /// API 통신 후 결과처리 - 디코딩
   /// - Parameters:
   ///   - apiResult: api 통신 결과
   ///   - type: 디코딩할 타입
-  ///
    func commonDecodeNetworkResponse<T: Decodable>(
     with apiResult : Result<Response, MoyaError>,
     decode type: T.Type,

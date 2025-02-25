@@ -219,7 +219,7 @@ class ResultSearchViewController: UIViewController {
   
   /// Actions 설정
   func setupActions(){
-    resultCollectionView.rx.modelSelected(Content.self)
+    resultCollectionView.rx.modelSelected(PostData.self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
 //        self?.viewModel.fetchSinglePostDatas(item.postID) { result in

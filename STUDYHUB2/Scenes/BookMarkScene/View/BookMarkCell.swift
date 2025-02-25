@@ -80,10 +80,11 @@ final class BookMarkCell: UICollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    setViewShadow(backView: self)
     addSubviews()
     
     configure()
+    setViewShadow(backView: self)
+
   }
   
   @available(*, unavailable)
@@ -143,10 +144,6 @@ final class BookMarkCell: UICollectionViewCell {
     }
     
     backgroundColor = .white
-    
-    self.layer.borderWidth = 0.1
-    self.layer.borderColor = UIColor.cellShadow.cgColor
-    self.layer.cornerRadius = 10
   }
   
   

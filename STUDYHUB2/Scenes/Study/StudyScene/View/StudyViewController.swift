@@ -4,6 +4,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
 /// 전체 스터디 VC
 final class StudyViewController: UIViewController {
@@ -30,12 +31,11 @@ final class StudyViewController: UIViewController {
   private lazy var emptyImageView = UIImageView(image: UIImage(named: "EmptyStudy"))
   
   /// 스터디가 없을 때 라벨
-  private lazy var describeLabel = createLabel(
-    title: "관련 스터디가 없어요\n지금 스터디를 만들어\n  팀원을 구해보세요!",
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 12
-  )
+  private lazy var describeLabel = UILabel().then {
+    $0.text = "관련 스터디가 없어요\n지금 스터디를 만들어\n  팀원을 구해보세요!"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
   
   /// 스터디 collectionView
   private lazy var resultCollectionView: UICollectionView = {
@@ -50,32 +50,38 @@ final class StudyViewController: UIViewController {
     return view
   }()
   
-  private let scrollView: UIScrollView = {
-    let scrollView = UIScrollView()
-    scrollView.backgroundColor = .bg30
-    return scrollView
-  }()
+  private let scrollView: UIScrollView =  UIScrollView().then {
+    $0.backgroundColor = .bg30
+  }
   
   /// 스터디 생성버튼
-  private lazy var addButton: UIButton = {
-    let addButton = UIButton(type: .system)
-    addButton.setTitle("+", for: .normal)
-    addButton.setTitleColor(.white, for: .normal)
-    addButton.backgroundColor = UIColor(hexCode: "FF5935")
-    addButton.layer.cornerRadius = 30
-    addButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-    return addButton
-  }()
+  private lazy var addButton: UIButton = UIButton().then {
+    $0.setTitle("+", for: .normal)
+    $0.setTitleColor(.white, for: .normal)
+    $0.backgroundColor = UIColor(hexCode: "FF5935")
+    $0.layer.cornerRadius = 30
+    $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+  }
   
   private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
   
+  /// view가 나타날 때 데이터 다시 가져오기
+  override func viewWillAppear(_ animated: Bool) {
+//    Task {
+//      do {
+//        print(#fileID, #function, #line," - 호출")
+//
+//        await viewModel.fetchPostData(hotType: "false")
+//      }
+//    }
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
     view.backgroundColor = .white
     
-    
-//    setupNavigationbar()
+    setupNavigationbar()
     setupCollectionView()
     
     setupBinding()
@@ -88,25 +94,11 @@ final class StudyViewController: UIViewController {
   func setupLayout(_ count: Int){
     if count > 0 {
       scrollView.addSubview(resultCollectionView)
-      
-      [
-        recentButton,
-        popularButton,
-        scrollView,
-        addButton
-      ].forEach {
-        view.addSubview($0)
-      }
+      [ recentButton, popularButton, scrollView, addButton]
+        .forEach { view.addSubview($0) }
     }else {
-      [
-        recentButton,
-        popularButton,
-        emptyImageView,
-        describeLabel,
-        addButton
-      ].forEach {
-        view.addSubview($0)
-      }
+      [ recentButton, popularButton, emptyImageView, describeLabel, addButton]
+        .forEach { view.addSubview($0) }
     }
   }
   
@@ -141,8 +133,8 @@ final class StudyViewController: UIViewController {
       
       addButton.snp.makeConstraints { make in
         make.width.height.equalTo(60)
-        make.bottom.equalTo(view.snp.bottom).offset(-100)
-        make.trailing.equalTo(view.snp.trailing).offset(-30)
+        make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+        make.trailing.equalTo(view).offset(-16)
       }
     } else {
       emptyImageView.snp.makeConstraints { make in
@@ -170,7 +162,7 @@ final class StudyViewController: UIViewController {
   }
   
   /// collectinoView 설정
-  func setupCollectionView(){
+  func setupCollectionView(){    
     resultCollectionView.delegate = self
     resultCollectionView.register(
       SearchResultCell.self,
@@ -190,6 +182,7 @@ final class StudyViewController: UIViewController {
     button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 14)
     button.backgroundColor = backgroundColor
     button.layer.cornerRadius = 15
+    
     return button
   }
   
@@ -203,15 +196,24 @@ final class StudyViewController: UIViewController {
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
-  func rightButtonTapped(_ sender: UIBarButtonItem) {
-// 검색화면으로 이동해야함
-    //    viewModel.steps.accept(AppStep.)
+  /// 네비게이션 바 오른쪽 아이템 터치 - 검색화면으로 이동
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(StudyStep.enterSearchIsRequired)
   }
+
   
   // MARK: -  setupBinding
   
   /// 바인딩
   func setupBinding(){
+    /// 포스트 갯수
+    viewModel.postCount
+      .withUnretained(self)
+      .asDriver(onErrorJustReturn: (self,0))
+      .drive(onNext: { (vc, count) in
+        vc.setupLayout(count)
+        vc.makeUI(count)
+      }).disposed(by: disposeBag)
     
     /// 스터디 데이터 - 셀에 바인딩
     viewModel.postDatas
@@ -222,78 +224,53 @@ final class StudyViewController: UIViewController {
           cell.cellData = content
         }
         .disposed(by: disposeBag)
-
-    /// 스터디 데이터 - 무한 스크롤 필요
-//    viewModel.postData
-//      .asDriver(onErrorJustReturn: nil)
-//      .drive(onNext: { [weak self] postData in
-////        self?.setupLayout($0)
-////        self?.makeUI($0)
-////        self?.recentButtonTapped()
-////        guard let data = postData else { return }
-////        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
-////        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
-////        
-////        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
-//      })
-//      .disposed(by: disposeBag)
   }
   
   // MARK: -  setupActions
   
   /// Actinos 설정
   func setupActions(){
-    /// 스터디 셀 터치 시
-    resultCollectionView.rx.modelSelected(Content.self)
+    /// 스터디 셀 터치 시 - 스터디 상세 화면으로 이동
+    resultCollectionView.rx.modelSelected(PostData.self)
+      .withUnretained(self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
-      .subscribe(onNext: { [weak self] item in
-//        guard let loginStauts = self?.viewModel.checkLoginStatus.value else { return }
-//        self?.viewModel.detailPostDataManager.searchSinglePostData(
-//          postId: item.postID,
-//          loginStatus: loginStauts,
-//          completion: { result  in
-//            let postData = PostedStudyData(
-//              isUserLogin: loginStauts,
-//              postDetailData: result,
-//              isNeedFechData: self?.viewModel.isNeedFetch
-//            )
-//            
-//            let postedVC = PostedStudyViewController(postData)
-//            postedVC.hidesBottomBarWhenPushed = true
-//            self?.navigationController?.pushViewController(postedVC, animated: true)
-//          })
+      .subscribe(onNext: { (_, item) in
+        let postID = item.postID
+        
+        NotificationCenter.default.post(name: .navToStudyDetailScrenn,
+                                        object: nil,
+                                        userInfo: ["postID" : postID])
+        
       })
       .disposed(by: disposeBag)
     
     /// 최신버튼 탭
     recentButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.recentButtonTapped()
+      .withUnretained(self)
+      .subscribe(onNext: { (vc, _) in
+        vc.viewModel.recentOrPopularBtnTapped(btnType: "false")
+        vc.updateButtonUI(selectedButton: vc.recentButton, unselectedButton: vc.popularButton)
+        vc.resultCollectionView.setContentOffset(.zero, animated: false)
       })
       .disposed(by: disposeBag)
     
     /// 인기버튼 탭
     popularButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.popularButtonTapped()
+      .withUnretained(self)
+      .subscribe(onNext: {  (vc, _) in
+        vc.viewModel.recentOrPopularBtnTapped(btnType: "true")
+        vc.updateButtonUI(selectedButton: vc.popularButton, unselectedButton: vc.recentButton)
+        vc.resultCollectionView.setContentOffset(.zero, animated: false)
       })
       .disposed(by: disposeBag)
     
     /// 게시글 생성 버튼 탭
     addButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        guard let self = self else { return }
-    
-////        let loginStatus = viewModel.checkLoginStatus.value
-//        switch loginStatus {
-//        case true:
-//          moveToOtherVCWithSameNavi(
-//            vc: CreateStudyViewController(postedData: viewModel.postData, mode: .POST),
-//            hideTabbar: true
-//          )
-//        case false: break
-////          checkLoginPopup(checkUser: viewModel.checkLoginStatus.value)
-//        }
+      .withUnretained(self)
+      .subscribe(onNext: { (_, _) in
+        NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
+                                        object: nil,
+                                        userInfo: ["postID" : nil])
       })
       .disposed(by: disposeBag)
   }
@@ -311,26 +288,6 @@ final class StudyViewController: UIViewController {
     unselectedButton.setTitleColor(.bg90, for: .normal)
     unselectedButton.backgroundColor = .bg30
   }
-  
-  func resetViewModelAndFetchData(hotType: String) {
-//    viewModel.resetCounter()
-//    viewModel.isLastData = false
-    viewModel.isInfiniteScroll = true
-    
-    resultCollectionView.setContentOffset(.zero, animated: false)
-    viewModel.fetchPostData(hotType: hotType, dataUpdate: true)
-  }
-  
-  @objc func recentButtonTapped() {
-    resetViewModelAndFetchData(hotType: "false")
-    updateButtonUI(selectedButton: recentButton, unselectedButton: popularButton)
-  }
-  
-  @objc func popularButtonTapped() {
-    resetViewModelAndFetchData(hotType: "true")
-    updateButtonUI(selectedButton: popularButton, unselectedButton: recentButton)
-  }
-
   
   // MARK: - 네트워킹 기다릴 때
   
@@ -358,13 +315,19 @@ final class StudyViewController: UIViewController {
 extension StudyViewController: UICollectionViewDelegate {
   // MARK: - 스크롤할 때 네트워킹 요청
   
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//    if scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.bounds.height) {
-//      if viewModel.isInfiniteScroll && viewModel.isLastData != true {
-//        viewModel.isInfiniteScroll = false
-//        fetchMoreData(hotType: viewModel.searchType)
-//      }
-//    }
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    let scrollViewHeight = scrollView.frame.size.height
+    let contentHeight = scrollView.contentSize.height
+    let offsetY = scrollView.contentOffset.y
+    
+    // 바닥에서 50포인트 위에 도달했는지 체크
+    if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
+      print("바닥에서 50포인트 위에 도달! \(recentButton.isSelected)")
+      
+      Task {
+        await viewModel.fetchPostData(hotType: "false")
+      }
+    }
   }
 }
 
@@ -375,8 +338,6 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
     layout collectionViewLayout: UICollectionViewLayout,
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
-    return CGSize(width: 350, height: 247)
+    return CGSize(width: 350, height: 240)
   }
 }
-
-extension StudyViewController: CreateUIprotocol {}

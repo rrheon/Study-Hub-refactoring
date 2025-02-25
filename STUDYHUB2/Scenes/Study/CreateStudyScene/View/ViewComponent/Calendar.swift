@@ -2,53 +2,65 @@ import UIKit
 
 import FSCalendar
 import SnapKit
+import Then
 
+/// 캘린더 VC
 final class CalendarViewController: UIViewController {
+  
   let viewModel: CreateStudyViewModel
+  
   private var calendar: FSCalendar?
   
-  private lazy var titleLabel = createLabel(
-    title: viewModel.dateFormatter.string(from: Date()),
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 18
-  )
+  /// true - 시작날짜 선택 / false - 종료날짜 선택
+  var selecType: Bool
+  
+  /// 선택된 날짜
+  var seletedDate: String? = nil
+
+  var selectedDay: Int = 0
+  var currentPage: Date? = nil
+  
+  /// 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = viewModel.dateFormatter.string(from: Date())
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 18)
+  }
     
-  private lazy var previousButton: UIButton = {
-    let button = UIButton()
-    button.setImage(
+  /// 이전 달 버튼
+  private lazy var previousButton: UIButton =  UIButton().then {
+    $0.setImage(
       UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate),
       for: .normal
     )
-    button.tintColor = .black
-    button.addTarget(self, action: #selector(self.prevCurrentPage), for: .touchUpInside)
-    return button
-  }()
+    $0.tintColor = .black
+    $0.addTarget(self, action: #selector(self.prevCurrentPage), for: .touchUpInside)
+  }
   
-  private lazy var nextButton: UIButton = {
-    let button = UIButton()
-    button.setImage(
+  /// 다음 달 버튼
+  private lazy var nextButton: UIButton = UIButton().then{
+    $0.setImage(
       UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate),
       for: .normal
     )
-    button.tintColor = .black
-    button.addTarget(self, action: #selector(self.nextCurrentPage), for: .touchUpInside)
-    return button
-  }()
+    $0.tintColor = .black
+    $0.addTarget(self, action: #selector(self.nextCurrentPage), for: .touchUpInside)
+  }
   
-  private lazy var completeButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("완료", for: .normal)
-    button.setTitleColor(.o50, for: .normal)
-    button.addTarget(self, action: #selector(self.completeButtonTapped), for: .touchUpInside)
-    return button
-  }()
+  /// 날짜 선택 버튼
+  private lazy var completeButton: UIButton = UIButton().then{
+    $0.setTitle("완료", for: .normal)
+    $0.setTitleColor(.o50, for: .normal)
+    $0.addTarget(self, action: #selector(self.completeButtonTapped), for: .touchUpInside)
+  }
   
   
   /// init - 캘린더 init
   /// - Parameter viewModel: 스터디 생성 ViewModel
-  init(viewModel: CreateStudyViewModel) {
+  /// - Parameter selectStartData: true - 시작날짜 선택 / false - 종료날짜 선택
+  init(viewModel: CreateStudyViewModel, selectStartData: Bool = true) {
     self.viewModel = viewModel
+    self.selecType = selectStartData
     super.init(nibName: nil, bundle: .none)
   }
   
@@ -168,9 +180,9 @@ final class CalendarViewController: UIViewController {
         cell.isHidden = false
         cell.titleLabel.textColor = .o50
         // seletedDay말고 시작날짜로 해야할듯
-      } else if viewModel.selectedDay > cellDay {
+      } else if selectedDay > cellDay {
         cell.titleLabel.textColor = .bg40
-      } else if viewModel.selectedDay == cellDay {
+      } else if selectedDay == cellDay {
         cell.titleLabel.textColor = .o50
         
         cell.shapeLayer?.path = UIBezierPath(ovalIn: cell.bounds).cgPath
@@ -188,7 +200,7 @@ final class CalendarViewController: UIViewController {
   ) {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
-    viewModel.seletedDate = dateFormatter.string(from: date)
+    seletedDate = dateFormatter.string(from: date)
     
     let isToday = Calendar.current.isDate(date, inSameDayAs: Date())
     
@@ -211,11 +223,11 @@ final class CalendarViewController: UIViewController {
     dateComponents.month = month
     viewModel.dateFormatter.dateFormat = "yyyy년 MM월"
     
-    self.viewModel.currentPage = cal.date(
+    currentPage = cal.date(
       byAdding: dateComponents,
-      to: self.viewModel.currentPage ?? self.viewModel.today
+      to: currentPage ?? self.viewModel.today
     )
-    if let currentPage = self.viewModel.currentPage {
+    if let currentPage = currentPage {
       self.calendar?.setCurrentPage(currentPage, animated: true)
     }
   }
@@ -238,15 +250,15 @@ final class CalendarViewController: UIViewController {
   /// - Parameter sender: UIButton - 완료버튼
   @objc private func completeButtonTapped(_ sender: UIButton) {
     // 선택한 날짜 확인
-    guard let data = viewModel.seletedDate else { return }
+    guard let data = seletedDate else { return }
     
-    if viewModel.isStartDateButton.value {
-      viewModel.startDate.accept(data)
-    } else {
-      viewModel.endDate.accept(data)
-    }
-    viewModel.selectedDay = Int(data.suffix(2)) ?? 0
-    self.dismiss(animated: true, completion: nil)
+    selecType ? viewModel.startDate.accept(data) : viewModel.endDate.accept(data)
+  
+    selectedDay = Int(data.suffix(2)) ?? 0
+    
+    print(selectedDay)
+  
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
   }
 }
 
@@ -270,7 +282,7 @@ extension CalendarViewController: FSCalendarDelegate,
     let dateFormatter = viewModel.dateFormatter
     dateFormatter.dateFormat = "yyyy-MM-dd"
     if let startDate = dateFormatter.date(from: viewModel.startDate.value),
-      viewModel.isEndDateButton.value {
+       viewModel.endDate.value != "선택하기" {
       if date < startDate {
         return false
       }
@@ -296,7 +308,7 @@ extension CalendarViewController: FSCalendarDelegate,
     let dateFormatter = viewModel.dateFormatter
     dateFormatter.dateFormat = "yyyy-MM-dd"
     if let startDate = dateFormatter.date(from: viewModel.startDate.value),
-      viewModel.isEndDateButton.value {
+       viewModel.endDate.value != "선택하기" {
       if date < startDate {
         return UIColor.bg40
       }

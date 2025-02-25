@@ -26,7 +26,11 @@ class MypageFlow: Flow {
     return self.rootViewController
   }
   
-  var rootViewController: UINavigationController = UINavigationController()
+  lazy var rootViewController: UINavigationController = {
+    let nav = UINavigationController()
+    nav.configurationNavigationBar()
+    return nav
+  }()
   
   init(){
     self.viewModel = MyPageViewModel.shared
