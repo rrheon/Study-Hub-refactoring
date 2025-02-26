@@ -68,7 +68,8 @@ final class HowToUseViewController: UIViewController, Stepper {
   func setupNavigationbar() {
     leftButtonSetting()
     settingNavigationTitle(title: "이용방법")
-
+    
+//    settingNavigationbar(false)
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
@@ -92,47 +93,48 @@ final class HowToUseViewController: UIViewController, Stepper {
       howToUseImg5,
       howToUseImg6,
       howToUseImg7,
-      howToUseImg8,
-      writeButton
+      howToUseImg8
     ].forEach {
       totalStackView.addArrangedSubview($0)
     }
     
     scrollView.addSubview(totalStackView)
+    scrollView.addSubview(writeButton)
   }
 
   // MARK: - makeUI
   
-  /// Ui 설정
-  func makeUI(){
-    /// 전체 스택뷰
+  func makeUI() {
+    /// 스크롤 뷰
+    scrollView.snp.makeConstraints { make in
+      make.top.equalTo(view.safeAreaLayoutGuide)
+      make.leading.trailing.bottom.equalToSuperview()
+    }
+    
+    /// 전체 스택뷰 (스크롤 가능한 영역)
     totalStackView.snp.makeConstraints {
-      $0.top.equalTo(scrollView)
-      $0.bottom.equalTo(scrollView.contentLayoutGuide)
-      $0.leading.trailing.equalTo(scrollView.frameLayoutGuide)
+      $0.edges.equalTo(scrollView.contentLayoutGuide)
+      $0.width.equalTo(scrollView.frameLayoutGuide)
     }
     
     /// 이미지1
     howToUseImg1.snp.makeConstraints { make in
       make.height.equalTo(305)
     }
-
+    
     /// 작성하기 버튼
     writeButton.snp.makeConstraints { make in
+      make.top.equalTo(totalStackView.snp.bottom).offset(-40)
+      make.leading.equalToSuperview().offset(20)
+      make.trailing.equalToSuperview().offset(-20)
       make.height.equalTo(55)
-    }
-    
-    /// 스크롤 뷰
-    scrollView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide)
-      make.leading.trailing.bottom.equalToSuperview()
     }
   }
 
   /// 이용방법 이미지 생성하기
   func createImageView(_ imageName: String) -> UIImageView{
     let imageView = UIImageView(image: UIImage(named: imageName))
-    imageView.contentMode = .scaleAspectFit
+    imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     return imageView
   }

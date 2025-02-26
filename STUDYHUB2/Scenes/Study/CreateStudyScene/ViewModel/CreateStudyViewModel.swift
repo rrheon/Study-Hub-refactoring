@@ -55,8 +55,13 @@ final class CreateStudyViewModel: Stepper {
   func createNewStudyPost(){
     var updatedData = self.createStudyData.value
     updatedData?.close = false
-    updatedData?.penalty = 0
-    updatedData?.penaltyWay = ""
+    
+    /// 벌금이 없는 경우
+    if updatedData?.penaltyWay == nil {
+      updatedData?.penalty = 0
+      updatedData?.penaltyWay = ""
+    }
+    
     self.createStudyData.accept(updatedData)
     
     guard let data = createStudyData.value else { return }

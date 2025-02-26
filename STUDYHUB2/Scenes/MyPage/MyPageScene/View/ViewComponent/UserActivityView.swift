@@ -4,60 +4,67 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
+/// 유저의 활동정보 View - 작성한 글, 참여한 스터디, 신청내역
 final class UserActivityView: UIView {
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyPageViewModel
   
-  // 작성한 글
-  private lazy var writtenLabel = createLabel(
-    title: "작성한 글",
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 14
-  )
+  /// 작성한 글 라벨
+  private lazy var writtenLabel = UILabel().then {
+    $0.text = "작성한 글"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
+
+  /// 작성한 글 갯수 라벨
+  private lazy var writtenCountLabel = UILabel().then {
+    $0.text = "0"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 18)
+  }
   
-  private lazy var writtenCountLabel = createLabel(
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 18
-  )
-  
+  /// 작성한 글 버튼
   private lazy var writtenButton = UIButton()
   
-  // 참여한 스터디
-  private lazy var joinstudyLabel = createLabel(
-    title: "참여한 스터디",
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 14
-  )
+  /// 참여한 스터디 라벨
+  private lazy var joinstudyLabel = UILabel().then {
+    $0.text = "참여한 스터디"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
   
-  private lazy var joinstudyCountLabel = createLabel(
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 18
-  )
+  /// 참여한 스터디 갯수 라벨
+  private lazy var joinstudyCountLabel = UILabel().then {
+    $0.text = "0"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 18)
+  }
   
+  /// 참여한 스터디 버튼
   private lazy var joinstudyButton = UIButton()
   
-  // 신청 내역
-  private lazy var requestCountLabel = createLabel(
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 18
-  )
+  /// 신청내역 라벨
+  private lazy var requestLabel = UILabel().then {
+    $0.text = "신청내역"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
   
-  private lazy var requestLabel = createLabel(
-    title: "신청내역",
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 14
-  )
+  /// 신청 내역 갯수 라벨
+  private lazy var requestCountLabel = UILabel().then {
+    $0.text = "0"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 18)
+  }
   
+  /// 신청내역 버튼
   private lazy var requestListButton = UIButton()
 
-  private lazy var didiveLine = createDividerLine(height: 10)
+  /// 구분선
+  private lazy var didiveLine = StudyHubUI.createDividerLine(height: 10)
   
   init(_ viewModel: MyPageViewModel) {
     self.viewModel = viewModel
@@ -75,7 +82,7 @@ final class UserActivityView: UIView {
   
   // MARK: - setupLayout
   
-  
+  /// layout 설정
   func setupLayout(){
     [
       writtenButton,
@@ -93,6 +100,7 @@ final class UserActivityView: UIView {
     }
   }
   
+  /// UI 설정
   func makeUI(){
     [
       writtenButton,
@@ -165,7 +173,9 @@ final class UserActivityView: UIView {
     }
   }
   
+  /// 바인딩
   func setupBinding(){
+    /// 유저 데이터
     viewModel.userData
       .asDriver()
       .drive(onNext: {[weak self] in
@@ -175,31 +185,30 @@ final class UserActivityView: UIView {
       .disposed(by: disposeBag)
   }
   
+  /// actions 설정
   func setupActions() {
-    let buttonActions: [(UIButton, UserActivity)] = [
-      (writtenButton, .writtenButton),
-      (joinstudyButton, .participateStudyButton),
-      (requestListButton, .requestListButton)
-    ]
-    
-    buttonActions.forEach { button, activity in
-      button.rx.tap
-        .subscribe(onNext: { [weak self] in
-          self?.viewModel.seletUserActivity(activity)
-        })
-        .disposed(by: disposeBag)
-    }
+//    let buttonActions: [(UIButton, UserActivity)] = [
+//      (writtenButton, .writtenButton),
+//      (joinstudyButton, .participateStudyButton),
+//      (requestListButton, .requestListButton)
+//    ]
+//    
+//    buttonActions.forEach { button, activity in
+//      button.rx.tap
+//        .subscribe(onNext: { [weak self] in
+//          self?.viewModel.seletUserActivity(activity)
+//        })
+//        .disposed(by: disposeBag)
+//    }
   }
 
 
   // MARK: - updateVC
   
-  
+  /// UI 데이터 설정
   func setupUIData(_ data: UserDetailData){
     self.writtenCountLabel.text = "\(data.postCount ?? 0)"
     self.joinstudyCountLabel.text = "\(data.participateCount ?? 0)"
     self.requestCountLabel.text = "\((data.applyCount ?? 0) - (data.participateCount ?? 0))"
   }
 }
-
-extension UserActivityView: CreateUIprotocol {}

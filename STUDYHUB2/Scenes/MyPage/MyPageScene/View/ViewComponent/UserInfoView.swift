@@ -4,61 +4,60 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
+import Then
 
+/// 유저의 정보 View
 final class UserInfoView: UIView {
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyPageViewModel
   
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.layer.cornerRadius = 15
-    imageView.image = UIImage(named: "ProfileAvatar_change")
+  /// 프로필 이미지View
+  private lazy var profileImageView: UIImageView = UIImageView().then {
+    $0.layer.cornerRadius = 15
+    $0.image = UIImage(named: "ProfileAvatar_change")
+  }
+  
+  /// 회원의 학과라벨
+  private lazy var majorLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
  
-    return imageView
-  }()
+  /// 회원의 닉네임 라벨
+  private lazy var nickNameLabel = UILabel().then {
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 18)
+  }
   
-  private lazy var majorLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 14
-  )
+  /// 비 로그인 시  라벨
+  private lazy var loginFailLabel = UILabel().then {
+    $0.text = "나의 스터디 팀원을 만나보세요"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
+
+  /// 비 로그인 시 라벨
+  private lazy var loginFailTitleLabel = UILabel().then {
+    $0.text = "로그인 / 회원가입"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 18)
+  }
   
-  private lazy var nickNameLabel = createLabel(
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 18
-  )
+  /// 로그인 시 - 프로필 편집으로 이동
+  /// 비 로그인 시 - 로그인 화면으로 이동
+  private lazy var managementProfileButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+    $0.tintColor = .black
+  }
   
-  // 로그인 안하면 보이는 라벨
-  private lazy var loginFailLabel = createLabel(
-    title: "나의 스터디 팀원을 만나보세요",
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 14
-  )
-  
-  private lazy var loginFailTitleLabel = createLabel(
-    title: "로그인 / 회원가입",
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 18
-  )
-  
-  private lazy var managementProfileButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-    button.tintColor = .black
-    return button
-  }()
-  
-  private lazy var buttonStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var buttonStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   
   init(_ viewModel: MyPageViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     
-    self.setupLayout()
-    self.makeUI()
+    makeCommonUI()
     self.setupBinding()
     self.setupActions()
   }
@@ -69,38 +68,11 @@ final class UserInfoView: UIView {
   
   // MARK: - setupLayout
   
-  
-  func setupLayout(){
-    viewModel.checkLoginStatus.value ? loginLayout() : logoutLayout()
-    
-    self.addSubview(managementProfileButton)
-  }
-  
-  func loginLayout(){
-    [
-      profileImageView,
-      majorLabel,
-      nickNameLabel
-    ].forEach {
-      self.addSubview($0)
-    }
-  }
-  
-  func logoutLayout(){
-    [
-      loginFailLabel,
-      loginFailTitleLabel
-    ].forEach {
-      self.addSubview($0)
-    }
-  }
-  
   // MARK: - makeUI
   
-  
-  func makeUI(){
-    viewModel.checkLoginStatus.value ? loginUI() : logoutUI()
-
+  /// 공통UI 설정
+  func makeCommonUI(){
+    self.addSubview(managementProfileButton)
     managementProfileButton.snp.makeConstraints {
       $0.top.equalTo(self.safeAreaLayoutGuide).offset(20)
       $0.trailing.equalToSuperview().offset(-20)
@@ -108,45 +80,61 @@ final class UserInfoView: UIView {
     }
   }
   
+  /// 로그인 시 UI
   func loginUI(){
+    self.addSubview(profileImageView)
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(10)
       $0.leading.equalToSuperview().offset(10)
       $0.height.width.equalTo(56)
     }
     
+    self.addSubview(majorLabel)
     majorLabel.snp.makeConstraints {
       $0.top.equalTo(profileImageView).offset(5)
       $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
+    self.addSubview(nickNameLabel)
     nickNameLabel.snp.makeConstraints {
       $0.top.equalTo(majorLabel.snp.bottom).offset(5)
       $0.leading.equalTo(majorLabel)
     }
   }
   
-  func logoutUI(){
+  /// 비로그인 시 UI
+  func logoutLayout(){
+    self.addSubview(loginFailLabel)
     loginFailLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(13)
       $0.leading.equalToSuperview().offset(10)
     }
     
+    self.addSubview(loginFailTitleLabel)
     loginFailTitleLabel.snp.makeConstraints {
       $0.top.equalTo(loginFailLabel.snp.bottom).offset(13)
       $0.leading.equalTo(loginFailLabel)
     }
   }
   
+  
+  /// 바인딩 설정
   func setupBinding(){
+    /// 사용자의 정보데이터
     viewModel.userData
-      .asDriver()
-      .drive(onNext: { [weak self] in
-        guard let data = $0 else { return }
-        self?.setupUIData(data)
+      .withUnretained(self)
+      .asDriver(onErrorJustReturn: (self, nil))
+      .drive(onNext: { (view, userData) in
+        guard let data = userData?.nickname else {
+          view.logoutLayout()
+          return
+        }
+        view.loginUI()
+        view.setupUIData(userData!)
       })
       .disposed(by: disposeBag)
     
+    /// 사용자의 프로필
     viewModel.userProfile
       .asDriver(onErrorJustReturn: UIImage(named: "ProfileAvatar_change")!)
       .drive(onNext: { [weak self] image in
@@ -157,7 +145,11 @@ final class UserInfoView: UIView {
       .disposed(by: disposeBag)
   }
   
+  /// actions 설정
   func setupActions(){
+  
+    /// 로그인 시 - 프로필 편집으로 이동
+    /// 비 로그인 시 - 로그인 화면으로 이동
     managementProfileButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
@@ -167,9 +159,15 @@ final class UserInfoView: UIView {
       .disposed(by: disposeBag)
   }
   
+  /// UI 데이터 설정
   func setupUIData(_ data: UserDetailData){
+    // 닉네임
     self.nickNameLabel.text = data.nickname
-    self.majorLabel.text = self.convertMajor(data.major ?? "", toEnglish: false)
+    
+    // 학과
+    self.majorLabel.text = Utils.convertMajor(data.major ?? "", toEnglish: false)
+    
+    // 이미지
     if let imageURL = URL(string: data.imageURL ?? "") {
       viewModel.getUserProfileImage(imageURL: imageURL) { result in
         switch result {
@@ -183,5 +181,3 @@ final class UserInfoView: UIView {
   }
 }
 
-extension UserInfoView: CreateUIprotocol {}
-extension UserInfoView: ConvertMajor {}

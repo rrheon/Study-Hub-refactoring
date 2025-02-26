@@ -308,11 +308,11 @@ extension MyPostViewController: UICollectionViewDelegate {
 }
 
 extension MyPostViewController: BottomSheetDelegate {
-  func firstButtonTapped(postOrCommentID: Int) {
+  func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     
   }
   
-  func secondButtonTapped(postOrCommentID: Int) {
+  func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
   
   }
   

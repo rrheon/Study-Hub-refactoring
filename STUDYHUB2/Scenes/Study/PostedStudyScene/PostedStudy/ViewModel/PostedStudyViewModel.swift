@@ -131,12 +131,14 @@ class PostedStudyViewModel: Stepper  {
   
   
   /// 내 포스트 삭제하기
-  func deleteMyPost(completion: @escaping () -> Void){
+  func deleteMyPost(with postID: Int){
 //    guard let postID = postDatas.value?.postID else { return }
 //    deleteMyPost(postID) {
 //      self.postedStudyData.isNeedFechData?.accept($0)
 //      completion()
 //    }
+    
+    StudyPostManager.shared.deletePost(with: postID)
   }
   
   

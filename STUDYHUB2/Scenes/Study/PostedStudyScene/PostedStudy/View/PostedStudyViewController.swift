@@ -75,24 +75,35 @@ final class PostedStudyViewController: UIViewController {
   func setupNavigationbar(){
     leftButtonSetting()
     self.navigationController?.navigationBar.isTranslucent = false
-    
-    /// 작성자가의 포스트인 경우 오른쪽 버튼 - 바텀시트 작업
-    if let isUsersPost = viewModel.postDatas.value?.usersPost {
-      rightButtonSetting(imgName: "RightButtonImg")
-    }
   }
   
-  /// 네비게이션 바 왼쪽 아이템 터치 - 현재 화면 pop
+  /// 네비게이션 바 왼쪽 아이탬 터치 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
     viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+  }
+  
+  /// 네비게이션 바 오른쪽 아이탬 터치 - 본인 게시글일 경우 수정 및 삭제
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+        guard let postID = viewModel.postDatas.value?.postID else { return }
+    //    let bottomSheetVC = BottomSheet(
+    //      postID: postID,
+    //      checkMyPost: true,
+    //      firstButtonTitle: "삭제하기",
+    //      secondButtonTitle: "수정하기",
+    //      checkPost: true
+    //    )
+    //    bottomSheetVC.delegate = self
+    //
+    //    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
+    //    present(bottomSheetVC, animated: true, completion: nil)
+    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
   }
   
   // MARK: - setUpLayout
   
   /// layout 설정
   func setUpLayout(){
-    [
-      mainComponent,
+    [ mainComponent,
       detailInfoComponent,
       writerComponent,
       commentComponent,
@@ -166,6 +177,11 @@ final class PostedStudyViewController: UIViewController {
         vc.setupComponents(with: data)
         vc.setUpLayout()
         vc.makeUI()
+        
+        /// 사용자가 작성한 게시글일 경우
+        if data?.usersPost == true {
+          self.rightButtonSetting(imgName: "RightButtonImg")
+        }
       })
       .disposed(by: disposeBag)
 
@@ -262,39 +278,23 @@ final class PostedStudyViewController: UIViewController {
           let similarStudyComponent = similarStudyComponent else { return }
     
     /// 댓글 테이블뷰
-    commentComponent.commentTableView.rx.setDelegate(self)
+    commentComponent.commentTableView
+      .rx
+      .setDelegate(self)
       .disposed(by: disposeBag)
     
-    commentComponent.commentTableView.register(
-      CommentCell.self,
-      forCellReuseIdentifier: CommentCell.cellID
-    )
+    commentComponent.commentTableView
+      .register(CommentCell.self, forCellReuseIdentifier: CommentCell.cellID)
     
     /// 유사한 스터디 컬랙션 뷰
-    similarStudyComponent.similarCollectionView.rx.setDelegate(self)
+    similarStudyComponent.similarCollectionView
+      .rx
+      .setDelegate(self)
       .disposed(by: disposeBag)
     
-    similarStudyComponent.similarCollectionView.register(
-      SimilarPostCell.self,
-      forCellWithReuseIdentifier: SimilarPostCell.cellID
-    )
+    similarStudyComponent.similarCollectionView
+      .register(SimilarPostCell.self, forCellWithReuseIdentifier: SimilarPostCell.cellID)
   }
-  
-  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
-    //    guard let postID = viewModel.postDatas.value?.postID else { return }
-    //    let bottomSheetVC = BottomSheet(
-    //      postID: postID,
-    //      checkMyPost: true,
-    //      firstButtonTitle: "삭제하기",
-    //      secondButtonTitle: "수정하기",
-    //      checkPost: true
-    //    )
-    //    bottomSheetVC.delegate = self
-    //
-    //    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-    //    present(bottomSheetVC, animated: true, completion: nil)
-  }
-  
 }
 
 // MARK: - extension
@@ -319,22 +319,29 @@ extension PostedStudyViewController: UITableViewDelegate  {
 // 터치하면 화면 내리기, 토스트팝업
 extension PostedStudyViewController: BottomSheetDelegate {
   
+  
+  
   /// BottomSheet의 첫 번째 버튼 탭 - 댓글 삭제
   /// - Parameter postOrCommentID: commentID
-  func firstButtonTapped(postOrCommentID: Int) {
-    viewModel.deleteComment(with: postOrCommentID)
+  func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
+    switch bottomSheetCase {
+    case .managementPost:  viewModel.deleteMyPost(with: postOrCommentID)
+    case .managementComment: viewModel.deleteComment(with: postOrCommentID)
+    default: return
+      
+      
+    }
   }
   
   /// BottomSheet의 두 번째 버튼 탭 - 댓글 수정
   /// - Parameter postOrCommentID: commentID
-  func secondButtonTapped(postOrCommentID: Int) {
+  func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     // 현재 화면 내리기
     viewModel.steps.accept(AppStep.dismissCurrentScreen)
-
+    
     commentComponent?.commentButton.setTitle("수정", for: .normal)
     viewModel.commentID = postOrCommentID
   }
-
   
   func goToParticipateVC(_ postData: BehaviorRelay<PostDetailData?>){
     let participateVC = ParticipateVC(postData)

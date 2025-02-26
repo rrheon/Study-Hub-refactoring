@@ -30,11 +30,9 @@ class HomeFlow: Flow {
   
   lazy var rootViewController: UINavigationController = {
     let nav = UINavigationController()
-
-    nav.configurationNavigationBar()
-
     return nav
   }()
+
   
   /// 로그인 상태
   var isLoginStatus: Bool = false
@@ -85,6 +83,7 @@ class HomeFlow: Flow {
   
   /// 현재화면 pop
   private func popCurrentScreen() -> FlowContributors {
+    self.rootViewController.popViewController(animated: true)
     self.rootViewController.popViewController(animated: true)
     return .none
   }

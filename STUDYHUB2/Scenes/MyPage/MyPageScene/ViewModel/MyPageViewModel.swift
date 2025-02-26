@@ -18,54 +18,45 @@ enum Service {
   case privacyPolicy
 }
 
+/// 마이페이지 ViewModel
 final class MyPageViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
   static let shared = MyPageViewModel()
   
+  /// 사용자의 정보 데이터
   var userData = BehaviorRelay<UserDetailData?>(value: nil)
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var managementProfileButton = PublishRelay<Bool>()
   var userProfile =  BehaviorRelay<UIImage?>(value: UIImage(named: "ProfileAvatar_change")!)
-
+  
   var isNeedFetch = PublishRelay<Bool>()
   var uesrActivityTapped = PublishRelay<UserActivity>()
   var serviceTapped = PublishRelay<Service>()
   
-  var serviceURL: String = ""
-  var personalURL: String = ""
+  var serviceURL: String? {
+    return DataLoaderFromPlist.loadURLs()?["service"]
+  }
+  var personalURL: String? {
+    return DataLoaderFromPlist.loadURLs()?["personal"]
+  }
   
   init() {
-//    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
-//    self.checkLoginStatus.accept(isLoginStatus)
-    fetchUserData()
-    loadURLs()
-    }
+    //    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken()?.first != nil
+    //    self.checkLoginStatus.accept(isLoginStatus)
+//    fetchUserData()
+  }
   
+  /// 사용자의 정보 가져오기
   func fetchUserData() {
-//    userInfoManager.getUserInfo { result in
-//      self.userData.accept(result)
-//    }
-  }
-  
-  func deleteToken(){
-    TokenManager.shared.deleteTokens()
-  }
-  
-  func seletUserActivity(_ seletedActivity: UserActivity){
-    uesrActivityTapped.accept(seletedActivity)
-  }
-  
-  func seletService(_ seletedService: Service) {
-    serviceTapped.accept(seletedService)
-  }
-  
-  private func loadURLs() {
-    if let serviceURLString = DataLoaderFromPlist.loadURLs()?["service"],
-       let personalURLString = DataLoaderFromPlist.loadURLs()?["personal"] {
-      serviceURL = serviceURLString
-      personalURL = personalURLString
+    UserProfileManager.shared.fetchUserInfoToServer { userData in
+      self.userData.accept(userData)
+      print(#fileID, #function, #line," - \(userData)")
+
     }
+    //    userInfoManager.getUserInfo { result in
+    //      self.userData.accept(result)
+    //    }
   }
 }
 

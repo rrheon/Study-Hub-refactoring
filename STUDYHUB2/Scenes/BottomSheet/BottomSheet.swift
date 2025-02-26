@@ -7,29 +7,30 @@ import Then
 
 /// BottomSheet Delegate
 protocol BottomSheetDelegate {
-  func firstButtonTapped(postOrCommentID: Int)
-  func secondButtonTapped(postOrCommentID: Int)
+  func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase)
+  func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase)
 }
 
 
 /// BottomSheet 종류
 enum BottomSheetCase {
-  case postOrComment       // 게시글, 댓글 삭제 수정
-  case editProfile         // 프로필 편집
+  case managementPost           // 게시글 삭제 수정
+  case managementComment       // 댓글 삭제 수정
+  case editProfile             // 프로필 편집
   
   /// 첫 번째 버튼 타이틀
   var firstBtntitle: String {
     switch self {
-    case .postOrComment:      return "삭제하기"
     case .editProfile:        return "사진 촬영하기"
+    default:                  return "삭제하기"
     }
   }
   
   /// 두 번째 버튼 타이틀
   var secondBtntitle: String {
     switch self {
-    case .postOrComment:      return "수정하기"
     case .editProfile:        return "앨범에서 선택하기"
+    default:                  return "수정하기"
     }
   }
 }
@@ -47,7 +48,7 @@ final class BottomSheet: UIViewController {
   /// - Parameters:
   ///   - postID: postID 혹은 CommentID
   ///   - type: BottomSheet 종류
-  init(with postOrCommentID: Int? = nil , type: BottomSheetCase = .postOrComment) {
+  init(with postOrCommentID: Int? = nil , type: BottomSheetCase = .managementPost) {
     self.postOrCommentID = postOrCommentID
     self.type = type
     
@@ -127,17 +128,18 @@ final class BottomSheet: UIViewController {
   
   /// 첫번째 버튼 터치 시
   func firstButtonTapped(){
-    delegate?.firstButtonTapped(postOrCommentID: postOrCommentID ?? 0)
+    guard let id = postOrCommentID else { return }
+    delegate?.firstButtonTapped(postOrCommentID: id, bottomSheetCase: type)
   }
   
   /// 두번째 버튼 터치 시
   func secondButtonTapped(){
-    delegate?.secondButtonTapped(postOrCommentID: postOrCommentID ?? 0)
+    guard let id = postOrCommentID else { return }
+    delegate?.secondButtonTapped(postOrCommentID: id, bottomSheetCase: type)
   }
   
   /// 닫기 버튼 터치 시
   @objc func dissMissButtonTapped(){
     dismiss(animated: true, completion: nil)
   }
-  
 }

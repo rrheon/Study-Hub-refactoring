@@ -3,6 +3,7 @@ import Foundation
 
 import RxRelay
 
+/// 스터디 참여 ViewModel
 final class ParticipateViewModel {
   
   var postData: BehaviorRelay<PostDetailData?>

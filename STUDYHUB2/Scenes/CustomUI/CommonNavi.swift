@@ -38,21 +38,20 @@ extension UIViewController {
   
   @objc func rightBarBtnTapped(_ sender: UIBarButtonItem){}
   
-  func settingNavigationbar(_ scroll: Bool) {
+  /// 네비게이션 바 UI 설정
+  func settingNavigationbar() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.shadowColor = .black
-    appearance.backgroundColor = .black
+    appearance.backgroundColor = .backgroundBlack
+    appearance.shadowColor = .clear
     
     appearance.titleTextAttributes = [
       NSAttributedString.Key.foregroundColor: UIColor.white,
       NSAttributedString.Key.font: UIFont(name: "Pretendard-Bold", size: 18)!
     ]
     
-    let navigationBar = UINavigationBar.appearance()
-    navigationBar.standardAppearance = appearance
-    navigationBar.scrollEdgeAppearance = appearance
-    
+    self.navigationController?.navigationBar.standardAppearance = appearance
+    self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
   }
   
   
@@ -71,7 +70,7 @@ extension UIViewController {
       ]
       
       self.navigationController?.navigationBar.standardAppearance = appearance
-//      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
   }
   
@@ -81,7 +80,6 @@ extension UIViewController {
     navigationBarAppearance.configureWithTransparentBackground()
     UINavigationBar.appearance().standardAppearance = navigationBarAppearance
     UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
-    
   }
 }
 
@@ -89,7 +87,7 @@ class CommonNavi: UIViewController {
   
   init(_ scroll: Bool = false) {
     super.init(nibName: nil, bundle: .none)
-    settingNavigationbar(scroll)
+    settingNavigationbar()
   }
   
   required init?(coder: NSCoder) {

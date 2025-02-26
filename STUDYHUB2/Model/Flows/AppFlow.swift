@@ -88,7 +88,6 @@ class AppFlow: Flow {
   
   lazy var rootViewController: UINavigationController = {
     let nav = UINavigationController()
-    nav.configurationNavigationBar()
     return nav
   }()
   

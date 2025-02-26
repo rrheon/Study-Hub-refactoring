@@ -3,49 +3,51 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxRelay
+import RxCocoa
+import Then
 
-final class ParticipateVC: CommonNavi {
+/// 스터디 참여하기 VC
+final class ParticipateVC: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: ParticipateViewModel
   
   // MARK: - UI세팅
   
   
-  private lazy var titleLabel = createLabel(
-    title: "자기소개나 스터디에 대한 의지를 스터디 팀장에게 알려 주세요! 💬",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 스터디 참여 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = "자기소개나 스터디에 대한 의지를 스터디 팀장에게 알려 주세요! 💬"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
+ 
+  /// 스터디 참여 이유 TextView
+  private lazy var reasonTextView: UITextView = UITextView().then {
+    $0.text = "ex) 안녕하세요, 저는 경영학부에 재학 중인 허브입니다! 지각이나 잠수 없이 열심히 참여하겠습니다. 잘 부탁드립니다 :)"
+    $0.textColor = .bg70
+    $0.layer.cornerRadius = 10
+    $0.layer.borderWidth = 1
+    $0.layer.borderColor = UIColor.bg50.cgColor
+    $0.font = UIFont(name: "Pretendard", size: 14)
+    $0.delegate = self
+  }
   
-  private lazy var reasonTextView: UITextView = {
-    let textView = UITextView()
-    textView.text =
-    "ex) 안녕하세요, 저는 경영학부에 재학 중인 허브입니다! 지각이나 잠수 없이 열심히 참여하겠습니다. 잘 부탁드립니다 :)"
-    textView.textColor = .bg70
-    textView.layer.cornerRadius = 10
-    textView.layer.borderWidth = 1
-    textView.layer.borderColor = UIColor.bg50.cgColor
-    textView.font = UIFont(name: "Pretendard", size: 14)
-    textView.delegate = self
-    return textView
-  }()
+  /// 스터디 참여 이유 글자 갯수 카운트 라벨
+  private lazy var countContentLabel: UILabel = UILabel().then {
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard", size: 12)
+    $0.text = "0/200"
+  }
   
-  private lazy var countContentLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 12)
-    label.text = "0/200"
-    return label
-  }()
-  
-  private lazy var bottomLabel = createLabel(
-    title: "- 수락 여부는 알림으로 알려드려요\n- 채팅방 링크는 ‘마이페이지-참여한 스터디’에서 확인할 수 있어요",
-    textColor: .bg60,
-    fontType: "Pretendard",
-    fontSize: 12
-  )
+  /// 스터디 참여 정보 라벨
+  private lazy var bottomLabel: UILabel = UILabel().then {
+    $0.textColor = .bg60
+    $0.font = UIFont(name: "Pretendard", size: 12)
+    $0.text =  "- 수락 여부는 알림으로 알려드려요\n- 채팅방 링크는 ‘마이페이지-참여한 스터디’에서 확인할 수 있어요"
+  }
 
+  /// 스터디 참여 신청완료버튼
   private lazy var completeButton = StudyHubButton(title: "완료")
 
   init(_ postData: BehaviorRelay<PostDetailData?>) {
@@ -74,22 +76,19 @@ final class ParticipateVC: CommonNavi {
     
     setupAction()
     setupBinding()
-  }
+  } // viewDidLoad
   
   // MARK: - setupLayout
+  
+  /// Loyout 설정
   func setupLayout(){
-    [
-      titleLabel,
-      reasonTextView,
-      countContentLabel,
-      bottomLabel,
-      completeButton
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ titleLabel, reasonTextView, countContentLabel, bottomLabel, completeButton]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
+  
+  /// UI 설정
   func makeUI(){
     titleLabel.numberOfLines = 0
     titleLabel.snp.makeConstraints {
@@ -127,7 +126,7 @@ final class ParticipateVC: CommonNavi {
   
   // MARK: - 네비게이션 세팅
   
-  
+  /// 네비게이션 바 세팅
   func setupNavigationbar() {
     leftButtonSetting()
     settingNavigationTitle(title: "참여하기")
@@ -135,7 +134,7 @@ final class ParticipateVC: CommonNavi {
   
   // MARK: - 메인라벨 텍스트 색상 변경
   
-  
+  /// 라벨 색상 변경
   func changeTitleLabelColor(){
     titleLabel.changeColor(wantToChange: "자기소개", color: .o50)
     titleLabel.changeColor(wantToChange: "스터디에 대한 의지", color: .o50)
@@ -143,7 +142,7 @@ final class ParticipateVC: CommonNavi {
   
   // MARK: - setupBinding
   
-  
+  /// 바인딩
   func setupBinding(){
     viewModel.isSuccessParticipate
       .asDriver(onErrorJustReturn: false)
@@ -166,27 +165,32 @@ final class ParticipateVC: CommonNavi {
           titleColor: .white)
       })
       .disposed(by: disposeBag)
+    
+    reasonTextView.rx.text.orEmpty
+      .filter { [weak self] _ in
+        return self?.reasonTextView.textColor == UIColor.black
+      }
+      .bind(to: viewModel.userIntroduce)
+      .disposed(by: disposeBag)
+
   }
   
+  /// Actions 설정
   func setupAction(){
+    /// 스터디 신청 완료버튼
     completeButton.rx.tap
       .subscribe(onNext: { [ weak self] in
         self?.completeButtonTapped()
       })
       .disposed(by: disposeBag)
-    
-    reasonTextView.rx.text.orEmpty
-        .filter { [weak self] _ in
-            return self?.reasonTextView.textColor == UIColor.black
-        }
-        .bind(to: viewModel.userIntroduce)
-        .disposed(by: disposeBag)
-
   }
   
+  
+  /// 스터디 신청 완료버튼 탭
   func completeButtonTapped(){
     guard let text = reasonTextView.text else { return }
   
+    /// 스터디 신청 사유 글자갯수 제한
     if text.count < 10 {
       showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
     } else {
@@ -195,7 +199,7 @@ final class ParticipateVC: CommonNavi {
   }
 }
 
-// MARK: - textview
+// MARK: - Extension
 
 
 extension ParticipateVC {
@@ -233,4 +237,3 @@ extension ParticipateVC {
   }
 }
 
-extension ParticipateVC: CreateUIprotocol {}

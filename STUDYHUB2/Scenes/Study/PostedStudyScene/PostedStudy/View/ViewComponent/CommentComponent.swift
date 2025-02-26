@@ -249,7 +249,7 @@ extension PostedStudyCommentComponent: CommentCellDelegate {
   func menuButtonTapped(commentID: Int) {
     /// BottomSheet 띄우기
     viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: commentID,
-                                                          type: .postOrComment))
+                                                         type: .managementComment))
   }
 }
 

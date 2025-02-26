@@ -9,6 +9,23 @@ import Foundation
 
 import Moya
 
+/// Header 종류
+/// - 로그인이 되어있을 경우 accessToken을 같이 보냄
+/// - 로그아웃일 경우 accessToken없이 보냄
+enum HeaderCase {
+  case isLogin
+  case isLogout
+  
+  var header: [String: String]? {
+    switch self {
+    case .isLogin:
+      return ["Content-type": "application/json",
+              "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
+    case .isLogout:
+      return ["Content-type": "application/json"]
+    }
+  }
+}
 
 // MARK: - networking
 
@@ -109,8 +126,29 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
         .modifyPost(_),
         .closePost(_),
         .deleteAllPost:
-      return ["Content-type": "application/json",
-              "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
+      return HeaderCase.isLogin.header
+      
+    case .searchSinglePost(_):
+      // 토큰 저장 성공여부
+      var isSuccessToSaveTokens: Bool = false
+      
+      // refreshToken 가져오기 - nil 이면 로그아웃인 경우의 헤더를 반환
+      guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
+        return HeaderCase.isLogout.header
+      }
+      
+      // accessToken 재발급
+      UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
+        if let refreshToken = tokens?.refreshToken,
+           let accessToken = tokens?.accessToken {
+          // 토큰 저장
+          isSuccessToSaveTokens = TokenManager.shared.saveTokens(accessToken: accessToken,
+                                                                 refreshToken: refreshToken)
+        }
+      }
+      
+      // 저장 결과에 따라 헤더 반환 -> 비동기 처리가 완료되지 않은 상태로 return 헤서 false
+      return isSuccessToSaveTokens ? HeaderCase.isLogin.header : HeaderCase.isLogout.header
       
     default:
       return ["Content-type": "application/json"]

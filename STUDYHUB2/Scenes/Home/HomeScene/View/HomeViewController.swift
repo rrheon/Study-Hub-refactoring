@@ -108,8 +108,7 @@ final class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    view.backgroundColor = .black
-
+    view.backgroundColor = .backgroundBlack
 
 //    Task {
 //      do {
@@ -120,7 +119,7 @@ final class HomeViewController: UIViewController {
 //        await deadLinePostData
 //      }
 //    }
-//    
+    
     setupBindings()
     setupCollectionView()
     setupActions()
@@ -235,6 +234,16 @@ final class HomeViewController: UIViewController {
   func setupNavigationbar(){
     leftButtonSetting(imgName: "LogoImage", activate: false)
     rightButtonSetting(imgName: "BookMarkImg")
+    settingNavigationbar()
+    self.navigationController?.navigationBar.isTranslucent = false
+  }
+  
+  
+  // MARK: -  북마크 버튼 탭
+  
+  /// 네비게이션 바 오른쪽 버튼 탭 - 북마크 화면으로 이동
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+    NotificationCenter.default.post(name: .navToBookmarkScreen, object: nil)
   }
   
   /// collectionView 설정
@@ -325,6 +334,10 @@ final class HomeViewController: UIViewController {
       .withUnretained(self)
       .subscribe(onNext: { (vc, item) in
         let postID = item.postID
+        NotificationCenter.default.post(name: .navToStudyDetailScrenn,
+                                        object: nil,
+                                        userInfo: ["postID" : postID]
+        )
       })
       .disposed(by: disposeBag)
     
@@ -351,15 +364,9 @@ final class HomeViewController: UIViewController {
       .disposed(by: disposeBag)
   }
   
-  // MARK: -  북마크 버튼 탭
-  
-  /// 네비게이션 바 오른쪽 버튼 탭 - 북마크 화면으로 이동
-  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
-    NotificationCenter.default.post(name: .navToBookmarkScreen, object: nil)
-  }
-  
   // MARK: - 서치바 재설정
   
+  /// 서치바 설정
   func redesignSearchBar(){
     searchBar.placeholder = "관심있는 스터디를 검색해 보세요"
     
@@ -373,6 +380,7 @@ final class HomeViewController: UIViewController {
 // MARK: - 서치바 관련
 
 extension HomeViewController: UISearchBarDelegate {
+  /// 서치바 터치 시 검색 화면으로 이동
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     viewModel.steps.accept(HomeStep.enterSearchIsRequired)
     return false

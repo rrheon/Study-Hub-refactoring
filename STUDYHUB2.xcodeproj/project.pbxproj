@@ -131,9 +131,9 @@
 		EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF742C9960B600896FEB /* ManagementImage.swift */; };
 		EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF772C9963D800896FEB /* MyPageViewModel.swift */; };
 		EEC5FF7D2C9C086300896FEB /* MyInfomationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF7C2C9C086300896FEB /* MyInfomationViewModel.swift */; };
-		EEC5FF7F2C9C088700896FEB /* ProfileComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF7E2C9C088700896FEB /* ProfileComponent.swift */; };
-		EEC5FF812C9C09C300896FEB /* UserInfomationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF802C9C09C300896FEB /* UserInfomationComponent.swift */; };
-		EEC5FF832C9C0AFA00896FEB /* ExitComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF822C9C0AFA00896FEB /* ExitComponent.swift */; };
+		EEC5FF7F2C9C088700896FEB /* ProfileComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF7E2C9C088700896FEB /* ProfileComponentView.swift */; };
+		EEC5FF812C9C09C300896FEB /* UserInfomationComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF802C9C09C300896FEB /* UserInfomationComponentView.swift */; };
+		EEC5FF832C9C0AFA00896FEB /* ExitComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF822C9C0AFA00896FEB /* ExitComponentView.swift */; };
 		EEC5FF852C9C108400896FEB /* Logout.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF842C9C108400896FEB /* Logout.swift */; };
 		EEC5FF902C9DBF2100896FEB /* EditNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF8F2C9DBF2100896FEB /* EditNicknameViewModel.swift */; };
 		EEC5FF942C9DBF4000896FEB /* EditMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FF932C9DBF4000896FEB /* EditMajorViewModel.swift */; };
@@ -335,9 +335,9 @@
 		EEC5FF742C9960B600896FEB /* ManagementImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementImage.swift; sourceTree = "<group>"; };
 		EEC5FF772C9963D800896FEB /* MyPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF7C2C9C086300896FEB /* MyInfomationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfomationViewModel.swift; sourceTree = "<group>"; };
-		EEC5FF7E2C9C088700896FEB /* ProfileComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileComponent.swift; sourceTree = "<group>"; };
-		EEC5FF802C9C09C300896FEB /* UserInfomationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfomationComponent.swift; sourceTree = "<group>"; };
-		EEC5FF822C9C0AFA00896FEB /* ExitComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitComponent.swift; sourceTree = "<group>"; };
+		EEC5FF7E2C9C088700896FEB /* ProfileComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileComponentView.swift; sourceTree = "<group>"; };
+		EEC5FF802C9C09C300896FEB /* UserInfomationComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfomationComponentView.swift; sourceTree = "<group>"; };
+		EEC5FF822C9C0AFA00896FEB /* ExitComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitComponentView.swift; sourceTree = "<group>"; };
 		EEC5FF842C9C108400896FEB /* Logout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logout.swift; sourceTree = "<group>"; };
 		EEC5FF8F2C9DBF2100896FEB /* EditNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNicknameViewModel.swift; sourceTree = "<group>"; };
 		EEC5FF932C9DBF4000896FEB /* EditMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMajorViewModel.swift; sourceTree = "<group>"; };
@@ -1094,9 +1094,9 @@
 		EEC5FF7A2C9C083100896FEB /* ViewComponent */ = {
 			isa = PBXGroup;
 			children = (
-				EEC5FF7E2C9C088700896FEB /* ProfileComponent.swift */,
-				EEC5FF802C9C09C300896FEB /* UserInfomationComponent.swift */,
-				EEC5FF822C9C0AFA00896FEB /* ExitComponent.swift */,
+				EEC5FF7E2C9C088700896FEB /* ProfileComponentView.swift */,
+				EEC5FF802C9C09C300896FEB /* UserInfomationComponentView.swift */,
+				EEC5FF822C9C0AFA00896FEB /* ExitComponentView.swift */,
 			);
 			path = ViewComponent;
 			sourceTree = "<group>";
@@ -1995,14 +1995,14 @@
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
 				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
-				EEC5FF832C9C0AFA00896FEB /* ExitComponent.swift in Sources */,
+				EEC5FF832C9C0AFA00896FEB /* ExitComponentView.swift in Sources */,
 				EE271F2A2AD8B9FA00190E7A /* String+Ext.swift in Sources */,
 				F88AB33F2A95236B001D619C /* CreatestudyViewController.swift in Sources */,
 				EEC5FF942C9DBF4000896FEB /* EditMajorViewModel.swift in Sources */,
 				EE5B933D2D48AAE3006DC65D /* ApplyStudyDTO.swift in Sources */,
 				EE0A8B632AFCB572001C3F41 /* BookMarkCell.swift in Sources */,
 				EEC5FFAC2CA29E9200896FEB /* EditPasswordViewController.swift in Sources */,
-				EEC5FF7F2C9C088700896FEB /* ProfileComponent.swift in Sources */,
+				EEC5FF7F2C9C088700896FEB /* ProfileComponentView.swift in Sources */,
 				EEC5FFA62CA2956B00896FEB /* EditPasswordTextField.swift in Sources */,
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEFD5D372B65C41600D1CE00 /* ParticipateDTO.swift in Sources */,
@@ -2068,7 +2068,7 @@
 				EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */,
 				EE271F202AD0584100190E7A /* UIColor+Ext.swift in Sources */,
 				EE5B934B2D48BC92006DC65D /* ToStudyHublDTO.swift in Sources */,
-				EEC5FF812C9C09C300896FEB /* UserInfomationComponent.swift in Sources */,
+				EEC5FF812C9C09C300896FEB /* UserInfomationComponentView.swift in Sources */,
 				EE5B93692D4A257C006DC65D /* CommentDTO.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,

@@ -5,12 +5,20 @@ import SnapKit
 import RxSwift
 import RxRelay
 
-final class ExitComponent: UIView {
+/// 로그아웃 / 탈퇴 View
+final class ExitComponentView: UIView {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyInfomationViewModel
   
-  private lazy var dividerLine = createDividerLine(height: 10)
+  /// 구분선
+  private lazy var dividerLine = StudyHubUI.createDividerLine(height: 10)
+  
+  /// 로그아웃 버튼
   private lazy var logoutButton = createMypageButton(title: "로그아웃")
+  
+  /// 탈퇴하기 버튼
   private lazy var quitButton = createMypageButton(title: "탈퇴하기")
   
   init(_ viewModel: MyInfomationViewModel) {
@@ -26,6 +34,7 @@ final class ExitComponent: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// 로그아웃 / 탈퇴하기 버튼 생성
   func createMypageButton(title: String) -> UIButton {
     let button = UIButton(type: .system)
     button.setTitle(title, for: .normal)
@@ -37,20 +46,15 @@ final class ExitComponent: UIView {
   
   // MARK: - setUpLayout
   
-  
+  /// Layout 설정
   func setUpLayout(){
-    [
-      dividerLine,
-      logoutButton,
-      quitButton
-    ].forEach {
-      self.addSubview($0)
-    }
+    [dividerLine, logoutButton, quitButton]
+      .forEach { self.addSubview($0) }
   }
   
   // MARK: - makeUI
   
-  
+  /// UI설정
   func makeUI(){
     dividerLine.snp.makeConstraints {
       $0.top.equalToSuperview()
@@ -68,6 +72,7 @@ final class ExitComponent: UIView {
     }
   }
   
+  /// 바인딩설정
   func setupBinding(){
     let buttonList: [(UIButton, EditInfomationList)] = [
       (logoutButton, .logout),
@@ -83,5 +88,3 @@ final class ExitComponent: UIView {
     }
   }
 }
-
-extension ExitComponent: CreateDividerLine {}

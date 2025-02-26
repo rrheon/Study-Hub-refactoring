@@ -74,9 +74,12 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
       let params: [String: Any] = ["password": password]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
+//    case .refreshAccessToken(let refreshToken):
+//      let params: [String: Any] = ["refreshToken": refreshToken]
+//      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
     case .refreshAccessToken(let refreshToken):
-      let params: [String: Any] = ["refreshToken": refreshToken]
-      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+       let params = RefreshAccessToken(refreshToken: refreshToken)
+       return .requestJSONEncodable(params)
     }
   }
   

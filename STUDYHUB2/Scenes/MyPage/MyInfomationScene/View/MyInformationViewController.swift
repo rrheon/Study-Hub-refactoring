@@ -7,20 +7,26 @@ import SnapKit
 import RxSwift
 import RxRelay
 
-final class MyInformViewController: CommonNavi {
+/// 내 정보 관리 VC
+final class MyInformViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: MyInfomationViewModel
   
-  private var profileComponent: ProfileComponent
-  private var userInfoComponent: UserInfomationComponent
-  private var exitComponent: ExitComponent
+  /// 유저 프로필 View
+  private var profileComponent: ProfileComponentView
   
-  init(_ userData: BehaviorRelay<UserDetailData?>, profile:  BehaviorRelay<UIImage?>) {
+  /// 유저 정보 관련
+  private var userInfoComponent: UserInfomationComponentView
+  
+  /// 로그아웃 / 탈퇴 View
+  private var exitComponent: ExitComponentView
+  
+  init(_ userData: BehaviorRelay<UserDetailData?>, profile: BehaviorRelay<UIImage?>) {
     self.viewModel = MyInfomationViewModel(userData, userProfile: profile)
     
-    self.profileComponent = ProfileComponent(viewModel)
-    self.userInfoComponent = UserInfomationComponent(viewModel)
-    self.exitComponent = ExitComponent(viewModel)
+    self.profileComponent = ProfileComponentView(viewModel)
+    self.userInfoComponent = UserInfomationComponentView(viewModel)
+    self.exitComponent = ExitComponentView(viewModel)
     super.init()
   }
   
@@ -42,24 +48,20 @@ final class MyInformViewController: CommonNavi {
     
     setupActions()
     self.view.bringSubviewToFront(profileComponent)
-  }
+  } // viewDidLoad
   
   // MARK: - setUpLayout
   
-  
+  /// Layout설정
   func setUpLayout(){
-    [
-      profileComponent,
-      userInfoComponent,
-      exitComponent
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ profileComponent, userInfoComponent, exitComponent]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI(){
     profileComponent.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -83,7 +85,7 @@ final class MyInformViewController: CommonNavi {
   
   // MARK: - 네비게이션바
   
-  
+  /// 네비게이션 바 세팅
   func setupNavigationbar(){
     leftButtonSetting()
     settingNavigationTitle(title: "내 정보")
@@ -91,7 +93,7 @@ final class MyInformViewController: CommonNavi {
   
   // MARK: - setupActions
   
-  
+  /// Actions 설정
   func setupActions(){
     viewModel.isUserProfileAction
       .subscribe(onNext: {[weak self] in
@@ -105,7 +107,8 @@ final class MyInformViewController: CommonNavi {
       })
       .disposed(by: disposeBag)
   }
-  
+   
+  /// 프로필 액션 별 toast
   func profileActions(_ action: ProfileActions){
     switch action {
     case .successToDelete:
@@ -197,11 +200,11 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
-  func firstButtonTapped(postOrCommentID postID: Int) {
+  func firstButtonTapped(postOrCommentID postID: Int, bottomSheetCase: BottomSheetCase) {
     requestCameraAccess()
   }
   
-  func secondButtonTapped(postOrCommentID postID: Int) {
+  func secondButtonTapped(postOrCommentID postID: Int, bottomSheetCase: BottomSheetCase) {
     requestPhotoLibraryAccess()
   }
   

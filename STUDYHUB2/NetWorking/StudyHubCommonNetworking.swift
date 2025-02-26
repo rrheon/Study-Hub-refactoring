@@ -30,7 +30,7 @@ class StudyHubCommonNetworking {
   init(){
     print(#fileID, #function, #line," - test")
 
-    registerCheckValidAccessToken()
+//    registerCheckValidAccessToken()
   }
   
   

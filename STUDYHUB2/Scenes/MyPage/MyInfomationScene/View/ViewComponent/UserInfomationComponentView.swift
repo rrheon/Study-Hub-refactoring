@@ -5,75 +5,82 @@ import SnapKit
 import RxSwift
 import RxRelay
 import RxCocoa
+import Then
 
-final class UserInfomationComponent: UIView {
+/// 유저 정보 관련 View
+final class UserInfomationComponentView: UIView {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyInfomationViewModel
   
-  private lazy var nickNamekLabel = createLabel(
-    title: "닉네임",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 닉네임 제목 라벨
+  private lazy var nickNamekLabel = UILabel().then {
+    $0.text = "닉네임"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
-  private lazy var userNickNamekLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
-  
+  /// 사용자의 닉네임 라벨
+  private lazy var userNickNamekLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
+
+  /// 닉네임 수정버튼
   private lazy var nickNameEditButton = createArrowButton()
 
-  private lazy var majorLabel = createLabel(
-    title: "학과",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 학과 제목라벨
+  private lazy var majorLabel = UILabel().then {
+    $0.text = "학과"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
-  private lazy var userMajorLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
-  
+  /// 사용자의 학과 라벨
+  private lazy var userMajorLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
+
+  /// 학과 수정 버튼
   private lazy var editMajorButton = createArrowButton()
   
-  private lazy var passwordLabel = createLabel(
-    title: "비밀번호",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
-  
+  /// 비밀번호 제목 라벨
+  private lazy var passwordLabel = UILabel().then {
+    $0.text = "비밀번호"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
+
+  /// 비밀번호 수정 버튼
   private lazy var editPassworButton = createArrowButton()
   
-  private lazy var genderLabel = createLabel(
-    title: "성별",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 성별 제목 라벨
+  private lazy var genderLabel = UILabel().then {
+    $0.text = "성별"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
-  private lazy var userGenderLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 유저의 성별 라벨
+  private lazy var userGenderLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
+
+  /// 이메일 제목라벨
+  private lazy var emailLabel = UILabel().then {
+    $0.text = "이메일"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
-  private lazy var emailLabel = createLabel(
-    title: "이메일",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
-  
-  private lazy var userEmailLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard",
-    fontSize: 16
-  )
+  /// 사용자의 이메일 라벨
+  private lazy var userEmailLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 16)
+  }
   
   init(_ viewModel: MyInfomationViewModel) {
     self.viewModel = viewModel
@@ -88,6 +95,7 @@ final class UserInfomationComponent: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// 화살표 버튼  생성
   func createArrowButton() -> UIButton{
     let button = UIButton(type: .system)
     button.setImage(UIImage(named: "RightArrow"), for: .normal)
@@ -97,7 +105,7 @@ final class UserInfomationComponent: UIView {
   
   // MARK: - setUpLayout
   
-  
+  /// layout 설정
   func setUpLayout(){
     [
       nickNamekLabel,
@@ -120,6 +128,7 @@ final class UserInfomationComponent: UIView {
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI(){
     nickNamekLabel.snp.makeConstraints {
       $0.leading.equalToSuperview().offset(20)
@@ -186,7 +195,9 @@ final class UserInfomationComponent: UIView {
     }
   }
   
+  /// 바인딩 설정
   func setupBinding(){
+    /// 사용자의 정보
     viewModel.userData
       .asDriver()
       .drive(onNext: { [weak self] in
@@ -211,15 +222,13 @@ final class UserInfomationComponent: UIView {
     }
   }
   
+  /// UI 데이터 설정
   func setupUserInfo(_ data: UserDetailData){
     userNickNamekLabel.text = data.nickname
     userEmailLabel.text = data.email
   
     guard let major = data.major, let gender = data.gender else { return }
-    userMajorLabel.text = convertMajor(major, toEnglish: false)
-    userGenderLabel.text = convertGender(gender: gender)
+    userMajorLabel.text = Utils.convertMajor(major, toEnglish: false)
+    userGenderLabel.text = Utils.convertGender(gender: gender)
   }
 }
-
-extension UserInfomationComponent: CreateLabel{}
-extension UserInfomationComponent: Convert {}

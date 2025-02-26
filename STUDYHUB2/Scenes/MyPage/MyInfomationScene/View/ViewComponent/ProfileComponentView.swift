@@ -6,10 +6,14 @@ import RxSwift
 import RxRelay
 import RxCocoa
 
-final class ProfileComponent: UIView {
+/// 유저 프로필 View
+final class ProfileComponentView: UIView {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyInfomationViewModel
   
+  /// 프로필 이미지뷰
   private lazy var profileImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.layer.cornerRadius = 15
@@ -18,7 +22,10 @@ final class ProfileComponent: UIView {
     return imageView
   }()
   
+  /// 프로필 삭제 버튼
   private lazy var deleteButton = createButton(title: "삭제", titleColor: .bg70)
+  
+  /// 프로필 편집 버튼
   private lazy var editButton = createButton(title: "변경", titleColor: .o50)
   
   init(_ viewModel: MyInfomationViewModel) {
@@ -35,19 +42,15 @@ final class ProfileComponent: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// Layout 설정
   func setUpLayout(){
-    [
-      profileImageView,
-      deleteButton,
-      editButton
-    ].forEach {
-      self.addSubview($0)
-    }
+    [ profileImageView, deleteButton, editButton]
+      .forEach { self.addSubview($0) }
   }
   
   // MARK: - makeUI
   
-  
+  /// UI설정
   func makeUI(){
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(30)
@@ -68,8 +71,10 @@ final class ProfileComponent: UIView {
       $0.width.equalTo(45)
       $0.height.equalTo(30)
     }
+    
   }
   
+  /// 이미지 삭제 / 편집 버튼 생성
   func createButton(title: String, titleColor: UIColor) -> UIButton {
     let button = UIButton()
     button.setTitle(title, for: .normal)
@@ -78,7 +83,9 @@ final class ProfileComponent: UIView {
     return button
   }
   
+  /// 바인딩
   func setupBinding(){
+    /// 사용자의 프로필
     viewModel.userProfile
       .asDriver(onErrorJustReturn: UIImage(named: "ProfileAvatar_change")!)
       .drive(onNext: { [weak self] image in
@@ -89,6 +96,7 @@ final class ProfileComponent: UIView {
       .disposed(by: disposeBag)
     }
   
+  /// actions 설정
   func setupActions(){
     let buttonList: [(UIButton, EditInfomationList)] = [
       (deleteButton, .deleteProfile),

@@ -86,7 +86,7 @@ final class BookmarkViewController: UIViewController {
   func setupNavigationbar(){
     leftButtonSetting()
     settingNavigationTitle(title: "북마크")
-    settingNavigationbar(false)
+    settingNavigationbar()
     self.navigationController?.navigationBar.isTranslucent = false
   }
   

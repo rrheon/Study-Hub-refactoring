@@ -192,7 +192,8 @@ final class StudyViewController: UIViewController {
   func setupNavigationbar(){
     leftButtonSetting(imgName: "StudyImg", activate: false)
     rightButtonSetting(imgName: "SearchImg_White")
-    
+    settingNavigationbar()
+
     self.navigationController?.navigationBar.isTranslucent = false
   }
   

@@ -213,7 +213,7 @@ extension CommentViewController: CommentCellDelegate {
   func menuButtonTapped(commentID: Int) {
     /// BottomSheet 띄우기
     viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: commentID,
-                                                          type: .postOrComment))
+                                                         type: .managementComment))
   }
 }
 
@@ -221,13 +221,13 @@ extension CommentViewController: CommentCellDelegate {
 extension CommentViewController: BottomSheetDelegate {
   /// BottomSheet의 첫 번째 버튼 탭 - 댓글 삭제
   /// - Parameter postOrCommentID: commentID
-  func firstButtonTapped(postOrCommentID: Int) {
+  func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     viewModel.deleteComment(with: postOrCommentID)
   }
   
   /// BottomSheet의 두 번째 버튼 탭 - 댓글 수정
   /// - Parameter postOrCommentID: commentID
-  func secondButtonTapped(postOrCommentID: Int) {
+  func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     commentButton.setTitle("수정", for: .normal)
     viewModel.commentID = postOrCommentID
   }

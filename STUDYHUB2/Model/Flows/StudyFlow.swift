@@ -31,7 +31,7 @@ class StudyFlow: Flow {
   
   lazy var rootViewController: UINavigationController = {
     let nav = UINavigationController()
-    nav.configurationNavigationBar()
+//    nav.configurationNavigationBar()
     return nav
   }()
   
