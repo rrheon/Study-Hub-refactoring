@@ -8,15 +8,20 @@
 import UIKit
 
 import SnapKit
+import Then
 
 protocol RefuseBottomSheetDelegate: AnyObject {
   func didTapRefuseButton(withReason reason: String, reasonNum: Int, userId: Int)
 }
 
+/// 스터디 신청 거절사유 vc
 final class RefuseBottomSheet: UIViewController {
   weak var delegate: RefuseBottomSheetDelegate?
+  
+  /// 거절할 대상 유저의 ID
   var userId: Int
   
+  /// 거절 사유 리스트
   var refuseList = ["이 스터디의 목표와 맞지 않아요",
                     "팀원 조건과 맞지 않아요 (학과, 성별 등)",
                     "소개글이 짧아서 어떤 분인지 알 수 없어요",
@@ -24,40 +29,37 @@ final class RefuseBottomSheet: UIViewController {
   
   private var selectedButtonTag: Int = -1
   
-  private lazy var titleLabel = createLabel(
-    title: "거절 사유",
-    textColor: .black,
-    fontType: "Pretendard",
-    fontSize: 18
-  )
+  /// 거절 사유 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = "거절 사유"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 18)
+  }
   
-  private lazy var descibeLabel = createLabel(
-    title: "해당 내용은 신청자에게 전송돼요",
-    textColor: .bg70,
-    fontType: "Pretendard",
-    fontSize: 12
-  )
+  /// 거절 사유 유의사항 라벨
+  private lazy var descibeLabel = UILabel().then {
+    $0.text = "해당 내용은 신청자에게 전송돼요"
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
   
-  private lazy var refuseButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("거절", for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
-    button.setTitleColor(.o20, for: .normal)
-    button.addAction(UIAction { _ in
+  /// 거절 버튼
+  private lazy var refuseButton: UIButton = UIButton().then {
+    $0.setTitle("거절", for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
+    $0.setTitleColor(.o20, for: .normal)
+    $0.addAction(UIAction { _ in
       self.refuseButtonTapped()
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
-  private lazy var reasonTableView: UITableView = {
-    let tableView = UITableView()
-    tableView.register(RefuseCell.self, forCellReuseIdentifier: RefuseCell.cellId)
-    tableView.backgroundColor = .white
-    tableView.separatorInset.left = 0
-    tableView.layer.cornerRadius = 10
-    return tableView
-  }()
-  
+  /// 거절사유 TableView
+  private lazy var reasonTableView: UITableView = UITableView().then {
+    $0.register(RefuseCell.self, forCellReuseIdentifier: RefuseCell.cellID)
+    $0.backgroundColor = .white
+    $0.separatorInset.left = 0
+    $0.layer.cornerRadius = 10
+  }
   
   init(delegate: RefuseBottomSheetDelegate?, userId: Int) {
     self.delegate = delegate
@@ -83,25 +85,20 @@ final class RefuseBottomSheet: UIViewController {
     
     reasonTableView.delegate = self
     reasonTableView.dataSource = self
-  }
+  } // viewDidLoad
   
   // MARK: - setupLayout
   
   
+  /// layout 설정
   func setupLayout(){
-    [
-      titleLabel,
-      descibeLabel,
-      refuseButton,
-      reasonTableView
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ titleLabel, descibeLabel, refuseButton, reasonTableView]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
-  
+  /// UI설정
   func makeUI(){
     titleLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(30)
@@ -137,7 +134,7 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = reasonTableView.dequeueReusableCell(withIdentifier: RefuseCell.cellId,
+    let cell = reasonTableView.dequeueReusableCell(withIdentifier: RefuseCell.cellID,
                                                    for: indexPath) as! RefuseCell
     let refuseReason = refuseList[indexPath.row]
     cell.setReasonLabel(reason: refuseReason)
@@ -200,4 +197,3 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
   }
 }
 
-extension RefuseBottomSheet: CreateUIprotocol {}

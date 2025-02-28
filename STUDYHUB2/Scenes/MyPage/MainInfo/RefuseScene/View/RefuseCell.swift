@@ -8,13 +8,24 @@
 import UIKit
 
 import SnapKit
-  
-final class RefuseCell: UITableViewCell {
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
+import Then
 
-  static let cellId = "CellId"
-  
+
+/// 거절항목 Cell
+final class RefuseCell: UITableViewCell {
+
   var buttonAction: (() -> Void) = {}
+  
+  /// 거절 사유 라벨
+  lazy var reasonLabel: UILabel = UILabel()
+  
+  /// 해당 사유 체크 버튼
+  lazy var checkButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
+    $0.addAction(UIAction { _ in
+
+    }, for: .touchUpInside)
+  }
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,31 +38,13 @@ final class RefuseCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  
-  lazy var reasonLabel: UILabel = {
-    let label = UILabel()
-    label.text = "정보통신학과"
-    return label
-  }()
-  
-   lazy var checkButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "ButtonEmpty"), for: .normal)
-    button.addAction(UIAction { _ in
-
-    }, for: .touchUpInside)
-    return button
-  }()
-  
+  /// layout 설정
   func setupLayout() {
-    [
-      checkButton,
-      reasonLabel
-    ].forEach {
-      self.contentView.addSubview($0)
-    }
+    [ checkButton, reasonLabel]
+      .forEach { self.contentView.addSubview($0) }
   }
   
+  /// UI 설정
   func makeUI() {
     checkButton.snp.makeConstraints {
       $0.centerY.equalToSuperview()
@@ -64,8 +57,8 @@ final class RefuseCell: UITableViewCell {
     }
   }
   
+  /// 거절사유 라벨에 넣어주기
   func setReasonLabel(reason: String){
     reasonLabel.text = reason
-    
   }
 }

@@ -1,9 +1,13 @@
 
 import Foundation
 
+import RxFlow
+import RxSwift
 import RxRelay
 
-final class EditNicknameViewModel: EditUserInfoViewModel {
+final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   
   var newNickname = BehaviorRelay<String?>(value: nil)
   var isCheckNicknameDuplication = PublishRelay<String>()

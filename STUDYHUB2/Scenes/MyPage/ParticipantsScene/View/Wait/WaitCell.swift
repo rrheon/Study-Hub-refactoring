@@ -9,97 +9,90 @@ import UIKit
 
 import SnapKit
 import Kingfisher
+import Then
 
 protocol ParticipantsCellDelegate: AnyObject {
   func refuseButtonTapped(in cell: WaitCell, userId: Int)
   func acceptButtonTapped(in cell: WaitCell, userId: Int)
 }
 
+/// 스터디 신청 대기인원 Cell
 final class WaitCell: UICollectionViewCell {
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
+
   weak var delegate: ParticipantsCellDelegate?
+  
+  /// 신청한 인원의 데이터
   var model: ApplyUserContent? {
-    didSet {
-      bind()
-    }
+    didSet { bind() }
   }
   
+  /// 신청한 인원의 ID
   lazy var userId: Int = 0
   
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "ProfileAvatar_change")
-    return imageView
-  }()
+  /// 신청자의 프로필 이미지뷰
+  private lazy var profileImageView: UIImageView = UIImageView().then {
+    $0.image = UIImage(named: "ProfileAvatar_change")
+  }
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard-Medium", size: 12)
-    return label
-  }()
+  /// 신청자의 학과 라벨
+  private lazy var majorLabel: UILabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
   
-  private lazy var nickNameLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .black
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    return label
-  }()
+  /// 신청자의 닉네임 라벨
+  private lazy var nickNameLabel: UILabel = UILabel().then {
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
   
-  private lazy var dateLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard-Medium", size: 12)
-    return label
-  }()
+  /// 신청한 날짜 라벨
+  private lazy var dateLabel: UILabel = UILabel().then {
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
+
+  /// 신청사유 TextView
+  private lazy var describeTextView: UITextView = UITextView().then {
+    $0.textColor = .bg80
+    $0.backgroundColor = .bg20
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+    $0.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+  }
   
-  private lazy var describeTextView: UITextView = {
-    let textView = UITextView()
-    textView.textColor = .bg80
-    textView.backgroundColor = .bg20
-    textView.font = UIFont(name: "Pretendard-Medium", size: 14)
-    textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    return textView
-  }()
-  
+  /// 셀의 구분선
   private lazy var seperateLine = UIView()
 
-  private lazy var buttonStackView: UIStackView = {
-    let stackView = UIStackView()
-    stackView.axis = .horizontal
-    stackView.spacing = 10
-    return stackView
-  }()
+  /// 거절 / 수락 버튼 스택뷰
+  private lazy var buttonStackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 10)
   
-  private lazy var refuseButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("거절", for: .normal)
-    button.setTitleColor(UIColor.bg80, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    button.addAction(UIAction { _ in
+  /// 신청 거절 버튼
+  private lazy var refuseButton: UIButton = UIButton().then {
+    $0.setTitle("거절", for: .normal)
+    $0.setTitleColor(UIColor.bg80, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    $0.addAction(UIAction { _ in
       self.delegate?.refuseButtonTapped(in: self, userId: self.userId)
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
-  private lazy var acceptButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("수락", for: .normal)
-    button.setTitleColor(UIColor.g_10, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    button.addAction(UIAction { _ in
+  /// 신청 수락 버튼
+  private lazy var acceptButton: UIButton = UIButton().then {
+    $0.setTitle("수락", for: .normal)
+    $0.setTitleColor(UIColor.g_10, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    $0.addAction(UIAction { _ in
       self.delegate?.acceptButtonTapped(in: self, userId: self.userId)
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
+  /// 스택뷰 구분선
   private lazy var seperateLineinStackView = UIView()
 
   // MARK: - init
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
     
     self.backgroundColor = .white
     
@@ -115,14 +108,11 @@ final class WaitCell: UICollectionViewCell {
   }
   
   // MARK: - setupLayout
+  
+  /// layout 설정
   func setupLayout(){
-    [
-      refuseButton,
-      seperateLineinStackView,
-      acceptButton
-    ].forEach {
-      buttonStackView.addArrangedSubview($0)
-    }
+    [ refuseButton, seperateLineinStackView, acceptButton ]
+      .forEach { buttonStackView.addArrangedSubview($0) }
     
     [
       profileImageView,
@@ -138,6 +128,8 @@ final class WaitCell: UICollectionViewCell {
   }
   
   // MARK: - makeUI
+  
+  /// UI 설정
   func makeUI(){
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
@@ -190,10 +182,11 @@ final class WaitCell: UICollectionViewCell {
     }
   }
   
+  /// 데이터 설정
   func bind(){
     guard let data = model else { return }
     userId = data.id
-    majorLabel.text = convertMajor(data.major, toEnglish: false)
+    majorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
     nickNameLabel.text = data.nickname
     describeTextView.text = data.introduce
     dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
@@ -220,4 +213,3 @@ final class WaitCell: UICollectionViewCell {
   }
 }
 
-extension WaitCell: ConvertMajor {}

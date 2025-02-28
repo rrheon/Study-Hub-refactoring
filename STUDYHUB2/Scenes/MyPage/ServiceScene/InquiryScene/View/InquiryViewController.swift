@@ -4,50 +4,66 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class InquiryViewController: CommonNavi {
+/// 문의하기 VC
+final class InquiryViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
-  let viewModel = InquiryViewModel()
+ 
+  let viewModel: InquiryViewModel
   
-  private lazy var titleLabel = createLabel(
-    title: "제목",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 문의사항 제목 라벨
+  private lazy var titleLabel = UILabel().then{
+    $0.text = "제목"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 문의사항 제목 입력 TextField
+  private lazy var titleTextField = StudyHubUI.createTextField(title: "제목을 입력해주세요")
   
-  private lazy var titleTextField = createTextField(title: "제목을 입력해주세요")
-  
-  private lazy var contentLabel = createLabel(
-    title: "내용",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  
+  /// 문의사항 내용 라벨
+  private lazy var contentLabel = UILabel().then{
+    $0.text = "내용"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 문의사항 입력 TextView
   private let initialContent = "이용하며 생긴 불편한 점이나 궁금한 점을 자세하게 적어주시면 빠르게 도움을 드릴게요"
-  private lazy var contentTextView: UITextView = {
-    let textView = UITextView()
-    textView.text = initialContent
-    textView.textColor = .bg70
-    textView.layer.cornerRadius = 10
-    textView.layer.borderWidth = 1
-    textView.layer.borderColor = UIColor.bg50.cgColor
-    textView.font = UIFont(name: "Pretendard-Medium", size: 14)
-    textView.delegate = self
-    return textView
-  }()
+  private lazy var contentTextView: UITextView = UITextView().then {
+    $0.text = initialContent
+    $0.textColor = .bg70
+    $0.layer.cornerRadius = 10
+    $0.layer.borderWidth = 1
+    $0.layer.borderColor = UIColor.bg50.cgColor
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+    $0.delegate = self
+  }
   
-  private lazy var emailLabel = createLabel(
-    title: "이메일",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 이메일 라벨
+  private lazy var emailLabel = UILabel().then{
+    $0.text = "이메일"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var emailTextField = createTextField(title: "답변을 받으실 이메일을 입력해주세요")
+  /// 이메일 입력 TextField
+  private lazy var emailTextField = StudyHubUI.createTextField(title: "답변을 받으실 이메일을 입력해주세요")
   
+  /// 문의하기버튼
   private lazy var inquiryButton = StudyHubButton(title: "문의하기")
+  
+  
+  init(with viewModel: InquiryViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   // MARK: - viewdidload
   
@@ -59,7 +75,6 @@ final class InquiryViewController: CommonNavi {
     
     setupNavigationbar()
     
-    setupLayout()
     makeUI()
     
     setupBinding()
@@ -68,38 +83,29 @@ final class InquiryViewController: CommonNavi {
   
   // MARK: - setupNavigationbar
   
-  
-  func setupNavigationbar() {
+  /// 네비게이션 바 설정
+  func setupNavigationbar(){
     settingNavigationTitle(title: "문의하기")
     leftButtonSetting()
+    settingNavigationbar()
   }
   
-  // MARK: - setupLayout
-  
-  
-  func setupLayout(){
-    [
-      titleLabel,
-      titleTextField,
-      contentLabel,
-      contentTextView,
-      emailLabel,
-      emailTextField,
-      inquiryButton
-    ].forEach {
-      view.addSubview($0)
-    }
+  /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
   }
-  
+
   // MARK: - makeUI
   
-  
+  /// UI 설정
   func makeUI(){
+    view.addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
       $0.leading.equalToSuperview().offset(20)
     }
     
+    view.addSubview(titleTextField)
     titleTextField.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel.snp.leading)
@@ -107,11 +113,13 @@ final class InquiryViewController: CommonNavi {
       $0.height.equalTo(50)
     }
     
+    view.addSubview(contentLabel)
     contentLabel.snp.makeConstraints {
       $0.top.equalTo(titleTextField.snp.bottom).offset(20)
       $0.leading.equalTo(titleLabel.snp.leading)
     }
     
+    view.addSubview(contentTextView)
     contentTextView.delegate = self
     contentTextView.snp.makeConstraints {
       $0.top.equalTo(contentLabel.snp.bottom).offset(10)
@@ -120,11 +128,13 @@ final class InquiryViewController: CommonNavi {
       $0.height.equalTo(170)
     }
     
+    view.addSubview(emailLabel)
     emailLabel.snp.makeConstraints {
       $0.top.equalTo(contentTextView.snp.bottom).offset(20)
       $0.leading.equalTo(titleLabel.snp.leading)
     }
     
+    view.addSubview(emailTextField)
     emailTextField.snp.makeConstraints {
       $0.top.equalTo(emailLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel.snp.leading)
@@ -132,6 +142,7 @@ final class InquiryViewController: CommonNavi {
       $0.height.equalTo(50)
     }
     
+    view.addSubview(inquiryButton)
     inquiryButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
       $0.leading.equalTo(titleLabel.snp.leading)
@@ -140,6 +151,7 @@ final class InquiryViewController: CommonNavi {
     }
   }
   
+  /// 바인딩 설정
   func setupBinding(){
     titleTextField.rx.text.orEmpty
       .bind(to: viewModel.titleValue)
@@ -154,6 +166,7 @@ final class InquiryViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     inquiryButton.rx.tap
       .subscribe(onNext: { [weak self] in
@@ -194,5 +207,4 @@ final class InquiryViewController: CommonNavi {
   }
 }
 
-extension InquiryViewController: CreateUIprotocol {}
 extension InquiryViewController: EditableViewProtocol {}

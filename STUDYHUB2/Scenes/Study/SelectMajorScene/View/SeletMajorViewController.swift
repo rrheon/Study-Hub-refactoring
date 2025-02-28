@@ -14,7 +14,7 @@ final class SeletMajorViewController: UIViewController {
   let viewModel: SeletMajorViewModel
   
   /// 학과선택 서치바
-  private lazy var searchController = UISearchBar.createSearchBar(
+  private lazy var searchController = StudyHubUI.createSearchBar(
     placeholder: "스터디와 관련된 학과를 입력해주세요"
   )
   

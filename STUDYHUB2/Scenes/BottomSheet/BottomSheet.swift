@@ -93,18 +93,13 @@ final class BottomSheet: UIViewController {
     
     view.backgroundColor = .white
     
-    setUpLayout()
     makeUI()
   } // viewDidLoad
   
-  /// layout 설정
-  func setUpLayout(){
-    [ firstButton, secondeButton, dismissButton]
-      .forEach { view.addSubview($0) }
-  }
-  
+ 
   /// UI 설정
   func makeUI(){
+    view.addSubview(firstButton)
     firstButton.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.centerX.equalToSuperview()
@@ -112,12 +107,14 @@ final class BottomSheet: UIViewController {
       make.height.equalTo(50)
     }
     
+    view.addSubview(secondeButton)
     secondeButton.snp.makeConstraints { make in
       make.top.equalTo(firstButton.snp.bottom).offset(10)
       make.centerX.equalToSuperview()
       make.height.equalTo(50)
     }
     
+    view.addSubview(dismissButton)
     dismissButton.snp.makeConstraints { make in
       make.top.equalTo(secondeButton.snp.bottom).offset(10)
       make.centerX.equalToSuperview()

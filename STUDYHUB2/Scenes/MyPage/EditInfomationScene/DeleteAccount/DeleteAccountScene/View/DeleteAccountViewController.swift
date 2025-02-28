@@ -6,10 +6,14 @@ import RxSwift
 import RxCocoa
 
 // 탈퇴하기 누를 때 action, 팝업
-final class DeleteAccountViewController: CommonNavi {
+/// 계정 삭제 VC
+final class DeleteAccountViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
-  let viewModel = DeleteAccountViewModel()
+  
+  let viewModel: DeleteAccountViewModel
 
+  /// 비밀번호 TextField의 Value
   let value = EditPasswordTextFieldValue(
     labelTitle: "비밀번호를 입력해주세요",
     textFieldTitle: "현재 비밀번호",
@@ -17,9 +21,21 @@ final class DeleteAccountViewController: CommonNavi {
     alertContentToFail: ""
   )
   
+  /// 비밀번호 TextField
   private lazy var passwordTextField = EditPasswordTextField(value)
   
+  /// 탈퇴하기 버튼
   private lazy var quitButton = StudyHubButton(title: "탈퇴하기")
+  
+  
+  init(viewModel: DeleteAccountViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   // MARK: - viewdidload
   
@@ -35,8 +51,10 @@ final class DeleteAccountViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
+  
+  /// UI설정
   func makeUI(){
     view.addSubview(passwordTextField)
     passwordTextField.textField.delegate = self
@@ -59,11 +77,13 @@ final class DeleteAccountViewController: CommonNavi {
   // MARK: - setupNavigationbar
   
   
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "탈퇴하기")
     leftButtonSetting()
   }
   
+  /// 바인딩 설정
   func setupBinding(){
     passwordTextField.textField.rx.text.orEmpty
       .filter { !$0.isEmpty }
@@ -71,6 +91,8 @@ final class DeleteAccountViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  
+  /// Actions 설정
   func setupActions(){
     viewModel.password
       .asDriver(onErrorJustReturn: "")
@@ -105,6 +127,7 @@ final class DeleteAccountViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// 계정 삭제 버튼 탭
   func deleteAccountButtonTapped(_ result: Bool){
     switch result {
     case true:
@@ -114,25 +137,24 @@ final class DeleteAccountViewController: CommonNavi {
     }
   }
   
+  /// 삭제 완료 시
   func resultOfDeleteAccount(_ result: Bool){
-    switch result {
-    case true:
-      let popupVC = PopupViewController(
-        title: "탈퇴가 완료됐어요",
-        desc: "지금까지 스터디허브를 이용해 주셔서 감사합니다.",
-        checkEndButton: true
-      )
-      
-      popupVC.popupView.endButtonAction = { [weak self] in
-        self?.logout()
-      }
-      
-      popupVC.modalPresentationStyle = .overFullScreen
-      self.present(popupVC, animated: false)
-    case false:
-      self.showToast(message: "계정 탈퇴에 실패했어요.", alertCheck: false)
-    }
+//    switch result {
+//    case true:
+//      let popupVC = PopupViewController(
+//        title: "탈퇴가 완료됐어요",
+//        desc: "지금까지 스터디허브를 이용해 주셔서 감사합니다.",
+//        checkEndButton: true
+//      )
+//      
+//      popupVC.popupView.endButtonAction = { [weak self] in
+////        self?.logout()
+//      }
+//      
+//      popupVC.modalPresentationStyle = .overFullScreen
+//      self.present(popupVC, animated: false)
+//    case false:
+//      self.showToast(message: "계정 탈퇴에 실패했어요.", alertCheck: false)
+//    }
   }
 }
-
-extension DeleteAccountViewController: Logout {}

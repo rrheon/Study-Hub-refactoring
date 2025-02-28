@@ -4,32 +4,36 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class CheckParticipantsVC: CommonNavi {
+/// 스터디 참가자 확인 VC
+/// 종류 : 대기인원, 참여인원, 거절인원
+final class CheckParticipantsVC: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: CheckParticipantsViewModel
   
-  private lazy var topItemStackView = createStackView(axis: .horizontal, spacing: 10)
-  private lazy var waitButton = createUIButton(
-    title: "대기",
-    titleColor: .black,
-    underLine: true
-  )
+  /// 상단 아이템 스택뷰
+  /// - 대기 인원확인 버튼, 참여 인원 확인 버튼, 거절 인원확인 버튼
+  private lazy var topItemStackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 10)
   
-  private lazy var participateButton = createUIButton(
-    title: "참여",
-    titleColor: .bg70,
-    underLine: false
-  )
-  
-  private lazy var refuseButton = createUIButton(
-    title: "거절",
-    titleColor: .bg70,
-    underLine: false
-  )
-  
+  /// 대기 인원 확인 버튼
+  private lazy var waitButton = createUIButton(title: "대기", titleColor: .black, underLine: true)
+
+  /// 대기인원 Collection View
   private lazy var waitingCollectionView = createUICollectionView()
+
+  /// 참여 인원 확인 버튼
+  private lazy var participateButton = createUIButton(title: "참여")
+  
+  /// 참여인원 CollectionView
   private lazy var participateCollectionView = createUICollectionView()
+  
+  /// 거절 인원 확인 버튼
+  private lazy var refuseButton = createUIButton(title: "거절")
+  
+  /// 거절인원  CollectionView
   private lazy var refuseCollectionView = createUICollectionView()
   
   private lazy var noParticipateImageView: UIImageView = {
@@ -38,22 +42,21 @@ final class CheckParticipantsVC: CommonNavi {
     return imageView
   }()
   
-  private lazy var noParticipateLabel = createLabel(
-    title: "참여를 기다리는 대기자가 없어요.",
-    textColor: .bg60,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 참여자가 없을 때의 라벨
+  private lazy var noParticipateLabel = UILabel().then {
+    $0.text = "참여를 기다리는 대기자가 없어요."
+    $0.textColor = .bg60
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private let scrollView: UIScrollView = {
-    let scrollView = UIScrollView()
-    scrollView.backgroundColor = .bg30
-    return scrollView
-  }()
+  private let scrollView: UIScrollView = UIScrollView().then{
+    $0.backgroundColor = .bg30
+  }
+ 
   
   init(_ studyID: Int) {
     self.viewModel = CheckParticipantsViewModel(studyID)
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -76,9 +79,14 @@ final class CheckParticipantsVC: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
-  func createUIButton(title: String, titleColor: UIColor, underLine: Bool) -> UIButton{
+  /// 참여,거절,대기 인원 확인 버튼 생성
+  /// - Parameters:
+  ///   - title: 버튼 제목
+  ///   - titleColor: 버튼 색상 - 기본 bg70
+  ///   - underLine: 버튼 아래 밑줄 여부
+  func createUIButton(title: String, titleColor: UIColor = .bg70, underLine: Bool = false) -> UIButton{
     let button = UIButton()
     button.setTitle(title, for: .normal)
     button.setTitleColor(titleColor, for: .normal)
@@ -91,6 +99,7 @@ final class CheckParticipantsVC: CommonNavi {
     return button
   }
   
+  /// 참여,거절,대기 인원 확인 collectionView 생성
   func createUICollectionView() -> UICollectionView{
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -104,15 +113,11 @@ final class CheckParticipantsVC: CommonNavi {
   
   // MARK: - setupLayout
   
-  
+  /// layout 설정
   func setupLayout(){
-    [
-      waitButton,
-      participateButton,
-      refuseButton
-    ].forEach {
-      topItemStackView.addArrangedSubview($0)
-    }
+    /// 상단 버튼 스택뷰 - 대기, 참여, 거절인원 확인 버튼
+    [ waitButton, participateButton, refuseButton ]
+      .forEach { topItemStackView.addArrangedSubview($0) }
     
     [
       waitingCollectionView,
@@ -129,17 +134,14 @@ final class CheckParticipantsVC: CommonNavi {
     noParticipateImageView.isHidden = true
     noParticipateLabel.isHidden = true
     
-    [
-      topItemStackView,
-      scrollView
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ topItemStackView, scrollView ]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI() {
     topItemStackView.distribution = .fillEqually
     topItemStackView.snp.makeConstraints {
@@ -184,11 +186,13 @@ final class CheckParticipantsVC: CommonNavi {
   // MARK: - setupBinding
   
   
+  /// 바인딩 설정
   func setupBinding(){
+    /// 대기인원 데이터
     viewModel.waitingUserData
       .asDriver(onErrorJustReturn: [])
       .drive(self.waitingCollectionView.rx.items(
-        cellIdentifier: WaitCell.id,
+        cellIdentifier: WaitCell.cellID,
         cellType: WaitCell.self
       )) { index, content, cell in
         cell.model = content
@@ -196,20 +200,22 @@ final class CheckParticipantsVC: CommonNavi {
       }
       .disposed(by: disposeBag)
     
+    /// 참여인원 데이터
     viewModel.participateUserData
       .asDriver(onErrorJustReturn: [])
       .drive(self.participateCollectionView.rx.items(
-        cellIdentifier: ParticipateCell.id,
+        cellIdentifier: ParticipateCell.cellID,
         cellType: ParticipateCell.self
       )) { index, content, cell in
         cell.model = content
       }
       .disposed(by: self.disposeBag)
     
+    /// 거절인원 데이터
     viewModel.refuseUserData
       .asDriver(onErrorJustReturn: [])
       .drive(self.refuseCollectionView.rx.items(
-        cellIdentifier: RefusePersonCell.id,
+        cellIdentifier: RefusePersonCell.cellID,
         cellType: RefusePersonCell.self
       )) { index, content, cell in
         cell.model = content
@@ -217,6 +223,7 @@ final class CheckParticipantsVC: CommonNavi {
       .disposed(by: self.disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     viewModel.totalCount
       .asDriver(onErrorJustReturn: 0)
@@ -256,30 +263,30 @@ final class CheckParticipantsVC: CommonNavi {
   
   // MARK: - setupcollectionView
   
-  
+  /// cell 등록
   private func registerCell() {
     waitingCollectionView.delegate = self
     waitingCollectionView.register(
       WaitCell.self,
-      forCellWithReuseIdentifier: WaitCell.id
+      forCellWithReuseIdentifier: WaitCell.cellID
     )
     
     participateCollectionView.delegate = self
     participateCollectionView.register(
       ParticipateCell.self,
-      forCellWithReuseIdentifier: ParticipateCell.id
+      forCellWithReuseIdentifier: ParticipateCell.cellID
     )
     
     refuseCollectionView.delegate = self
     refuseCollectionView.register(
       RefusePersonCell.self,
-      forCellWithReuseIdentifier: RefusePersonCell.id
+      forCellWithReuseIdentifier: RefusePersonCell.cellID
     )
   }
   
   // MARK: - setupNavigationbar
   
-  
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "참여자")
     leftButtonSetting()
@@ -386,25 +393,25 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
   
   
   func acceptButtonTapped(in cell: WaitCell, userId: Int) {
-    let popupVC = PopupViewController(
-      title: "이 신청자를 수락할까요?",
-      desc: "수락 후,취소가 어려워요",
-      leftButtonTitle: "아니요",
-      rightButtonTilte: "수락"
-    )
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-      
-      let personData = AcceptStudy(rejectedUserId: userId, studyId: viewModel.studyID)
-//      viewModel.participateManager.acceptApplyUser(personData: personData) {
-//        popupVC.dismiss(animated: true)
-//        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
-//        self.waitButtonTapped()
-//      }
-    }
+//    let popupVC = PopupViewController(
+//      title: "이 신청자를 수락할까요?",
+//      desc: "수락 후,취소가 어려워요",
+//      leftButtonTitle: "아니요",
+//      rightButtonTilte: "수락"
+//    )
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      guard let self = self else { return }
+//      
+//      let personData = AcceptStudy(rejectedUserId: userId, studyId: viewModel.studyID)
+////      viewModel.participateManager.acceptApplyUser(personData: personData) {
+////        popupVC.dismiss(animated: true)
+////        self.showToast(message: "수락이 완료됐어요", alertCheck: true)
+////        self.waitButtonTapped()
+////      }
+//    }
   }
 }
 
@@ -442,4 +449,3 @@ extension CheckParticipantsVC: WriteRefuseReasonVCDelegate {
 }
 
 extension CheckParticipantsVC: ShowBottomSheet {}
-extension CheckParticipantsVC: CreateUIprotocol {}

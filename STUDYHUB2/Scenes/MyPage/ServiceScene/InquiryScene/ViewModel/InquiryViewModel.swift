@@ -8,10 +8,13 @@
 import Foundation
 
 import RxSwift
+import RxFlow
 import RxRelay
 
-final class InquiryViewModel {
+final class InquiryViewModel: Stepper {
   
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+
   let titleValue = BehaviorRelay<String?>(value: nil)
   let contentValue = BehaviorRelay<String?>(value: nil)
   let emailValue = BehaviorRelay<String?>(value: nil)

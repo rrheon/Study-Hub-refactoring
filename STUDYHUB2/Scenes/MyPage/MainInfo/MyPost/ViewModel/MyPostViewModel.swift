@@ -1,6 +1,7 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
 enum PostCountUpdate {
@@ -8,7 +9,9 @@ enum PostCountUpdate {
   case MINUS
 }
 
-final class MyPostViewModel: EditUserInfoViewModel {
+final class MyPostViewModel: EditUserInfoViewModel, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
   let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)

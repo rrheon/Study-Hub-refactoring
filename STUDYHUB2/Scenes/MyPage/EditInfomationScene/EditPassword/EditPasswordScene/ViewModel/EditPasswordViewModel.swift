@@ -7,9 +7,12 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class EditPasswordViewModel {
+final class EditPasswordViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   
   let userEmail: String
   let loginStatus: Bool

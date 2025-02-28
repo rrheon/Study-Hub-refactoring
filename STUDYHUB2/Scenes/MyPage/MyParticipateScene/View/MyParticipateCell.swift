@@ -8,70 +8,64 @@
 import UIKit
 
 import SnapKit
+import Then
 
 protocol MyParticipateCellDelegate: AnyObject {
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int)
   func moveToChatUrl(chatURL: NSURL)
 }
 
+/// 내가 참여한 스터디 Cell
 final class MyParticipateCell: UICollectionViewCell {
   
   weak var delegate: MyParticipateCellDelegate?
   
+  /// 참여한 스터디의 데이터
   var model: ParticipateContent? {
-    didSet {
-      bind()
-    }
+    didSet { bind() }
   }
   
   var chatURL: String = ""
   
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
+  /// 학과라벨
+  lazy var majorLabel: UILabel = UILabel().then {
+    $0.textColor = .o50
+    $0.layer.cornerRadius = 5
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+  }
   
-  lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .o50
-    label.layer.cornerRadius = 5
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
-    return label
-  }()
-  
-  private lazy var deleteButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "DeleteButtonImage"), for: .normal)
-    button.addAction(UIAction { _ in
+  /// 참여 삭제 버튼
+  private lazy var deleteButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "DeleteButtonImage"), for: .normal)
+    $0.addAction(UIAction { _ in
       self.deleteButtonTapped()
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
-  lazy var titleLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .black
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    return label
-  }()
+  /// 스터디 제목 라벨
+  lazy var titleLabel: UILabel = UILabel().then {
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  lazy var infoLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
+  /// 스터디 설명라벨
+  lazy var infoLabel: UILabel = UILabel().then{
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
 
   private lazy var seperateLine = UIView()
 
-  private lazy var moveToChat: UIButton = {
-    let button = UIButton()
-    button.setTitle("채팅방으로 이동하기", for: .normal)
-    button.setTitleColor(UIColor.bg80, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    button.titleLabel?.textAlignment = .center
-    button.addAction(UIAction { _ in
+  /// 채팅방 이동버튼
+  private lazy var moveToChat: UIButton = UIButton().then {
+    $0.setTitle("채팅방으로 이동하기", for: .normal)
+    $0.setTitleColor(UIColor.bg80, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    $0.titleLabel?.textAlignment = .center
+    $0.addAction(UIAction { _ in
       self.moveToChatButtonTapped()
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -81,7 +75,6 @@ final class MyParticipateCell: UICollectionViewCell {
     configure()
     
     setViewShadow(backView: self)
-
   }
   
   @available(*, unavailable)
@@ -89,20 +82,14 @@ final class MyParticipateCell: UICollectionViewCell {
     fatalError()
   }
   
+  /// layout 설정
   private func addSubviews() {
-    
-    [
-      majorLabel,
-      deleteButton,
-      titleLabel,
-      infoLabel,
-      seperateLine,
-      moveToChat
-    ].forEach {
-      addSubview($0)
-    }
+    [ majorLabel, deleteButton, titleLabel, infoLabel, seperateLine, moveToChat]
+      .forEach { addSubview($0) }
   }
   
+  
+  /// UI 설정
   private func configure() {
     majorLabel.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
@@ -141,16 +128,19 @@ final class MyParticipateCell: UICollectionViewCell {
     backgroundColor = .white
   }
   
+  /// 참여한 스터디 삭제 버튼 탭
   func deleteButtonTapped(){
     guard let postId = model?.postID else { return}
     self.delegate?.deleteButtonTapped(in: self, postID: postId)
   }
   
+  /// 채팅방으로 이동 버튼 탭
   func moveToChatButtonTapped(){
     guard let chatURL = NSURL(string: chatURL) else { return }
     self.delegate?.moveToChatUrl(chatURL: chatURL)
   }
   
+  /// 데이터 바인딩
   func bind(){
     guard let model = model else { return }
     majorLabel.text = model.major

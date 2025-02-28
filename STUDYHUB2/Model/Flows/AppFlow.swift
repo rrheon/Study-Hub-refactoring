@@ -10,6 +10,7 @@ import UIKit
 import RxFlow
 import RxSwift
 import RxRelay
+import SafariServices
 
 
 // MARK: - step
@@ -37,44 +38,85 @@ enum AppStep: Step {
       }
     }
   }
+  // 메인탭바
+  case mainTabIsRequired
   
-  case mainTabIsRequired                                                       // 메인탭바
-  case loginScreenIsRequired                                                  // 로그인 화면
-  case signupIsRequired                                                       // 회원가입 Flow
-  case bookmarkScreenIsRequired                                                // 북마크 화면
-  case howToUseScreenIsRequired                                               // 이용방법 화면
-  case studyDetailScreenIsRequired(postID: Int)                               // 스터디 상세 화면
-  case commentDetailScreenIsRequired(postID: Int)                           // 댓글 전체화면
-  case studyFormScreenIsRequired(data: PostDetailData?)                     // 스터디 생성,수정 화면
-  case selectMajorScreenIsRequired(seletedMajor: BehaviorRelay<String?>)    // 학과 선택화면
-  case bottomSheetIsRequired(postOrCommnetID: Int, type: BottomSheetCase)   // BottomSheet
-  case calendarIsRequired(viewModel: CreateStudyViewModel, selectType: Bool)  // 캘린더화면
-  case popCurrentScreen(navigationbarHidden: Bool)                           // 현재화면 pop
-  case dismissCurrentScreen                                                 // 현재화면 dismiss
-  /*
-   필요한 화면
-   
-   캘린더
-   팝업 - toast / 일반
-   이용약관
-   스터디 상세화면
-   댓글화면
-   참여하기
-   스터디 생성 flow
-   학과검색
-   프로필 화면
-   닉네임/ 학과/비밀번호 변경화면
-   비밀번호 찾기 flow
-   탈퇴하기
-   작성한 글
-   참여자화면
-   거절화면
-   신청내역화면
-   북마크화면
-   공지사항
-   서비스이용약관
-   개인정보처리방침
-   */
+  // 로그인 화면
+  case loginScreenIsRequired
+  
+  // 회원가입 Flow
+  case signupIsRequired
+  
+  // 북마크 화면
+  case bookmarkScreenIsRequired
+  
+  // 이용방법 화면
+  case howToUseScreenIsRequired
+  
+  // 스터디 상세 화면
+  case studyDetailScreenIsRequired(postID: Int)
+  
+  // 댓글 전체화면
+  case commentDetailScreenIsRequired(postID: Int)
+  
+  // 스터디 생성,수정 화면
+  case studyFormScreenIsRequired(data: PostDetailData?)
+  
+  // 학과 선택화면
+  case selectMajorScreenIsRequired(seletedMajor: BehaviorRelay<String?>)
+  
+  // BottomSheet
+  case bottomSheetIsRequired(postOrCommnetID: Int, type: BottomSheetCase)
+  
+  // 캘린더화면
+  case calendarIsRequired(viewModel: CreateStudyViewModel, selectType: Bool)
+  
+  // 유저 프로필 편집화면
+  case editUserProfileIsRequired(userData: BehaviorRelay<UserDetailData?>,
+                                 profile: BehaviorRelay<UIImage?>)
+  
+  // 내가 작성한 스터디 리스트 화면
+  case myStudyPostIsRequired(userData: BehaviorRelay<UserDetailData?>)
+  
+  // 내가 참여한 스터디 리스트 화면
+  case myParticipateStudyIsRequired(userData: BehaviorRelay<UserDetailData?>)
+  
+  // 내가 신청한 스터디 리스트 화면
+  case myRequestStudyIsRequired(userData: BehaviorRelay<UserDetailData?>)
+  
+  // 공지사항 화면으로 이동
+  case noticeScreenIsRequired
+  
+  // 문의하기 화면으로 이동
+  case inquiryScreenIsRequired
+  
+  // 사파리 화면 띄우기
+  case safariScreenIsReuiqred(url: String)
+  
+  // 닉네임 수정화면 이동
+  case editNicknameScreenIsRequired(userData: BehaviorRelay<UserDetailData?>)
+  
+  // 비밀번호 수정화면으로 이동
+  case editPasswordScreenIsRequired(email: String)
+  
+  // 학과 수정화면 이동
+  case editMajorScreenIsRequired(userData: BehaviorRelay<UserDetailData?>)
+  
+  // 탈퇴하기 화면으로 이동
+  case deleteAccountScreenIsRequired
+  
+  // 팝업화면 띄우기
+  case popupScreenIsRequired(popupCase: PopupCase)
+  
+  // 현재화면 pop
+  case popCurrentScreen(navigationbarHidden: Bool)
+  
+  // 현재화면 dismiss
+  case dismissCurrentScreen
+  
+  // 현재 flow 닫기
+  case dismissCurrentFlow
+ 
 }
 
 // MARK: - Flow
@@ -116,6 +158,8 @@ class AppFlow: Flow {
     case .dismissCurrentScreen:
       self.rootViewController.dismiss(animated: true)
       return .none
+    case .dismissCurrentFlow:
+      return presentLoginScreen()
     case .commentDetailScreenIsRequired(let postID):
       return navToCommentDetailScreen(postID: postID)
     case .studyFormScreenIsRequired(let data):
@@ -124,6 +168,30 @@ class AppFlow: Flow {
       return navToSelectMajorScreen(major: seletedMajor)
     case .calendarIsRequired(let viewModel, let selectType):
       return presentCalendarScreen(viewModel: viewModel, selectType: selectType)
+    case .editUserProfileIsRequired(let userData, let profile):
+      return navToEditUserProfileScreen(userData: userData, profile: profile)
+    case .myStudyPostIsRequired(let userData):
+      return navToMyPostScreen(with: userData)
+    case .myParticipateStudyIsRequired(let userData):
+      return navToMyParticipateScreen(with: userData)
+    case .myRequestStudyIsRequired(let userData):
+      return navToMyRequestListScreen(with: userData)
+    case .noticeScreenIsRequired:
+      return navToNoticeScreen()
+    case .inquiryScreenIsRequired:
+      return navToInquiryScreen()
+    case .safariScreenIsReuiqred(let url):
+      return presentSafariScreen(url: url)
+    case .editNicknameScreenIsRequired(let userData):
+      return navToEditNicknameScreen(with: userData)
+    case .editPasswordScreenIsRequired(let email):
+      return navToEditpasswordScreen(with: email)
+    case .editMajorScreenIsRequired(let userData):
+      return navToEditmajorScreen(with: userData)
+    case .deleteAccountScreenIsRequired:
+      return navToDeleteAccountScreen()
+    case .popupScreenIsRequired(let popupCase):
+      return presentPopupScreen(wtih: popupCase)
     }
   }
   
@@ -144,6 +212,7 @@ class AppFlow: Flow {
       tabBarController.tabBar.tintColor = .o50
       tabBarController.tabBar.layer.borderColor = UIColor.white.cgColor
       tabBarController.tabBar.layer.borderWidth = 0.5
+      tabBarController.selectedIndex = 0
       
       rootViewController.setViewControllers([tabBarController], animated: false)
       rootViewController.navigationBar.isHidden = true
@@ -263,11 +332,147 @@ class AppFlow: Flow {
   /// 캘린더 띄우기
   /// - Parameter viewModel: 스터디 생성 viewModel
   /// - Parameter selectType: 선택타입 - true - 시작날짜 선택 / false - 종료날짜 선택
-  private func presentCalendarScreen(viewModel: CreateStudyViewModel,
-                                     selectType: Bool = true) -> FlowContributors {
+  private func presentCalendarScreen(
+    viewModel: CreateStudyViewModel,
+    selectType: Bool = true
+  ) -> FlowContributors {
     let calendarVC = CalendarViewController(viewModel: viewModel, selectStartData: selectType)
     showBottomSheet(bottomSheetVC: calendarVC, size: 400.0)
     self.rootViewController.present(calendarVC, animated: true)
+    return .none
+  }
+  
+  
+  /// 유저 프로필 수정화면으로 이동
+  /// - Parameters:
+  ///   - userData: 유저 데이터
+  ///   - profile: 프로필
+  private func navToEditUserProfileScreen(
+    userData: BehaviorRelay<UserDetailData?>,
+    profile: BehaviorRelay<UIImage?>
+  ) -> FlowContributors {
+    let viewModel = MyInfomationViewModel(userData, userProfile: profile)
+    let vc = MyInformViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
+  /// 내가 작성한 스터디 리스트 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToMyPostScreen(with userData: BehaviorRelay<UserDetailData?>) -> FlowContributors {
+    let viewModel = MyPostViewModel(userData: userData)
+    let vc = MyPostViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
+  /// 내가 참여한 스터디 리스트 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToMyParticipateScreen(with userData: BehaviorRelay<UserDetailData?>) -> FlowContributors {
+    let viewModel = MyParticipateStudyViewModel(with: userData)
+    let vc = MyParticipateStudyVC(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 내가 신청한 스터디 리스트 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToMyRequestListScreen(with userData: BehaviorRelay<UserDetailData?>) -> FlowContributors {
+    let viewModel = MyRequestListViewModel(with: userData)
+    let vc = MyRequestListViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+
+  /// 공지사항 화면으로 이동
+  private func navToNoticeScreen() -> FlowContributors {
+    let viewModel = NotificationViewModel()
+    let vc = NotificationViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 문의하기 화면으로 이동
+  private func navToInquiryScreen() -> FlowContributors {
+    let viewModel = InquiryViewModel()
+    let vc = InquiryViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 사파리 화면 띄우기
+  /// - Parameter url: 이동할 url
+  private func presentSafariScreen(url: String) -> FlowContributors {
+    if let url = URL(string: url) {
+      let urlView = SFSafariViewController(url: url)
+      self.rootViewController.present(urlView, animated: true)
+      return .none
+    }
+    return .none
+  }
+  
+  /// 닉네임 수정 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToEditNicknameScreen(with userData: BehaviorRelay<UserDetailData?>) -> FlowContributors {
+    let viewModel = EditNicknameViewModel(userData: userData)
+    let vc = EditnicknameViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 비밀번호 수정 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToEditpasswordScreen(with email: String) -> FlowContributors {
+    let viewModel = EditPasswordViewModel(userEmail: email)
+    let vc = EditPasswordViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  /// 학과 수정 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToEditmajorScreen(with userData: BehaviorRelay<UserDetailData?>) -> FlowContributors {
+    let viewModel = EditMajorViewModel(userData: userData)
+    let vc = EditMajorViewController(with: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
+  /// 탈퇴하기 화면으로 이동
+  /// - Parameter userData: 유저 프로필 데이터
+  private func navToDeleteAccountScreen() -> FlowContributors {
+    let viewModel = DeleteAccountViewModel()
+    let vc = DeleteAccountViewController(viewModel: viewModel)
+    self.rootViewController.navigationBar.isHidden = false
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
+  /// 팝업 뷰 띄우기
+  /// - Parameter popupCase: 팝업의 종류
+  private func presentPopupScreen(wtih popupCase: PopupCase) -> FlowContributors {
+    let popupVC = PopupViewController(popupCase: popupCase)
+    
+    if let topVC = self.rootViewController.viewControllers.last as? PopupViewDelegate {
+      popupVC.popupView.delegate = topVC
+    }
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.rootViewController.present(popupVC, animated: false)
     return .none
   }
   
@@ -313,7 +518,25 @@ class AppStepper: Stepper {
       NotificationCenter.default
         .rx
         .notification(.navToHowToUseScreen)
-        .map { _ in AppStep.howToUseScreenIsRequired},
+        .map { _ in AppStep.howToUseScreenIsRequired },
+      
+      /// 현재 flow 닫기
+      NotificationCenter.default
+        .rx
+        .notification(.dismissCurrentFlow)
+        .map { _ in AppStep.dismissCurrentFlow },
+      
+      /// 공지사항 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToNoticeScreen)
+        .map { _ in AppStep.noticeScreenIsRequired },
+      
+      /// 문의사항 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToInquiryScreen)
+        .map { _ in AppStep.inquiryScreenIsRequired },
       
       /// 스터디 상세화면으로 이동
       NotificationCenter.default
@@ -331,6 +554,67 @@ class AppStepper: Stepper {
         .map({ notification in
           let postData = notification.userInfo?["postData"] as? PostDetailData?
           return AppStep.studyFormScreenIsRequired(data: postData ?? nil)
+        }),
+      
+      /// 유저 프로필 수정 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToEditUserProfileScreen)
+        .map({ notification in
+          guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?>,
+                let userPrfileImage = notification.userInfo?["userProfile"] as? BehaviorRelay<UIImage?> else {
+            return AppStep.dismissCurrentFlow
+          }
+          
+          return AppStep.editUserProfileIsRequired(userData: userData, profile: userPrfileImage)
+        }),
+      
+      /// 작성한 글 리스트 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToMyStudyPostScreen)
+        .map({ notification in
+          guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
+            return AppStep.dismissCurrentFlow
+          }
+          
+          return AppStep.myStudyPostIsRequired(userData: userData)
+        }),
+      
+      /// 참여한 스터디 리스트 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToMyParticipatePostScreen)
+        .map({ notification in
+          guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
+            return AppStep.dismissCurrentFlow
+          }
+          
+          return AppStep.myParticipateStudyIsRequired(userData: userData)
+        }),
+      
+      /// 신청 스터디 리스트 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToMyRequestPostScreen)
+        .map({ notification in
+          guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
+            return AppStep.dismissCurrentFlow
+          }
+          
+          return AppStep.myRequestStudyIsRequired(userData: userData)
+        }),
+      
+      /// 사파리 화면으로 이동
+      NotificationCenter.default
+        .rx
+        .notification(.navToSafariScreen)
+        .map({ notification in
+          guard let url = notification.userInfo?["url"] as? String else {
+            return AppStep.dismissCurrentFlow
+          }
+          
+          return AppStep.safariScreenIsReuiqred(url: url)
         })
     )
     .bind(to: self.steps)

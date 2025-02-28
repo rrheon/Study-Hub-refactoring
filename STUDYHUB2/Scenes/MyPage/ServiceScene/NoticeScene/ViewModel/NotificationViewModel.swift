@@ -3,13 +3,16 @@ import Foundation
 
 import Moya
 import RxRelay
+import RxFlow
 
-final class NotificationViewModel {
+final class NotificationViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   
   var noticeDatas = BehaviorRelay<[ExpandedNoticeContent]>(value: [])
   
   init() {
-    getNoticeData(page: 0, size: 5)
+    self.getNoticeData(page: 0, size: 5)
   }
   
   func getNoticeData(page: Int, size: Int){

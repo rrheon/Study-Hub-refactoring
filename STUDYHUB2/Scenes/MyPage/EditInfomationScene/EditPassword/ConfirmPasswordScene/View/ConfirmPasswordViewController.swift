@@ -4,7 +4,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class ConfirmPasswordViewController: CommonNavi {
+/// 비밀번호 확인 VC
+final class ConfirmPasswordViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: ConfirmPasswordViewModel
   
@@ -15,8 +16,10 @@ final class ConfirmPasswordViewController: CommonNavi {
     alertContentToFail: ""
   )
   
+  /// 비밀번호 확인 View
   private lazy var passwordView = EditPasswordTextField(value)
   
+  /// 비밀번호 찾기 버튼
   private lazy var forgotPasswordButton: UIButton = {
     let forgotPasswordButton = UIButton(type: .system)
     forgotPasswordButton.setTitle("비밀번호가 기억나지 않으시나요?", for: .normal)
@@ -29,7 +32,7 @@ final class ConfirmPasswordViewController: CommonNavi {
   
   init(_ userEmail: String) {
     self.viewModel = ConfirmPasswordViewModel(userEmail: userEmail)
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -37,6 +40,8 @@ final class ConfirmPasswordViewController: CommonNavi {
   }
   
   // MARK: - viewDidLoad
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
@@ -48,23 +53,21 @@ final class ConfirmPasswordViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
   // MARK: - setUpLayout
   
   
+  /// layout 설정
   func setUpLayout(){
-    [
-      passwordView,
-      forgotPasswordButton
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ passwordView, forgotPasswordButton ]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI(){
     passwordView.textField.delegate = self
     passwordView.snp.makeConstraints {
@@ -79,18 +82,26 @@ final class ConfirmPasswordViewController: CommonNavi {
     }
   }
 
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "비밀번호 변경")
     leftButtonSetting()
     rightButtonSetting(imgName: "UnableNextButton", activate: false)
   }
   
+  /// 네비게이션 바 오른쪽 버튼 탭
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.nextButtonTapped(viewModel.currentPassword.value)
+  }
+  
+  /// 바인딩 설정
   func setupBinding(){
     passwordView.textField.rx.text.orEmpty
       .bind(to: viewModel.currentPassword)
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     viewModel.currentPassword
       .asDriver(onErrorJustReturn: "")
@@ -111,19 +122,16 @@ final class ConfirmPasswordViewController: CommonNavi {
       .subscribe(onNext: { [weak self] valid in
         switch valid {
         case true:
-          self?.moveToOtherVCWithSameNavi(vc: EditPasswordViewController(
-            self?.viewModel.userEmail ?? ""
-          ), hideTabbar: true)
+          return
+//          self?.moveToOtherVCWithSameNavi(vc: EditPasswordViewController(
+//            self?.viewModel.userEmail ?? ""
+//          ), hideTabbar: true)
         case false:
           self?.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
         }
       })
       .disposed(by: disposeBag)
   }
-  
-  override func rightButtonTapped(_ sender: UIBarButtonItem) {
-    viewModel.nextButtonTapped(viewModel.currentPassword.value)
-  }
-  
+
 }
 

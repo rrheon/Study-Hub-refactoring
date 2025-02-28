@@ -30,7 +30,7 @@ final class HomeViewController: UIViewController {
   let detailsButton = StudyHubButton(title: "알아보기", radious: 5)
 
   /// 검색서치바
-  private lazy var searchBar = UISearchBar.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
+  private lazy var searchBar = StudyHubUI.createSearchBar(placeholder: "스터디와 관련된 학과를 입력해주세요")
   
   
   /// 새로 모집중인 스터디 라벨

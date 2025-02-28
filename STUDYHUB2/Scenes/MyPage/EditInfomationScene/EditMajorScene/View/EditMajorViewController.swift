@@ -5,38 +5,41 @@ import SnapKit
 import RxRelay
 import RxSwift
 import RxCocoa
+import Then
 
-final class EditMajorViewController: CommonNavi {
+/// 학과 수정 라벨
+final class EditMajorViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: EditMajorViewModel
   
-  private lazy var titleLabel = createLabel(
-    title: "변경할 학과를 알려주세요",
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 16
-  )
+  /// 학과 변경 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = "변경할 학과를 알려주세요"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 16)
+  }
   
-  private lazy var majorTextField = createTextField(title: viewModel.getCurrentmajor())
+  /// 새로운 학과 입력
+  private lazy var majorTextField = StudyHubUI.createTextField(title: viewModel.getCurrentmajor())
   
-  private lazy var searchButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "SearchImg"), for: .normal)
-    return button
-  }()
+  /// 검색버튼
+  private lazy var searchButton: UIButton = UIButton().then {
+    $0.setImage(UIImage(named: "SearchImg"), for: .normal)
+  }
   
-  private lazy var resultTableView: UITableView = {
-    let tableView = UITableView()
-    tableView.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
-    tableView.backgroundColor = .white
-    tableView.separatorInset.left = 0
-    tableView.layer.cornerRadius = 10
-    return tableView
-  }()
+  /// 검색한 학과 tableView
+  private lazy var resultTableView: UITableView = UITableView().then {
+    $0.register(SeletMajorCell.self, forCellReuseIdentifier: SeletMajorCell.cellId)
+    $0.backgroundColor = .white
+    $0.separatorInset.left = 0
+    $0.layer.cornerRadius = 10
+  }
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
-    self.viewModel = EditMajorViewModel(userData: userData)
-    super.init(false)
+  init(with viewModel: EditMajorViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -55,25 +58,20 @@ final class EditMajorViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
   // MARK: - setupLayout
   
   
+  /// layout 설정
   func setupLayout(){
-    [
-      titleLabel,
-      majorTextField,
-      searchButton,
-      resultTableView
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ titleLabel, majorTextField, searchButton, resultTableView ]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
-  
+  /// UI 설정
   func makeUI() {
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
@@ -101,15 +99,32 @@ final class EditMajorViewController: CommonNavi {
     }
   }
   
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "학과 변경")
     leftButtonSetting()
     rightButtonSetting(imgName: "DeCompletedImg", activate: false)
   }
   
+  /// 네비게이션 바 오른쪽 버튼 탭
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
+    guard let major = majorTextField.text else { return }
+    
+    let result = viewModel.checkCurrentMajor(major)
+    switch result {
+    case true:
+      viewModel.storeMajorToServer(major)
+    case false:
+      showToast(message: "기존 학과와 동일해요. 다시 선택해주세요", alertCheck: false)
+      rightButtonSetting(imgName: "DeCompletedImg", activate: false)
+    }
+  }
+  
+  
+
   // MARK: - setupBinding
   
-  
+  /// 바인딩
   func setupBinding(){
     viewModel.matchedMajors
       .bind(to: resultTableView.rx.items(cellIdentifier: "CellId")) { index, department, cell in
@@ -154,7 +169,7 @@ final class EditMajorViewController: CommonNavi {
   
   // MARK: - setupActions
   
-  
+  /// actions 설정
   func setupActions(){
     resultTableView.rx.modelSelected(String.self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
@@ -174,19 +189,6 @@ final class EditMajorViewController: CommonNavi {
       })
       .disposed(by: disposeBag)
   }
-  
-  override func rightButtonTapped(_ sender: UIBarButtonItem) {
-    guard let major = majorTextField.text else { return }
-    
-    let result = viewModel.checkCurrentMajor(major)
-    switch result {
-    case true:
-      viewModel.storeMajorToServer(major)
-    case false:
-      showToast(message: "기존 학과와 동일해요. 다시 선택해주세요", alertCheck: false)
-      rightButtonSetting(imgName: "DeCompletedImg", activate: false)
-    }
-  }
 }
 
 // MARK: - cell 함수
@@ -197,4 +199,3 @@ extension EditMajorViewController: UITableViewDelegate {
   }
 }
 
-extension EditMajorViewController: CreateUIprotocol {}

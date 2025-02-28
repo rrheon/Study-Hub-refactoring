@@ -4,23 +4,28 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class ConfirmEmailViewController: CommonNavi {
+/// 이메일 확인 VC
+final class ConfirmEmailViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: ConfirmEmailViewModel
   
-  private lazy var titleLabel = createLabel(
-    title: "가입했던 이메일 주소를 입력해주세요",
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 16
-  )
+  /// 이메일 확인 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = "가입했던 이메일 주소를 입력해주세요"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 16)
+  }
   
-  private lazy var emailTextField = createTextField(title: "@inu.ac.kr")
+ /// 이메일 입력 TextField
+  private lazy var emailTextField = StudyHubUI.createTextField(title: "@inu.ac.kr")
   
-  override init(_ loginStatus: Bool) {
+  init(_ loginStatus: Bool) {
     self.viewModel = ConfirmEmailViewModel(loginStatus: loginStatus)
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -39,23 +44,20 @@ final class ConfirmEmailViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
   // MARK: - setUpLayout
   
   
+  /// layout 설정
   func setUpLayout(){
-    [
-      titleLabel,
-      emailTextField
-    ].forEach {
-      view.addSubview($0)
-    }
+    [ titleLabel, emailTextField ]
+      .forEach { view.addSubview($0) }
   }
   
   // MARK: - makeUI
   
-  
+  ///UI 설정
   func makeUI(){
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -74,7 +76,7 @@ final class ConfirmEmailViewController: CommonNavi {
   
   // MARK: - navigationbar
   
-  
+  /// 네비게이션 설정
   func setupNavigationbar() {
     settingNavigationTitle(title: "비밀번호 찾기")
     leftButtonSetting()
@@ -82,14 +84,15 @@ final class ConfirmEmailViewController: CommonNavi {
     navigationController?.navigationBar.backgroundColor = .black
   }
   
-  func leftButtonTapped(_ sender: UIBarButtonItem) {
-//    viewModel.loginStatus ? super.leftButtonTapped(sender) : dismiss(animated: true)
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    //    viewModel.loginStatus ? super.leftButtonTapped(sender) : dismiss(animated: true)
   }
   
-  override func rightButtonTapped(_ sender: UIBarButtonItem) {
+  override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     viewModel.checkEmailValid()
   }
-  
+
+  /// 바인딩 설정
   func setupBinding(){
     emailTextField.rx.text.orEmpty
       .filter({ !$0.isEmpty })
@@ -97,6 +100,7 @@ final class ConfirmEmailViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     viewModel.email
       .asDriver(onErrorJustReturn: "")
@@ -121,4 +125,3 @@ final class ConfirmEmailViewController: CommonNavi {
   }
 }
 
-extension ConfirmEmailViewController: CreateUIprotocol {}

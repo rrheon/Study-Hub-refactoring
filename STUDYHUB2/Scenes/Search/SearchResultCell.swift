@@ -281,7 +281,7 @@ final class SearchResultCell: UICollectionViewCell {
     
     var countMember = data.studyPerson - data.remainingSeat
 
-    majorLabel.text = " \(convertMajor(data.major, toEnglish: false) ?? "없음") "
+    majorLabel.text = " \(Utils.convertMajor(data.major, toEnglish: false) ?? "없음") "
     titleLabel.text = data.title
     periodLabel.text = "\(data.studyStartDate[1])월 \(data.studyStartDate[2])일 ~\(data.studyEndDate[1])월 \(data.studyEndDate[2])일 "
     
@@ -291,7 +291,7 @@ final class SearchResultCell: UICollectionViewCell {
     let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty)원"
     fineLabel.text = "\(fineText)"
     
-    genderLabel.text = convertGender(gender: data.filteredGender)
+    genderLabel.text = Utils.convertGender(gender: data.filteredGender)
     
     if genderLabel.text == "남자" {
       genderImage.image = UIImage(named: "MenGenderImage")
@@ -352,5 +352,4 @@ final class SearchResultCell: UICollectionViewCell {
   }
 }
 
-extension SearchResultCell: Convert{}
 extension SearchResultCell: ManagementImage {}

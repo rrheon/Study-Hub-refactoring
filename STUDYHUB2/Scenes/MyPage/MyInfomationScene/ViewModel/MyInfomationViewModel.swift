@@ -2,17 +2,8 @@
 import Foundation
 
 import RxRelay
+import RxFlow
 import Kingfisher
-
-enum EditInfomationList {
-  case nickname
-  case deleteProfile
-  case editProfile
-  case major
-  case password
-  case logout
-  case deleteAccount
-}
 
 enum ProfileActions {
   case failToLoad
@@ -22,14 +13,16 @@ enum ProfileActions {
   case failToEdit
 }
 
-final class MyInfomationViewModel {
+final class MyInfomationViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  
   private let tokenManager = TokenManager.shared
 
   
   var userData = BehaviorRelay<UserDetailData?>(value: nil)
   var userProfile = BehaviorRelay<UIImage?>(value: UIImage(named: "ProfileAvatar_change")!)
   var isUserProfileAction = PublishRelay<ProfileActions>()
-  var editButtonTapped = PublishRelay<EditInfomationList>()
   
   init(_ userData: BehaviorRelay<UserDetailData?>, userProfile: BehaviorRelay<UIImage?>) {
     self.userData = userData

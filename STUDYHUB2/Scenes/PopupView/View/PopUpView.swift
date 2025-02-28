@@ -8,78 +8,84 @@
 import UIKit
 
 import SnapKit
+import Then
 
+
+/// 팝업뷰 Delegate
+protocol PopupViewDelegate {
+  func leftBtnTapped()
+  func rightBtnTapped()
+  func endBtnTapped()
+}
+
+extension PopupViewDelegate {
+  func endBtnTapped(){}
+}
+
+/// 팝업 view
 final class PopupView: UIView {
-  var leftButtonAction: (() -> Void)?
-  var rightButtonAction: (() -> Void)?
-  var endButtonAction: (() -> Void)?
+  
+  var delegate: PopupViewDelegate?
+  
+  /// 종료버튼 체크
   var checkEndButton: Bool = false
-  
-  private let popupView: UIView = {
-    let view = UIView()
 
-    view.layer.cornerRadius = 7
-    view.clipsToBounds = true
-    view.backgroundColor = .white
-    return view
-  }()
+  /// 팝업 view
+  private let popupView: UIView = UIView().then {
+    $0.layer.cornerRadius = 7
+    $0.clipsToBounds = true
+    $0.backgroundColor = .white
+  }
   
-  private let titleLabel: UILabel = {
-    let label = UILabel()
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    label.numberOfLines = 0
-    label.textAlignment = .center
-    return label
-  }()
+  /// 팝업 제목 라벨
+  private let titleLabel: UILabel = UILabel().then {
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    $0.numberOfLines = 0
+    $0.textAlignment = .center
+  }
   
-  private let descLabel: UILabel = {
-    let label = UILabel()
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    label.numberOfLines = 0
-    label.textAlignment = .center
-    label.textColor = .bg80
-    
-    return label
-  }()
+  /// 팝업 설명라벨
+  private let descLabel: UILabel = UILabel().then {
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+    $0.numberOfLines = 0
+    $0.textAlignment = .center
+    $0.textColor = .bg80
+  }
   
-  private let leftButton: UIButton = {
-    let button = UIButton()
-    button.setTitleColor(.bg80, for: .normal)
-    button.backgroundColor = .bg40
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
-    button.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
-    button.layer.cornerRadius = 8
-    return button
-  }()
+  /// 팝업의 왼쪽 버튼
+  private let leftButton: UIButton = UIButton().then {
+    $0.setTitleColor(.bg80, for: .normal)
+    $0.backgroundColor = .bg40
+    $0.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
+    $0.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
+    $0.layer.cornerRadius = 8
+  }
   
-  private let rightButton: UIButton = {
-    let button = UIButton()
-    button.backgroundColor = .o50
-    button.setTitleColor(.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
-    button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
-    button.layer.cornerRadius = 8
-    return button
-  }()
+  /// 팝업의 오른쪽 버튼
+  private let rightButton: UIButton = UIButton().then {
+    $0.backgroundColor = .o50
+    $0.setTitleColor(.white, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
+    $0.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
+    $0.layer.cornerRadius = 8
+  }
   
-  private lazy var endButton: UIButton = {
-    let button = UIButton()
-    button.backgroundColor = .o50
-    button.setTitleColor(.white, for: .normal)
-    button.setTitle("종료", for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
-    button.addTarget(self, action: #selector(endButtonTapped), for: .touchUpInside)
-    button.layer.cornerRadius = 8
-    return button
-  }()
+  /// 종료 버튼
+  private lazy var endButton: UIButton = UIButton().then {
+    $0.backgroundColor = .o50
+    $0.setTitleColor(.white, for: .normal)
+    $0.setTitle("종료", for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
+    $0.addTarget(self, action: #selector(endButtonTapped), for: .touchUpInside)
+    $0.layer.cornerRadius = 8
+  }
   
-  private lazy var buttonStack: UIStackView = {
-    let stackView = UIStackView()
-    stackView.axis = .horizontal
-    stackView.spacing = 10
-    stackView.distribution = .fillEqually
-    return stackView
-  }()
+  /// 버튼의 스택뷰
+  private lazy var buttonStack: UIStackView = UIStackView().then {
+    $0.axis = .horizontal
+    $0.spacing = 10
+    $0.distribution = .fillEqually
+  }
   
   init(title: String,
        desc: String,
@@ -90,9 +96,10 @@ final class PopupView: UIView {
     self.titleLabel.text = title
     self.descLabel.text = desc
     self.checkEndButton = checkEndButton
+    
     self.leftButton.setTitle(leftButtonTitle, for: .normal)
     self.rightButton.setTitle(rightButtonTitle, for: .normal)
-    
+      
     super.init(frame: .zero)
     
     self.backgroundColor = .clear
@@ -105,9 +112,11 @@ final class PopupView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// layout 설정
   private func setupLayout(){
     self.addSubview(self.popupView)
     
+    /// 종료버튼 true인 경우
     if checkEndButton {
       self.checkEndButton = true
       self.buttonStack.addArrangedSubview(self.endButton)
@@ -121,6 +130,7 @@ final class PopupView: UIView {
     self.popupView.addSubview(self.buttonStack)
   }
 
+  /// UI설정
   private func setupConstraints() {
     self.popupView.snp.makeConstraints { make in
       make.center.equalToSuperview()
@@ -161,14 +171,14 @@ final class PopupView: UIView {
   }
 
   @objc private func leftButtonTapped() {
-    leftButtonAction?()
+    delegate?.leftBtnTapped()
   }
   
   @objc private func rightButtonTapped() {
-    rightButtonAction?()
+    delegate?.rightBtnTapped()
   }
   
   @objc private func endButtonTapped() {
-    endButtonAction?()
+    delegate?.endBtnTapped()
   }
 }

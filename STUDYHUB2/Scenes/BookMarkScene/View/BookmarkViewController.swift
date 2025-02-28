@@ -233,20 +233,20 @@ final class BookmarkViewController: UIViewController {
   
   /// 전체삭제 버튼 탭
   @objc func deleteAllButtonTapped(){
-    // postID 수정 필요
-    let popupVC = PopupViewController(title: "", desc: "북마크를 모두 삭제할까요?")
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = {
-      BookmarkManager.shared.deleteAllBookmark {
-        self.dismiss(animated: true)
-        self.viewModel.getBookmarkList()
-        self.totalCountLabel.text = "전체 0"
-      }
-      self.bookMarkCollectionView.isHidden = true
-      self.noDataUI(loginStatus: true)
-    }
+//    // postID 수정 필요
+//    let popupVC = PopupViewController(title: "", desc: "북마크를 모두 삭제할까요?")
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      BookmarkManager.shared.deleteAllBookmark {
+//        self.dismiss(animated: true)
+//        self.viewModel.getBookmarkList()
+//        self.totalCountLabel.text = "전체 0"
+//      }
+//      self.bookMarkCollectionView.isHidden = true
+//      self.noDataUI(loginStatus: true)
+//    }
   }
 
 }
@@ -297,4 +297,3 @@ extension BookmarkViewController: ParticipatePostDelegate{
   }
 }
 
-extension BookmarkViewController: CreateUIprotocol {}

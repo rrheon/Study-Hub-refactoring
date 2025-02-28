@@ -2,16 +2,20 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class MyRequestListViewModel: EditUserInfoViewModel {
+final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  
   
   var requestStudyList = BehaviorRelay<[RequestStudyContent]>(value: [])
   var countPostNumber = BehaviorRelay<Int>(value: 0)
   var isSuccessToDelete = PublishRelay<Bool>()
   var rejectReason = PublishRelay<RejectReason>()
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
+  init(with userData: BehaviorRelay<UserDetailData?>) {
     if let applyCount = userData.value?.applyCount {
       self.countPostNumber.accept(applyCount)
     } else {

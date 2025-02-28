@@ -2,7 +2,9 @@
 import UIKit
 
 import SnapKit
+import Then
 
+/// 비밀번호 수정 TextField의 Value
 struct EditPasswordTextFieldValue {
   let labelTitle: String
   let textFieldTitle: String
@@ -10,24 +12,27 @@ struct EditPasswordTextFieldValue {
   let alertContentToFail: String
 }
 
+/// 비밀번호 수정 TextField
 final class EditPasswordTextField: UIView {
+  /// 비밀번호 수정 value
   let content: EditPasswordTextFieldValue
   
-  private lazy var titleLabel = createLabel(
-    title: content.labelTitle,
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// TextField 위의 타이틀 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = content.labelTitle
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  lazy var textField = createTextField(title: content.textFieldTitle)
+  /// TextField
+  lazy var textField = StudyHubUI.createTextField(title: content.textFieldTitle)
   
-  private lazy var alertLabel = createLabel(
-    textColor: .r50,
-    fontType: "Pretendard-Medium",
-    fontSize: 12
-  )
-
+  /// 경고라벨
+  private lazy var alertLabel = UILabel().then {
+    $0.textColor = .r50
+    $0.font = UIFont(name: "Pretendard-Medium", size: 12)
+  }
+  
   init(_ content: EditPasswordTextFieldValue){
     self.content = content
     super.init(frame: .zero)
@@ -41,16 +46,14 @@ final class EditPasswordTextField: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// layout 설정
   func setupLayout(){
-    [
-      titleLabel,
-      textField,
-      alertLabel
-    ].forEach {
-      self.addSubview($0)
-    }
+    [ titleLabel, textField, alertLabel]
+      .forEach { self.addSubview($0) }
   }
   
+  
+  /// Ui설정
   func makeUI(){
     titleLabel.snp.makeConstraints{
       $0.top.equalToSuperview()
@@ -69,6 +72,7 @@ final class EditPasswordTextField: UIView {
     }
   }
   
+  /// TextField 보안설정
   func setPasswordSecure(){
     textField.isSecureTextEntry = true
     textField.textContentType = .oneTimeCode
@@ -85,11 +89,13 @@ final class EditPasswordTextField: UIView {
     return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
   }
   
-  func alertLabelSetting(
-    hidden: Bool,
-    successOrFail: Bool,
-    textColor: UIColor = .r50
-  ){
+  
+  /// 경고라벨 설정
+  /// - Parameters:
+  ///   - hidden: 경고라벨 숨김여부
+  ///   - successOrFail: 성공 / 실패 여부
+  ///   - textColor: 라벨 제목 색상
+  func alertLabelSetting(hidden: Bool, successOrFail: Bool, textColor: UIColor = .r50){
     alertLabel.isHidden = hidden
     alertLabel.text = successOrFail ? content.alertContentToSuccess : content.alertContentToFail
     alertLabel.textColor = textColor
@@ -98,4 +104,3 @@ final class EditPasswordTextField: UIView {
   }
 }
 
-extension EditPasswordTextField: CreateUIprotocol {}

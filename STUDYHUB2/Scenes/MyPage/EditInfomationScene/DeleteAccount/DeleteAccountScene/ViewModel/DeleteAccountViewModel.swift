@@ -7,9 +7,12 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class DeleteAccountViewModel {
+final class DeleteAccountViewModel: Stepper{
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
   
   let password = BehaviorRelay<String>(value: "")
   let isValidPassword = PublishRelay<Bool>()

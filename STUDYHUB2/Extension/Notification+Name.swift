@@ -23,4 +23,28 @@ extension Notification.Name {
   
   /// 학과선택 화면으로 이동
   static let navToSelectMajorScreen = Notification.Name("navToSelectMajorScreen")
+  
+  /// 유저 정보 편집화면으로 이동
+  static let navToEditUserProfileScreen = Notification.Name("navToEditUserProfileScreen")
+  
+  /// 내가 작성한 스터디 리스트 화면으로 이동
+  static let navToMyStudyPostScreen = Notification.Name("navToMyStudyPostScreen")
+  
+  /// 내가 참여한 스터디 리스트 화면으로 이동
+  static let navToMyParticipatePostScreen = Notification.Name("navToMyParticipatePostScreen")
+  
+  /// 내가 신청한 스터디 리스트 화면으로 이동
+  static let navToMyRequestPostScreen = Notification.Name("navToMyRequestPostScreen")
+  
+  /// 공지사항  화면으로 이동
+  static let navToNoticeScreen = Notification.Name("navToNoticeScreen")
+  
+  /// 문의사항  화면으로 이동
+  static let navToInquiryScreen = Notification.Name("navToInquiryScreen")
+  
+  /// 사파리  화면으로 이동
+  static let navToSafariScreen = Notification.Name("navToSafariScreen")
+  
+  /// 현재 flow 닫기
+  static let dismissCurrentFlow = Notification.Name("dismissCurrentFlow")
 }

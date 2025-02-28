@@ -19,7 +19,7 @@ final class EnterSearchViewController: UIViewController {
   var viewModel: SearchViewModel
   
   /// 서치바
-  private lazy var searchBar = UISearchBar.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
+  private lazy var searchBar = StudyHubUI.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
   
   /// 검색어 결과 테이블뷰
   private lazy var resultTableView: UITableView = UITableView().then({

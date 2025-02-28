@@ -27,7 +27,7 @@ final class PostedStudyViewController: UIViewController {
   /// 유사한 스터디 component
   private var similarStudyComponent: SimilarStudyComponent?
   
-  private lazy var pageStackView = createStackView(axis: .vertical, spacing: 10)
+  private lazy var pageStackView = StudyHubUI.createStackView(axis: .vertical, spacing: 10)
   private lazy var scrollView: UIScrollView = UIScrollView()
   
   init(with viewModel: PostedStudyViewModel) {
@@ -374,4 +374,3 @@ extension PostedStudyViewController: BottomSheetDelegate {
 }
 
 extension PostedStudyViewController: ShowBottomSheet {}
-extension PostedStudyViewController: CreateUIprotocol {}

@@ -1,69 +1,70 @@
-import UIKit
-import SnapKit
 
+import UIKit
+
+import SnapKit
+import Then
+
+/// 거절사유 전달 delegate
 protocol WriteRefuseReasonVCDelegate: AnyObject {
   func completeButtonTapped(reason: String, userId: Int)
 }
 
-final class WriteRefuseReasonVC: CommonNavi {
+/// 거절사유 작성 VC
+final class WriteRefuseReasonVC: UIViewController {
   weak var delegate: WriteRefuseReasonVCDelegate?
+  
+  /// 스터디 신청한 유저의 ID
   var userId: Int = 0
   
-  private lazy var titleLabel: UILabel = {
-    let label = createLabel(
-      title: "해당 참여자를 거절하게 된 이유를 적어주세요 😢",
-      textColor: .black,
-      fontType: "Pretendard",
-      fontSize: 16
-    )
-    label.numberOfLines = 0
-    return label
-  }()
+  /// 거절 사유 작성 제목 라벨
+  private lazy var titleLabel: UILabel = UILabel().then {
+    $0.text = "해당 참여자를 거절하게 된 이유를 적어주세요 😢"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 16)
+    $0.numberOfLines = 0
+  }
   
-  private lazy var reasonTextView: UITextView = {
-    let textView = UITextView()
-    textView.text = "ex) 욕설 등의 부적절한 말을 사용했습니다, 저희 스터디와 맞지 않습니다"
-    textView.textColor = .bg70
-    textView.layer.cornerRadius = 10
-    textView.layer.borderWidth = 1
-    textView.layer.borderColor = UIColor.bg50.cgColor
-    textView.font = UIFont(name: "Pretendard", size: 16)
-    textView.delegate = self
-    return textView
-  }()
+  /// 거절 사유 작성 TextView
+  private lazy var reasonTextView: UITextView = UITextView().then {
+    $0.text = "ex) 욕설 등의 부적절한 말을 사용했습니다, 저희 스터디와 맞지 않습니다"
+    $0.textColor = .bg70
+    $0.layer.cornerRadius = 10
+    $0.layer.borderWidth = 1
+    $0.layer.borderColor = UIColor.bg50.cgColor
+    $0.font = UIFont(name: "Pretendard", size: 16)
+    $0.delegate = self
+  }
   
-  private lazy var countContentLabel: UILabel = {
-    let label = UILabel()
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 12)
-    label.text = "0/200"
-    return label
-  }()
+  /// 거절사유 글자 갯수 제한 라벨
+  private lazy var countContentLabel: UILabel = UILabel().then {
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard", size: 12)
+    $0.text = "0/200"
+  }
   
-  private lazy var bottomLabel = createLabel(
-    title: "- 해당 내용은 사용자에게 전송돼요",
-    textColor: .bg60,
-    fontType: "Pretendard",
-    fontSize: 12
-  )
-
+  /// 거절사유 경고  라벨
+  private lazy var bottomLabel = UILabel().then {
+    $0.text = "- 해당 내용은 사용자에게 전송돼요"
+    $0.textColor = .bg60
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
   
-  private lazy var completeButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("완료", for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.backgroundColor = .o30
-    button.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
-    button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
-    button.isEnabled = false
-    button.layer.cornerRadius = 10
-    return button
-  }()
+  /// 거절 완료 버튼
+  private lazy var completeButton: UIButton = UIButton().then {
+    $0.setTitle("완료", for: .normal)
+    $0.setTitleColor(.white, for: .normal)
+    $0.backgroundColor = .o30
+    $0.titleLabel?.font = UIFont(name: "Pretendard", size: 16)
+    $0.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    $0.isEnabled = false
+    $0.layer.cornerRadius = 10
+  }
   
   init(delegate: WriteRefuseReasonVCDelegate?, userId: Int) {
     self.delegate = delegate
     self.userId = userId
-    super.init()
+    
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -73,32 +74,26 @@ final class WriteRefuseReasonVC: CommonNavi {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    view.backgroundColor = .white
+
     setupUI()
     
-    setupNavigationbar()
+    settingNavigationTitle(title: "거절사유")
   }
   
   // MARK: - UI Setup
   
+  
+  /// UI설정
   private func setupUI() {
-    view.backgroundColor = .white
-    
-    [
-      titleLabel,
-      reasonTextView,
-      countContentLabel,
-      completeButton,
-      bottomLabel
-    ].forEach {
-      view.addSubview($0)
-    }
-    
+    view.addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
       $0.leading.equalToSuperview().offset(20)
       $0.trailing.equalToSuperview().offset(-10)
     }
     
+    view.addSubview(reasonTextView)
     reasonTextView.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(20)
       $0.leading.equalToSuperview().offset(20)
@@ -106,16 +101,19 @@ final class WriteRefuseReasonVC: CommonNavi {
       $0.height.equalTo(186)
     }
     
+    view.addSubview(countContentLabel)
     countContentLabel.snp.makeConstraints {
       $0.trailing.equalTo(reasonTextView)
       $0.top.equalTo(reasonTextView.snp.bottom).offset(5)
     }
     
+    view.addSubview(bottomLabel)
     bottomLabel.snp.makeConstraints {
       $0.bottom.equalTo(completeButton.snp.top).offset(-30)
       $0.leading.equalTo(completeButton)
     }
     
+    view.addSubview(completeButton)
     completeButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
       $0.leading.equalToSuperview().offset(20)
@@ -123,12 +121,11 @@ final class WriteRefuseReasonVC: CommonNavi {
       $0.height.equalTo(55)
     }
   }
-  
-  func setupNavigationbar() {
-    settingNavigationTitle(title: "거절사유")
-  }
+
   
   // MARK: - Button Action
+  
+  
   @objc private func completeButtonTapped() {
     delegate?.completeButtonTapped(reason: reasonTextView.text, userId: userId)
     navigationController?.popViewController(animated: true)
@@ -173,4 +170,3 @@ extension WriteRefuseReasonVC {
   }
 }
 
-extension WriteRefuseReasonVC: CreateUIprotocol {}

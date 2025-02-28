@@ -7,16 +7,19 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class MyParticipateStudyViewModel: EditUserInfoViewModel {
+final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
 
   
   var participateInfo = BehaviorRelay<[ParticipateContent]>(value: [])
   var countPostNumber = BehaviorRelay<Int>(value: 0)
   var isSuccessToDelete = PublishRelay<Bool>()
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
+  init(with userData: BehaviorRelay<UserDetailData?>) {
     if let participateCount = userData.value?.participateCount {
       self.countPostNumber.accept(participateCount)
     } else {

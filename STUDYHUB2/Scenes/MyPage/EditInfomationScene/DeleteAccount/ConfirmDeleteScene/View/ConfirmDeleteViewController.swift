@@ -2,28 +2,32 @@
 import UIKit
 
 import SnapKit
+import Then
 
-final class ConfirmDeleteViewController: CommonNavi {
-  private lazy var titleLabel = createLabel(
-    title: "정말 탈퇴하시나요?\n회원님이 떠나신다니 너무 아쉬워요😢",
-    textColor: .black,
-    fontType: "Pretendard-Bold",
-    fontSize: 20
-  )
-  private lazy var mainView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .bg20
-    view.layer.borderColor = UIColor.bg40.cgColor
-    return view
-  }()
+/// 계정 삭제 확인 VC
+final class ConfirmDeleteViewController: UIViewController {
   
-  private lazy var infoTitleLabel = createLabel(
-    title: "스터디 허브를 탈퇴하시면,",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
+  /// 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.text = "정말 탈퇴하시나요?\n회원님이 떠나신다니 너무 아쉬워요😢"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-Bold", size: 20)
+  }
+ 
+  /// 메인뷰
+  private lazy var mainView: UIView = UIView().then {
+    $0.backgroundColor = .bg20
+    $0.layer.borderColor = UIColor.bg40.cgColor
+  }
   
+  /// 탈퇴 안내 라벨
+  private lazy var infoTitleLabel = UILabel().then {
+    $0.text = "스터디 허브를 탈퇴하시면,"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 탈퇴 안내 라벨
   private lazy var infoDescriptionLabel1: UILabel = {
     let label = UILabel()
     label.textColor = .bg80
@@ -33,6 +37,7 @@ final class ConfirmDeleteViewController: CommonNavi {
     return label
   }()
   
+  /// 탈퇴 안내 라벨
   private lazy var infoDescriptionLabel2: UILabel = {
     let label = UILabel()
     label.textColor = .bg80
@@ -48,20 +53,22 @@ final class ConfirmDeleteViewController: CommonNavi {
     return label
   }()
   
-  private lazy var buttonStackView = createStackView(axis: .horizontal, spacing: 8)
+  /// 버튼 스택뷰
+  private lazy var buttonStackView = StudyHubUI.createStackView(axis: .horizontal, spacing: 8)
+
   
-  private lazy var continueButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("계속", for: .normal)
-    button.setTitleColor(.bg80, for: .normal)
-    button.backgroundColor = .bg30
-    button.layer.cornerRadius = 10
-    return button
-  }()
+  /// 탈퇴 진행 버튼
+  private lazy var continueButton: UIButton = UIButton().then {
+   $0.setTitle("계속", for: .normal)
+   $0.setTitleColor(.bg80, for: .normal)
+   $0.backgroundColor = .bg30
+   $0.layer.cornerRadius = 10
+  }
   
+  /// 탈퇴 취소 버튼
   private lazy var cancelButton = StudyHubButton(title: "취소")
+    
   
-  // MARK: - setupLayout
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -71,14 +78,17 @@ final class ConfirmDeleteViewController: CommonNavi {
     
     settingNavigationBar()
     setupButtonActions()
-  }
+  } // viewDidLoad
 
+  
+  /// 네비게이션 바 설정
   func settingNavigationBar(){
     leftButtonSetting()
     
     settingNavigationTitle(title: "탈퇴하기")
   }
   
+  /// layout 설정
   func setupLayout(){
     buttonStackView.addArrangedSubview(continueButton)
     buttonStackView.addArrangedSubview(cancelButton)
@@ -98,6 +108,7 @@ final class ConfirmDeleteViewController: CommonNavi {
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI(){
     titleLabel.numberOfLines = 2
     titleLabel.changeColor(
@@ -146,9 +157,10 @@ final class ConfirmDeleteViewController: CommonNavi {
     }
   }
   
+  /// 버튼 액션 설정
   func setupButtonActions(){
     continueButton.addAction(UIAction { _ in
-      self.moveToOtherVCWithSameNavi(vc: DeleteAccountViewController(), hideTabbar: true)
+//      self.moveToOtherVCWithSameNavi(vc: DeleteAccountViewController(), hideTabbar: true)
     }, for: .touchUpInside)
     
     cancelButton.addAction(UIAction { _ in
@@ -156,5 +168,3 @@ final class ConfirmDeleteViewController: CommonNavi {
     }, for: .touchUpInside)
   }
 }
-
-extension ConfirmDeleteViewController: CreateUIprotocol {}

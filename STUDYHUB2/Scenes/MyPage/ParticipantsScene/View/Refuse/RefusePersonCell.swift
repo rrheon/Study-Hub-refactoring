@@ -3,68 +3,60 @@ import UIKit
 
 import SnapKit
 import Kingfisher
+import Then
 
+/// 거절인원 cell
 final class RefusePersonCell: UICollectionViewCell {
-  static var id: String { NSStringFromClass(Self.self).components(separatedBy: ".").last ?? "" }
   
+  /// 거절 인원 데이터
   var model: ApplyUserContent? {
-    didSet {
-      bind()
-    }
+    didSet { bind() }
   }
   
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "ProfileAvatar_change")
-    return imageView
-  }()
+  /// 거절당한 인원의 프로필이미지
+  private lazy var profileImageView: UIImageView =  UIImageView().then{
+    $0.image = UIImage(named: "ProfileAvatar_change")
+  }
   
-  private lazy var majorLabel: UILabel = {
-    let label = UILabel()
-    label.text = "경영학부"
-    label.textColor = .bg80
-    label.font = UIFont(name: "Pretendard", size: 12)
-    return label
-  }()
+  /// 거절당한 인원의 학과 라벨
+  private lazy var majorLabel: UILabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
   
-  private lazy var nickNameLabel: UILabel = {
-    let label = UILabel()
-    label.text = "경영이"
-    label.textColor = .black
-    label.font = UIFont(name: "Pretendard", size: 14)
-    return label
-  }()
+  /// 거절당한 인원의 닉네임 라벨
+  private lazy var nickNameLabel: UILabel = UILabel().then {
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard", size: 14)
+  }
   
-  private lazy var dateLabel: UILabel = {
-    let label = UILabel()
-    label.text = "2023. 9 . 8 신청 "
-    label.textColor = .bg70
-    label.font = UIFont(name: "Pretendard", size: 12)
-    return label
-  }()
+  /// 거절당한 인원의 신청날짜
+  private lazy var dateLabel: UILabel = UILabel().then {
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard", size: 12)
+  }
   
-  private lazy var refuseReasonTextView: UITextView = {
-    let textView = UITextView()
-    textView.text = "거절 사유\n이 스터디의 목표와 맞지 않아요"
-    textView.textColor = .bg80
-    textView.font = UIFont(name: "Pretendard", size: 14)
-    textView.backgroundColor = .bg20
-    textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    return textView
-  }()
+  /// 거절당한 인원의 사유
+  private lazy var refuseReasonTextView: UITextView = UITextView().then {
+    $0.text = "거절 사유\n이 스터디의 목표와 맞지 않아요"
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
+    $0.backgroundColor = .bg20
+    $0.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+  }
   
   
   // MARK: - init
+  
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
     
     self.backgroundColor = .white
     
     setupLayout()
     makeUI()
     setViewShadow(backView: self)
-
   }
   
   @available(*, unavailable)
@@ -73,19 +65,16 @@ final class RefusePersonCell: UICollectionViewCell {
   }
   
   // MARK: - setupLayout
+  
+  /// layout 설정
   func setupLayout(){
-    [
-      profileImageView,
-      majorLabel,
-      nickNameLabel,
-      dateLabel,
-      refuseReasonTextView
-    ].forEach {
-      addSubview($0)
-    }
+    [ profileImageView, majorLabel, nickNameLabel, dateLabel, refuseReasonTextView]
+      .forEach { addSubview($0) }
   }
   
   // MARK: - makeUI
+  
+  /// UI 설정
   func makeUI(){
     profileImageView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(20)
@@ -116,32 +105,32 @@ final class RefusePersonCell: UICollectionViewCell {
     }
   }
   
+  /// 데이터 바인딩
   func bind(){
     guard let data = model else { return }
-      majorLabel.text = convertMajor(data.major, toEnglish: false)
-      nickNameLabel.text = data.nickname
-      dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
-//      refuseReasonTextView.text = $0.
-      if let imageURL = URL(string: data.imageURL ) {
-        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
-        
-        self.profileImageView.kf.setImage(with: imageURL,
-                                          options: [.processor(processor)]) { result in
-          switch result {
-          case .success(let value):
-            DispatchQueue.main.async {
-              self.profileImageView.image = value.image
-              self.profileImageView.layer.cornerRadius = 20
-              self.profileImageView.clipsToBounds = true
-            }
-          case .failure(let error):
-            print("Image download failed: \(error)")
-            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
+    majorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
+    nickNameLabel.text = data.nickname
+    dateLabel.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
+    //    refuseReasonTextView.text = data.
+    if let imageURL = URL(string: data.imageURL ) {
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))
+      
+      self.profileImageView.kf.setImage(with: imageURL,
+                                        options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
+          DispatchQueue.main.async {
+            self.profileImageView.image = value.image
+            self.profileImageView.layer.cornerRadius = 20
+            self.profileImageView.clipsToBounds = true
           }
+        case .failure(let error):
+          print("Image download failed: \(error)")
+          self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
         }
+      }
       
     }
   }
 }
 
-extension RefusePersonCell: ConvertMajor {}

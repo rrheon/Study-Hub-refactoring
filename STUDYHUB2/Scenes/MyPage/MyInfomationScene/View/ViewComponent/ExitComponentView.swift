@@ -4,6 +4,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxRelay
+import RxCocoa
 
 /// 로그아웃 / 탈퇴 View
 final class ExitComponentView: UIView {
@@ -74,17 +75,21 @@ final class ExitComponentView: UIView {
   
   /// 바인딩설정
   func setupBinding(){
-    let buttonList: [(UIButton, EditInfomationList)] = [
-      (logoutButton, .logout),
-      (quitButton, .deleteAccount)
-    ]
+    // 로그아웃 버튼
+    logoutButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+      })
+      .disposed(by: disposeBag)
     
-    buttonList.forEach { button , action in
-      button.rx.tap
-        .subscribe(onNext: {[weak self] in
-          self?.viewModel.editButtonTapped.accept(action)
-        })
-        .disposed(by: disposeBag)
-    }
+    // 탈퇴하기 버튼
+    quitButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        self.viewModel.steps.accept(AppStep.deleteAccountScreenIsRequired)
+      })
+      .disposed(by: disposeBag)
+
   }
 }

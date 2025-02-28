@@ -19,7 +19,7 @@ class ResultSearchViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 
   /// 서치바
-  private lazy var searchBar = UISearchBar.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
+  private lazy var searchBar = StudyHubUI.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
   
   /// 검색결과 필터링 버튼 - 제목일치(기본값)
   private lazy var titleButton = createSearchViewButton(

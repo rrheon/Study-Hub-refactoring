@@ -5,10 +5,14 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class NotificationViewController: CommonNavi {
+/// 공지사항 VC
+final class NotificationViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
-  let viewModel = NotificationViewModel()
+  
+  var viewModel: NotificationViewModel
 
+  /// 공지사항 CollectionView
   private lazy var notificationCollectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .vertical
@@ -19,6 +23,15 @@ final class NotificationViewController: CommonNavi {
 
     return collectionView
   }()
+  
+  init(with viewModel: NotificationViewModel){
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -31,19 +44,28 @@ final class NotificationViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } //viewDidLoad
+  
   
   // MARK: - navigationbar 설정
   
-  
-  func setupNavigationbar() {
+
+  /// 네비게이션 바 설정
+  func setupNavigationbar(){
     settingNavigationTitle(title: "공지사항")
     leftButtonSetting()
+    settingNavigationbar()
   }
-
+  
+  /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+  }
+  
+  
   // MARK: - makeUI
   
-  
+  /// UI설정
   func makeUI(){
     view.addSubview(notificationCollectionView)
     notificationCollectionView.snp.makeConstraints {
@@ -52,11 +74,12 @@ final class NotificationViewController: CommonNavi {
     }
   }
   
+  /// 바인딩 설정
   func setupBinding(){
     viewModel.noticeDatas
       .asDriver(onErrorJustReturn: [])
       .drive(notificationCollectionView.rx.items(
-        cellIdentifier: NotificationCell.id,
+        cellIdentifier: NotificationCell.cellID,
         cellType: NotificationCell.self)
       ) { index, content , cell in
         cell.model = content
@@ -64,6 +87,7 @@ final class NotificationViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions() {
     notificationCollectionView.rx.modelSelected(ExpandedNoticeContent.self)
       .subscribe(onNext: { [weak self] data in
@@ -73,13 +97,14 @@ final class NotificationViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
 
+  /// deletgaet 설정
   func setupDelegate(){
     notificationCollectionView.rx.setDelegate(self)
       .disposed(by: disposeBag)
     
     notificationCollectionView.register(
       NotificationCell.self,
-      forCellWithReuseIdentifier: NotificationCell.id
+      forCellWithReuseIdentifier: NotificationCell.cellID
     )
   }
 }

@@ -187,19 +187,37 @@ final class UserActivityView: UIView {
   
   /// actions 설정
   func setupActions() {
-//    let buttonActions: [(UIButton, UserActivity)] = [
-//      (writtenButton, .writtenButton),
-//      (joinstudyButton, .participateStudyButton),
-//      (requestListButton, .requestListButton)
-//    ]
-//    
-//    buttonActions.forEach { button, activity in
-//      button.rx.tap
-//        .subscribe(onNext: { [weak self] in
-//          self?.viewModel.seletUserActivity(activity)
-//        })
-//        .disposed(by: disposeBag)
-//    }
+    let userData = self.viewModel.userData
+    
+    // 내가 작성한 글 버튼 탭
+    writtenButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToMyStudyPostScreen,
+                                        object: nil,
+                                        userInfo: ["userData": userData])
+      })
+      .disposed(by: disposeBag)
+    
+    // 내가 참여한 글 버튼 탭
+    joinstudyButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToMyParticipatePostScreen,
+                                      object: nil,
+                                      userInfo: ["userData": userData])
+    })
+    .disposed(by: disposeBag)
+    
+    // 내가 신청한 글 버튼 탭
+    requestListButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToMyRequestPostScreen,
+                                        object: nil,
+                                        userInfo: ["userData": userData])
+      })
+      .disposed(by: disposeBag)
   }
 
 

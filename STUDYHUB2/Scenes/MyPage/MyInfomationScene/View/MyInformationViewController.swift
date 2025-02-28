@@ -21,13 +21,13 @@ final class MyInformViewController: UIViewController {
   /// 로그아웃 / 탈퇴 View
   private var exitComponent: ExitComponentView
   
-  init(_ userData: BehaviorRelay<UserDetailData?>, profile: BehaviorRelay<UIImage?>) {
-    self.viewModel = MyInfomationViewModel(userData, userProfile: profile)
+  init(with viewModel: MyInfomationViewModel) {
+    self.viewModel = viewModel
     
     self.profileComponent = ProfileComponentView(viewModel)
     self.userInfoComponent = UserInfomationComponentView(viewModel)
     self.exitComponent = ExitComponentView(viewModel)
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -43,39 +43,34 @@ final class MyInformViewController: UIViewController {
       
     setupNavigationbar()
     
-    setUpLayout()
     makeUI()
     
     setupActions()
     self.view.bringSubviewToFront(profileComponent)
   } // viewDidLoad
-  
-  // MARK: - setUpLayout
-  
-  /// Layout설정
-  func setUpLayout(){
-    [ profileComponent, userInfoComponent, exitComponent]
-      .forEach { view.addSubview($0) }
-  }
+
   
   // MARK: - makeUI
   
   
   /// UI 설정
   func makeUI(){
+    view.addSubview(profileComponent)
     profileComponent.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
       $0.centerX.equalToSuperview()
       $0.height.equalTo(168)
       $0.width.equalTo(375)
     }
-
+    
+    view.addSubview(userInfoComponent)
     userInfoComponent.snp.makeConstraints {
       $0.top.equalTo(profileComponent.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview().inset(5)
       $0.height.equalTo(250)
     }
-
+    
+    view.addSubview(exitComponent)
     exitComponent.snp.makeConstraints {
       $0.top.equalTo(userInfoComponent.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
@@ -85,12 +80,18 @@ final class MyInformViewController: UIViewController {
   
   // MARK: - 네비게이션바
   
-  /// 네비게이션 바 세팅
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     leftButtonSetting()
     settingNavigationTitle(title: "내 정보")
+    settingNavigationbar()
   }
   
+  /// 네비게이션 왼쪽 버튼 탭 - 현재 탭 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+  }
+    
   // MARK: - setupActions
   
   /// Actions 설정
@@ -101,12 +102,7 @@ final class MyInformViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    viewModel.editButtonTapped
-      .subscribe(onNext: { [weak self] in
-        self?.editActions($0)
-      })
-      .disposed(by: disposeBag)
-  }
+    }
    
   /// 프로필 액션 별 toast
   func profileActions(_ action: ProfileActions){
@@ -123,64 +119,29 @@ final class MyInformViewController: UIViewController {
       return
     }
   }
-  
-  func editActions(_ action: EditInfomationList){
-    let userData = viewModel.userData
-    
-    switch action {
-    case .nickname:
-      moveToOtherVCWithSameNavi(vc: EditnicknameViewController(userData), hideTabbar: true)
-      return
-    case .major:
-      moveToOtherVCWithSameNavi(vc: EditMajorViewController(userData), hideTabbar: true)
-    case .password:
-      guard let email = userData.value?.email else { return }
-      moveToOtherVCWithSameNavi(vc: ConfirmPasswordViewController(email), hideTabbar: true)
-    case .logout:
-      logoutButtonTapped()
-    case .deleteAccount:
-      moveToOtherVCWithSameNavi(vc: ConfirmDeleteViewController(), hideTabbar: true)
-    case .editProfile:
-      editProfileButtonTapped()
-    case .deleteProfile:
-      viewModel.deleteProfile()
-    }
-  }
-  
-  func editProfileButtonTapped(){
-//    let bottomSheetVC = BottomSheet(
-//      postID: 0,
-//      firstButtonTitle: "사진 촬영하기" ,
-//      secondButtonTitle: "앨범에서 선택하기",
-//      checkPost: false
-//    )
-//    bottomSheetVC.delegate = self
-//    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-//    present(bottomSheetVC, animated: true, completion: nil)
-  }
 
 
   // MARK: - 로그아웃 버튼
   
   
   func logoutButtonTapped(){
-    let popupVC = PopupViewController(
-      title: "로그아웃 하시겠어요?",
-      desc: "",
-      leftButtonTitle: "아니요",
-      rightButtonTilte: "네"
-    )
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      self?.viewModel.deleteToken()
-      self?.dismiss(animated: true) {
-        self?.navigationController?.popViewController(animated: false)
-        self?.logout()
-      }
-    }
+//    let popupVC = PopupViewController(
+//      title: "로그아웃 하시겠어요?",
+//      desc: "",
+//      leftButtonTitle: "아니요",
+//      rightButtonTilte: "네"
+//    )
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      self?.viewModel.deleteToken()
+//      self?.dismiss(animated: true) {
+//        self?.navigationController?.popViewController(animated: false)
+////        self?.logout()
+//      }
+//    }
   }
 }
 
@@ -237,22 +198,22 @@ extension MyInformViewController: BottomSheetDelegate {
   }
   
   func showAccessDeniedAlert() {
-    let popupVC = PopupViewController(
-      title: "사진을 변경하려면 허용이 필요해요",
-      desc: "",
-      leftButtonTitle: "취소",
-      rightButtonTilte: "설정"
-    )
-
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(settingsURL)
-      }
-    }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    let popupVC = PopupViewController(
+//      title: "사진을 변경하려면 허용이 필요해요",
+//      desc: "",
+//      leftButtonTitle: "취소",
+//      rightButtonTilte: "설정"
+//    )
+//
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true) {
+//        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+//        UIApplication.shared.open(settingsURL)
+//      }
+//    }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
 }
 
@@ -271,4 +232,3 @@ extension MyInformViewController: UIImagePickerControllerDelegate,
 }
 
 extension MyInformViewController: ShowBottomSheet{}
-extension MyInformViewController: Logout{}

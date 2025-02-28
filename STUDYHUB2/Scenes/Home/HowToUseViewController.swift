@@ -143,29 +143,26 @@ final class HowToUseViewController: UIViewController, Stepper {
   
   /// 작성하기 버튼 탭
   @objc func writeButtonTapped() {
-    loginStatus ? moveToCreateStudyVC() : showPopupView()
+    // 로그인이 된 경우 스터디 생성 화면 띄우기
+    if loginStatus {
+      steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
+      // 비로그인의 경우 로그인 화면으로 이동
+    }else {
+      steps.accept(AppStep.popupScreenIsRequired(popupCase: .requireLogin))
+    }
+  }
+
+}
+
+extension HowToUseViewController: PopupViewDelegate {
+  // 닫기
+  func leftBtnTapped() {
+    steps.accept(AppStep.dismissCurrentScreen)
   }
   
-  func moveToCreateStudyVC(){
-//    let createStudyVC = CreateStudyViewController()
-//    createStudyVC.hidesBottomBarWhenPushed = true
-//    self.navigationController?.pushViewController(createStudyVC, animated: true)
-  }
- 
-  func showPopupView(){
-    let popupVC = PopupViewController(
-      title: "로그인이 필요해요",
-      desc: "계속하시려면 로그인을 해주세요!",
-      leftButtonTitle: "취소",
-      rightButtonTilte: "로그인")
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true) {
-        self.dismiss(animated: true)
-      }
-    }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+  // 로그인 화면으로 이동
+  func rightBtnTapped() {
+    steps.accept(AppStep.dismissCurrentScreen)
+    NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
   }
 }

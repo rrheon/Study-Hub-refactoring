@@ -321,4 +321,3 @@ extension CalendarViewController: FSCalendarDelegate,
   }
 }
 
-extension CalendarViewController: CreateUIprotocol {}

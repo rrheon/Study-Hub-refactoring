@@ -5,42 +5,32 @@ import SafariServices
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class MyParticipateStudyVC: CommonNavi{
+/// 내가 참여한 스터디 VC
+final class MyParticipateStudyVC: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyParticipateStudyViewModel
   
-  private lazy var totalPostCountLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  
-  private lazy var deleteAllButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("전체삭제", for: .normal)
-    button.setTitleColor(UIColor.bg70, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    button.addAction(UIAction { _ in
+  /// 참여한 스터디 갯수 라벨
+  private lazy var totalPostCountLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+
+  /// 참여한 스터디 모두 삭제 버튼
+  private lazy var deleteAllButton: UIButton = UIButton().then {
+    $0.setTitle("전체삭제", for: .normal)
+    $0.setTitleColor(UIColor.bg70, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    $0.addAction(UIAction { _ in
       self.confirmDeleteAll()
     },for: .touchUpInside)
-    return button
-  }()
+  }
   
-  private lazy var emptyImage: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "MyParticipateEmptyImage")
-    return imageView
-  }()
-  
-  private lazy var emptyLabel: UILabel = {
-    let label = UILabel()
-    label.text = "참여한 스터디가 없어요\n나와 맞는 스터디를 찾아 보세요!"
-    label.numberOfLines = 0
-    label.textColor = .bg70
-    return label
-  }()
-  
+  /// 참여한 스터디 collectionView
   private lazy var participateCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -52,16 +42,26 @@ final class MyParticipateStudyVC: CommonNavi{
     return view
   }()
   
-  private let scrollView: UIScrollView = {
-    let scrollView = UIScrollView()
-    scrollView.backgroundColor = .bg30
-    return scrollView
-  }()
   
+  /// 참여한 스터디가 없을 때의 이미지
+  private lazy var emptyImage: UIImageView = UIImageView().then {
+    $0.image = UIImage(named: "MyParticipateEmptyImage")
+  }
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
-    self.viewModel = MyParticipateStudyViewModel(userData)
-    super.init()
+  /// 참여한 스터디가 없을 때의 라벨
+  private lazy var emptyLabel: UILabel = UILabel().then {
+    $0.text = "참여한 스터디가 없어요\n나와 맞는 스터디를 찾아 보세요!"
+    $0.numberOfLines = 0
+    $0.textColor = .bg70
+  }
+  
+  private let scrollView: UIScrollView = UIScrollView().then {
+    $0.backgroundColor = .bg30
+  }
+  
+  init(with viewModel: MyParticipateStudyViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -80,34 +80,27 @@ final class MyParticipateStudyVC: CommonNavi{
     
     registerCell()
     
-    setupLayout()
     makeUI()
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
   // MARK: - setupLayout
   
-  
-  func setupLayout(){
-    [
-      totalPostCountLabel,
-      deleteAllButton
-    ].forEach {
-      view.addSubview($0)
-    }
-  }
+
   
   // MARK: - makeUI
   
-  
+  /// UI 설정
   func makeUI(){
+    view.addSubview(totalPostCountLabel)
     totalPostCountLabel.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
       make.leading.equalToSuperview().offset(20)
     }
     
+    view.addSubview(deleteAllButton)
     deleteAllButton.snp.makeConstraints { make in
       make.top.equalTo(totalPostCountLabel)
       make.trailing.equalToSuperview().offset(-20)
@@ -115,21 +108,23 @@ final class MyParticipateStudyVC: CommonNavi{
     }
   }
   
+  /// cell 등록
   private func registerCell() {
     participateCollectionView.rx.setDelegate(self)
       .disposed(by: disposeBag)
     
     participateCollectionView.register(
       MyParticipateCell.self,
-      forCellWithReuseIdentifier: MyParticipateCell.id
+      forCellWithReuseIdentifier: MyParticipateCell.cellID
     )
   }
   
+  /// 바인딩 설정
   func setupBinding(){
     viewModel.participateInfo
       .asDriver(onErrorJustReturn: [])
       .drive(participateCollectionView.rx.items(
-        cellIdentifier: MyParticipateCell.id,
+        cellIdentifier: MyParticipateCell.cellID,
         cellType: MyParticipateCell.self)
       ) { index , content , cell in
         cell.model = content
@@ -152,6 +147,7 @@ final class MyParticipateStudyVC: CommonNavi{
       .disposed(by: disposeBag)
   }
   
+  /// acionts 설정
   func setupActions(){
     viewModel.isSuccessToDelete
       .asDriver(onErrorJustReturn: false)
@@ -169,27 +165,37 @@ final class MyParticipateStudyVC: CommonNavi{
   // MARK: - setupNavigationbar
   
   
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "참여한 스터디")
     leftButtonSetting()
+    settingNavigationbar()
   }
   
+  /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+  }
+  
+  
+  /// 참여한 스터디 전체 삭제
   func confirmDeleteAll(){
-    let popupVC = PopupViewController(
-      title: "스터디를 모두 삭제할까요?",
-      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
-    )
-
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-
-      self.viewModel.deleteAllParticipateList()
-    }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    let popupVC = PopupViewController(
+//      title: "스터디를 모두 삭제할까요?",
+//      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
+//    )
+//
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//
+//      self.viewModel.deleteAllParticipateList()
+//    }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
   
+  /// 참여한 스터디가 있을 때의 UI
   func dataUI(){
     view.addSubview(scrollView)
     scrollView.addSubview(participateCollectionView)
@@ -205,6 +211,7 @@ final class MyParticipateStudyVC: CommonNavi{
     }
   }
   
+  /// 참여한 스터디가 없을 때의 UI
   func noDataUI(){
     view.addSubview(emptyImage)
     emptyImage.snp.makeConstraints {
@@ -249,20 +256,18 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
   }
 
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
-    let popupVC = PopupViewController(
-      title: "이 스터디를 삭제할까요?",
-      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
-    )
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      
-      self.viewModel.deleteParticipateList(studyID: postID)
-    }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    let popupVC = PopupViewController(
+//      title: "이 스터디를 삭제할까요?",
+//      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
+//    )
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      
+//      self.viewModel.deleteParticipateList(studyID: postID)
+//    }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
 }
-
-extension MyParticipateStudyVC: CreateUIprotocol {}

@@ -4,46 +4,51 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class MyPostViewController: CommonNavi {
+/// 내가 작성한 스터디 VC
+final class MyPostViewController: UIViewController {
+  
   let disposeBag: DisposeBag = DisposeBag()
+  
   let viewModel: MyPostViewModel
   
-  private lazy var totalPostCountLabel: UILabel = {
-    let label = UILabel()
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    return label
-  }()
+  /// 작성한 게시글의 총 갯수
+  private lazy var totalPostCountLabel: UILabel = UILabel().then {
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
   
-  private lazy var deleteAllButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("전체삭제", for: .normal)
-    button.setTitleColor(UIColor.bg70, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-    button.addAction(UIAction { _ in
+  /// 작성한 게시글 전체 삭제 버튼
+  private lazy var deleteAllButton: UIButton = UIButton().then{
+    $0.setTitle("전체삭제", for: .normal)
+    $0.setTitleColor(UIColor.bg70, for: .normal)
+    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+    $0.addAction(UIAction { _ in
       self.confirmDeleteAll()
     },for: .touchUpInside)
-    return button
-  }()
+  }
   
   // MARK: - 작성한 글 없을 때
   
+  /// 작성한 글 없을 때의 이미지
   private lazy var emptyImage: UIImageView = UIImageView(image: UIImage(named: "EmptyPostImg"))
   
-  private lazy var emptyLabel: UILabel = {
-    let label = UILabel()
-    label.text = "작성한 글이 없어요\n새로운 스터디 활동을 시작해 보세요!"
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    label.numberOfLines = 0
-    label.textColor = .bg70
-    return label
-  }()
+  /// 작성한 글 없을 때의 라벨
+  private lazy var emptyLabel: UILabel = UILabel().then {
+    $0.text = "작성한 글이 없어요\n새로운 스터디 활동을 시작해 보세요!"
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    $0.numberOfLines = 0
+    $0.textColor = .bg70
+  }
   
+  /// 작성한 글 없을 때의 버튼 - 새로운 스터디 생성 버튼
   private lazy var writePostButton = StudyHubButton(title: "글 작성하기")
+  
   
   // MARK: - 작성한 글 있을 때
   
   
+  /// 내가 작성한 글 collectionview
   private lazy var myPostCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -56,15 +61,13 @@ final class MyPostViewController: CommonNavi {
   }()
   
   
-  private let scrollView: UIScrollView = {
-    let scrollView = UIScrollView()
-    scrollView.backgroundColor = .bg30
-    return scrollView
-  }()
+  private let scrollView: UIScrollView = UIScrollView().then{
+    $0.backgroundColor = .bg30
+  }
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
-    self.viewModel = MyPostViewModel(userData: userData)
-    super.init()
+  init(with viewModel: MyPostViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -86,12 +89,12 @@ final class MyPostViewController: CommonNavi {
     
     setupBinding()
     setupActions()
-  }
+  } // viewDidLoad
   
   
   // MARK: - makeUI
   
-  
+  /// UI 설정
   func makeUI(){
     view.addSubview(totalPostCountLabel)
     let postCount = viewModel.userData.value?.postCount
@@ -110,6 +113,7 @@ final class MyPostViewController: CommonNavi {
     }
   }
   
+  /// 게시글 갯수에 따른 UI 설정
   func makeUIWithPostCount(_ postCount: Int){
     if postCount > 0 {
       scrollView.addSubview(myPostCollectionView)
@@ -155,11 +159,13 @@ final class MyPostViewController: CommonNavi {
     }
   }
   
+  
+  /// 바인딩 설정
   func setupBinding(){
     viewModel.myPostData
       .asDriver(onErrorJustReturn: [])
       .drive(myPostCollectionView.rx.items(
-        cellIdentifier: MyPostCell.id,
+        cellIdentifier: MyPostCell.cellID,
         cellType: MyPostCell.self)) { index, content, cell in
           cell.model = content
           cell.delegate = self
@@ -174,6 +180,7 @@ final class MyPostViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     viewModel.myPostData
       .asDriver(onErrorJustReturn: [])
@@ -215,8 +222,10 @@ final class MyPostViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  
+  /// cell등록
   private func registerCell() {
-    myPostCollectionView.register(MyPostCell.self, forCellWithReuseIdentifier: MyPostCell.id)
+    myPostCollectionView.register(MyPostCell.self, forCellWithReuseIdentifier: MyPostCell.cellID)
     myPostCollectionView.rx.setDelegate(self)
       .disposed(by: disposeBag)
     myPostCollectionView.delegate = self
@@ -224,29 +233,36 @@ final class MyPostViewController: CommonNavi {
   
   // MARK: - setupNavigationbar
   
+  /// 네비게이션 바 설정
   func setupNavigationbar(){
     settingNavigationTitle(title: "작성한 글")
     leftButtonSetting()
+    settingNavigationbar()
+  }
+  
+  /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
   }
   
   // MARK: - 전체삭제
   
-  
+  /// 전체 삭제 버튼 탭
   func confirmDeleteAll() {
-    let popupVC = PopupViewController(
-      title: "글을 모두 삭제할까요?",
-      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
-    )
-    
-    popupVC.popupView.rightButtonAction = { [weak self] in
-      guard let self = self else { return }
-      popupVC.dismiss(animated: true)
-      viewModel.deleteMyAllPost()
-      showToast(message: "글이 삭제됐어요")
-    }
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
+//    let popupVC = PopupViewController(
+//      title: "글을 모두 삭제할까요?",
+//      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
+//    )
+//    
+//    popupVC.popupView.rightButtonAction = { [weak self] in
+//      guard let self = self else { return }
+//      popupVC.dismiss(animated: true)
+//      viewModel.deleteMyAllPost()
+//      showToast(message: "글이 삭제됐어요")
+//    }
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
   }
 }
 
@@ -277,18 +293,18 @@ extension MyPostViewController: MyPostCellDelegate {
   }
   
   func closeButtonTapped(in cell: MyPostCell, postID: Int){
-    let popupVC = PopupViewController(
-      title: "이 글의 모집을 마감할까요?",
-      desc: "마감하면 다시 모집할 수 없어요",
-      rightButtonTilte: "마감"
-    )
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.present(popupVC, animated: false)
-    
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      self.viewModel.closeMyPost(postID)
-    }
+//    let popupVC = PopupViewController(
+//      title: "이 글의 모집을 마감할까요?",
+//      desc: "마감하면 다시 모집할 수 없어요",
+//      rightButtonTilte: "마감"
+//    )
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    self.present(popupVC, animated: false)
+//    
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      self.viewModel.closeMyPost(postID)
+//    }
   }
 }
 

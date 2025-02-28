@@ -2,25 +2,29 @@
 import UIKit
 
 import SnapKit
+import Then
 
-final class DetailRejectReasonViewController: CommonNavi {
+/// 스터디 거절 사유 자세히 보기 VC
+final class DetailRejectReasonViewController: UIViewController {
   
+  /// 거절사유
   private var rejectData: RejectReason?
   
-  private lazy var titleLabel = createLabel(
-    title: rejectData?.studyTitle,
-    textColor: .bg80,
-    fontType: "Pretendard-Medium",
-    fontSize: 14
-  )
+  /// 스터디 제목 라벨
+  private lazy var titleLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+  }
+
+  /// 거절 사유 제목 라벨
+  private lazy var rejectTitleLabel = UILabel().then {
+    $0.text = "스터디 팀장의 거절 이유예요 😢"
+    $0.textColor = .black
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var rejectTitleLabel = createLabel(
-    title: "스터디 팀장의 거절 이유예요 😢",
-    textColor: .black,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
   
+  /// 거절 사유 라벨
   lazy var rejectReasonLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 20, left: 10, bottom: 20, right: 10))
     label.text = rejectData?.reason
@@ -31,11 +35,12 @@ final class DetailRejectReasonViewController: CommonNavi {
     return label
   }()
   
+  /// 거절 확인버튼
   private lazy var confirmButton = StudyHubButton(title: "확인")
   
   init(rejectData: RejectReason) {
     self.rejectData = rejectData
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -50,46 +55,35 @@ final class DetailRejectReasonViewController: CommonNavi {
     
     view.backgroundColor = .white
     
-    setupLayout()
     makeUI()
 
     setupNavigationbar()
   }
-  
-  // MARK: - setupLayout
-  
-  
-  func setupLayout(){
-    [
-      titleLabel,
-      rejectTitleLabel,
-      rejectReasonLabel,
-      confirmButton
-    ].forEach {
-      view.addSubview($0)
-    }
-  }
-  
+    
   // MARK: - makeUI
   
-  
+  /// UI 설정
   func makeUI(){
+    view.addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
       $0.leading.equalToSuperview().offset(20)
     }
     
+    view.addSubview(rejectTitleLabel)
     rejectTitleLabel.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(10)
       $0.leading.equalTo(titleLabel)
     }
     
+    view.addSubview(rejectReasonLabel)
     rejectReasonLabel.snp.makeConstraints {
       $0.top.equalTo(rejectTitleLabel.snp.bottom).offset(30)
       $0.leading.equalTo(titleLabel)
       $0.trailing.equalToSuperview().offset(-20)
     }
     
+    view.addSubview(confirmButton)
     confirmButton.addAction(UIAction { _ in
       self.navigationController?.popViewController(animated: true)
     }, for: .touchUpInside)
@@ -103,11 +97,9 @@ final class DetailRejectReasonViewController: CommonNavi {
   
   // MARK: - setupNavigationbar
 
-  
+  /// 네비게이션 바 설정
   func setupNavigationbar() {
     settingNavigationTitle(title: "거절 이유")
     leftButtonSetting()
   }
 }
-
-extension DetailRejectReasonViewController: CreateUIprotocol {}

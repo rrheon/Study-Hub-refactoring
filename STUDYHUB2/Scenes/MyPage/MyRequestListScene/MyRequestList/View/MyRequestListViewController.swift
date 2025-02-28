@@ -4,33 +4,22 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Then
 
-final class MyRequestListViewController: CommonNavi {
+/// 내가 신청한 스터디 리스트 VC
+final class MyRequestListViewController: UIViewController {
+
   let disposeBag: DisposeBag = DisposeBag()
+
   let viewModel: MyRequestListViewModel
+
+  /// 신청한 스터디 총 갯수 라벨
+  private lazy var totalPostCountLabel = UILabel().then {
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
   
-  private lazy var totalPostCountLabel = createLabel(
-    textColor: .bg80,
-    fontType: "Pretendard-SemiBold",
-    fontSize: 16
-  )
-  
-  private lazy var emptyImage: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "ApplyEmptyImg")
-    return imageView
-  }()
-  
-  private lazy var emptyLabel: UILabel = {
-    let label = UILabel()
-    label.text = "참여한 스터디가 없어요\n나와 맞는 스터디를 찾아 보세요!"
-    label.numberOfLines = 0
-    label.textAlignment = .center
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    label.textColor = .bg70
-    return label
-  }()
-  
+  /// 신청한 스터디 collectionview
   private lazy var myStudyRequestCollectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
@@ -42,9 +31,23 @@ final class MyRequestListViewController: CommonNavi {
     return view
   }()
   
-  init(_ userData: BehaviorRelay<UserDetailData?>) {
-    self.viewModel = MyRequestListViewModel(userData)
-    super.init()
+  /// 신청한 스터디가 없을 때의 이미지
+  private lazy var emptyImage: UIImageView = UIImageView().then {
+    $0.image = UIImage(named: "ApplyEmptyImg")
+  }
+  
+  /// 신청한 스터디가 없을 때의 라벨
+  private lazy var emptyLabel: UILabel = UILabel().then {
+    $0.text = "참여한 스터디가 없어요\n나와 맞는 스터디를 찾아 보세요!"
+    $0.numberOfLines = 0
+    $0.textAlignment = .center
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    $0.textColor = .bg70
+  }
+
+  init(with viewModel: MyRequestListViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -66,11 +69,12 @@ final class MyRequestListViewController: CommonNavi {
     
     setupActions()
     setupBinding()
-  }
+  } // viewDidLoad
   
   // MARK: - makeUI
   
   
+  /// UI 설정
   func makeUI(){
     view.addSubview(totalPostCountLabel)
     totalPostCountLabel.snp.makeConstraints {
@@ -79,11 +83,12 @@ final class MyRequestListViewController: CommonNavi {
     }
   }
 
+  /// 바인딩 설정
   func setupBinding(){
     viewModel.requestStudyList
       .asDriver(onErrorJustReturn: [])
       .drive(myStudyRequestCollectionView.rx.items(
-        cellIdentifier: MyRequestCell.id,
+        cellIdentifier: MyRequestCell.cellID,
         cellType: MyRequestCell.self)
       ) { index, content, cell in
         cell.model = content
@@ -92,6 +97,7 @@ final class MyRequestListViewController: CommonNavi {
       .disposed(by: disposeBag)
   }
   
+  /// Actions 설정
   func setupActions(){
     viewModel.countPostNumber
       .asDriver(onErrorJustReturn: 0)
@@ -134,22 +140,31 @@ final class MyRequestListViewController: CommonNavi {
   
   // MARK: - 네비게이션 설정
   
-  
-  func setupNavigationbar() {
+
+  /// 네비게이션 바 설정
+  func setupNavigationbar(){
     settingNavigationTitle(title: "신청 내역")
     leftButtonSetting()
+    settingNavigationbar()
   }
   
+  /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+  }
+                           
+  /// 셀등록
   private func registerCell() {
     myStudyRequestCollectionView.rx.setDelegate(self)
       .disposed(by: disposeBag)
     
     myStudyRequestCollectionView.register(
       MyRequestCell.self,
-      forCellWithReuseIdentifier: MyRequestCell.id
+      forCellWithReuseIdentifier: MyRequestCell.cellID
     )
   }
   
+  /// 데이터가 있을 때의 UI
   func dataUI(){
     view.addSubview(myStudyRequestCollectionView)
     myStudyRequestCollectionView.snp.makeConstraints {
@@ -160,6 +175,7 @@ final class MyRequestListViewController: CommonNavi {
     }
   }
   
+  /// 데이터가 없을 때의 UI
   func noDataUI(){
     view.addSubview(emptyImage)
     emptyImage.snp.makeConstraints {
@@ -198,15 +214,14 @@ extension MyRequestListViewController: MyRequestCellDelegate {
   }
   
   func deleteButtonTapped(in cell: MyRequestCell, postID: Int) {
-    let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?", desc: "")
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    popupVC.popupView.rightButtonAction = {
-      self.dismiss(animated: true)
-      self.viewModel.deleteMyReuest(postID)
-    }
-    self.present(popupVC, animated: false)
+//    let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?", desc: "")
+//    
+//    popupVC.modalPresentationStyle = .overFullScreen
+//    popupVC.popupView.rightButtonAction = {
+//      self.dismiss(animated: true)
+//      self.viewModel.deleteMyReuest(postID)
+//    }
+//    self.present(popupVC, animated: false)
   }
 }
 
-extension MyRequestListViewController: CreateUIprotocol {}

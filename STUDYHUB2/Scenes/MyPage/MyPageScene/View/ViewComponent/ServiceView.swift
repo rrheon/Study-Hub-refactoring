@@ -3,6 +3,7 @@ import UIKit
 
 import SnapKit
 import RxSwift
+import RxCocoa
 import Then
 
 /// 서비스 View - 공지사항, 문의하기, 이용방법, 서비스 이용약관, 개인정보 처리방침
@@ -76,21 +77,49 @@ final class ServiceView: UIView {
   
   /// Actions 설정
   func setupActions(){
-//    let buttonActions: [(UIButton, Service)] = [
-//      (notificationButton, .notice),
-//      (askButton, .inquiry),
-//      (howToUseButton, .howToUse),
-//      (serviceButton, .termsOfService),
-//      (informhandleButton, .privacyPolicy)
-//    ]
-//    
-//    buttonActions.forEach { button, activity in
-//      button.rx.tap
-//        .subscribe(onNext: { [weak self] in
-//          self?.viewModel.seletService(activity)
-//        })
-//        .disposed(by: disposeBag)
-//    }
+    // 공지사항버튼 탭
+    notificationButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToNoticeScreen, object: nil)
+      })
+      .disposed(by: disposeBag)
+    
+    // 문의하기 버튼 탭
+    askButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+      NotificationCenter.default.post(name: .navToInquiryScreen, object: nil)
+    })
+    .disposed(by: disposeBag)
+    
+    // 이용방법 버튼 탭
+    howToUseButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToHowToUseScreen, object: nil)
+      })
+      .disposed(by: disposeBag)
+    
+    // 서비스이용약관 탭
+    serviceButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToSafariScreen,
+                                        object: nil,
+                                        userInfo: ["url" : self.viewModel.serviceURL])
+      })
+      .disposed(by: disposeBag)
+
+    // 개인정보처리방침 탭
+    informhandleButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        NotificationCenter.default.post(name: .navToSafariScreen,
+                                        object: nil,
+                                        userInfo: ["url" : self.viewModel.personalURL])
+      })
+      .disposed(by: disposeBag)
   }
 }
 

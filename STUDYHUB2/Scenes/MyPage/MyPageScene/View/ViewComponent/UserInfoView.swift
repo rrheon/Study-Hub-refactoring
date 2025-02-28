@@ -66,7 +66,6 @@ final class UserInfoView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  // MARK: - setupLayout
   
   // MARK: - makeUI
   
@@ -147,14 +146,22 @@ final class UserInfoView: UIView {
   
   /// actions 설정
   func setupActions(){
-  
-    /// 로그인 시 - 프로필 편집으로 이동
-    /// 비 로그인 시 - 로그인 화면으로 이동
+    
+    /// 로그인화면 / 프로필 편집화면으로 이동
     managementProfileButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        guard let self = self else { return }
-        let loginStauts = viewModel.checkLoginStatus.value
-        viewModel.managementProfileButton.accept(loginStauts)
+      .withUnretained(self)
+      .subscribe(onNext: { (view, _) in
+        
+        /// 비 로그인 시 - 로그인 화면으로 이동
+        if view.viewModel.userData.value?.nickname == nil {
+          NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+        }else {
+          /// 로그인 시 - 프로필 편집으로 이동
+          NotificationCenter.default.post(name: .navToEditUserProfileScreen,
+                                          object: nil,
+                                          userInfo: ["userData" : view.viewModel.userData,
+                                                     "userProfile": view.viewModel.userProfile])
+        }
       })
       .disposed(by: disposeBag)
   }

@@ -98,19 +98,19 @@ final class ProfileComponentView: UIView {
   
   /// actions 설정
   func setupActions(){
-    let buttonList: [(UIButton, EditInfomationList)] = [
-      (deleteButton, .deleteProfile),
-      (editButton, .editProfile)
-    ]
+    // 프로필 편집 버튼 탭
+    editButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+      self.viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: 0, type: .editProfile))
+    }).disposed(by: disposeBag)
     
-    buttonList.forEach { button, action in
-      button.rx.tap
-        .subscribe(onNext: {[weak self] in
-          self?.viewModel.editButtonTapped.accept(action)
-        })
-        .disposed(by: disposeBag)
-    }
-
+    // 프로필 삭제 버튼 탭
+    deleteButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+    
+    }).disposed(by: disposeBag)
   }
 }
 

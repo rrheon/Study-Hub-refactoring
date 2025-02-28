@@ -1,9 +1,12 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class EditMajorViewModel: EditUserInfoViewModel {
+final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
  
   let enteredMajor = PublishRelay<String>()
   let matchedMajors = PublishRelay<[String]>()
@@ -29,8 +32,8 @@ final class EditMajorViewModel: EditUserInfoViewModel {
   }
   
   func storeMajorToServer(_ major: String){
-    guard let major = convertMajor(major, toEnglish: true) else { return }
-//    
+    guard let major = Utils.convertMajor(major, toEnglish: true) else { return }
+//
 //    commonNetworking.moyaNetworking(
 //      networkingChoice: .editUserMaojr(major),
 //      needCheckToken: true) { result in
@@ -47,7 +50,7 @@ final class EditMajorViewModel: EditUserInfoViewModel {
   }
   
   func getCurrentmajor() -> String{
-    return self.convertMajor(userData.value?.major ?? "없음", toEnglish: false) ?? "없음"
+    return Utils.convertMajor(userData.value?.major ?? "없음", toEnglish: false) ?? "없음"
   }
   
   func checkCurrentMajor(_ major: String) -> Bool{
@@ -57,4 +60,3 @@ final class EditMajorViewModel: EditUserInfoViewModel {
   }
 }
 
-extension EditMajorViewModel: ConvertMajor{}

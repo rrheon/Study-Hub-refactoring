@@ -206,20 +206,34 @@ final class UserInfomationComponentView: UIView {
       })
       .disposed(by: disposeBag)
     
+    // 닉네임 수정버튼 탭
+    nickNameEditButton
+      .rx
+      .tap
+      .subscribe(onNext: { _ in
+        self.viewModel.steps.accept(AppStep.editNicknameScreenIsRequired(
+          userData: self.viewModel.userData))
+      })
+      .disposed(by: disposeBag)
     
-    let buttonList: [(UIButton, EditInfomationList)] = [
-      (nickNameEditButton, .nickname),
-      (editMajorButton, .major),
-      (editPassworButton, .password)
-    ]
+    // 학과 수정버튼 탭
+    editMajorButton
+      .rx
+      .tap
+      .subscribe(onNext: { _ in
+        self.viewModel.steps.accept(AppStep.editMajorScreenIsRequired(userData: self.viewModel.userData))
+      })
+      .disposed(by: disposeBag)
     
-    buttonList.forEach { button, action in
-      button.rx.tap
-        .subscribe(onNext: {[weak self] in
-          self?.viewModel.editButtonTapped.accept(action)
-        })
-        .disposed(by: disposeBag)
-    }
+    // 비밀번호 수정 버튼 탭
+    editPassworButton.rx
+      .tap
+      .subscribe(onNext: { _ in
+        guard let email = self.viewModel.userData.value?.email else { return }
+        self.viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
+      })
+      .disposed(by: disposeBag)
+
   }
   
   /// UI 데이터 설정
