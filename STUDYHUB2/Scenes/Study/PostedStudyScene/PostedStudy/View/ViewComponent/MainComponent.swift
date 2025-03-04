@@ -59,8 +59,8 @@ final class PostedStudyMainComponent: UIView {
   /// 성별 스택뷰
   private lazy var genderStackView = createInfoStack(
     labelText: "성별",
-    imageName: postedData.filteredGender,
-    countText: Utils.convertGender(gender: postedData.filteredGender),
+    imageName: postedData.filteredGender ?? "",
+    countText: Utils.convertGender(gender: postedData.filteredGender ?? ""),
     countColor: .white
   )
   
@@ -218,9 +218,9 @@ final class PostedStudyMainComponent: UIView {
     changeLabelTextInStackView(memberNumberStackView, title: title, studyPerson: data.studyPerson)
     changeLabelTextInStackView(fineStackView, title: "\(data.penalty)원")
     
-    let convertedGender = Utils.convertGender(gender: data.filteredGender)
+    let convertedGender = Utils.convertGender(gender: data.filteredGender ?? "")
     changeLabelTextInStackView(genderStackView, title: convertedGender)
-    changeImageInStackView(genderStackView, gender: data.filteredGender)
+    changeImageInStackView(genderStackView, gender: data.filteredGender ?? "")
   }
   
   func changeLabelTextInStackView(_ stackView: UIStackView, title: String, studyPerson: Int = 0){

@@ -12,8 +12,8 @@ import Kingfisher
 import Then
 
 protocol ParticipantsCellDelegate: AnyObject {
-  func refuseButtonTapped(in cell: WaitCell, userId: Int)
-  func acceptButtonTapped(in cell: WaitCell, userId: Int)
+  func refuseButtonTapped(userId: Int)
+  func acceptButtonTapped(userId: Int)
 }
 
 /// 스터디 신청 대기인원 Cell
@@ -72,7 +72,7 @@ final class WaitCell: UICollectionViewCell {
     $0.setTitleColor(UIColor.bg80, for: .normal)
     $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     $0.addAction(UIAction { _ in
-      self.delegate?.refuseButtonTapped(in: self, userId: self.userId)
+      self.delegate?.refuseButtonTapped(userId: self.userId)
     }, for: .touchUpInside)
   }
   
@@ -82,7 +82,7 @@ final class WaitCell: UICollectionViewCell {
     $0.setTitleColor(UIColor.g_10, for: .normal)
     $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
     $0.addAction(UIAction { _ in
-      self.delegate?.acceptButtonTapped(in: self, userId: self.userId)
+      self.delegate?.acceptButtonTapped(userId: self.userId)
     }, for: .touchUpInside)
   }
   

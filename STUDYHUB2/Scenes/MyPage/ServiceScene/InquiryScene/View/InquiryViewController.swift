@@ -92,7 +92,7 @@ final class InquiryViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
 
   // MARK: - makeUI
@@ -180,7 +180,7 @@ final class InquiryViewController: UIViewController {
         switch result {
         case true:
           self?.navigationController?.popViewController(animated: true)
-          self?.showToast(message: "문의가 정상적으로 접수됐어요.", imageCheck: true, alertCheck: true)
+          ToastPopupManager.shared.showToast(message: "문의가 정상적으로 접수됐어요.")
         case false:
           return
         }

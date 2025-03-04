@@ -21,12 +21,12 @@ class BookmarkManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - postId: 해당 스터디의 postId
   ///   - completion: 콜백함수
-  func bookmarkTapped(with postId: Int, completion: @escaping () -> Void){
+  func bookmarkTapped(with postId: Int, completion: @escaping (Int) -> Void){
     provider.request(.changeBookMarkStatus(postId: postId)) { result in
       switch result {
       case .success(let response):
         print(response.statusCode)
-        completion()
+        completion(response.statusCode)
       case .failure(let response):
         print(response.response)
       }

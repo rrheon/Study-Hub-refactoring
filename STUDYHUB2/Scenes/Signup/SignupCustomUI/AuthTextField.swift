@@ -88,11 +88,6 @@ class AuthTextField: UIView {
     return NSPredicate(format:"SELF MATCHES %@", regex).evaluate(with: email)
   }
   
-  func isValidPassword(_ password: String) -> Bool {
-    let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
-    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
-  }
-  
   func setPlaceholder(_ placeholder: String) {
     textField.attributedPlaceholder = NSAttributedString(
       string: placeholder,

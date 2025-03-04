@@ -68,13 +68,12 @@ final class BookmarkViewModel: Stepper {
   /// 북마크 버튼 탭 - 북마크 삭제
   /// - Parameter postID: 해당 스터디의 postID
   func deleteButtonTapped(postID: Int){
-    BookmarkManager.shared.bookmarkTapped(with: postID) {
-      print("북마크 탭")
+ 
+    BookmarkManager.shared.deleteAllBookmark {
+      self.bookmarkList.removeAll { $0.postID == postID }
+      self.bookmarkDatas.accept(self.bookmarkList)
+      self.totalCount.accept(self.bookmarkList.count)
     }
-    
-    bookmarkList.removeAll { $0.postID == postID }
-    bookmarkDatas.accept(bookmarkList)
-    totalCount.accept(bookmarkList.count)
   }
   
   

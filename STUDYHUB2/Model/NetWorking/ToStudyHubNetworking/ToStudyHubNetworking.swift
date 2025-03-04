@@ -21,17 +21,18 @@ extension ToStudyHubNetworking: TargetType, CommonBaseURL {
   /// API 별 요청 path
   var path: String {
     switch self {
-    case .inquiryQuestion(_):               return "/v1/email/question"
-      //공지사항 이용약관조회랑 묶기
-    case .getNotice(page: let page, size: let size):
-      return ""
+    case .inquiryQuestion(_):                          return "/v1/email/question"
+    case .getNotice(page: let page, size: let size):   return "/v1/announce"
     }
   }
   
   
   /// API 별 메소드
   var method: Moya.Method {
-    return .post
+    switch self {
+    case .inquiryQuestion(_):     return .post
+    case .getNotice(_, _):        return .get
+    }
   }
   
   

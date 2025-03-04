@@ -27,4 +27,14 @@ class ToStudyHubManager: StudyHubCommonNetworking {
       }
     }
   }
+  
+  func fetchNotice(completion: @escaping (NoticeData) -> Void){
+    provider.request(.getNotice(page: 0, size: 5)) { result in
+      self.commonDecodeNetworkResponse(with: result, decode: NoticeData.self) { result in
+        if result.numberOfElements != 0{
+          completion(result)
+        }
+      }
+    }
+  }
 }

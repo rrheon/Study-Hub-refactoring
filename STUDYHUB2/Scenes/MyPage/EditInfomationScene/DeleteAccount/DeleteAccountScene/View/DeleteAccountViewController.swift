@@ -133,28 +133,29 @@ final class DeleteAccountViewController: UIViewController {
     case true:
       viewModel.deleteAccount()
     case false:
-      self.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
+      ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
     }
   }
   
   /// 삭제 완료 시
   func resultOfDeleteAccount(_ result: Bool){
-//    switch result {
-//    case true:
-//      let popupVC = PopupViewController(
-//        title: "탈퇴가 완료됐어요",
-//        desc: "지금까지 스터디허브를 이용해 주셔서 감사합니다.",
-//        checkEndButton: true
-//      )
-//      
-//      popupVC.popupView.endButtonAction = { [weak self] in
-////        self?.logout()
-//      }
-//      
-//      popupVC.modalPresentationStyle = .overFullScreen
-//      self.present(popupVC, animated: false)
-//    case false:
-//      self.showToast(message: "계정 탈퇴에 실패했어요.", alertCheck: false)
-//    }
+    switch result {
+    case true:
+      viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .accountDeletionCompleted))
+  
+    case false:
+      ToastPopupManager.shared.showToast(message:  "계정 탈퇴에 실패했어요.", alertCheck: false)
+
+    }
+  }
+}
+
+
+// MARK: - PopupView Delegate
+extension DeleteAccountViewController: PopupViewDelegate {
+  // 팝업 닫고 로그인 화면으로 이동
+  func endBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
   }
 }

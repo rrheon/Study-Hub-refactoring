@@ -23,8 +23,8 @@ final class ConfirmEmailViewController: UIViewController {
  /// 이메일 입력 TextField
   private lazy var emailTextField = StudyHubUI.createTextField(title: "@inu.ac.kr")
   
-  init(_ loginStatus: Bool) {
-    self.viewModel = ConfirmEmailViewModel(loginStatus: loginStatus)
+  init(with viewModel: ConfirmEmailViewModel) {
+    self.viewModel = ConfirmEmailViewModel()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -59,11 +59,13 @@ final class ConfirmEmailViewController: UIViewController {
   
   ///UI 설정
   func makeUI(){
+    view.addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
       $0.leading.equalToSuperview().offset(20)
     }
     
+    view.addSubview(emailTextField)
     emailTextField.autocorrectionType = .no
     emailTextField.autocapitalizationType = .none
     emailTextField.snp.makeConstraints {
@@ -85,7 +87,7 @@ final class ConfirmEmailViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    //    viewModel.loginStatus ? super.leftButtonTapped(sender) : dismiss(animated: true)
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
   
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
@@ -115,9 +117,12 @@ final class ConfirmEmailViewController: UIViewController {
       .drive(onNext: { [weak self] result in
         if result {
           guard let email = self?.viewModel.email.value else { return }
-          self?.moveToOtherVCWithSameNavi(vc: EnterValidCodeViewController(email), hideTabbar: true)
+
+          self?.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+          self?.viewModel.steps.accept(AppStep.enterEmailCodeScreenIsRequired(email: email))
         } else {
-          self?.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.", alertCheck: false)
+          ToastPopupManager.shared.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
+                                             alertCheck: false)
         }
       })
       .disposed(by: disposeBag)

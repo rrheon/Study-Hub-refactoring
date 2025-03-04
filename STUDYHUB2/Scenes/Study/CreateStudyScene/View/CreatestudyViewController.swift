@@ -64,7 +64,7 @@ final class CreateStudyViewController: UIViewController {
     setupBinding()
   } // viewDidLoad
   
-  
+ 
   // MARK: - setUpLayout
   
   func setUpLayout(){
@@ -77,6 +77,8 @@ final class CreateStudyViewController: UIViewController {
   }
   
   // MARK: - makeUI
+  
+  ///UI 설정
   func makeUI(){
     studyInfoView.snp.makeConstraints {
       $0.top.equalToSuperview().offset(33)
@@ -124,11 +126,13 @@ final class CreateStudyViewController: UIViewController {
     let navigationTitle = viewModel.postedData.value == nil ? "스터디 만들기" : "수정하기"
     leftButtonSetting()
     settingNavigationTitle(title: navigationTitle)
+    settingNavigationbar()
+    
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    self.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    self.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
 #warning("수정하거나 작성하다가 나가면 경고창")
   }
   
@@ -159,43 +163,23 @@ final class CreateStudyViewController: UIViewController {
         }
       })
       .disposed(by: disposeBag)
-
-  
-    /// 스터디가 생성되었을 때
-    viewModel.isSuccessCreateStudy
-      .subscribe(onNext: { [weak self] _ in
-        self?.navigationController?.popViewController(animated: false)
-      })
-      .disposed(by: disposeBag)
-    
-    /// 스터디가 수정되었을 때
-    viewModel.isSuccessModifyStudy
-      .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self] _ in
-        guard let self = self else { return }
-        self.navigationController?.popViewController(animated: true)
-        self.showToast(message: "글이 수정됐어요.", alertCheck: true)
-      })
-      .disposed(by: disposeBag)
   }
   
+  
+  // 뒤로가기 버튼 탭
   func backButtonTapped(){
     self.view.endEditing(true)
     
-//    let popupVC = PopupViewController(
-//      title: "수정을 취소할까요?",
-//      desc: "취소할 시 내용이 저장되지 않아요",
-//      leftButtonTitle: "아니요",
-//      rightButtonTilte: "네"
-//    )
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: false) {
-//        self.navigationController?.popViewController(animated: true)
-//      }
-//    }
-//    self.present(popupVC, animated: true)
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .cancelModifyPost))
   }
 }
 
+// MARK: - PopupView Delgate
+
+
+extension CreateStudyViewController: PopupViewDelegate {
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+  }
+}

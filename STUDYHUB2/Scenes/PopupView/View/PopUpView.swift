@@ -13,17 +13,37 @@ import Then
 
 /// 팝업뷰 Delegate
 protocol PopupViewDelegate {
-  func leftBtnTapped()
-  func rightBtnTapped()
-  func endBtnTapped()
+  func leftBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase)
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase)
+  func endBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase)
 }
 
+/// 팝업뷰 Delegate의 기본값
 extension PopupViewDelegate {
-  func endBtnTapped(){}
+  /// 왼쪽 버튼 -> 기본값  =. 닫기
+  func leftBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase){
+    defaultBtnAction()
+  }
+  
+  /// 오른쪽 버튼
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase){
+    defaultBtnAction()
+  }
+  
+  /// 종료버튼
+  func endBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase){
+    defaultBtnAction()
+  }
 }
 
 /// 팝업 view
 final class PopupView: UIView {
+  
+  /// popupView 버튼의 기본 action
+  var defaultBtnAction: (() -> ())? = nil
+  
+  /// 팝업의 종류
+  var popupCase: PopupCase? = nil
   
   var delegate: PopupViewDelegate?
   
@@ -87,18 +107,15 @@ final class PopupView: UIView {
     $0.distribution = .fillEqually
   }
   
-  init(title: String,
-       desc: String,
-       leftButtonTitle: String = "취소",
-       rightButtonTitle: String = "삭제",
-       checkEndButton: Bool = false) {
+  init(popupCase: PopupCase) {
+    self.popupCase = popupCase
     
-    self.titleLabel.text = title
-    self.descLabel.text = desc
-    self.checkEndButton = checkEndButton
+    self.titleLabel.text = popupCase.popupData.title
+    self.descLabel.text = popupCase.popupData.desc
+    self.checkEndButton = popupCase.popupData.checkEndButton
     
-    self.leftButton.setTitle(leftButtonTitle, for: .normal)
-    self.rightButton.setTitle(rightButtonTitle, for: .normal)
+    self.leftButton.setTitle(popupCase.popupData.leftButtonTitle, for: .normal)
+    self.rightButton.setTitle(popupCase.popupData.rightButtonTitle, for: .normal)
       
     super.init(frame: .zero)
     
@@ -171,14 +188,20 @@ final class PopupView: UIView {
   }
 
   @objc private func leftButtonTapped() {
-    delegate?.leftBtnTapped()
+    delegate?.leftBtnTapped(defaultBtnAction: {
+      defaultBtnAction?()
+    }, popupCase: popupCase ?? .requireLogin)
   }
   
   @objc private func rightButtonTapped() {
-    delegate?.rightBtnTapped()
+    delegate?.rightBtnTapped(defaultBtnAction: {
+      defaultBtnAction?()
+    }, popupCase: popupCase ?? .requireLogin)
   }
   
   @objc private func endButtonTapped() {
-    delegate?.endBtnTapped()
+    delegate?.endBtnTapped(defaultBtnAction: {
+      defaultBtnAction?()
+    }, popupCase: popupCase ?? .requireLogin)
   }
 }

@@ -165,10 +165,10 @@ final class RecruitPostCell: UICollectionViewCell {
   
   /// 북마크 버튼 탭
   private func bookmarkTapped(){
-    guard let postID = self.model?.postID else { return }
+    guard let postID = self.model?.postId else { return }
     
     
-    BookmarkManager.shared.bookmarkTapped(with: postID) {
+    BookmarkManager.shared.bookmarkTapped(with: postID) {_ in 
       
     }
     if loginStatus ?? false {
@@ -189,7 +189,7 @@ final class RecruitPostCell: UICollectionViewCell {
     countMemeberLabel.changeColor(wantToChange: "\(studyPersonCount)", color: .o50)
     
     /// 북마크 여부
-    let bookmarkImage =  data.bookmarked ? "BookMarkChecked": "BookMarkLightImg"
+    let bookmarkImage = data.bookmarked ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     /// 학과

@@ -121,18 +121,21 @@ final class UserInfoView: UIView {
   func setupBinding(){
     /// 사용자의 정보데이터
     viewModel.userData
+      .skip(1) // 초기값(nil) 방출 무시
+      .distinctUntilChanged { $0?.nickname == $1?.nickname } // 같은 닉네임이면 UI 업데이트 안 함
       .withUnretained(self)
       .asDriver(onErrorJustReturn: (self, nil))
       .drive(onNext: { (view, userData) in
-        guard let data = userData?.nickname else {
+        if let _ = userData?.nickname,
+           let userData = userData {
+          view.loginUI()
+          view.setupUIData(userData)
+        } else {
           view.logoutLayout()
-          return
         }
-        view.loginUI()
-        view.setupUIData(userData!)
       })
       .disposed(by: disposeBag)
-    
+  
     /// 사용자의 프로필
     viewModel.userProfile
       .asDriver(onErrorJustReturn: UIImage(named: "ProfileAvatar_change")!)
@@ -154,6 +157,7 @@ final class UserInfoView: UIView {
         
         /// 비 로그인 시 - 로그인 화면으로 이동
         if view.viewModel.userData.value?.nickname == nil {
+          TokenManager.shared.deleteTokens()
           NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
         }else {
           /// 로그인 시 - 프로필 편집으로 이동

@@ -16,22 +16,10 @@ final class NotificationViewModel: Stepper {
   }
   
   func getNoticeData(page: Int, size: Int){
-//    commonNetworking.moyaNetworking(
-//      networkingChoice: .getNotice(page: page, size: size)
-//    ) { result in
-//      switch result {
-//      case .success(let response):
-//        do {
-//          let noticeData = try JSONDecoder().decode(NoticeData.self, from: response.data)
-//          let filteredDatas = noticeData.content.map { ExpandedNoticeContent(noticeContent: $0) }
-//          self.noticeDatas.accept(filteredDatas)
-//        } catch {
-//          print("Failed to decode JSON: \(error)")
-//        }
-//      case .failure(let response):
-//        print(response.response)
-//      }
-//    }
+    ToStudyHubManager.shared.fetchNotice { noticeData in
+      let filteredDatas = noticeData.content.map { ExpandedNoticeContent(noticeContent: $0) }
+      self.noticeDatas.accept(filteredDatas)
+    }
   }
   
   func noticeCellTapped(_ title: String){

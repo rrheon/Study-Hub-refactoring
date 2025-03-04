@@ -22,11 +22,10 @@ final class SearchViewModel: Stepper {
   /// 검색된 스터디 리스트
   var postDatas: PublishRelay<[PostData?]> = PublishRelay<[PostData?]>()
 
-  init() {
-    
-  }
   
   // MARK: - 추천어 검색하기
+
+
   func searchRecommend(keyword: String) async {
     do {
       let result = try await StudyPostManager.shared.searchRecommend(with: keyword)

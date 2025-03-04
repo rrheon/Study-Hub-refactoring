@@ -112,8 +112,9 @@ final class EditnicknameViewController: UIViewController {
     settingNavigationbar()
   }
  
+  /// 네비게이션 바 왼쪽 아이탬 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 탭
@@ -176,7 +177,7 @@ final class EditnicknameViewController: UIViewController {
     guard let newNickname = viewModel.newNickname.value else { return }
     viewModel.storeNicknameToServer(newNickname)
   
-    self.showToast(message: "닉네임이 변경되었어요", alertCheck: true)
+    ToastPopupManager.shared.showToast(message: "닉네임이 변경되었어요")
     self.navigationController?.popViewController(animated: true)
   }
   

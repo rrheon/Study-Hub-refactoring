@@ -115,7 +115,7 @@ final class EditMajorViewController: UIViewController {
     case true:
       viewModel.storeMajorToServer(major)
     case false:
-      showToast(message: "기존 학과와 동일해요. 다시 선택해주세요", alertCheck: false)
+      ToastPopupManager.shared.showToast(message: "기존 학과와 동일해요. 다시 선택해주세요", alertCheck: false)
       rightButtonSetting(imgName: "DeCompletedImg", activate: false)
     }
   }
@@ -147,24 +147,25 @@ final class EditMajorViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
+    /// 학과 입력 TextField
     majorTextField.rx.text.orEmpty
       .bind(onNext: { [weak self] text in
         self?.viewModel.searchMajorFromPlist(text)
       })
       .disposed(by: disposeBag)
     
-    viewModel.isSuccessChangeMajor
-      .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self] in
-        switch $0 {
-        case true:
-          self?.showToast(message: "학과가 변경됐어요.", alertCheck: true)
-          self?.navigationController?.popViewController(animated: true)
-        case false:
-          return
-        }
-      })
-      .disposed(by: disposeBag)
+//    viewModel.isSuccessChangeMajor
+//      .asDriver(onErrorJustReturn: false)
+//      .drive(onNext: { [weak self] in
+//        switch $0 {
+//        case true:
+//          ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
+//          self?.navigationController?.popViewController(animated: true)
+//        case false:
+//          return
+//        }
+//      })
+//      .disposed(by: disposeBag)
   }
   
   // MARK: - setupActions

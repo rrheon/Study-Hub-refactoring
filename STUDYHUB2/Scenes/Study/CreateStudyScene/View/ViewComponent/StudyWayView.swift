@@ -284,7 +284,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
    
     [ contactButton, untactButton, mixmeetButton]
       .forEach {
-        if $0.titleLabel?.text == Utils.convertStudyWay(wayToStudy: postValue.studyWay) {
+        if $0.titleLabel?.text == Utils.convertStudyWay(wayToStudy: postValue.studyWay ?? "") {
         updateButtonSelection(selectedButton: $0)
       }
     }

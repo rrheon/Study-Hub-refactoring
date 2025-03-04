@@ -61,8 +61,7 @@ final class RefuseBottomSheet: UIViewController {
     $0.layer.cornerRadius = 10
   }
   
-  init(delegate: RefuseBottomSheetDelegate?, userId: Int) {
-    self.delegate = delegate
+  init(userId: Int) {
     self.userId = userId
     
     super.init(nibName: nil, bundle: nil)
@@ -174,7 +173,7 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
     updateRefuseButtonState()
   }
 
-  
+  /// 선택한 버튼에 따른 버튼 활성화
   func updateRefuseButtonState() {
     if selectedButtonTag != -1 {
       refuseButton.isEnabled = true
@@ -185,6 +184,7 @@ extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
     }
   }
   
+  /// 거절 버튼 탭
   func refuseButtonTapped() {
     self.dismiss(animated: true)
     

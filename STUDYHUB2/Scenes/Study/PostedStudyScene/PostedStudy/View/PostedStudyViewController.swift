@@ -40,8 +40,8 @@ final class PostedStudyViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func viewDidDisappear(_ animated: Bool) {
-    //    viewModel.isNeedFetch?.accept(true)
+  override func viewWillAppear(_ animated: Bool) {
+    viewModel.fetchCommentDatas(with: viewModel.postID)
   }
   
   // MARK: - viewDidLoad
@@ -74,28 +74,27 @@ final class PostedStudyViewController: UIViewController {
   /// 네비게이션 바 세팅
   func setupNavigationbar(){
     leftButtonSetting()
+    
+    settingNavigationbar()
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
   /// 네비게이션 바 왼쪽 아이탬 터치 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    var isHiddenNav: Bool = false
+    
+    /// 스터디 디테일 -> 스터디 디테일 이동하는 경우 pop 할 경우 네비게이션 바 숨기기 처리 x
+    if let vcCount = self.navigationController?.viewControllers.count {
+      isHiddenNav = vcCount < 3
+    }
+    
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: isHiddenNav, animate: true))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 터치 - 본인 게시글일 경우 수정 및 삭제
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
-        guard let postID = viewModel.postDatas.value?.postID else { return }
-    //    let bottomSheetVC = BottomSheet(
-    //      postID: postID,
-    //      checkMyPost: true,
-    //      firstButtonTitle: "삭제하기",
-    //      secondButtonTitle: "수정하기",
-    //      checkPost: true
-    //    )
-    //    bottomSheetVC.delegate = self
-    //
-    //    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-    //    present(bottomSheetVC, animated: true, completion: nil)
+    guard let postID = viewModel.postDatas.value?.postId else { return }
+
     viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
   }
   
@@ -185,91 +184,6 @@ final class PostedStudyViewController: UIViewController {
       })
       .disposed(by: disposeBag)
 
-    //    viewModel.postDatas
-    //      .subscribe(onNext: { [weak self] in
-    //        if $0?.usersPost == false {
-    //          self?.navigationItem.rightBarButtonItem = nil
-    //        }
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.dataFromPopupView
-    //      .subscribe(onNext: { [weak self] action in
-    //        guard let self = self else { return }
-    //        switch action {
-    //        case .deletePost:
-    //          viewModel.deleteMyPost {
-    //            self.navigationController?.popViewController(animated: false)
-    //            self.showToast(message: "삭제가 완료됐어요.")
-    //          }
-    //        case .editPost:
-    //          let postData = viewModel.postDatas
-    //          let modifyVC = CreateStudyViewController(postedData: postData, mode: .PUT)
-    //          self.moveToOtherVCWithSameNavi(vc: modifyVC, hideTabbar: true)
-    //        case .deleteComment: break
-    ////          viewModel.commentManager.deleteComment(commentID: viewModel.postOrCommentID) {
-    ////            if $0 {
-    ////              self.viewModel.fetchCommentDatas()
-    ////            }
-    ////          }
-    //        case .editComment:
-    //          commentComponent.commentButton.setTitle("수정", for: .normal)
-    //        }
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.singlePostData
-    //      .subscribe(onNext: { [weak self] in
-    //        let loginStatus = self?.viewModel.isUserLogined
-    //        let postData = PostedStudyData(isUserLogin: loginStatus ?? false, postDetailData: $0)
-    //        let postedStudyVC = PostedStudyViewController(postData)
-    //        self?.moveToOtherVCWithSameNavi(vc: postedStudyVC, hideTabbar: true)
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.isActivateParticipate
-    //      .subscribe(onNext: { [weak self] in
-    //        guard let postData = self?.viewModel.postDatas else { return }
-    //        $0 ? self?.goToParticipateVC(postData) : self?.goToLoginVC()
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.showToastMessage
-    //      .asDriver(onErrorJustReturn: "")
-    //      .drive(onNext: { [weak self] in
-    //        self?.showToast(message: $0, imageCheck: false)
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.showBottomSheet
-    //      .asDriver(onErrorJustReturn: 0)
-    //      .drive(onNext: { [weak self]  in
-    //        let bottomSheetVC = BottomSheet(postID: $0, checkPost: false)
-    //        bottomSheetVC.delegate = self
-    //
-    //        self?.showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-    //        self?.present(bottomSheetVC, animated: true, completion: nil)
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.moveToCommentVC
-    //      .subscribe(onNext: { [weak self] in
-    //        self?.navigationController?.pushViewController($0, animated: true)
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.moveToLoginVC
-    //      .subscribe(onNext: { [weak self] _ in
-    //        self?.goToLoginVC()
-    //      })
-    //      .disposed(by: disposeBag)
-    //
-    //    viewModel.moveToParticipateVC
-    //      .subscribe(onNext: { [weak self] _ in
-    //        guard let self = self else { return }
-    //        self.goToParticipateVC(viewModel.postDatas)
-    //      })
-    //      .disposed(by: disposeBag)
   }
   
   /// delegate 설정
@@ -320,16 +234,19 @@ extension PostedStudyViewController: UITableViewDelegate  {
 extension PostedStudyViewController: BottomSheetDelegate {
   
   
-  
-  /// BottomSheet의 첫 번째 버튼 탭 - 댓글 삭제
+  /// BottomSheet의 첫 번째 버튼 탭
   /// - Parameter postOrCommentID: commentID
   func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     switch bottomSheetCase {
-    case .managementPost:  viewModel.deleteMyPost(with: postOrCommentID)
-    case .managementComment: viewModel.deleteComment(with: postOrCommentID)
+    case .managementPost:
+      
+      viewModel.steps.accept(AppStep.dismissCurrentScreen)
+      // 게시글 삭제 팝업 띄우기
+      viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+    case .managementComment:
+      // 댓글 삭제하기
+      viewModel.deleteComment(with: postOrCommentID)
     default: return
-      
-      
     }
   }
   
@@ -339,38 +256,30 @@ extension PostedStudyViewController: BottomSheetDelegate {
     // 현재 화면 내리기
     viewModel.steps.accept(AppStep.dismissCurrentScreen)
     
-    commentComponent?.commentButton.setTitle("수정", for: .normal)
-    viewModel.commentID = postOrCommentID
-  }
-  
-  func goToParticipateVC(_ postData: BehaviorRelay<PostDetailData?>){
-    let participateVC = ParticipateVC(postData)
-    self.navigationController?.pushViewController(participateVC, animated: true)
-  }
-  
-  func goToLoginVC(){
-    //    DispatchQueue.main.async {
-    //      let popupVC = PopupViewController(
-    //        title: "로그인이 필요해요",
-    //        desc: "계속하려면 로그인을 해주세요!",
-    //        rightButtonTilte: "로그인"
-    //      )
-    //      self.present(popupVC, animated: true)
-    //
-    //      popupVC.popupView.rightButtonAction = {
-    //        self.dismiss(animated: true) {
-    //          if let navigationController = self.navigationController {
-    //            navigationController.popToRootViewController(animated: false)
-    //
-    //            let loginVC = LoginViewController()
-    //
-    //            loginVC.modalPresentationStyle = .overFullScreen
-    //            navigationController.present(loginVC, animated: true, completion: nil)
-    //          }
-    //        }
-    //      }
-    //    }
+    switch bottomSheetCase {
+    case .managementPost:
+      // 게시글 수정
+      
+      viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+      
+      NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
+                                      object: nil,
+                                      userInfo: ["postData": viewModel.postDatas.value ?? nil])
+    case .managementComment:
+      // 댓글 수정
+      commentComponent?.commentButton.setTitle("수정", for: .normal)
+      viewModel.commentID = postOrCommentID
+    default: return
+    }
+   
   }
 }
 
-extension PostedStudyViewController: ShowBottomSheet {}
+extension PostedStudyViewController: PopupViewDelegate {
+  // 삭제 후 스터디 화면으로 이동
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    viewModel.deleteMyPost(with: viewModel.postID)
+ 
+  }
+}

@@ -56,15 +56,16 @@ class UserProfileManager: StudyHubCommonNetworking {
   ///   - password: 변경할 비밀번호
   ///   - email: 사용자의 이메일
   ///   - completion: 콜백함수
-  func changePassword(password: String, email: String, completion: @escaping () -> Void){
+  func changePassword(password: String, email: String, completion: @escaping (Bool) -> Void){
     let data = EditUserPasswordDTO(checkPassword: true, email: email, password: password)
     provider.request(.editUserPassword(data: data)) { result in
       switch result {
       case .success(let response):
         print(response.response)
-        completion()
+        completion(true)
       case .failure(let respose):
         print(respose.response)
+        completion(false)
       }
     }
  
@@ -72,41 +73,47 @@ class UserProfileManager: StudyHubCommonNetworking {
   
   /// 사용자의 학과 변경
   /// - Parameter major: 변경할 학과
-  func changeMajor(major: String){
+  func changeMajor(major: String, completion: @escaping(Bool) -> Void){
     guard let major = Utils.convertMajor(major, toEnglish: true) else { return }
     
     provider.request(.editUserMajor(major: major)) { result in
       switch result {
       case .success(let response):
         print(response.response)
+        completion(true)
       case .failure(let respose):
         print(respose.response)
+        completion(false)
       }
     }
   }
   
   
   /// 사용자의 계정 삭제
-  func deleteAccount(){
+  func deleteAccount(completion: @escaping (Bool) -> Void){
     provider.request(.deleteUserAccount) { result in
       switch result {
       case .success(let response):
         print(response.response)
+        completion(true)
       case .failure(let respose):
         print(respose.response)
+        completion(false)
       }
      }
   }
   
   
   /// 사용자의 프로필 이미지 삭제
-  func deleteProfile(){
+  func deleteProfile(completion: @escaping (Bool) -> Void){
     provider.request(.deleteUserProfileImage) { result in
       switch result {
       case .success(let response):
         print(response.response)
+        completion(true)
       case .failure(let respose):
         print(respose.response)
+        completion(false)
       }
     }
   }
@@ -114,13 +121,15 @@ class UserProfileManager: StudyHubCommonNetworking {
   
   /// 사용자의 프로필 이미지 저장
   /// - Parameter image: 저장할 이미지
-  func storeProfileToserver(image: UIImage){
+  func storeProfileToserver(image: UIImage, completion: @escaping (Bool) -> Void){
     provider.request(.storeUserProfileImage(image: image)) { result in
       switch result {
       case .success(let response):
         print(response.response)
+        completion(true)
       case .failure(let respose):
         print(respose.response)
+        completion(false)
       }
     }
   }

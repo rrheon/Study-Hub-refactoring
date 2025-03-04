@@ -81,6 +81,7 @@ final class LoginViewController: UIViewController {
     return signUpButton
   }()
   
+          
   init(with viewModel: LoginViewModel) {
     self.viewModel = viewModel
     super.init(nibName: .none, bundle: nil)
@@ -214,7 +215,7 @@ final class LoginViewController: UIViewController {
     // 비밀번호찾기 버튼 터치
     forgotPasswordButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.moveToOtherVC(vc: ConfirmEmailViewController(false), naviCheck: true)
+//        self?.moveToOtherVC(vc: ConfirmEmailViewController(false), naviCheck: true)
       })
       .disposed(by: disposeBag)
     
@@ -259,7 +260,7 @@ final class LoginViewController: UIViewController {
         isValid = textField.isValidEmail(text)
         invalidMessage = "잘못된 주소예요. 다시 입력해주세요"
       } else if textField == passwordTextField {
-        isValid = textField.isValidPassword(text)
+        isValid = Utils.isValidPassword(text)
         invalidMessage = "잘못된 비밀번호예요. (10자리 이상, 특수문자 포함 필수)"
       } else {
         return
@@ -276,7 +277,7 @@ final class LoginViewController: UIViewController {
   func loginButtonTapped() {
     guard let email = emailTextField.getTextFieldValue() ,!email.isEmpty,
           let password = passwordTextField.getTextFieldValue(), !password.isEmpty else {
-      showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false, alertCheck: true)
+      ToastPopupManager.shared.showToast(message: "이메일과 비밀번호를 모두 작성해주세요.", imageCheck: false)
       return
     }
     

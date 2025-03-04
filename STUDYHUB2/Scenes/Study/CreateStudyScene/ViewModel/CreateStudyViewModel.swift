@@ -17,7 +17,8 @@ final class CreateStudyViewModel: Stepper {
   var postedData = BehaviorRelay<PostDetailData?>(value: nil)
   
   /// 스터디 생성 데이터
-  var createStudyData: BehaviorRelay<CreateStudyRequest?> = BehaviorRelay<CreateStudyRequest?>(value: CreateStudyRequest())
+  var createStudyData: BehaviorRelay<CreateStudyRequest?> =
+  BehaviorRelay<CreateStudyRequest?>(value: CreateStudyRequest())
   
   /// 선택된 학과
   var selectedMajor = BehaviorRelay<String?>(value: nil)
@@ -68,7 +69,33 @@ final class CreateStudyViewModel: Stepper {
 
     print(data)
     /// close - false,   벌금은 nil
-    StudyPostManager.shared.createNewPost(with: data)
+    StudyPostManager.shared.createNewPost(with: data) { postID in
+      if let _postID = postID {
+        /// 생성 후 회면 내리기
+        self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+        
+        /// 생성한 게시글로 이동
+        self.steps.accept(AppStep.studyDetailScreenIsRequired(postID: _postID))
+      }
+    }
+  }
+  
+  /// 게시글 수정
+  func modifyStudyPost(){
+    /// 게시글 상세 -> 수정의 경우 데이터가 비어있지 않으면 생성
+    guard let postedData = postedData.value else {
+      createNewStudyPost()
+      return
+    }
+    
+    if let data = createStudyData.value {
+      let modifyData = UpdateStudyRequest(from: data, postId: postedData.postId)
+      StudyPostManager.shared.modifyPost(with: modifyData)
+      
+      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+
+      ToastPopupManager.shared.showToast(message: "글이 수정됐어요.")
+    }
   }
   
   
@@ -89,46 +116,11 @@ final class CreateStudyViewModel: Stepper {
              !(data.title.isEmpty)
   }
 
-
-  
-
-  func createOrModifyPost(){
-//    switch mode {
-//    case .POST:
-//      let value = createPostValue()
-//    
-//  
-//      return createPost(value) { postID in
-//        guard let convertedPostID = Int(postID) else { return }
-//        self.isSuccessCreateStudy.accept(true)
-//        self.fetchSinglePostDatas(convertedPostID) { updatedPostValue in
-//        self.postedData.accept(updatedPostValue)
-//        }
-//      }
-//      
-//    case .PUT:
-//      let updateRequestValue = updatePostValue()
-//      return modifyMyPost(updateRequestValue) {
-//        self.isSuccessModifyStudy.accept($0)
-//        self.fetchSinglePostDatas(updateRequestValue.postId) { updatedPostValue in
-//          self.postedData.accept(updatedPostValue)
-//        }
-//      }
-//    }
-  }
-  
   func changeDate(_ date: [Int]) -> String{
     let convertedDate = "\(date[0])-\(date[1])-\(date[2])"
     let changedDate = convertedDate.convertDateString(from: .format3, to: "yyyy-MM-dd")
     return changedDate
   }
-//  
-//  func comparePostData() -> Bool{
-////    let request = createPostValue()
-//    let detail = postedData.value
-//    
-//    return request == detail?.toCreateStudyRequest()
-//  }
 }
 
 extension CreateStudyViewModel: ManagementDate {}

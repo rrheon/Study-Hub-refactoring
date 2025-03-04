@@ -211,7 +211,9 @@ final class CheckEmailViewController: UIViewController {
         if result == "true" {
           vc.viewModel.steps.accept(SignupStep.enterPasswordScreenIsRequired)
         } else {
-          vc.showToast(message: "인증코드가 일치하지 않아요.", alertCheck: false, large: false)
+          ToastPopupManager.shared.showToast(message: "인증코드가 일치하지 않아요.",
+                                             alertCheck: false,
+                                             large: false)
         }
       })
       .disposed(by: disposeBag)
@@ -270,7 +272,7 @@ final class CheckEmailViewController: UIViewController {
                                           textColor: .g80,
                                           underLineColor: .g100)
     if self.viewModel.resend == true {
-      self.showToast(message: "인증코드가 재전송됐어요.", alertCheck: true)
+      ToastPopupManager.shared.showToast(message: "인증코드가 재전송됐어요.")
     }
     
     self.viewModel.resend = true

@@ -115,11 +115,12 @@ final class SeletMajorViewController: UIViewController {
     rightButtonSetting(imgName: "DeCompletedImg.png", activate: false)
 
     settingNavigationTitle(title: "관련학과")
+    settingNavigationbar()
   }
   
   /// 네비게이션 바 왼쪽 아이템 터치
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
   
   // 네비게이션 오른쪽 버튼을 누르면 이전 화면에 뜰 수 있도록 설정하기
@@ -129,7 +130,7 @@ final class SeletMajorViewController: UIViewController {
     viewModel.enteredMajor.accept(viewModel.selectedMajor)
     
     /// 현재 화면 pop
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
   
   /// Actions 설정
@@ -221,7 +222,7 @@ extension SeletMajorViewController {
   func cellTapped(with selectedMajor: String) {
     /// 학과 1개이상 선택 시
     if selectMajorLabel.text != nil {
-      showToast(message: "관련학과는 1개만 선택이 가능해요", alertCheck: false)
+      ToastPopupManager.shared.showToast(message: "관련학과는 1개만 선택이 가능해요", alertCheck: false)
       return
     }
     

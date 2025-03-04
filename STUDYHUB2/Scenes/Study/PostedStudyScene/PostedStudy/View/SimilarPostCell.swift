@@ -142,18 +142,18 @@ final class SimilarPostCell: UICollectionViewCell {
   /// 데이터 바인딩
   private func bind() {
     guard let major = Utils.convertMajor(model?.major ?? "없음", toEnglish: false),
-          let writerMajor = Utils.convertMajor(model?.userData.major ?? "없음", toEnglish: false)
+          let writerMajor = Utils.convertMajor(model?.major ?? "없음", toEnglish: false)
           else { return }
 
     majorLabel.text = "\(major)"
     titleLabel.text = model?.title
     remainMemberNum = model?.remainingSeat ?? 0
     writerMajorLabel.text = "\(writerMajor)"
-    nickNameLabel.text = model?.userData.nickname
-    postID = model?.postID
+    nickNameLabel.text = model?.relatedUser.nickname
+    postID = model?.postId
     
     
-    if let imageURL = URL(string: model?.userData.imageURL ?? "") {
+    if let imageURL = URL(string: model?.relatedUser.imageUrl ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 40, height: 40))
             
       self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in

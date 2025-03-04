@@ -192,7 +192,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   /// 스터디 수정 UI 설정
   func setupModifyUI(){
     guard let postValue = viewModel.postedData.value else { return }
-    chatLinkTextField.text = postValue.chatURL
+    chatLinkTextField.text = postValue.chatUrl
     studytitleTextField.text = postValue.title
     studyIntroduceTextView.text = postValue.content
     studyIntroduceTextView.textColor = .black

@@ -54,7 +54,7 @@ final class CheckEmailViewModel: Stepper {
   ///   - email: 보낼 이메일 주소
   ///   - completion: 콜백함수
   func sendEmailCode(_ email: String, completion: @escaping () -> Void){
-    UserAuthManager.shared.sendEmailCode(email: email) {
+    UserAuthManager.shared.sendEmailCode(email: email) { _ in
       completion()
     }
   }

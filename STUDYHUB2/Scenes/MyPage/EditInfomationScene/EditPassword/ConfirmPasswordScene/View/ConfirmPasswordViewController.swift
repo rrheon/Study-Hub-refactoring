@@ -30,8 +30,8 @@ final class ConfirmPasswordViewController: UIViewController {
   }()
   
   
-  init(_ userEmail: String) {
-    self.viewModel = ConfirmPasswordViewModel(userEmail: userEmail)
+  init(wtih viewModel: ConfirmPasswordViewModel) {
+    self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -48,27 +48,19 @@ final class ConfirmPasswordViewController: UIViewController {
     
     setupNavigationbar()
     
-    setUpLayout()
     makeUI()
     
     setupBinding()
     setupActions()
   } // viewDidLoad
   
-  // MARK: - setUpLayout
-  
-  
-  /// layout 설정
-  func setUpLayout(){
-    [ passwordView, forgotPasswordButton ]
-      .forEach { view.addSubview($0) }
-  }
   
   // MARK: - makeUI
   
   
   /// UI 설정
   func makeUI(){
+    view.addSubview(passwordView)
     passwordView.textField.delegate = self
     passwordView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -76,6 +68,7 @@ final class ConfirmPasswordViewController: UIViewController {
       $0.height.equalTo(109)
     }
     
+    view.addSubview(forgotPasswordButton)
     forgotPasswordButton.snp.makeConstraints {
       $0.top.equalTo(passwordView.snp.bottom)
       $0.centerX.equalTo(passwordView)
@@ -99,10 +92,22 @@ final class ConfirmPasswordViewController: UIViewController {
     passwordView.textField.rx.text.orEmpty
       .bind(to: viewModel.currentPassword)
       .disposed(by: disposeBag)
-  }
-  
-  /// Actions 설정
-  func setupActions(){
+    
+    // 비밀번호 유효성 여부 체크
+    viewModel.isValidPassword
+      .subscribe(onNext: { [weak self] valid in
+        switch valid {
+        case true:
+          guard let email = self?.viewModel.userEmail else { return }
+          self?.viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
+        case false:
+          ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.",
+                                             alertCheck: false)
+        }
+      })
+      .disposed(by: disposeBag)
+    
+    // 현재 비밀번호 입력상태
     viewModel.currentPassword
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] in
@@ -111,24 +116,16 @@ final class ConfirmPasswordViewController: UIViewController {
         self?.rightButtonSetting(imgName: buttonImage, activate: buttonActivate)
       })
       .disposed(by: disposeBag)
-    
+  }
+  
+  /// Actions 설정
+  func setupActions(){
+
+    // 비밀번호 잊었을 경우
     forgotPasswordButton.rx.tap
       .subscribe(onNext: { [weak self] in
-        self?.moveToOtherVCWithSameNavi(vc: ConfirmEmailViewController(true), hideTabbar: true)
-      })
-      .disposed(by: disposeBag)
-    
-    viewModel.isValidPassword
-      .subscribe(onNext: { [weak self] valid in
-        switch valid {
-        case true:
-          return
-//          self?.moveToOtherVCWithSameNavi(vc: EditPasswordViewController(
-//            self?.viewModel.userEmail ?? ""
-//          ), hideTabbar: true)
-        case false:
-          self?.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
-        }
+      
+//        self?.moveToOtherVCWithSameNavi(vc: ConfirmEmailViewController(true), hideTabbar: true)
       })
       .disposed(by: disposeBag)
   }

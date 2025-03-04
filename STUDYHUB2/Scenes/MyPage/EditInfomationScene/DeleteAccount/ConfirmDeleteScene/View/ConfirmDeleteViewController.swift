@@ -2,11 +2,14 @@
 import UIKit
 
 import SnapKit
+import RxFlow
+import RxRelay
 import Then
 
 /// 계정 삭제 확인 VC
-final class ConfirmDeleteViewController: UIViewController {
-  
+final class ConfirmDeleteViewController: UIViewController, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+
   /// 제목 라벨
   private lazy var titleLabel = UILabel().then {
     $0.text = "정말 탈퇴하시나요?\n회원님이 떠나신다니 너무 아쉬워요😢"
@@ -160,11 +163,12 @@ final class ConfirmDeleteViewController: UIViewController {
   /// 버튼 액션 설정
   func setupButtonActions(){
     continueButton.addAction(UIAction { _ in
-//      self.moveToOtherVCWithSameNavi(vc: DeleteAccountViewController(), hideTabbar: true)
+      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+      self.steps.accept(AppStep.deleteAccountScreenIsRequired)
     }, for: .touchUpInside)
     
     cancelButton.addAction(UIAction { _ in
-      self.navigationController?.popViewController(animated: true)
+      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
     }, for: .touchUpInside)
   }
 }

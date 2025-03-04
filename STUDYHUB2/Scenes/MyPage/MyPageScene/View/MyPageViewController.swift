@@ -19,41 +19,35 @@ final class MyPageViewController: UIViewController {
   
   /// 서비스 View - 공지사항, 문의하기, 이용방법, 서비스 이용약관, 개인정보 처리방침
   private lazy var serviceView: ServiceView = ServiceView(viewModel)
-
   
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
     
     setupNavigationbar()
-    setupLayout()
     makeUI()
-    
+
+    viewModel.fetchUserData()
   } // viewDidLoad
   
-  // MARK: - setupLayout
-  
-  
-  /// Layout 설정
-  func setupLayout(){
-    [ userInfoView, userActivityView, serviceView]
-      .forEach { view.addSubview($0) }
-  }
-  
+
   /// UI설정
   func makeUI(){
+    view.addSubview(userInfoView)
     userInfoView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
       $0.leading.trailing.equalToSuperview().inset(10)
       $0.height.equalTo(60)
     }
     
+    view.addSubview(userActivityView)
     userActivityView.snp.makeConstraints {
       $0.top.equalTo(userInfoView.snp.bottom).offset(30)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(119)
     }
     
+    view.addSubview(serviceView)
     serviceView.snp.makeConstraints {
       $0.top.equalTo(userActivityView.snp.bottom).offset(10)
       $0.leading.equalTo(userInfoView.snp.leading).offset(15)
@@ -75,3 +69,14 @@ final class MyPageViewController: UIViewController {
   }
 }
 
+extension MyPageViewController: PopupViewDelegate {
+  func leftBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+  }
+  
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    TokenManager.shared.deleteTokens()
+    NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+  }
+}

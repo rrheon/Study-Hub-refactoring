@@ -56,7 +56,6 @@ final class StudyPeriodView: UIView {
     self.setupLayout()
     self.makeUI()
     self.setupModifyUI()
-    self.setupDateButtonActions()
     self.setupBinding()
     self.setupActions()
   }
@@ -157,29 +156,7 @@ final class StudyPeriodView: UIView {
     button.layer.cornerRadius = 5
     return button
   }
-  
-  /// 날짜 선택 버튼 action 설정하기
-  func setupDateButtonActions() {
-    /// 시작날짜 선택 버튼 탭
-    startDateButton.rx.tap
-      .withUnretained(self)
-      .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: true))
-      }
-      .disposed(by: disposeBag)
-    
-    /// 종료날짜 선택 버튼 탭
-    endDateButton.rx.tap
-      .withUnretained(self)
-      .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: false))
 
-      }
-      .disposed(by: disposeBag)
-  }
-  
   /// 날짜 선택 버튼 action 설정하기
   private func setupButtonAction(
     _ button: UIButton,
@@ -203,13 +180,40 @@ final class StudyPeriodView: UIView {
   
   /// Actions 설정
   func setupActions(){
+  
+    /// 시작날짜 선택 버튼 탭
+    startDateButton.rx.tap
+      .withUnretained(self)
+      .subscribe { (view, _) in
+        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
+                                                               selectType: true))
+      }
+      .disposed(by: disposeBag)
+    
+    /// 종료날짜 선택 버튼 탭
+    endDateButton.rx.tap
+      .withUnretained(self)
+      .subscribe { (view, _) in
+        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
+                                                               selectType: false))
+
+      }
+      .disposed(by: disposeBag)
+    
+    
+    /// 게시글 작성버튼 탭
     completeButton.rx.tap
       .subscribe(onNext: { [weak self] in
-//        guard let mode = self?.viewModel.mode else { return }
-//        self?.viewModel.createOrModifyPost(mode: mode)
-        self?.viewModel.createNewStudyPost()
+        // 게시글 디테일 -> 수정
+        guard let _ = self?.viewModel.postedData.value else {
+          self?.viewModel.createNewStudyPost()
+          return
+        }
+        
+        self?.viewModel.modifyStudyPost()
       })
       .disposed(by: disposeBag)
+
   }
   
   /// 바인딩

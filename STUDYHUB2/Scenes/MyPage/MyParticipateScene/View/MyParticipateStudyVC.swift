@@ -154,7 +154,9 @@ final class MyParticipateStudyVC: UIViewController {
       .drive(onNext: {[weak self] result in
         switch result {
         case true:
-          self?.showToast(message: "삭제가 완료됐어요.", imageCheck: true, alertCheck: true)
+          ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.",
+                                             imageCheck: true,
+                                             alertCheck: true)
         case false:
           return
         }
@@ -174,25 +176,13 @@ final class MyParticipateStudyVC: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
   
   
-  /// 참여한 스터디 전체 삭제
+  /// 참여한 스터디 전체 삭제tr
   func confirmDeleteAll(){
-//    let popupVC = PopupViewController(
-//      title: "스터디를 모두 삭제할까요?",
-//      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
-//    )
-//
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true)
-//
-//      self.viewModel.deleteAllParticipateList()
-//    }
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllParticipatedStudies))
   }
   
   /// 참여한 스터디가 있을 때의 UI
@@ -247,27 +237,35 @@ extension MyParticipateStudyVC: UICollectionViewDelegateFlowLayout {
 extension MyParticipateStudyVC: MyParticipateCellDelegate {
   func moveToChatUrl(chatURL: NSURL) {
     guard UIApplication.shared.canOpenURL(chatURL as URL) else {
-      showToast(message: "해당 주소를 사용할 수 없어요")
+      ToastPopupManager.shared.showToast(message: "해당 주소를 사용할 수 없어요")
       return
     }
     
     let chatLinkSafariView = SFSafariViewController(url: chatURL as URL)
     self.present(chatLinkSafariView, animated: true)
   }
-
+  
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
-//    let popupVC = PopupViewController(
-//      title: "이 스터디를 삭제할까요?",
-//      desc: "삭제하면 채팅방을 다시 찾을 수 없어요"
-//    )
-//    
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true)
-//      
-//      self.viewModel.deleteParticipateList(studyID: postID)
-//    }
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
+    viewModel.selectedPostID = postID
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
   }
 }
+  // MARK: - PopupView Delegate
+  
+  
+extension MyParticipateStudyVC: PopupViewDelegate {
+  // 오른쪽 버튼 탭 - 전체삭제 , 단일 삭제
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    
+    switch popupCase{
+    case .deleteAllParticipatedStudies:
+      self.viewModel.deleteAllParticipateList()
+    case .deleteSingleParticipatedStudy:
+      guard let postID = viewModel.selectedPostID else { return }
+      self.viewModel.deleteParticipateList(studyID: postID)
+    default: return
+    }
+  }
+}
+  

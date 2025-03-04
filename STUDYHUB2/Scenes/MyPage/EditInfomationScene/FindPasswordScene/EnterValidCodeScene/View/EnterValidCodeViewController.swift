@@ -30,8 +30,8 @@ final class EnterValidCodeViewController: UIViewController {
   /// 인증코드 재정송 버튼
   private lazy var resendCodeButton = StudyHubButton(title: "  재전송  ")
   
-  init(_ email: String) {
-    self.viewModel = EnterValidCodeViewModel(email)
+  init(with viewModel: EnterValidCodeViewModel) {
+    self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -102,7 +102,8 @@ final class EnterValidCodeViewController: UIViewController {
   }
   
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.checkValidCode()
+    guard let code = validCodeTextField.text else { return }
+    viewModel.checkValidCode(code: code)
   }
  
   
@@ -127,7 +128,7 @@ final class EnterValidCodeViewController: UIViewController {
     viewModel.isCodeSended
       .subscribe(onNext: { [weak self] sended in
         if sended {
-          self?.showToast(message: "인증코드가 재전송됐어요.")
+          ToastPopupManager.shared.showToast(message: "인증코드가 재전송됐어요.")
         }
       })
       .disposed(by: disposeBag)
@@ -144,16 +145,13 @@ final class EnterValidCodeViewController: UIViewController {
         let email = viewModel.email
         switch valid {
         case true:
-//          moveToOtherVCWithSameNavi(
-//            vc: EditPasswordViewController(email, loginStatus: false),
-//            hideTabbar: true
-//          )
-          return 
+          guard let email = viewModel.email else { return }
+          viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: false))
+          viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
         case false:
-          self.showToast(
+          ToastPopupManager.shared.showToast(
             message: "인증코드가 일치하지 않아요. 다시 입력하거나 새 인증코드를 받아주세요.",
-            alertCheck: false
-          )
+            alertCheck: false)
         }
       })
       .disposed(by: disposeBag)

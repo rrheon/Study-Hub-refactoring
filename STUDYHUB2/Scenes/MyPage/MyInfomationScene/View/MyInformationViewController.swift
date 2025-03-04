@@ -89,7 +89,7 @@ final class MyInformViewController: UIViewController {
   
   /// 네비게이션 왼쪽 버튼 탭 - 현재 탭 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
     
   // MARK: - setupActions
@@ -108,40 +108,33 @@ final class MyInformViewController: UIViewController {
   func profileActions(_ action: ProfileActions){
     switch action {
     case .successToDelete:
-      self.showToast(message: "사진이 삭제됐어요.", alertCheck: true)
+      ToastPopupManager.shared.showToast(message: "사진이 삭제됐어요.")
     case .failToDelete:
-      self.showToast(message: "사진 삭제에 실패했어요. 다시 시도해주세요.", alertCheck: false)
+      ToastPopupManager.shared.showToast(message: "사진 삭제에 실패했어요. 다시 시도해주세요.", alertCheck: false)
     case .successToEdit:
-      self.showToast(message: "사진이 변경됐어요.", alertCheck: true)
+      ToastPopupManager.shared.showToast(message: "사진이 변경됐어요.")
     case .failToEdit:
-      self.showToast(message: "사진 변경에 실패했어요. 다시 시도해주세요.", alertCheck: false)
-    case .failToLoad:
-      return
+      ToastPopupManager.shared.showToast(message: "사진 변경에 실패했어요. 다시 시도해주세요.", alertCheck: false)
+    default: return
     }
   }
+}
+
+// MARK: - PopupView Delegate
 
 
-  // MARK: - 로그아웃 버튼
-  
-  
-  func logoutButtonTapped(){
-//    let popupVC = PopupViewController(
-//      title: "로그아웃 하시겠어요?",
-//      desc: "",
-//      leftButtonTitle: "아니요",
-//      rightButtonTilte: "네"
-//    )
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
-//    
-//    popupVC.popupView.rightButtonAction = { [weak self] in
-//      self?.viewModel.deleteToken()
-//      self?.dismiss(animated: true) {
-//        self?.navigationController?.popViewController(animated: false)
-////        self?.logout()
-//      }
-//    }
+extension MyInformViewController: PopupViewDelegate {
+  // 오른쪽 버튼 탭 -> 로그아웃의 경우  = 팝업 닫고 로그인 화면으로 이동, 프로필 변경 허용의 경우 = 허용 팝업
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    
+    if popupCase == .logoutIsRequired {
+      TokenManager.shared.deleteTokens()
+      NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+    }else{
+      guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+      UIApplication.shared.open(settingsURL)
+    }
   }
 }
 
@@ -161,25 +154,30 @@ extension MyInformViewController: BottomSheetDelegate {
     self.present(picker, animated: true)
   }
   
+  /// bottomSheet 첫 번째 버튼 -> 촬영
   func firstButtonTapped(postOrCommentID postID: Int, bottomSheetCase: BottomSheetCase) {
     requestCameraAccess()
   }
   
+  /// bottomSheet 두 번째 버튼 -> 갤러리에서 선택
   func secondButtonTapped(postOrCommentID postID: Int, bottomSheetCase: BottomSheetCase) {
     requestPhotoLibraryAccess()
   }
   
+  /// 카메라 요청 허용
   func requestCameraAccess() {
     DispatchQueue.main.async {
       AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-        granted ? self?.changeProfileImage(
-          type: .camera,
-          checkPost: false
-        ) : self?.showAccessDeniedAlert()
+        if granted {
+          self?.changeProfileImage(type: .camera, checkPost: false)
+        }else {
+          self?.showAccessDeniedAlert()
+        }
       }
     }
   }
   
+  /// 허용에 따른 actions
   func requestPhotoLibraryAccess() {
     PHPhotoLibrary.requestAuthorization { [weak self] status in
       DispatchQueue.main.async {
@@ -197,23 +195,9 @@ extension MyInformViewController: BottomSheetDelegate {
     }
   }
   
+  /// 프로필 사진 변경 허용 팝업
   func showAccessDeniedAlert() {
-//    let popupVC = PopupViewController(
-//      title: "사진을 변경하려면 허용이 필요해요",
-//      desc: "",
-//      leftButtonTitle: "취소",
-//      rightButtonTilte: "설정"
-//    )
-//
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true) {
-//        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
-//        UIApplication.shared.open(settingsURL)
-//      }
-//    }
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .allowProfileImageChange))
   }
 }
 
@@ -226,9 +210,8 @@ extension MyInformViewController: UIImagePickerControllerDelegate,
   ) {
     if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
       viewModel.storeProfileToserver(image: image)
-//      self.dismiss(animated: true)
+      
+      viewModel.steps.accept(AppStep.dismissCurrentScreen)
     }
   }
 }
-
-extension MyInformViewController: ShowBottomSheet{}

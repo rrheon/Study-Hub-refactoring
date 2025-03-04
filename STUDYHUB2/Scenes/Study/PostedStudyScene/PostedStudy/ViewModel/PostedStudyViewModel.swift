@@ -5,10 +5,18 @@ import RxRelay
 import RxSwift
 import RxFlow
 
+/// 참여하기 버튼을 탭했을 때 action들
 enum ParticipateAction {
+  /// 로그인이 안되어 있는 경우 -> 로그인 화면으로 이동
   case goToLoginVC
+  
+  /// 성별에 제한이 있는 경우
   case limitedGender
+  
+  /// 마감된 경우
   case closed
+  
+  /// 참여하기 vc로 이동
   case goToParticipateVC
 }
 
@@ -37,6 +45,10 @@ class PostedStudyViewModel: Stepper  {
   /// 댓글의 ID - 수정용
   var commentID: Int? = nil
 
+  /// 북마크 여부
+  var isBookmarked = BehaviorRelay<Bool>(value: false)
+
+  
   var loginUserData: BehaviorRelay<UserDetailData?> = BehaviorRelay<UserDetailData?>(value: nil)
 
   init(with postID: Int) {
@@ -61,14 +73,9 @@ class PostedStudyViewModel: Stepper  {
     Task {
       let postedData: PostDetailData = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
       postDatas.accept(postedData)
+      isBookmarked.accept(postedData.bookmarked)
     }
   }
-  
-  func countRelatedPosts(){
-//    guard let count = postDatas.value?.relatedPost.filter({ $0.title != nil }).count else { return }
-//    countRelatedPost.accept(count)
-  }
-  
   
   /// 댓글 미리보기 가져오기(스터디 디테일에서 보여주는 댓글들)
   func fetchCommentDatas(with postID: Int){
@@ -100,8 +107,6 @@ class PostedStudyViewModel: Stepper  {
     CommentManager.shared.deleteComment(commentID: commentID) { result in
       print("댓글 삭제 여부 - \(result)")
       
- 
-      
       // 댓글 삭제 후 데이터 수정
       if result {
         var datas = self.commentDatas.value
@@ -127,33 +132,33 @@ class PostedStudyViewModel: Stepper  {
   }
   
   
-
-  
-  
   /// 내 포스트 삭제하기
   func deleteMyPost(with postID: Int){
-//    guard let postID = postDatas.value?.postID else { return }
-//    deleteMyPost(postID) {
-//      self.postedStudyData.isNeedFechData?.accept($0)
-//      completion()
-//    }
-    
     StudyPostManager.shared.deletePost(with: postID)
+    
+    /// 현재 화면 pop
+    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+
+    ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
   }
   
   
-  func bookmarkToggle(){
-//    let toggledBookmark = isBookmarked.value ? false : true
-//    isBookmarked.accept(toggledBookmark)
+  /// 북마크 버튼 탭
+  func bookmarkBtnTapped() {
+    guard let postID = postDatas.value?.postId else { return  }
+    BookmarkManager.shared.bookmarkTapped(with: postID) { statusCode in
+      switch statusCode{
+      case 200:
+        var bookmark = self.isBookmarked.value
+        bookmark.toggle()
+        self.isBookmarked.accept(bookmark)
+      default: return
+      }
+    }
   }
   
-  func similarCellTapped(_ postID: Int){
-//    fetchSinglePostDatas(postID) {
-//      self.singlePostData.accept($0)
-//    }
-  }
-  
-  func participateButtonTapped(completion: @escaping (ParticipateAction) -> Void) {
+  /// 스터디 참여하기 버튼 탭
+  func participateBtnTapped(completion: @escaping (ParticipateAction) -> Void) {
     /*
      마감된 스터디 -> self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
      로그인이 안되어 있는 경우 -> 로그인 팝업 -> 로그인화면
@@ -161,25 +166,29 @@ class PostedStudyViewModel: Stepper  {
      참여 -> 참여화면으로 이동
 
      */
-
-//    userInfoManager.getUserInfo { [weak self] userData in
-//      let postedData = self?.postedStudyData.postDetailData
-//      if userData?.nickname == nil {
-//        completion(.goToLoginVC)
-//        return
-//      }
-//      
-//      if postedData?.filteredGender != userData?.gender && postedData?.filteredGender != "NULL" {
-//        completion(.limitedGender)
-//        return
-//      }
-//      
-//      if postedData?.close == true {
-//        completion(.closed)
-//        return
-//      }
-//      
-//      completion(.goToParticipateVC)
-//    }
+    UserProfileManager.shared.fetchUserInfoToServer { userData in
+      let postedData = self.postDatas.value
+      
+      /// 사용자가 로그인이 안된 경우
+      if userData.nickname == nil {
+        completion(.goToLoginVC)
+        return
+      }
+      
+      /// 성별 필터링
+      if postedData?.filteredGender != userData.gender && postedData?.filteredGender != "NULL" {
+        completion(.limitedGender)
+        return
+      }
+      
+      /// 마감 여부 확인
+      if postedData?.close == true {
+        completion(.closed)
+        return
+      }
+      
+      /// 참여하기 VC로 이동
+      completion(.goToParticipateVC)
+    }
   }
 }

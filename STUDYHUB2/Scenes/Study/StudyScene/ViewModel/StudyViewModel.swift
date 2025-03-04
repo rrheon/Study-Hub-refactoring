@@ -35,12 +35,13 @@ final class StudyViewModel: Stepper {
     return totalPostDatas.value?.postDataByInquiries.last ?? true
   }
 
-  
+
   /// 게시글의 페이지
   var postPage: Int = 0
 
   init() {
     print(#fileID, #function, #line," - 111111111111111")
+
   }
 
   /// 모든 스터디 게시글 조회하기

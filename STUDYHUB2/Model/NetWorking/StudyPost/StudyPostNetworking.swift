@@ -38,7 +38,7 @@ enum StudyPostNetworking {
   case closePost(postId: Int)                             // 스터디 게시글 마감
   case deletePost(postId: Int)                            // 스터디 게시글 삭제
   case searchMyPost(page: Int, size: Int)              // 작성한 스터디 조회
-  case searchAllPost(searchData: SearchAllPostDTO)    // 스터디 전체 조회
+  case searchAllPost(loginStatus: Bool, searchData: SearchAllPostDTO)    // 스터디 전체 조회
   case searchSinglePost(postId: Int)                   // 스터디 단건조회
 }
 
@@ -102,7 +102,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
       let params: [String : Any] = ["page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
-    case .searchAllPost(let searchData):
+    case .searchAllPost(_, let searchData):
       let parmas: [String: Any] = [
         "hot" : searchData.hot,
         "text" : searchData.text,
@@ -128,27 +128,11 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
         .deleteAllPost:
       return HeaderCase.isLogin.header
       
-    case .searchSinglePost(_):
-      // 토큰 저장 성공여부
-      var isSuccessToSaveTokens: Bool = false
+    case .searchSinglePost(_): return HeaderCase.isLogin.header
       
-      // refreshToken 가져오기 - nil 이면 로그아웃인 경우의 헤더를 반환
-      guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
-        return HeaderCase.isLogout.header
-      }
+    case .searchAllPost(let loginStatus, _):
+      return loginStatus ? HeaderCase.isLogin.header : HeaderCase.isLogout.header
       
-      // accessToken 재발급
-      UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
-        if let refreshToken = tokens?.refreshToken,
-           let accessToken = tokens?.accessToken {
-          // 토큰 저장
-          isSuccessToSaveTokens = TokenManager.shared.saveTokens(accessToken: accessToken,
-                                                                 refreshToken: refreshToken)
-        }
-      }
-      
-      // 저장 결과에 따라 헤더 반환 -> 비동기 처리가 완료되지 않은 상태로 return 헤서 false
-      return isSuccessToSaveTokens ? HeaderCase.isLogin.header : HeaderCase.isLogout.header
       
     default:
       return ["Content-type": "application/json"]

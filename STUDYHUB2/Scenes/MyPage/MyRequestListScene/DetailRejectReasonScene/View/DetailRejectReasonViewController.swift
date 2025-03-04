@@ -2,11 +2,14 @@
 import UIKit
 
 import SnapKit
+import RxFlow
+import RxRelay
 import Then
 
 /// 스터디 거절 사유 자세히 보기 VC
-final class DetailRejectReasonViewController: UIViewController {
-  
+final class DetailRejectReasonViewController: UIViewController, Stepper{
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+
   /// 거절사유
   private var rejectData: RejectReason?
   
@@ -85,7 +88,7 @@ final class DetailRejectReasonViewController: UIViewController {
     
     view.addSubview(confirmButton)
     confirmButton.addAction(UIAction { _ in
-      self.navigationController?.popViewController(animated: true)
+      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
     }, for: .touchUpInside)
     confirmButton.snp.makeConstraints {
       $0.leading.equalTo(titleLabel)
@@ -101,5 +104,10 @@ final class DetailRejectReasonViewController: UIViewController {
   func setupNavigationbar() {
     settingNavigationTitle(title: "거절 이유")
     leftButtonSetting()
+    settingNavigationbar()
+  }
+  
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
 }

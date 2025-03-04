@@ -260,8 +260,8 @@ final class SearchResultCell: UICollectionViewCell {
   
   /// 북마크 터치 시
   private func bookmarkTapped(){
-    let postID = cellData?.postID ?? 0
-    BookmarkManager.shared.bookmarkTapped(with: postID) {
+    let postID = cellData?.postId ?? 0
+    BookmarkManager.shared.bookmarkTapped(with: postID) {_ in 
       
     }
     
@@ -273,7 +273,9 @@ final class SearchResultCell: UICollectionViewCell {
   }
   
   private func bind() {
-    guard let data = cellData else { return }
+    guard let data = cellData,
+          let createdDate = data.createdDate,
+          let studyStartDate = data.studyStartDate else { return }
     
     checkBookmarked = data.bookmarked
     let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
@@ -283,7 +285,7 @@ final class SearchResultCell: UICollectionViewCell {
 
     majorLabel.text = " \(Utils.convertMajor(data.major, toEnglish: false) ?? "없음") "
     titleLabel.text = data.title
-    periodLabel.text = "\(data.studyStartDate[1])월 \(data.studyStartDate[2])일 ~\(data.studyEndDate[1])월 \(data.studyEndDate[2])일 "
+    periodLabel.text = "\(studyStartDate[1])월 \(studyStartDate[2])일 ~\(studyStartDate[1])월 \(studyStartDate[2])일 "
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요"
     countMemeberLabel.text = "\(countMember) /\(data.studyPerson)명"
@@ -291,7 +293,7 @@ final class SearchResultCell: UICollectionViewCell {
     let fineText = data.penalty == 0 ? "없어요" : "\(data.penalty)원"
     fineLabel.text = "\(fineText)"
     
-    genderLabel.text = Utils.convertGender(gender: data.filteredGender)
+    genderLabel.text = Utils.convertGender(gender: data.filteredGender ?? "")
     
     if genderLabel.text == "남자" {
       genderImage.image = UIImage(named: "MenGenderImage")
@@ -302,7 +304,7 @@ final class SearchResultCell: UICollectionViewCell {
     }
     
     nickNameLabel.text = data.userData.nickname
-    postedDate.text = "\(data.createdDate[0]).\(data.createdDate[1]).\(data.createdDate[2])"
+    postedDate.text = "\(createdDate[0]).\(createdDate[1]).\(createdDate[2])"
     
     if let imageURL = URL(string: data.userData.imageURL ?? "") {
       let processor = ResizingImageProcessor(referenceSize: CGSize(width: 50, height: 50))

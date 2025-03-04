@@ -194,7 +194,7 @@ final class EnterPasswordViewController: UIViewController {
   func validatePasswordTextField(_ textField: AuthTextField) {
     guard let password = textField.getTextFieldValue() else { return }
     
-    let isValidPassword = textField.isValidPassword(password)
+    let isValidPassword = Utils.isValidPassword(password)
     let isTextFieldEditing = textField.textField.isEditing
     
     let color: UIColor = isValidPassword ? .g_10 : .r50

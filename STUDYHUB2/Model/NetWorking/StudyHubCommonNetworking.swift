@@ -27,10 +27,14 @@ class StudyHubCommonNetworking {
   /// 타이머
   var timer: Timer?
   
+  /// 로그인 상태
+  var loginStatus: Bool = false
+  
   init(){
     print(#fileID, #function, #line," - test")
-
-//    registerCheckValidAccessToken()
+        
+    // 5분 간격으로 AccessToken 다시 받아오기
+    registerCheckValidAccessToken()
   }
   
   
@@ -45,12 +49,17 @@ class StudyHubCommonNetworking {
   
   
   /// AccessToken 다시 받아오기
-  @objc private func fetchAccessToken(){
-    guard let refreshToken = TokenManager.shared.loadRefreshToken() else { return }
+  @objc func fetchAccessToken(){
+    guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
+      loginStatus = false
+      return
+    }
     UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
       if let accessToken = tokens?.accessToken,
          let refreshToken = tokens?.refreshToken {
-        _ = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+        self.loginStatus = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+      } else {
+        self.loginStatus = false
       }
     }
   }

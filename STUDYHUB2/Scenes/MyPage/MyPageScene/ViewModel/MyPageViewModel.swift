@@ -27,10 +27,7 @@ final class MyPageViewModel: Stepper {
     return DataLoaderFromPlist.loadURLs()?["personal"]
   }
   
-  init() {
-    fetchUserData()
-  }
-  
+
   /// 사용자의 정보 가져오기
   func fetchUserData() {
     UserProfileManager.shared.fetchUserInfoToServer { userData in

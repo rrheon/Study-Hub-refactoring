@@ -101,6 +101,8 @@ final class HomeViewController: UIViewController {
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
 //    viewModel.isNeedFetchDatas.accept(true)
+    print(#fileID, #function, #line," - \(TokenManager.shared.loadAccessToken())")
+
   }
   
   // MARK: -  viewDidLoad
@@ -317,8 +319,7 @@ final class HomeViewController: UIViewController {
         .throttle(.seconds(1), scheduler: MainScheduler.instance)
         .withUnretained(self)
         .subscribe(onNext: { (vc, item) in
-            let postID = item.postID
-#warning("스터디 상세 화면으로 이동")
+            let postID = item.postId
           NotificationCenter.default.post(name: .navToStudyDetailScrenn,
                                           object: nil,
                                           userInfo: ["postID" : postID]
@@ -333,7 +334,7 @@ final class HomeViewController: UIViewController {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .withUnretained(self)
       .subscribe(onNext: { (vc, item) in
-        let postID = item.postID
+        let postID = item.postId
         NotificationCenter.default.post(name: .navToStudyDetailScrenn,
                                         object: nil,
                                         userInfo: ["postID" : postID]

@@ -53,7 +53,7 @@ final class EditPasswordViewController: UIViewController {
     
     setupActions()
     setupBinding()
-  } // viewModel
+  } // viewDidLoad
   
   
   /// UI 설정
@@ -80,8 +80,11 @@ final class EditPasswordViewController: UIViewController {
     settingNavigationTitle(title: "비밀번호 변경")
     leftButtonSetting()
     rightButtonSetting(imgName: "DeCompletedImg", activate: false)
+    
+    settingNavigationbar()
   }
   
+  /// 네비게이션 바 오른쪽 버튼 탭 -> 비밀번호 저장
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     viewModel.storePasswordToServer()
   }
@@ -100,17 +103,19 @@ final class EditPasswordViewController: UIViewController {
   
   /// Actions 설정
   func setupActions(){
+    // 첫 번째 TextFeild에 입력한 비밀번호
     viewModel.firstPassword
       .asDriver(onErrorJustReturn: "")
       .filter({ !$0.isEmpty })
       .drive(onNext: { [weak self] password in
         guard let self = self else { return }
-        let checkValid = viewModel.isValidPassword(password)
+        let checkValid = Utils.isValidPassword(password)
         
         checkValidPassword(textfield: firstPasswordTextField, checkValid: checkValid)
       })
       .disposed(by: disposeBag)
     
+    // 두 번째 TextFeild에 입력한 비밀번호
     viewModel.secondPassword
       .asDriver(onErrorJustReturn: "")
       .filter({ !$0.isEmpty })
@@ -125,15 +130,26 @@ final class EditPasswordViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
+    // 비밀번호 변경 성공여부
     viewModel.isSuccessChangePassword
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] result in
-        switch result {
-        case true:
-          self?.checkLoginStatus(checkHomeScene: self?.viewModel.loginStatus ?? false)
-        case false:
-          return
+        // 사용자 정보 가져오기
+        UserProfileManager.shared.fetchUserInfoToServer { userData in
+          // 성공 : 비로그인시 -> 로그인화면
+          if userData.nickname == nil && result {
+            NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+          // 성공 :로그인 시 -> 프로필 편집화면
+          }else if userData.nickname != nil && result {
+            self?.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false,
+                                                                  animate: true))
+          // 실패 -> 팝업
+          }else {
+            ToastPopupManager.shared.showToast(message: "비밀번호 변경에 실패했어요. 다시 시도해주세요.")
+          }
         }
+        NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+        ToastPopupManager.shared.showToast(message: "비밀번호가 변경됐어요")
       })
       .disposed(by: disposeBag)
   }
@@ -146,25 +162,6 @@ final class EditPasswordViewController: UIViewController {
     case false:
       textfield.alertLabelSetting(hidden: false, successOrFail: false, textColor: .r50)
     }
-  }
-  
-  /// 로그인 상태 체크  왜이럼?
-  func checkLoginStatus(checkHomeScene: Bool){
-    switch viewModel.loginStatus {
-    case true:
-      if checkHomeScene {
-        self.navigationController?.popViewController(animated: false)
-        self.navigationController?.popViewController(animated: false)
-        self.navigationController?.popViewController(animated: false)
-      }else {
-//        logout()
-      }
-      
-    case false:
-//      logout()
-      return
-    }
-    self.showToast(message: "비밀번호가 변경됐어요", alertCheck: true)
   }
 }
 

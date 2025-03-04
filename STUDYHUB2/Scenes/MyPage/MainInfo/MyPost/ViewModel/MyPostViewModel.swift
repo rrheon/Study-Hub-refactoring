@@ -9,9 +9,12 @@ enum PostCountUpdate {
   case MINUS
 }
 
+
+/// 내가 작성한 스터디 포스트 ViewModel
 final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
+  var selectedPostID: Int? = nil
   
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
   let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)
@@ -99,22 +102,19 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
 //    }
   }
   
-  func deleteMyAllPost(){
-//    commonNetworking.moyaNetworking(networkingChoice: .deleteMyAllPost) { result in
-//      super.updateUserData(postCount: 0)
-//      self.myPostData.accept([])
-//    }
-  }
   
-  func getEmptyPostData() -> BehaviorRelay<PostDetailData?> {
-    updateMyPostData.accept(nil)
-    return updateMyPostData
+  /// 내가 작성한 스터디 모두 삭제
+  func deleteMyAllPost(){
+    StudyPostManager.shared.deleteMyAllPost { result in
+      super.updateUserData(postCount: 0)
+      self.myPostData.accept([])
+    }
   }
   
   func updateMyPost(postData: PostDetailData, addPost: Bool = false) {
     var currentData = myPostData.value
     
-    if let index = currentData.firstIndex(where: { $0.postID == postData.postID }) {
+    if let index = currentData.firstIndex(where: { $0.postID == postData.postId }) {
       currentData.remove(at: index)
     }
     
@@ -122,9 +122,9 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
       close: postData.close,
       content: postData.content,
       major: postData.major,
-      postID: postData.postID,
+      postID: postData.postId,
       remainingSeat: postData.remainingSeat,
-      studyId: postData.studyID,
+      studyId: postData.studyId,
       title: postData.title
     )
     currentData.append(newPost)

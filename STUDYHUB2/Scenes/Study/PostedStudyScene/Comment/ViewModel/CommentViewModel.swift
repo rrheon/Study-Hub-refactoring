@@ -3,12 +3,6 @@ import Foundation
 
 import RxRelay
 
-enum CommentActionList {
-  case delete
-  case create
-  case modify
-}
-
 /// 댓글 전체 ViewModel - PostedStudyViewModel을 상속받는건 어떤지
 final class CommentViewModel: PostedStudyViewModel {
   

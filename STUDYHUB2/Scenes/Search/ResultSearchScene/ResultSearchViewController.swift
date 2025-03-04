@@ -91,18 +91,9 @@ class ResultSearchViewController: UIViewController {
 
   // MARK: - UI설정
   func makeUI(){
-    [
-      searchBar,
-      titleButton,
-      popularButton,
-      majorButton,
-      scrollView
-    ].forEach {
-      view.addSubview($0)
-    }
-    
     scrollView.addSubview(resultCollectionView)
     
+    view.addSubview(searchBar)
     searchBar.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(10)
       make.leading.equalToSuperview().offset(10)
@@ -110,6 +101,7 @@ class ResultSearchViewController: UIViewController {
       make.height.equalTo(58)
     }
     
+    view.addSubview(titleButton)
     titleButton.snp.makeConstraints {
       $0.top.equalTo(searchBar.snp.bottom).offset(10)
       $0.leading.equalTo(searchBar.snp.leading).offset(10)
@@ -117,6 +109,7 @@ class ResultSearchViewController: UIViewController {
       $0.width.equalTo(57)
     }
     
+    view.addSubview(popularButton)
     popularButton.snp.makeConstraints {
       $0.top.equalTo(titleButton)
       $0.leading.equalTo(titleButton.snp.trailing).offset(10)
@@ -124,6 +117,7 @@ class ResultSearchViewController: UIViewController {
       $0.width.equalTo(57)
     }
     
+    view.addSubview(majorButton)
     majorButton.snp.makeConstraints {
       $0.top.equalTo(titleButton)
       $0.leading.equalTo(popularButton.snp.trailing).offset(10)
@@ -131,12 +125,14 @@ class ResultSearchViewController: UIViewController {
       $0.width.equalTo(57)
     }
     
+    view.addSubview(resultCollectionView)
     resultCollectionView.reloadData()
     resultCollectionView.snp.makeConstraints { make in
       make.width.equalToSuperview()
       make.height.equalTo(scrollView.snp.height)
     }
     
+    view.addSubview(scrollView)
     scrollView.snp.makeConstraints { make in
       make.top.equalTo(titleButton.snp.bottom).offset(20)
       make.leading.trailing.equalTo(view)
@@ -219,35 +215,33 @@ class ResultSearchViewController: UIViewController {
   
   /// Actions 설정
   func setupActions(){
+    
+    // 검색결과 collectionView 탭 -> 스터디 상세 화면으로 이동
     resultCollectionView.rx.modelSelected(PostData.self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
-//        self?.viewModel.fetchSinglePostDatas(item.postID) { result in
-//          let postData = PostedStudyData(
-//            isUserLogin: self?.viewModel.isUserLogin ?? false,
-//            postDetailData: result,
-//            isNeedFechData: self?.viewModel.isNeedFetchToSearchVC
-//          )
-//
-//          let postedVC = PostedStudyViewController(postData)
-//          postedVC.hidesBottomBarWhenPushed = true
-//          self?.navigationController?.pushViewController(postedVC, animated: true)
-//        }
+        let postID = item.postId
+       NotificationCenter.default.post(name: .navToStudyDetailScrenn,
+                                      object: nil,
+                                      userInfo: ["postID" : postID])
       })
       .disposed(by: disposeBag)
     
+    // 검색결과 제목이 일치하는 스터디로 정렬
     titleButton.rx.tap
       .subscribe(onNext: { [weak self] in
         self?.allButtonTapped()
       })
       .disposed(by: disposeBag)
     
+    // 검색결과 인기순 스터디로 정렬
     popularButton.rx.tap
       .subscribe(onNext: { [weak self] in
         self?.popularButtonTapped()
       })
       .disposed(by: disposeBag)
     
+    // 검색결과 학과가 일치하는 스터디로 정렬
     majorButton.rx.tap
       .subscribe(onNext: { [weak self] in
         self?.majorButtonTapped()
@@ -340,30 +334,7 @@ class ResultSearchViewController: UIViewController {
   
   // MARK: - 스크롤해서 네트워킹
   func fetchMoreData(hotType: String, titleAndMajor: String){
-    //    addPageCount { pageCount in
-    //      self.waitingNetworking()
-    //
-    //      self.postDataManager.getPostData(hot: "false",
-    //                                       text: self.searchKeyword,
-    //                                       page: pageCount,
-    //                                       size: 5,
-    //                                       titleAndMajor: titleAndMajor,
-    //                                       loginStatus: false) { PostDataContent in
-    //
-    //        self.totalDatas?.append(contentsOf: PostDataContent.postDataByInquiries.content)
-    //
-    //        DispatchQueue.main.async {
-    //          DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-    //            self.activityIndicator.stopAnimating()
-    //            self.activityIndicator.removeFromSuperview()
-    //
-    //            self.updateCollectionViewHeight()
-    //            self.resultCollectionView.reloadData()
-    //            self.isInfiniteScroll = true
-    //          }
-    //        }
-    //      }
-    //    }
+  }
     
     // MARK: - 스크롤 제약 업데이트
     func updateCollectionViewHeight() {
@@ -401,7 +372,7 @@ class ResultSearchViewController: UIViewController {
    }
   }
   
-}
+
 
 // 셀의 각각의 크기
 extension ResultSearchViewController: UICollectionViewDelegateFlowLayout {

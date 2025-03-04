@@ -6,9 +6,9 @@ import Then
 
 /// 내가 작성한 스터디 Cell의 delegate
 protocol MyPostCellDelegate: AnyObject {
-  func menuButtonTapped(in cell: MyPostCell, postID: Int)
-  func closeButtonTapped(in cell: MyPostCell, postID: Int)
-  func acceptButtonTapped(in cell: MyPostCell, studyID: Int)
+  func menuButtonTapped(postID: Int)
+  func closeButtonTapped(postID: Int)
+  func acceptButtonTapped(studyID: Int)
 }
 
 /// 내가 작성한 스터디 Cell
@@ -189,19 +189,19 @@ final class MyPostCell: UICollectionViewCell {
   /// 메뉴버튼 탭 - 수정 삭제
   @objc func menuButtonTapped(){
     guard let postID = model?.postID else { return }
-    delegate?.menuButtonTapped(in: self, postID: postID)
+    delegate?.menuButtonTapped(postID: postID)
   }
   
   /// 마감버튼 탭 - 스터디 마감
   @objc func closeButtonTapped(){
     guard let postID = model?.postID else { return }
-    delegate?.closeButtonTapped(in: self, postID: postID)
+    delegate?.closeButtonTapped(postID: postID)
   }
   
   /// 참여자 확인버튼 탭 - 참여자 확인 페이지로 이동
   @objc func checkPersonButtonTapped(){
     guard let studyID = model?.studyId else { return }
-    delegate?.acceptButtonTapped(in: self, studyID: studyID)
+    delegate?.acceptButtonTapped(studyID: studyID)
   }
 }
 

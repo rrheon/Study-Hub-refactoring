@@ -197,24 +197,3 @@ extension EnterSearchViewController: UITableViewDelegate {
   }
 }
 
-
-
-// MARK: - 북마크 관련
-//extension SearchViewController: CheckLoginDelegate {}
-
-extension EnterSearchViewController {
-  // MARK: - 네트워킹 기다릴 때
-  //   func waitingNetworking(){
-  //     view.addSubview(activityIndicator)
-  //
-  //     activityIndicator.snp.makeConstraints {
-  //       $0.centerX.centerY.equalToSuperview()
-  //     }
-  //
-  //     activityIndicator.startAnimating()
-  //   }
-  //
-  //
-  //
-  
-}

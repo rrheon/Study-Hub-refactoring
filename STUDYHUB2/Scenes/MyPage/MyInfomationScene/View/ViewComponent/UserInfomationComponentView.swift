@@ -230,7 +230,7 @@ final class UserInfomationComponentView: UIView {
       .tap
       .subscribe(onNext: { _ in
         guard let email = self.viewModel.userData.value?.email else { return }
-        self.viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
+        self.viewModel.steps.accept(AppStep.confirmPasswordScreenIsRequired(email: email))
       })
       .disposed(by: disposeBag)
 

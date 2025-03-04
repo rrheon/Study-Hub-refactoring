@@ -177,7 +177,7 @@ final class UserActivityView: UIView {
   func setupBinding(){
     /// 유저 데이터
     viewModel.userData
-      .asDriver()
+      .asDriver(onErrorJustReturn: nil)
       .drive(onNext: {[weak self] in
         guard let data = $0 else { return }
         self?.setupUIData(data)
@@ -193,6 +193,7 @@ final class UserActivityView: UIView {
     writtenButton.rx
       .tap
       .subscribe(onNext: { _ in
+        
         NotificationCenter.default.post(name: .navToMyStudyPostScreen,
                                         object: nil,
                                         userInfo: ["userData": userData])

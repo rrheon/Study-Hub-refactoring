@@ -15,6 +15,11 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   let provider = MoyaProvider<StudyPostNetworking>()
   
+  override init() {
+    super.init()
+    super.fetchAccessToken()
+  }
+  
   /// 모든 스터디 게시글 조회하기
   /// - Parameters:
   ///   - hot: true - 인기순, false - 인기순 x
@@ -32,7 +37,9 @@ class StudyPostManager: StudyHubCommonNetworking {
                                                   titleAndMajor: titleAndMajor,
                                                   page: page,
                                                   size: size)
-    let result = await provider.request(.searchAllPost(searchData: data))
+    
+    
+    let result = await provider.request(.searchAllPost(loginStatus: loginStatus, searchData: data))
     return try await self.commonDecodeNetworkResponse(with: result, decode: PostDataContent.self)
   }
   
@@ -68,18 +75,24 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   /// 스터디 생성
   /// - Parameter data: 스터디 관련 데이터
-  func createNewPost(with data: CreateStudyRequest){
+  func createNewPost(with data: CreateStudyRequest ,completion: @escaping (Int?) -> Void) {
     provider.request(.createNewPost(newData: data)) { result in
       switch result {
       case .success(let response):
         print(response.description)
         print(response.response)
-        /// 게시 후 postID 반환해야함
-        let strData = String(data: response.data, encoding: .utf8)
-        print(strData)
         
+        
+        /// 게시 후 postID 반환해야함
+        guard let postID = String(data: response.data, encoding: .utf8) else {
+          completion(nil)
+          return
+        }
+        print(postID)
+        completion(Int(postID))
       case .failure(let err):
         print(err)
+        completion(nil)
       }
 //      self.commonDecodeNetworkResponse(with: result, decode: StudyDTO.self) { decodedData in
 //        print(decodedData)
@@ -132,11 +145,15 @@ class StudyPostManager: StudyHubCommonNetworking {
   }
   
   /// 작성한 모든 게시글 삭제
-  func deleteMyAllPost(){
+  func deleteMyAllPost(completion: @escaping (Bool) -> Void){
     provider.request(.deleteAllPost) { result in
       switch result {
-      case .success(_): print("삭제 완료")
-      case .failure(_): print("삭제 실패")
+      case .success(_):
+        print("삭제 완료")
+        completion(true)
+      case .failure(_):
+        print("삭제 실패")
+        completion(false)
       }
     }
   }

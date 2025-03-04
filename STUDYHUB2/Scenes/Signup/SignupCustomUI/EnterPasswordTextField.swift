@@ -25,7 +25,7 @@ final class EnterPasswordTextField: AuthTextField {
   
   func textFieldDidChange() {
     guard let context = super.getTextFieldValue(), !context.isEmpty else { return }
-    let isPasswordValid = isValidPassword(context)
+    let isPasswordValid = Utils.isValidPassword(context)
     let color = isPasswordValid ? UIColor.g_10 : UIColor.r50
     let content = isPasswordValid ? successContent : failContent
     
@@ -34,7 +34,7 @@ final class EnterPasswordTextField: AuthTextField {
   
   func textFieldEnd() {
     guard let context = super.getTextFieldValue(), !context.isEmpty else { return }
-    let isPasswordValid = isValidPassword(context)
+    let isPasswordValid = Utils.isValidPassword(context)
     let color = isPasswordValid ? UIColor.g100 : UIColor.r50
     let content = isPasswordValid ? successContent : nil
     let alertLabelHidden = isPasswordValid

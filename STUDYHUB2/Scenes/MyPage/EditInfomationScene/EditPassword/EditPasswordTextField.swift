@@ -84,11 +84,6 @@ final class EditPasswordTextField: UIView {
     }
   }
   
-  func isValidPassword(_ password: String) -> Bool {
-    let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
-    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
-  }
-  
   
   /// 경고라벨 설정
   /// - Parameters:

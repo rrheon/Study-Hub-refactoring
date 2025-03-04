@@ -2,6 +2,8 @@
 import UIKit
 
 import SnapKit
+import RxFlow
+import RxRelay
 import Then
 
 /// 거절사유 전달 delegate
@@ -10,7 +12,9 @@ protocol WriteRefuseReasonVCDelegate: AnyObject {
 }
 
 /// 거절사유 작성 VC
-final class WriteRefuseReasonVC: UIViewController {
+final class WriteRefuseReasonVC: UIViewController, Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
+
   weak var delegate: WriteRefuseReasonVCDelegate?
   
   /// 스터디 신청한 유저의 ID
@@ -60,8 +64,7 @@ final class WriteRefuseReasonVC: UIViewController {
     $0.layer.cornerRadius = 10
   }
   
-  init(delegate: WriteRefuseReasonVCDelegate?, userId: Int) {
-    self.delegate = delegate
+  init(userId: Int) {
     self.userId = userId
     
     super.init(nibName: nil, bundle: nil)
@@ -128,7 +131,7 @@ final class WriteRefuseReasonVC: UIViewController {
   
   @objc private func completeButtonTapped() {
     delegate?.completeButtonTapped(reason: reasonTextView.text, userId: userId)
-    navigationController?.popViewController(animated: true)
+    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
 }
 

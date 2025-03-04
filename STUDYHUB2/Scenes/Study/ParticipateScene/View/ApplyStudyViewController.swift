@@ -7,10 +7,10 @@ import RxCocoa
 import Then
 
 /// 스터디 참여하기 VC
-final class ParticipateVC: UIViewController {
+final class ApplyStudyViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: ParticipateViewModel
+  let viewModel: ApplyStudyViewModel
   
   // MARK: - UI세팅
   
@@ -50,9 +50,9 @@ final class ParticipateVC: UIViewController {
   /// 스터디 참여 신청완료버튼
   private lazy var completeButton = StudyHubButton(title: "완료")
 
-  init(_ postData: BehaviorRelay<PostDetailData?>) {
-    self.viewModel = ParticipateViewModel(postData)
-    super.init()
+  init(with viewModel: ApplyStudyViewModel) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
   }
 
   required init?(coder: NSCoder) {
@@ -130,6 +130,11 @@ final class ParticipateVC: UIViewController {
   func setupNavigationbar() {
     leftButtonSetting()
     settingNavigationTitle(title: "참여하기")
+    settingNavigationbar()
+  }
+  
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
   
   // MARK: - 메인라벨 텍스트 색상 변경
@@ -146,14 +151,16 @@ final class ParticipateVC: UIViewController {
   func setupBinding(){
     viewModel.isSuccessParticipate
       .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self] in
-        if $0 {
-          self?.navigationController?.popViewController(animated: true)
-          self?.showToast(message: "참여 신청이 완료됐어요.", alertCheck: true)
+      .drive(onNext: { [weak self] result in
+        if result {
+          self?.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false,
+                                                                animate: false))
+          ToastPopupManager.shared.showToast(message: "참여 신청이 완료됐어요.")
         }
       })
       .disposed(by: disposeBag)
     
+    /// 사용자의 소개 내용
     viewModel.userIntroduce
       .asDriver(onErrorJustReturn: "")
       .drive(onNext: { [weak self] in
@@ -192,7 +199,8 @@ final class ParticipateVC: UIViewController {
   
     /// 스터디 신청 사유 글자갯수 제한
     if text.count < 10 {
-      showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.", alertCheck: false)
+      ToastPopupManager.shared.showToast(message: "팀장이 회원님에 대해 알 수 있도록 10자 이상 적어주세요.",
+                                         alertCheck: false)
     } else {
       viewModel.participateButtonTapped(text)
     }
@@ -202,7 +210,7 @@ final class ParticipateVC: UIViewController {
 // MARK: - Extension
 
 
-extension ParticipateVC {
+extension ApplyStudyViewController {
   override func textViewDidBeginEditing(_ textView: UITextView) {
     if textView.textColor == UIColor.bg70 {
       textView.text = nil

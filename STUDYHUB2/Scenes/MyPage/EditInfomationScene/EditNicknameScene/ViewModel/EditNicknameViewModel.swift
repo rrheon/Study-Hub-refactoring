@@ -5,29 +5,42 @@ import RxFlow
 import RxSwift
 import RxRelay
 
+/// 닉네임 변경 ViewModel
 final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
-  
+  /// 새로운 닉네임
   var newNickname = BehaviorRelay<String?>(value: nil)
+  
+  /// 닉네임 중복 확인
   var isCheckNicknameDuplication = PublishRelay<String>()
   
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
   }
   
+  
+  /// 닉네임 중복 체크
+  /// - Parameter nickname: 체크할 닉네임
   func checkNicknameDuplication(_ nickname: String){
+    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname, completion: { result in
+      self.isCheckNicknameDuplication.accept(result)
+    })
 //    editUserInfoManager.checkNicknameDuplication(nickName: nickname) { result in
 //      self.isCheckNicknameDuplication.accept(result)
 //    }
   }
   
+  
+  /// 새로운 닉네임 저장
+  /// - Parameter nickname: 저장할 닉네임
   func storeNicknameToServer(_ nickname: String){
-//    editUserInfoManager.editUserNickname(nickname) {
-//      // 예외처리 필요
-//      print($0)
-//      self.updateUserData(nickname: nickname)
-//    }
+    UserProfileManager.shared.editUserNickname(nickname: nickname) { statusCode in
+#warning("코드 체크해보기")
+      print(statusCode)
+      self.updateUserData(nickname: nickname)
+    }
+
   }
   
   // MARK: - 유효성 검사

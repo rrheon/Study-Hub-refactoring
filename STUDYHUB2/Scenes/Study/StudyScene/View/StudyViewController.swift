@@ -63,7 +63,6 @@ final class StudyViewController: UIViewController {
     $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
   }
   
-  private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
   
   /// view가 나타날 때 데이터 다시 가져오기
   override func viewWillAppear(_ animated: Bool) {
@@ -74,6 +73,9 @@ final class StudyViewController: UIViewController {
 //        await viewModel.fetchPostData(hotType: "false")
 //      }
 //    }
+    
+    print(#fileID, #function, #line," - \(TokenManager.shared.loadAccessToken() ?? "")")
+
   }
 
   override func viewDidLoad() {
@@ -236,7 +238,7 @@ final class StudyViewController: UIViewController {
       .withUnretained(self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { (_, item) in
-        let postID = item.postID
+        let postID = item.postId
         
         NotificationCenter.default.post(name: .navToStudyDetailScrenn,
                                         object: nil,
@@ -289,33 +291,29 @@ final class StudyViewController: UIViewController {
     unselectedButton.setTitleColor(.bg90, for: .normal)
     unselectedButton.backgroundColor = .bg30
   }
-  
-  // MARK: - 네트워킹 기다릴 때
-  
-  func waitingNetworking(){
-    view.addSubview(activityIndicator)
-    
-    activityIndicator.snp.makeConstraints {
-      $0.centerX.centerY.equalToSuperview()
-    }
-    
-    activityIndicator.startAnimating()
-  }
+
   
   // MARK: - 스크롤해서 네트워킹
   
   func fetchMoreData(hotType: String) {
-    self.waitingNetworking()
-//    viewModel.fetchPostData(hotType: hotType, page: viewModel.counter, size: 5)
-    activityIndicator.stopAnimating()
+    // 인디케이터 불러오기
+    showLoading()
+    
+    //    viewModel.fetchPostData(hotType: hotType, page: viewModel.counter, size: 5)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+      // 1.5 초 후 로딩 종료
+      self.hideLoading()
+    }
+    
   }
 }
 
-// MARK: - collectionView
+// MARK: - Scroll
 
-extension StudyViewController: UICollectionViewDelegate {
-  // MARK: - 스크롤할 때 네트워킹 요청
+
+extension StudyViewController {
   
+  /// 스크롤할 때 네트워킹 요청
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     let scrollViewHeight = scrollView.frame.size.height
     let contentHeight = scrollView.contentSize.height

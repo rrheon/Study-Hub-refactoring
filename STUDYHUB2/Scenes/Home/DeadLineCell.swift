@@ -128,9 +128,9 @@ final class DeadLineCell: UICollectionViewCell {
   }
   
   private func bookmarkTapped(){
-    guard let postID = self.model?.postID else { return }
+    guard let postID = self.model?.postId else { return }
   
-    BookmarkManager.shared.bookmarkTapped(with: postID) {}
+    BookmarkManager.shared.bookmarkTapped(with: postID) {_ in }
     if loginStatus {
       checkBookmarked = !(checkBookmarked ?? false)
       let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"

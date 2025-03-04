@@ -23,7 +23,6 @@ class UserAuthManager: StudyHubCommonNetworking {
   func loginToStudyHub(email: String, password: String, completion: @escaping (AccessTokenResponse) -> Void){
     provider.request(.loginToStudyHub(email: email, password: password)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: AccessTokenResponse.self) { decodedData in
-        print(decodedData)
         completion(decodedData)
       }
     }
@@ -48,18 +47,18 @@ class UserAuthManager: StudyHubCommonNetworking {
   
   /// 비밀번호 검증
   /// - Parameter password: 비밀번호
-  func verifyPassword(password: String){
+  func verifyPassword(password: String, completion: @escaping (Bool) -> Void){
     provider.request(.verifyPassword(password: password)) { result in
       switch result {
       case .success(let response):
         switch response.statusCode{
         case 200:
-          return // 검증성공
+          completion(true)
         default:
-          return // 검증실패
+          completion(false)
         }
       case .failure(let response):
-        return // 검증실패
+        completion(false)
       }
     }
   }
@@ -161,13 +160,14 @@ class UserAuthManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - email: 인증코드를 전송할 이메일주소
   ///   - completion: 콜백함수
-  func sendEmailCode(email: String, completion: @escaping () -> Void){
+  func sendEmailCode(email: String, completion: @escaping (Bool) -> Void){
     provider.request(.sendEmailCode(email: email)) { result in
       switch result {
       case .success(let response):
-        completion()
+        completion(true)
       case .failure(let response):
         print(response.response)
+        completion(false)
       }
     }
   }

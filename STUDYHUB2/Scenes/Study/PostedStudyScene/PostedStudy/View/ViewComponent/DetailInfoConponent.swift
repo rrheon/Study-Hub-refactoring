@@ -187,8 +187,15 @@ final class PostedStudyDetailInfoComponent: UIView {
   func setupUIData(_ data: PostDetailData){
     introduceStudyDeatilLabel.text = data.content
     periodLabel.text = getPeriodText(data)
-    fineAmountLabel.text = "\(data.penaltyWay) \(data.penalty)원"
-    meetLabel.text = Utils.convertStudyWay(wayToStudy: data.studyWay)
+    
+    if let penaltyWay = data.penaltyWay, data.penalty != 0 {
+      fineAmountLabel.text = "\(penaltyWay) \(data.penalty)원"
+    } else {
+      fineAmountLabel.text = "없어요"
+    }
+    
+    
+    meetLabel.text = Utils.convertStudyWay(wayToStudy: data.studyWay ?? "")
     majorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
   }
 }

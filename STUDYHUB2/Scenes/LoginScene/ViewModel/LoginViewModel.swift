@@ -35,7 +35,8 @@ class LoginViewModel: Stepper {
         return
       }
       
-      let saveResult = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+      let saveResult = TokenManager.shared.saveTokens(accessToken: accessToken,
+                                                      refreshToken: refreshToken)
       
       // 로그인 성공
       self.isValidAccount.accept(saveResult)

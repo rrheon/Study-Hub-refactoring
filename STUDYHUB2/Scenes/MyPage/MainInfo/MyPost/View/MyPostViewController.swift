@@ -190,13 +190,12 @@ final class MyPostViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
+    // 작성한 글이 없을 때 작성하기 버튼
     writePostButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-//        moveToOtherVCWithSameNavi(
-//          vc: CreateStudyViewController(postedData: viewModel.getEmptyPostData() ),
-//          hideTabbar: true
-//        )
+
+        viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
       })
       .disposed(by: disposeBag)
     
@@ -228,7 +227,6 @@ final class MyPostViewController: UIViewController {
     myPostCollectionView.register(MyPostCell.self, forCellWithReuseIdentifier: MyPostCell.cellID)
     myPostCollectionView.rx.setDelegate(self)
       .disposed(by: disposeBag)
-    myPostCollectionView.delegate = self
   }
   
   // MARK: - setupNavigationbar
@@ -242,27 +240,14 @@ final class MyPostViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
   
   // MARK: - 전체삭제
   
   /// 전체 삭제 버튼 탭
   func confirmDeleteAll() {
-//    let popupVC = PopupViewController(
-//      title: "글을 모두 삭제할까요?",
-//      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
-//    )
-//    
-//    popupVC.popupView.rightButtonAction = { [weak self] in
-//      guard let self = self else { return }
-//      popupVC.dismiss(animated: true)
-//      viewModel.deleteMyAllPost()
-//      showToast(message: "글이 삭제됐어요")
-//    }
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllMyPosts))
   }
 }
 
@@ -277,34 +262,23 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
-// MARK: - MyPostcell 함수
-
+// MARK: - MyPostcell
 
 extension MyPostViewController: MyPostCellDelegate {
-  func acceptButtonTapped(in cell: MyPostCell, studyID: Int) {
-    moveToOtherVCWithSameNavi(vc: CheckParticipantsVC(studyID), hideTabbar: true)
+  /// 참여자 버튼
+  func acceptButtonTapped(studyID: Int) {
+//    moveToOtherVCWithSameNavi(vc: CheckParticipantsVC(studyID), hideTabbar: true)
   }
   
-  func menuButtonTapped(in cell: MyPostCell, postID: Int) {
-//    let bottomSheetVC = BottomSheet(postID: postID)
-//    bottomSheetVC.delegate = self
-//    showBottomSheet(bottomSheetVC: bottomSheetVC, size: 228.0)
-//    present(bottomSheetVC, animated: true, completion: nil)
+  /// 메뉴버튼 탭
+  func menuButtonTapped(postID: Int) {
+    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
   }
   
-  func closeButtonTapped(in cell: MyPostCell, postID: Int){
-//    let popupVC = PopupViewController(
-//      title: "이 글의 모집을 마감할까요?",
-//      desc: "마감하면 다시 모집할 수 없어요",
-//      rightButtonTilte: "마감"
-//    )
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
-//    
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true)
-//      self.viewModel.closeMyPost(postID)
-//    }
+  /// 마감하기 버튼 탭
+  func closeButtonTapped(postID: Int){
+    viewModel.selectedPostID = postID
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .closeStudyRecruitment))
   }
 }
 
@@ -323,39 +297,41 @@ extension MyPostViewController: UICollectionViewDelegate {
   }
 }
 
+// MARK: - BottomSheet
+
+
 extension MyPostViewController: BottomSheetDelegate {
+  /// 삭제하기 버튼
   func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
-    
+    viewModel.selectedPostID = postOrCommentID
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
   }
   
+  /// 수정하기 버튼
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
-  
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: viewModel.postDetailData.value))
   }
-  
-//  func firstButtonTapped(postID: Int, checkPost: Bool) {
-//    let popupVC = PopupViewController(
-//      title: "이 글을 삭제할까요?",
-//      desc: "삭제한 글과 참여자는 다시 볼 수 없어요"
-//    )
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    self.present(popupVC, animated: false)
-//    
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true)
-//      self.viewModel.deleteMySinglePost(postID)
-//    }
-//  }
-//  
-//  func secondButtonTapped(postID: Int, checkPost: Bool) {
-//    self.dismiss(animated: true) {
-//      self.viewModel.getPostDetailData(postID) { postData in
-//        self.moveToOtherVCWithSameNavi(
-//          vc: CreateStudyViewController(postedData: postData, mode: .PUT),
-//          hideTabbar: true
-//        )
-//      }
-//    }
-//  }
 }
 
-extension MyPostViewController: ShowBottomSheet {}
+
+// MARK: - Popup
+
+extension MyPostViewController: PopupViewDelegate {
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    
+    switch popupCase{
+    case .deleteAllMyPosts:
+      viewModel.deleteMyAllPost()
+      ToastPopupManager.shared.showToast(message: "글이 삭제됐어요")
+    case .deleteStudyPost:
+      guard let postID = viewModel.selectedPostID else { return }
+      viewModel.deleteMySinglePost(postID)
+    case .closeStudyRecruitment:
+      guard let postID = viewModel.selectedPostID else { return }
+      viewModel.closeMyPost(postID)
+    default: return
+    }
+  }
+}

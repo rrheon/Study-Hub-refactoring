@@ -48,7 +48,7 @@ extension UIViewController {
   func settingNavigationbar() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.backgroundColor = .backgroundBlack
+    appearance.backgroundColor = .black
     appearance.shadowColor = .clear
     
     appearance.titleTextAttributes = [

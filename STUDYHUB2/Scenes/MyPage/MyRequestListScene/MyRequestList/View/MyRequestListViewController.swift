@@ -107,10 +107,8 @@ final class MyRequestListViewController: UIViewController {
         totalPostCountLabel.changeColor(wantToChange: "\(count)", color: .black)
         
         switch count {
-        case _ where count == 0:
-          noDataUI()
-        default:
-          dataUI()
+        case _ where count == 0:      noDataUI()
+        default:                      dataUI()
         }
       })
       .disposed(by: disposeBag)
@@ -120,7 +118,9 @@ final class MyRequestListViewController: UIViewController {
       .drive(onNext: { [weak self] result in
         switch result {
         case true:
-          self?.showToast(message: "삭제가 완료됐어요.", imageCheck: true, alertCheck: true)
+          ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.",
+                                             imageCheck: true,
+                                             alertCheck: true)
         case false:
           return
         }
@@ -130,10 +130,7 @@ final class MyRequestListViewController: UIViewController {
     viewModel.rejectReason
       .asDriver(onErrorJustReturn: RejectReason(reason: "실패", studyTitle: "실패"))
       .drive(onNext: { [weak self] reason in
-        self?.moveToOtherVCWithSameNavi(
-          vc: DetailRejectReasonViewController(rejectData: reason),
-          hideTabbar: true
-        )
+        self?.viewModel.steps.accept(AppStep.detailRejectReasonScreenIsRequired(reason: reason))
       })
       .disposed(by: disposeBag)
   }
@@ -150,7 +147,7 @@ final class MyRequestListViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
                            
   /// 셀등록
@@ -196,6 +193,9 @@ final class MyRequestListViewController: UIViewController {
   }
 }
 
+// MARK: - 스터디 셀 크기
+
+
 extension MyRequestListViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(
     _ collectionView: UICollectionView,
@@ -208,20 +208,33 @@ extension MyRequestListViewController: UICollectionViewDelegateFlowLayout {
   }
 }
 
+// MARK: - 신청한 스터디 셀
+
+
 extension MyRequestListViewController: MyRequestCellDelegate {
+  
+  /// 거절된 이유 확인 -> 화면이동
+
   func moveToCheckRejectReason(studyId: Int) {
     self.viewModel.getRejectReason(studyId)
   }
   
-  func deleteButtonTapped(in cell: MyRequestCell, postID: Int) {
-//    let popupVC = PopupViewController(title: "이 스터디를 삭제할까요?", desc: "")
-//    
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    popupVC.popupView.rightButtonAction = {
-//      self.dismiss(animated: true)
-//      self.viewModel.deleteMyReuest(postID)
-//    }
-//    self.present(popupVC, animated: false)
+  /// 신청한 스터디 삭제 탭 -> 팝업 띄우기
+  func deleteButtonTapped(postID: Int) {
+    viewModel.selectedPostID = postID
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
+
   }
 }
 
+// MARK: - PopupView
+
+
+extension MyRequestListViewController: PopupViewDelegate {
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    guard let postID = viewModel.selectedPostID else { return }
+    
+    self.viewModel.deleteMyReuest(postID)
+  }
+}

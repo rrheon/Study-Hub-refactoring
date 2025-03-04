@@ -136,15 +136,11 @@ final class CommentViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false))
+    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
   }
   
   /// 바인딩
   func setupBinding(){
-//    commentTextField.rx.text.orEmpty
-//      .bind(to: viewModel.commentContent)
-//      .disposed(by: disposeBag)
-    
     /// 댓글 리스트
     viewModel.commentDatas
       .compactMap { $0 }
@@ -174,13 +170,19 @@ final class CommentViewController: UIViewController {
   func setupActions(){
     /// 댓글 입력, 수정버튼
     commentButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-//        guard let self = self else { return }
-//        guard let commentID = viewModel.commentID else {
-//          viewModel.createComment()
-//          return
-//        }
-//        viewModel.modifyComment(commentID)
+      .withUnretained(self)
+      .subscribe(onNext: { (vc, _) in
+        guard let content = vc.commentTextField.text else { return }
+        guard let _ = vc.viewModel.commentID else {
+          vc.viewModel.createNewComment(with: content)
+          self.commentTextField.text = nil
+          self.commentTextField.resignFirstResponder()
+          return
+        }
+        vc.viewModel.modifyComment(content: content)
+        
+        self.commentTextField.text = nil
+        self.commentTextField.resignFirstResponder()
       })
       .disposed(by: disposeBag)
   }
@@ -222,7 +224,13 @@ extension CommentViewController: BottomSheetDelegate {
   /// BottomSheet의 첫 번째 버튼 탭 - 댓글 삭제
   /// - Parameter postOrCommentID: commentID
   func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
-    viewModel.deleteComment(with: postOrCommentID)
+    self.commentTextField.text = nil
+    self.commentTextField.resignFirstResponder()
+    
+    viewModel.commentID = postOrCommentID
+    
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteComment))
   }
   
   /// BottomSheet의 두 번째 버튼 탭 - 댓글 수정
@@ -230,25 +238,19 @@ extension CommentViewController: BottomSheetDelegate {
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     commentButton.setTitle("수정", for: .normal)
     viewModel.commentID = postOrCommentID
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
   }
-//  func firstButtonTappeㅇ {
-//    self.commentTextField.text = nil
-//    self.commentTextField.resignFirstResponder()
-//    let popupVC = PopupViewController(title: "댓글을 삭제할까요?", desc: "")
-//    popupVC.modalPresentationStyle = .overFullScreen
-//    
-//    self.present(popupVC, animated: true)
-//    
-////    popupVC.popupView.rightButtonAction = {
-////      self.viewModel.deleteComment(commentId: postID)
-////      self.navigationController?.dismiss(animated: true)
-////    }
-//  }
-//  
-//  func secondButtonTapped(postID: Int, checkPost: Bool) {
-//    commentButton.setTitle("수정", for: .normal)
-//    viewModel.commentID = postID
-//  }
+}
+
+// MARK: - PopupView Delegate
+
+extension CommentViewController: PopupViewDelegate {
+  // 팝업 뷰 오른쪽 버튼 탭 -> 댓글 삭제 후 화면닫기
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    guard let commentID = viewModel.commentID else { return }
+    viewModel.deleteComment(with: commentID)
+    defaultBtnAction()
+  }
 }
 
 /// 댓글 입력 TextField Delegate - 댓글 입력 시 버튼 활성화

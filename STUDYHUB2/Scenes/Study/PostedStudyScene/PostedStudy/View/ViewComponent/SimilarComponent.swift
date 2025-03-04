@@ -163,6 +163,15 @@ final class SimilarStudyComponent: UIView {
           cell.model = content
         }
       .disposed(by: disposeBag)
+    
+    /// 북마크 UI 설정
+    viewModel.isBookmarked
+      .asDriver()
+      .drive(onNext: { bookmarked in
+        let bookmarkImg = bookmarked ? "BookMarkChecked" : "BookMarkLightImg"
+        self.bookmarkButton.setImage(UIImage(named: bookmarkImg), for: .normal)
+      })
+      .disposed(by: disposeBag)
 
   }
   
@@ -174,10 +183,7 @@ final class SimilarStudyComponent: UIView {
     bookmarkButton.rx.tap
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] in
-        guard let postID = self?.viewModel.postDatas.value?.postID else { return }
-        BookmarkManager.shared.bookmarkTapped(with: postID) {
-          self?.viewModel.bookmarkToggle()
-        }
+        self?.viewModel.bookmarkBtnTapped()
       })
       .disposed(by: disposeBag)
     
@@ -186,7 +192,7 @@ final class SimilarStudyComponent: UIView {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .withUnretained(self)
       .subscribe(onNext: { (component, cellData) in
-        let postID = cellData.postID
+        let postID = cellData.postId
         component.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postID))
       })
       .disposed(by: disposeBag)
@@ -197,21 +203,20 @@ final class SimilarStudyComponent: UIView {
       .throttle(.seconds(1))
       .drive(onNext: { [weak self] in
         guard let self = self else { return }
-//        self.viewModel.participateButtonTapped(completion: { action in
-//          DispatchQueue.main.async {
-//            switch action {
-//            case .closed:
-//              self.viewModel.showToastMessage.accept("이미 마감된 스터디예요")
-//            case .goToLoginVC:
-//              self.viewModel.moveToLoginVC.accept(true)
-//            case .goToParticipateVC:
-//              let studyID = self.viewModel.postedStudyData.postDetailData.studyID
-//              self.viewModel.moveToParticipateVC.accept(studyID)
-//            case .limitedGender:
-//              self.viewModel.showToastMessage.accept("이 스터디는 성별 제한이 있는 스터디예요")
-//            }
-//          }
-//        })
+        self.viewModel.participateBtnTapped(completion: { action in
+          switch action {
+          case .closed:
+            ToastPopupManager.shared.showToast(message: "이미 마감된 스터디예요")
+          case .goToLoginVC:
+            NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+          case .goToParticipateVC:
+            let studyID = self.viewModel.postDatas.value?.studyId
+            //              self.viewModel.moveToParticipateVC.accept(studyID)
+            self.viewModel.steps.accept(AppStep.applyStudyScreenIsRequired(data: self.viewModel.postDatas))
+          case .limitedGender:
+            ToastPopupManager.shared.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요")
+          }
+        })
       })
       .disposed(by: disposeBag)
   }

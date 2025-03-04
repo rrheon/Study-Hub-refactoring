@@ -68,14 +68,14 @@ final class HowToUseViewController: UIViewController, Stepper {
   func setupNavigationbar() {
     leftButtonSetting()
     settingNavigationTitle(title: "이용방법")
+    settingNavigationbar()
     
-//    settingNavigationbar(false)
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
   /// 네비게이션 바 왼쪽 탭 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true))
+    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
   }
   
   // MARK: - setupLayout
@@ -151,18 +151,15 @@ final class HowToUseViewController: UIViewController, Stepper {
       steps.accept(AppStep.popupScreenIsRequired(popupCase: .requireLogin))
     }
   }
-
 }
 
+// MARK: - popupView Delegate
+
+
 extension HowToUseViewController: PopupViewDelegate {
-  // 닫기
-  func leftBtnTapped() {
-    steps.accept(AppStep.dismissCurrentScreen)
-  }
-  
   // 로그인 화면으로 이동
-  func rightBtnTapped() {
-    steps.accept(AppStep.dismissCurrentScreen)
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
     NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
   }
 }

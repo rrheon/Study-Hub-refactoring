@@ -2,28 +2,29 @@
 
 import Foundation
 
+import RxFlow
 import RxRelay
 
-final class ConfirmEmailViewModel {
+/// Email 유효성 확인 ViewModel
+final class ConfirmEmailViewModel: Stepper {
+  var steps: PublishRelay<Step> = PublishRelay<Step>()
   
-  let loginStatus: Bool
   var checkedEmail: Bool = false
   
   let email = BehaviorRelay<String>(value: "")
   let isExistEmail = PublishRelay<Bool>()
 
-  init(loginStatus: Bool) {
-    self.loginStatus = loginStatus
+  init() {
+
   }
   
+  
+  /// 이메일 유효성 체크
   func checkEmailValid(){
     let email = email.value
     
     UserAuthManager.shared.checkEmailDuplication(email: email) { result in
       self.isExistEmail.accept(result)
     }
-//    editUserInfoManager.checkEmailDuplication(email: email) { result in
-//      self.isExistEmail.accept(result)
-//    }
   }
 }

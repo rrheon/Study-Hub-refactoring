@@ -37,7 +37,7 @@ final class BookMarkCell: UICollectionViewCell {
     $0.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
     $0.addAction(UIAction { _ in
 //      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
-      BookmarkManager.shared.bookmarkTapped(with: self.model?.postID ?? 0) {
+      BookmarkManager.shared.bookmarkTapped(with: self.model?.postID ?? 0) { _ in 
         print("북")
       }
     }, for: .touchUpInside)
