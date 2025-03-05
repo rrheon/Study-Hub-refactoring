@@ -39,7 +39,7 @@ enum StudyPostNetworking {
   case deletePost(postId: Int)                            // 스터디 게시글 삭제
   case searchMyPost(page: Int, size: Int)              // 작성한 스터디 조회
   case searchAllPost(loginStatus: Bool, searchData: SearchAllPostDTO)    // 스터디 전체 조회
-  case searchSinglePost(postId: Int)                   // 스터디 단건조회
+  case searchSinglePost(loginStatus: Bool, postId: Int)                   // 스터디 단건조회
 }
 
 
@@ -57,7 +57,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
     case .deletePost(let postId):             return "/v1/study-posts/\(postId)"
     case .searchMyPost:                       return "/v1/study-posts/mypost"
     case .searchAllPost:                      return "/v2/study-posts"
-    case .searchSinglePost(let postId):       return "/v2/study-posts/\(postId)"
+    case .searchSinglePost(_, let postId):       return "/v2/study-posts/\(postId)"
     }
   }
   
@@ -128,9 +128,9 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
         .deleteAllPost:
       return HeaderCase.isLogin.header
       
-    case .searchSinglePost(_): return HeaderCase.isLogin.header
       
-    case .searchAllPost(let loginStatus, _):
+    case .searchSinglePost(let loginStatus, _),
+        .searchAllPost(let loginStatus, _):
       return loginStatus ? HeaderCase.isLogin.header : HeaderCase.isLogout.header
       
       

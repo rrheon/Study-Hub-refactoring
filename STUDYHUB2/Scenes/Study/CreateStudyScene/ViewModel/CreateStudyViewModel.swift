@@ -72,7 +72,7 @@ final class CreateStudyViewModel: Stepper {
     StudyPostManager.shared.createNewPost(with: data) { postID in
       if let _postID = postID {
         /// 생성 후 회면 내리기
-        self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+        self.steps.accept(AppStep.popCurrentScreen(animate: false))
         
         /// 생성한 게시글로 이동
         self.steps.accept(AppStep.studyDetailScreenIsRequired(postID: _postID))
@@ -92,7 +92,7 @@ final class CreateStudyViewModel: Stepper {
       let modifyData = UpdateStudyRequest(from: data, postId: postedData.postId)
       StudyPostManager.shared.modifyPost(with: modifyData)
       
-      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+      self.steps.accept(AppStep.popCurrentScreen(animate: false))
 
       ToastPopupManager.shared.showToast(message: "글이 수정됐어요.")
     }

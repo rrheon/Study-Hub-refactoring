@@ -67,16 +67,13 @@ final class BookmarkViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .bg30
     
+    viewModel.fetchBookmarkData()
+
     setupNavigationbar()
-    
-    setupLayout(count: 0)
-    makeUI(loginStatus: viewModel.loginStatus, count: 0)
-    
+  
     setupBinding()
     setupActions()
-    
-    viewModel.fetchBookmarkData()
-    
+        
     registerCell()
   } // viewDidLoad
   
@@ -92,7 +89,7 @@ final class BookmarkViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽버튼 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   /// 바인딩 설정
@@ -103,7 +100,8 @@ final class BookmarkViewController: UIViewController {
       .asDriver(onErrorJustReturn: (self, 0))
       .drive(onNext: { (vc, count) in
         vc.setupLayout(count: count)
-        vc.makeUI(loginStatus: false, count: count)
+        vc.makeUI(count: count)
+        
       })
       .disposed(by: disposeBag)
     
@@ -115,11 +113,20 @@ final class BookmarkViewController: UIViewController {
         cellType: BookMarkCell.self)) { [weak self] index, content, cell in
           guard let self = self else { return }
           cell.model = content
-          cell.postDelegate = self
-
+          cell.delegate = self
         }
         .disposed(by: disposeBag)
     
+//    // 로그인 여부에 따른 데이터 설정
+//    viewModel.loginStatus
+//      .observe(on: MainScheduler.instance)
+//      .subscribe(onNext: { loginStatus in
+//        if !loginStatus {
+//          self.noDataUI(loginStatus: !loginStatus)
+//        }
+//      })
+//      .disposed(by: disposeBag)
+
 //    viewModel.postData
 //      .subscribe(onNext: { [weak self] in
 //        if $0.close == true { return }
@@ -151,8 +158,8 @@ final class BookmarkViewController: UIViewController {
     // 북마크한 스터디 셀을 터치 시
     bookMarkCollectionView.rx
       .modelSelected(BookmarkContent.self)
-      .subscribe(onNext: { [weak self] in
-        self?.viewModel.searchSingePostData(postID: $0.postID, loginStatus: true)
+      .subscribe(onNext: { [weak self] postCellData in
+        self?.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postCellData.postID))
       })
       .disposed(by: disposeBag)
   }
@@ -173,8 +180,9 @@ final class BookmarkViewController: UIViewController {
   }
   
   // MARK: - makeUI
+  
   /// UI설정
-  func makeUI(loginStatus: Bool, count: Int){
+  func makeUI(count: Int){
     totalCountLabel.text = "전체 \(count)"
     totalCountLabel.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -196,23 +204,24 @@ final class BookmarkViewController: UIViewController {
         make.top.equalTo(totalCountLabel.snp.bottom).offset(20)
         make.leading.trailing.bottom.equalTo(view)
       }
-    } else {
-      noDataUI(loginStatus: loginStatus)
+    }else {
+      emptyView.snp.makeConstraints {
+        $0.top.equalTo(view.snp.top).offset(150)
+        $0.height.equalTo(250)
+        $0.leading.trailing.equalToSuperview().inset(30)
+      }
+      
+      noDataUI(loginStatus: viewModel.loginStatus.value)
     }
   }
   
   /// 데이터가 없을 때 UI설정
   func noDataUI(loginStatus: Bool){
-    emptyView.snp.makeConstraints {
-      $0.top.equalTo(view.snp.top).offset(150)
-      $0.height.equalTo(250)
-      $0.leading.trailing.equalToSuperview().inset(30)
-    }
-
+    
     loginButton.isHidden = loginStatus
     loginButton.snp.makeConstraints {
       $0.top.equalTo(emptyView.snp.bottom).offset(40)
-      $0.centerX.equalToSuperview()
+      $0.centerX.equalTo(emptyView.snp.centerX)
       $0.width.equalTo(100)
       $0.height.equalTo(47)
     }
@@ -234,9 +243,7 @@ final class BookmarkViewController: UIViewController {
   /// 전체삭제 버튼 탭
   @objc func deleteAllButtonTapped(){
     viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllBookmarks))
-
   }
-
 }
 
 // MARK: - collectionView 사이즈
@@ -254,22 +261,27 @@ extension BookmarkViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 북마크 셀에서 Actions
 
-extension BookmarkViewController {
-  
-  /// 북마크 셀에서 북마크 터치 시
-  /// - Parameter postId: 포스트 아이디
-  func bookmarkTapped(postId: Int) {
-    viewModel.deleteButtonTapped(postID: postId)
-  }
-}
+//extension BookmarkViewController {
+//  
+//  /// 북마크 셀에서 북마크 터치 시
+//  /// - Parameter postId: 포스트 아이디
+//  func bookmarkTapped(postId: Int) {
+//    viewModel.deleteAllBtnTapped(postID: postId)
+//  }
+//}
 
-extension BookmarkViewController: ParticipatePostDelegate{
+extension BookmarkViewController: BookmarkCellDelegate {
+  func bookmarkBtnTapped(postId: Int) {
+    viewModel.deleteSingleBtnTapped(postID: postId)
+  }
+  
   
   /// 북마크 셀에서 참여하기 터치
   /// - Parameters:
   ///   - studyId: 스터디의 아이디
   ///   - postId: 포스트 아이디
-  func participateButtonTapped(studyId: Int, postId: Int) {
+  func participateBtnTapped(studyId: Int, postId: Int) {
+    viewModel.applyStudyBtnTppaed(postID: postId)
 //    StudyPostManager.shared.searchSinglePostData(postId: postId) { result in
 //      if result.apply {
 //        self.showToast(message: "이미 신청한 스터디예요.", imageCheck: false)
@@ -288,9 +300,15 @@ extension BookmarkViewController: ParticipatePostDelegate{
 extension BookmarkViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
-    self.viewModel.getBookmarkList()
+    self.viewModel.deleteAllBtnTapped()
     self.totalCountLabel.text = "전체 0"
     self.bookMarkCollectionView.isHidden = true
-    self.noDataUI(loginStatus: true)
+    
+    view.addSubview(emptyView)
+    emptyView.snp.makeConstraints {
+      $0.top.equalTo(view.snp.top).offset(150)
+      $0.height.equalTo(250)
+      $0.leading.trailing.equalToSuperview().inset(30)
+    }
   }
 }

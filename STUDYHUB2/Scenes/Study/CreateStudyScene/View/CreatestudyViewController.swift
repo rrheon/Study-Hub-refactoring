@@ -81,31 +81,26 @@ final class CreateStudyViewController: UIViewController {
   ///UI 설정
   func makeUI(){
     studyInfoView.snp.makeConstraints {
-      $0.top.equalToSuperview().offset(33)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(550)
     }
     
     seletMajorView.snp.makeConstraints {
-      $0.top.equalTo(studyInfoView.snp.bottom).offset(10)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(80)
     }
     
     studyMemeberView.snp.makeConstraints {
-      $0.top.equalTo(seletMajorView.snp.bottom)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(354)
     }
     
     studyWayView.snp.makeConstraints {
-      $0.top.equalTo(studyMemeberView.snp.bottom).offset(11)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(230)
     }
     
     studyPeroioudView.snp.makeConstraints {
-      $0.top.equalTo(studyWayView.snp.bottom).offset(11)
       $0.leading.trailing.equalToSuperview()
       $0.height.equalTo(440)
     }
@@ -116,8 +111,9 @@ final class CreateStudyViewController: UIViewController {
      $0.width.equalTo(view.safeAreaLayoutGuide)
     }
     
-    scrollView.snp.makeConstraints { make in
-      make.edges.equalTo(view)
+    scrollView.snp.makeConstraints {
+      $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+      $0.leading.trailing.bottom.equalToSuperview()
     }
   }
   
@@ -132,7 +128,7 @@ final class CreateStudyViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    self.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    self.viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
 #warning("수정하거나 작성하다가 나가면 경고창")
   }
   
@@ -180,6 +176,6 @@ final class CreateStudyViewController: UIViewController {
 extension CreateStudyViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
   }
 }

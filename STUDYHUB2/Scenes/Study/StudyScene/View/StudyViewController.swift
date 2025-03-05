@@ -225,6 +225,7 @@ final class StudyViewController: UIViewController {
         cellIdentifier: SearchResultCell.cellID,
         cellType: SearchResultCell.self)) { index, content, cell in
           cell.cellData = content
+          cell.delegate = self
         }
         .disposed(by: disposeBag)
   }
@@ -271,9 +272,14 @@ final class StudyViewController: UIViewController {
     addButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { (_, _) in
-        NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
-                                        object: nil,
-                                        userInfo: ["postID" : nil])
+        if TokenManager.shared.loadAccessToken()?.isEmpty == true {
+          self.presentLoginPopup()
+        }else {
+          NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
+                                          object: nil,
+                                          userInfo: ["postID" : nil])
+        }
+        
       })
       .disposed(by: disposeBag)
   }
@@ -338,5 +344,17 @@ extension StudyViewController: UICollectionViewDelegateFlowLayout {
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     return CGSize(width: 350, height: 240)
+  }
+}
+
+// MARK: - 비로그인 시 팝업 띄우기 
+
+extension StudyViewController: LoginPopupIsRequired {}
+
+extension StudyViewController: PopupViewDelegate {
+  // 로그인 화면으로 이동
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
   }
 }

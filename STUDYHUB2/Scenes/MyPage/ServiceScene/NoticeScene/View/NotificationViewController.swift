@@ -59,7 +59,7 @@ final class NotificationViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   

@@ -114,7 +114,7 @@ final class EditnicknameViewController: UIViewController {
  
   /// 네비게이션 바 왼쪽 아이탬 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 탭

@@ -101,7 +101,6 @@ final class HomeViewController: UIViewController {
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
 //    viewModel.isNeedFetchDatas.accept(true)
-    print(#fileID, #function, #line," - \(TokenManager.shared.loadAccessToken())")
 
   }
   
@@ -112,15 +111,6 @@ final class HomeViewController: UIViewController {
     
     view.backgroundColor = .backgroundBlack
 
-//    Task {
-//      do {
-//        async let newPostData: () = viewModel.fetchNewPostDatas()
-//        async let deadLinePostData: () = viewModel.fetchDeadLinePostDatas()
-//      
-//        await newPostData
-//        await deadLinePostData
-//      }
-//    }
     
     setupBindings()
     setupCollectionView()
@@ -281,7 +271,7 @@ final class HomeViewController: UIViewController {
         cellIdentifier: RecruitPostCell.cellID,
         cellType: RecruitPostCell.self)) { index, content, cell in
           cell.model = content
-          cell.loginStatus = self.viewModel.checkLoginStatus.value
+          cell.delegate = self
         }
         .disposed(by: disposeBag)
     
@@ -293,7 +283,7 @@ final class HomeViewController: UIViewController {
         cellIdentifier: DeadLineCell.cellID,
         cellType: DeadLineCell.self)) { index, content, cell in
           cell.model = content
-          cell.loginStatus = self.viewModel.checkLoginStatus.value
+          cell.delegate = self
         }
         .disposed(by: disposeBag)
     
@@ -400,5 +390,18 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     } else {
       return CGSize(width: 335, height: collectionView.frame.height)
     }
+  }
+}
+
+
+// MARK: - 비로그인 시 팝업 띄우기
+
+extension HomeViewController: LoginPopupIsRequired {}
+
+extension HomeViewController: PopupViewDelegate {
+  // 로그인 화면으로 이동
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    defaultBtnAction()
+    NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
   }
 }

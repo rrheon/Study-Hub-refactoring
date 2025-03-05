@@ -89,7 +89,7 @@ final class MyInformViewController: UIViewController {
   
   /// 네비게이션 왼쪽 버튼 탭 - 현재 탭 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
     
   // MARK: - setupActions

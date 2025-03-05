@@ -90,8 +90,9 @@ class ResultSearchViewController: UIViewController {
   
 
   // MARK: - UI설정
+  
+  
   func makeUI(){
-    scrollView.addSubview(resultCollectionView)
     
     view.addSubview(searchBar)
     searchBar.snp.makeConstraints { make in
@@ -125,7 +126,7 @@ class ResultSearchViewController: UIViewController {
       $0.width.equalTo(57)
     }
     
-    view.addSubview(resultCollectionView)
+    scrollView.addSubview(resultCollectionView)
     resultCollectionView.reloadData()
     resultCollectionView.snp.makeConstraints { make in
       make.width.equalToSuperview()

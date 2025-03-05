@@ -76,17 +76,15 @@ class UserAuthManager: StudyHubCommonNetworking {
           do {
             let decodedData = try JSONDecoder().decode(AccessTokenResponse.self, from: response.data)
   
-            completion(decodedData) // ✅ 성공 시 갱신된 accessToken 반환
+            completion(decodedData) //  성공 시 갱신된 Token 반환
           } catch {
-            print("❌ Token decoding failed: \(error)")
             completion(nil)
           }
         } else {
-          completion(nil) // ❌ 실패 시 nil 반환
+          completion(nil)
         }
         
       case .failure(let error):
-        print("❌ Token refresh request failed: \(error)")
         completion(nil)
       }
     }

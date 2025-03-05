@@ -106,7 +106,11 @@ final class EnterSearchViewController: UIViewController {
   
   /// 네비게이션 왼쪽버튼 탭 - pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(HomeStep.popScreenIsRequired)
+    if let _ = self.navigationController?.viewControllers.first as? HomeViewController  {
+      viewModel.steps.accept(HomeStep.popScreenIsRequired)
+    }else{
+      viewModel.steps.accept(StudyStep.popScreenIsRequired)
+    }
   }
   
   /// 네비게이션 바 오른쪽 버튼 탭 - 북마크 화면으로 이동
@@ -160,9 +164,15 @@ final class EnterSearchViewController: UIViewController {
         print(#fileID, #function, #line," - \(keyword)")
         
         vc.viewModel.fectchPostData(with: keyword)
-        vc.viewModel.steps.accept(HomeStep.resultSearchIsRequired)
+        
+        if let _ = self.navigationController?.viewControllers.first as? HomeViewController  {
+          vc.viewModel.steps.accept(HomeStep.resultSearchIsRequired)
+        }else{
+          vc.viewModel.steps.accept(StudyStep.resultSearchIsRequired)
+        }
       })
       .disposed(by: disposeBag)
+    
   }
   
   func noSearchDataUI(count: Int){

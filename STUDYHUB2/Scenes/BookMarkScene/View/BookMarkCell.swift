@@ -10,18 +10,20 @@ import SnapKit
 import Then
 
 /// 북마크 셀에서 참여하기 action을 위한 프로토콜
-protocol ParticipatePostDelegate: AnyObject {
+protocol BookmarkCellDelegate: AnyObject {
   
   /// 참여하기 버튼 터치 시
   /// - Parameters:
   ///   - studyId: 스터디의 StudyId
   ///   - postId: 스터디의 PostId
-  func participateButtonTapped(studyId: Int, postId: Int)
+  func participateBtnTapped(studyId: Int, postId: Int)
+  
+  func bookmarkBtnTapped(postId: Int)
 }
 
 /// 북마크 셀
 final class BookMarkCell: UICollectionViewCell {
-  weak var postDelegate: ParticipatePostDelegate?
+  weak var delegate: BookmarkCellDelegate?
   
   var model: BookmarkContent? { didSet { bind()} }
   
@@ -36,9 +38,8 @@ final class BookMarkCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = UIButton().then {
     $0.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
     $0.addAction(UIAction { _ in
-//      self.delegate?.bookmarkTapped(postId: self.model?.postID ?? 0)
       BookmarkManager.shared.bookmarkTapped(with: self.model?.postID ?? 0) { _ in 
-        print("북")
+        self.delegate?.bookmarkBtnTapped(postId: self.model?.postID ?? 0)
       }
     }, for: .touchUpInside)
   } 
@@ -70,10 +71,8 @@ final class BookMarkCell: UICollectionViewCell {
    $0.layer.borderColor = UIColor.o40.cgColor
    $0.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
    $0.addAction(UIAction { _ in
-      self.postDelegate?.participateButtonTapped(
-        studyId: self.model?.studyID ?? 0,
-        postId: self.model?.postID ?? 0
-      )
+     self.delegate?.participateBtnTapped(studyId: self.model?.studyID ?? 0,
+                                         postId: self.model?.postID ?? 0)
     }, for: .touchUpInside)
   }
   

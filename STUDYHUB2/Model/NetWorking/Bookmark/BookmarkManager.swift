@@ -29,6 +29,7 @@ class BookmarkManager: StudyHubCommonNetworking {
         completion(response.statusCode)
       case .failure(let response):
         print(response.response)
+        completion(response.errorCode)
       }
     }
   }

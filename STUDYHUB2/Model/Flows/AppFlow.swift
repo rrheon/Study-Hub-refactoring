@@ -152,7 +152,7 @@ enum AppStep: Step {
   case popupScreenIsRequired(popupCase: PopupCase)
   
   /// 현재화면 pop
-  case popCurrentScreen(navigationbarHidden: Bool, animate: Bool)
+  case popCurrentScreen(animate: Bool)
   
   /// 현재화면 dismiss
   case dismissCurrentScreen
@@ -269,11 +269,11 @@ class AppFlow: Flow {
       
       
     case .popupScreenIsRequired(let popupCase):
-      return presentPopupScreen(wtih: popupCase)
+      return presentPopupScreen(with: popupCase)
     case .bottomSheetIsRequired(let postOrCommentID, let type):
       return presentBottomSheet(postOrCommentID: postOrCommentID, type: type)
-    case .popCurrentScreen(let navigationbarHidden, let animate):
-      return popCurrentScreen(navigationbarHidden: navigationbarHidden, animate: animate)
+    case .popCurrentScreen(let animate):
+      return popCurrentScreen(animate: animate)
     case .dismissCurrentScreen:
       self.rootViewController.dismiss(animated: true)
       return .none
@@ -359,8 +359,7 @@ class AppFlow: Flow {
   
   /// 이용방법 화면으로 이동
   private func navToHowToUseScreen() -> FlowContributors {
-#warning("vc에 로그인 상태를 주입하지 말고 작성하기 버튼을 누를 때 로그인 여부를 판단해야함")
-    let vc = HowToUseViewController(false)
+    let vc = HowToUseViewController()
     self.rootViewController.navigationBar.isHidden = false
     self.rootViewController.pushViewController(vc, animated: true)
     return .one(flowContributor: .contribute(withNext: vc))
@@ -597,29 +596,25 @@ class AppFlow: Flow {
   
   /// 팝업 뷰 띄우기
   /// - Parameter popupCase: 팝업의 종류
-  private func presentPopupScreen(wtih popupCase: PopupCase) -> FlowContributors {
-    let popupVC = PopupViewController(popupCase: popupCase)
-    
-    if let selectedNav = tabBarController.selectedViewController as? UINavigationController,
-       let topVC = selectedNav.viewControllers.last as? PopupViewDelegate {
-        popupVC.popupView.delegate = topVC
-    } else if let topVC = rootViewController.viewControllers.last as? PopupViewDelegate {
-        popupVC.popupView.delegate = topVC
-    } else if let topVC = rootViewController as? PopupViewDelegate {
-        popupVC.popupView.delegate = topVC
-    }
+  private func presentPopupScreen(with popupCase: PopupCase) -> FlowContributors {
+      let popupVC = PopupViewController(popupCase: popupCase)
 
-    
-    popupVC.modalPresentationStyle = .overFullScreen
-    self.rootViewController.present(popupVC, animated: false)
-    return .none
+      if let topVC = topMostViewController(), let delegateVC = topVC as? PopupViewDelegate {
+          popupVC.popupView.delegate = delegateVC
+      }
+
+      popupVC.modalPresentationStyle = .overFullScreen
+      self.rootViewController.present(popupVC, animated: false)
+      return .none
   }
   
   /// 현재화면 pop
   /// - Parameter navigationbarHidden: 상단 네비게이션 바 숨기기 여부
-  private func popCurrentScreen(navigationbarHidden: Bool = true,
-                                animate: Bool = true) -> FlowContributors {
-    self.rootViewController.navigationBar.isHidden = navigationbarHidden
+  private func popCurrentScreen(animate: Bool = true) -> FlowContributors {
+    
+    print(#fileID, #function, #line," - \(self.rootViewController.viewControllers.count)")
+    let vcCount = self.rootViewController.viewControllers.count
+    self.rootViewController.navigationBar.isHidden = vcCount < 3 ? true : false
     self.rootViewController.popViewController(animated: animate)
     return .none
   }
@@ -750,7 +745,7 @@ class AppStepper: Stepper {
         .notification(.navToMyStudyPostScreen)
         .map({ notification in
           guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
-            return AppStep.popupScreenIsRequired(popupCase: .requireLogin)
+            return AppStep.popupScreenIsRequired(popupCase: .requiredLogin)
           }
           
           return AppStep.myStudyPostIsRequired(userData: userData)
@@ -762,7 +757,7 @@ class AppStepper: Stepper {
         .notification(.navToMyParticipatePostScreen)
         .map({ notification in
           guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
-            return AppStep.popupScreenIsRequired(popupCase: .requireLogin)
+            return AppStep.popupScreenIsRequired(popupCase: .requiredLogin)
           }
           
           return AppStep.myParticipateStudyIsRequired(userData: userData)
@@ -774,7 +769,7 @@ class AppStepper: Stepper {
         .notification(.navToMyRequestPostScreen)
         .map({ notification in
           guard let userData = notification.userInfo?["userData"] as? BehaviorRelay<UserDetailData?> else {
-            return AppStep.popupScreenIsRequired(popupCase: .requireLogin)
+            return AppStep.popupScreenIsRequired(popupCase: .requiredLogin)
           }
           
           return AppStep.myRequestStudyIsRequired(userData: userData)
@@ -790,7 +785,18 @@ class AppStepper: Stepper {
           }
           
           return AppStep.safariScreenIsReuiqred(url: url)
-        })
+        }),
+      
+      /// popupView 띄우기
+      NotificationCenter.default
+        .rx
+        .notification(.presentPopupScreen)
+        .compactMap { notification in
+          guard let popupCase = notification.userInfo?["popupCase"] as? PopupCase else { return nil}
+          return AppStep.popupScreenIsRequired(popupCase: popupCase)
+        }
+      
+      
     )
     .bind(to: self.steps)
     .disposed(by: disposBag)
@@ -799,3 +805,27 @@ class AppStepper: Stepper {
 }
 
 extension AppFlow: ShowBottomSheet {}
+
+/// 가장 최상단 화면 찾기
+extension AppFlow {
+  private func topMostViewController(
+    from rootViewController: UIViewController? = UIApplication.shared.windows.first(
+      where: { $0.isKeyWindow })?.rootViewController
+  ) -> UIViewController?
+  {
+      if let presented = rootViewController?.presentedViewController {
+          return topMostViewController(from: presented)
+      }
+      
+      if let navigationController = rootViewController as? UINavigationController {
+          return topMostViewController(from: navigationController.viewControllers.last)
+      }
+      
+      if let tabBarController = rootViewController as? UITabBarController,
+         let selected = tabBarController.selectedViewController {
+          return topMostViewController(from: selected)
+      }
+      
+      return rootViewController
+  }
+}

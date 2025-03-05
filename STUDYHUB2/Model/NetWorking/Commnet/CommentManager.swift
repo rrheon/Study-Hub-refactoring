@@ -78,7 +78,7 @@ class CommentManager: StudyHubCommonNetworking {
   ///   - size: 댓글 갯수
   ///   - completion: 콜백함수
   func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping (GetCommentList) -> Void) {
-    provider.request(.getCommentList(postId: postId, page: page, size: size)) { result in
+    provider.request(.getCommentList(postId: postId, page: page, size: size, loginStatus: loginStatus)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: GetCommentList.self) { decodedData in
         completion(decodedData)
       }
@@ -92,7 +92,7 @@ class CommentManager: StudyHubCommonNetworking {
   ///   - postId:스터디의 postId
   ///   - completion: 콜백함수
   func getCommentPreview(postId: Int) async throws -> [CommentConetent] {
-    let result = await provider.request(.getPreviewCommentList(postId: postId))
+    let result = await provider.request(.getPreviewCommentList(postId: postId, loginStatus: loginStatus))
     return try await self.commonDecodeNetworkResponse(with: result, decode: [CommentConetent].self)
 //
 //    provider.request(.getPreviewCommentList(postId: postId)){ result in

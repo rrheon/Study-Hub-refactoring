@@ -5,7 +5,7 @@ import SnapKit
 enum PopupCase {
   
   /// 로그인이 필요한 경우
-  case requireLogin
+  case requiredLogin
   
   /// 로그아웃이 필요한 경우
   case logoutIsRequired
@@ -50,7 +50,7 @@ enum PopupCase {
                   rightButtonTitle: String?,
                   checkEndButton: Bool) {
       switch self {
-      case .requireLogin:
+      case .requiredLogin:
           return ("로그인이 필요해요", "계속하시려면 로그인을 해주세요!", "취소", "로그인", false)
       case .allowProfileImageChange:
           return ("사진을 변경하려면 허용이 필요해요", "취소", "삭제", "설정", false)

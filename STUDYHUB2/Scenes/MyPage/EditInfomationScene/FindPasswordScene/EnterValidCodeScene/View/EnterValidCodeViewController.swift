@@ -146,7 +146,7 @@ final class EnterValidCodeViewController: UIViewController {
         switch valid {
         case true:
           guard let email = viewModel.email else { return }
-          viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: false))
+          viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
           viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
         case false:
           ToastPopupManager.shared.showToast(

@@ -47,4 +47,8 @@ extension Notification.Name {
   
   /// 현재 flow 닫기
   static let dismissCurrentFlow = Notification.Name("dismissCurrentFlow")
+  
+  /// popup 띄우기
+  static let presentPopupScreen = Notification.Name("presentPopupScreen")
+
 }

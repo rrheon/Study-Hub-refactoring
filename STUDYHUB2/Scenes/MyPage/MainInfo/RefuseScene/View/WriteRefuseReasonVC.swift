@@ -131,7 +131,7 @@ final class WriteRefuseReasonVC: UIViewController, Stepper {
   
   @objc private func completeButtonTapped() {
     delegate?.completeButtonTapped(reason: reasonTextView.text, userId: userId)
-    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
+    steps.accept(AppStep.popCurrentScreen(animate: true))
   }
 }
 

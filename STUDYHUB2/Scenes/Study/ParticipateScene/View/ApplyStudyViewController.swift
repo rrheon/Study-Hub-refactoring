@@ -134,7 +134,7 @@ final class ApplyStudyViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   // MARK: - 메인라벨 텍스트 색상 변경
@@ -153,8 +153,7 @@ final class ApplyStudyViewController: UIViewController {
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] result in
         if result {
-          self?.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false,
-                                                                animate: false))
+          self?.viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
           ToastPopupManager.shared.showToast(message: "참여 신청이 완료됐어요.")
         }
       })

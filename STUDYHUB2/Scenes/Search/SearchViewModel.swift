@@ -44,16 +44,7 @@ final class SearchViewModel: Stepper {
         postDatas.accept(data.postDataByInquiries.content)
       }
     }
-//    postDataManager.getPostData(
-//      hot: data.hot,
-//      text: data.text,
-//      page: data.page,
-//      size: data.size,
-//      titleAndMajor: data.titleAndMajor,
-//      loginStatus: isUserLogin){
-//        self.postDatas.accept($0.postDataByInquiries.content)
-//        self.numberOfCells =  $0.totalCount
-//      }
   }
+  
 }
 

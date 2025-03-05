@@ -2,63 +2,59 @@
 import UIKit
 
 import SnapKit
+import Then
 
-final class DeadLineCell: UICollectionViewCell {  
+
+/// 마감이 임박한 스터디의 셀
+final class DeadLineCell: UICollectionViewCell {
   var model: PostData? { didSet { bind() } }
   
-  var checkBookmarked: Bool?
+  var delegate: LoginPopupIsRequired?
+  var checkBookmarked: Bool = false
   var loginStatus: Bool = false
 
-  private lazy var profileImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "ProfileAvatar_change")
-    imageView.clipsToBounds = true
-    return imageView
-  }()
   
-  private lazy var titleLabel: UILabel = {
-    let label = UILabel()
-    label.text = "컴활 1급 같이하실 분"
-    label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    return label
-  }()
+  /// 작성자의 프로필 ImageView
+  private lazy var profileImageView: UIImageView = UIImageView().then{
+    $0.image = UIImage(named: "ProfileAvatar_change")
+    $0.clipsToBounds = true
+  }
   
-  private lazy var bookMarkButton: UIButton = {
-    let button = UIButton()
-    button.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
-    button.addAction(UIAction { _ in
+  /// 스터디의 제목 라벨
+  private lazy var titleLabel: UILabel = UILabel().then {
+    $0.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+  }
+  
+  /// 북마크 버튼
+  private lazy var bookMarkButton: UIButton = UIButton().then{
+    $0.setImage(UIImage(named: "BookMarkLightImg"), for: .normal)
+    $0.addAction(UIAction { _ in
       self.bookmarkTapped()
     }, for: .touchUpInside)
-    return button
-  }()
+  }
   
-  private lazy var countImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "PersonImg")
-    return imageView
-  }()
+  /// 인원 수 이미지뷰
+  private lazy var countImageView: UIImageView = UIImageView().then {
+    $0.image = UIImage(named: "PersonImg")
+  }
   
-  private lazy var countLabel: UILabel = {
-    let label = UILabel()
-    label.text = "29/30명"
-    label.textColor = .bg90
-    label.changeColor(wantToChange: "29", color: .changeInfo)
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
+  /// 인원 수 카운트 라벨
+  private lazy var countLabel: UILabel = UILabel().then {
+    $0.textColor = .bg90
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
   
-  private lazy var remainLabel: UILabel = {
-    let label = UILabel()
-    label.text = "1자리 남았어요!"
-    label.textColor = .o50
-    label.font = UIFont(name: "Pretendard-Medium", size: 14)
-    return label
-  }()
+  /// 남아있는 자리 라벨
+  private lazy var remainLabel: UILabel = UILabel().then {
+    $0.textColor = .o50
+    $0.font = UIFont(name: "Pretendard-Medium", size: 14)
+  }
 
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    setupLayout()
+    backgroundColor = .white
+
     makeUI()
     setViewShadow(backView: self)
   }
@@ -68,58 +64,51 @@ final class DeadLineCell: UICollectionViewCell {
     fatalError()
   }
 
-  func setupLayout() {
-    [
-      profileImageView,
-      titleLabel,
-      bookMarkButton,
-      countImageView,
-      countLabel,
-      remainLabel
-    ].forEach {
-      addSubview($0)
-    }
-  }
-  
+
+  /// UI 설정
   func makeUI() {
+    addSubview(profileImageView)
     profileImageView.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(10)
       make.centerY.equalToSuperview()
       make.height.width.equalTo(48)
     }
    
+    addSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(18)
       make.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
+    addSubview(countImageView)
     countImageView.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.leading.equalTo(profileImageView.snp.trailing).offset(10)
     }
     
+    addSubview(countLabel)
     countLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.centerY.equalTo(countImageView)
       make.leading.equalTo(countImageView.snp.trailing)
     }
     
+    addSubview(bookMarkButton)
     bookMarkButton.snp.makeConstraints { make in
       make.top.equalTo(titleLabel)
       make.trailing.equalToSuperview().offset(-10)
     }
     
+    addSubview(remainLabel)
     remainLabel.snp.makeConstraints { make in
       make.top.equalTo(bookMarkButton.snp.bottom).offset(10)
       make.leading.equalTo(countLabel.snp.trailing).offset(50)
     }
-    
-    backgroundColor = .white
   }
   
   // MARK: - 셀 재사용 관련
   
-  
+  /// 셀 재사용 관련
   override func prepareForReuse() {
     super.prepareForReuse()
     
@@ -127,37 +116,47 @@ final class DeadLineCell: UICollectionViewCell {
     checkBookmarked = false
   }
   
+  
+  /// 북마크 터치 시
   private func bookmarkTapped(){
     guard let postID = self.model?.postId else { return }
   
-    BookmarkManager.shared.bookmarkTapped(with: postID) {_ in }
-    if loginStatus {
-      checkBookmarked = !(checkBookmarked ?? false)
-      let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-      bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    BookmarkManager.shared.bookmarkTapped(with: postID) { result in
+      if result == 500 {
+        self.delegate?.presentLoginPopup()
+      } else {
+        DispatchQueue.main.async {
+          self.checkBookmarked.toggle()
+         
+          let bookmarkImage =  self.checkBookmarked  ? "BookMarkChecked": "BookMarkLightImg"
+          self.bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+        }
+      }
     }
-    
   }
   
+  /// 데이터 바인딩
   private func bind() {
     guard let data = model else { return }
   
-    var studyPersonCount = data.studyPerson - data.remainingSeat
+    /// 북마크
     checkBookmarked = data.bookmarked
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+
+    let bookmarkImage = data.bookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
     
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
+    /// 스터디 제목
     titleLabel.text = data.title
     
+    /// 인원수
+    var studyPersonCount = data.studyPerson - data.remainingSeat
     countLabel.text = "\(studyPersonCount) /\(data.studyPerson)명"
-    countLabel.changeColor(
-      wantToChange: "\(studyPersonCount)",
-      color: .o50
-    )
+    countLabel.changeColor(wantToChange: "\(studyPersonCount)", color: .o50)
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요!"
         
+    /// 작성자 프로필 이미지
     if let imageURL = URL(string: data.userData.imageURL ?? "") {
       getUserProfileImage(imageURL: imageURL) { result in
         DispatchQueue.main.async {

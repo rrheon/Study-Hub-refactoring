@@ -163,12 +163,12 @@ final class ConfirmDeleteViewController: UIViewController, Stepper {
   /// 버튼 액션 설정
   func setupButtonActions(){
     continueButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+      self.steps.accept(AppStep.popCurrentScreen(animate: false))
       self.steps.accept(AppStep.deleteAccountScreenIsRequired)
     }, for: .touchUpInside)
     
     cancelButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+      self.steps.accept(AppStep.popCurrentScreen(animate: true))
     }, for: .touchUpInside)
   }
 }

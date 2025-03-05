@@ -50,7 +50,7 @@ final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
       if result {
 //        self.isSuccessChangeMajor.accept(true)
         ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
-        self.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: false, animate: true))
+        self.steps.accept(AppStep.popCurrentScreen(animate: true))
         self.updateUserData(major: major)
       }else {
 //        self.isSuccessChangeMajor.accept(false)

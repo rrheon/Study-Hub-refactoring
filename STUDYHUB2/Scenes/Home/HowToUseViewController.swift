@@ -7,10 +7,11 @@ import SnapKit
 import Then
 
 /// 이용방법 VC
+/// 로그인 상태 확인필요
 final class HowToUseViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step>
   
-  let loginStatus: Bool
+  var loginStatus: Bool = false
   
   // MARK: - 화면구성
   
@@ -37,8 +38,7 @@ final class HowToUseViewController: UIViewController, Stepper {
   
   private let scrollView: UIScrollView = UIScrollView()
   
-  init(_ loginStatus: Bool) {
-    self.loginStatus = loginStatus
+  init() {
     self.steps = PublishRelay<Step>()
     super.init(nibName: nil, bundle: nil)
   }
@@ -53,6 +53,10 @@ final class HowToUseViewController: UIViewController, Stepper {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .black
+    
+    UserProfileManager.shared.fetchUserInfoToServer { userData in
+      self.loginStatus =  userData.nickname != nil
+    }
     
     setupNavigationbar()
     
@@ -75,7 +79,7 @@ final class HowToUseViewController: UIViewController, Stepper {
   
   /// 네비게이션 바 왼쪽 탭 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   // MARK: - setupLayout
@@ -145,10 +149,11 @@ final class HowToUseViewController: UIViewController, Stepper {
   @objc func writeButtonTapped() {
     // 로그인이 된 경우 스터디 생성 화면 띄우기
     if loginStatus {
+      steps.accept(AppStep.popCurrentScreen(animate: false))
       steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
       // 비로그인의 경우 로그인 화면으로 이동
     }else {
-      steps.accept(AppStep.popupScreenIsRequired(popupCase: .requireLogin))
+      steps.accept(AppStep.popupScreenIsRequired(popupCase: .requiredLogin))
     }
   }
 }

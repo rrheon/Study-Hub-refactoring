@@ -137,7 +137,7 @@ class PostedStudyViewModel: Stepper  {
     StudyPostManager.shared.deletePost(with: postID)
     
     /// 현재 화면 pop
-    steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+    steps.accept(AppStep.popCurrentScreen(animate: false))
 
     ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
   }

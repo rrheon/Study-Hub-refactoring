@@ -248,7 +248,6 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       $0.top.equalTo(fineAmountLabel.snp.bottom).offset(8)
       $0.leading.equalTo(studymethodLabel)
       $0.trailing.equalToSuperview().offset(-20)
-      $0.width.equalTo(120)
       $0.height.equalTo(50)
     }
     

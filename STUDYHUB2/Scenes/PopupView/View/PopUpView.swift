@@ -190,18 +190,18 @@ final class PopupView: UIView {
   @objc private func leftButtonTapped() {
     delegate?.leftBtnTapped(defaultBtnAction: {
       defaultBtnAction?()
-    }, popupCase: popupCase ?? .requireLogin)
+    }, popupCase: popupCase ?? .requiredLogin)
   }
   
   @objc private func rightButtonTapped() {
     delegate?.rightBtnTapped(defaultBtnAction: {
       defaultBtnAction?()
-    }, popupCase: popupCase ?? .requireLogin)
+    }, popupCase: popupCase ?? .requiredLogin)
   }
   
   @objc private func endButtonTapped() {
     delegate?.endBtnTapped(defaultBtnAction: {
       defaultBtnAction?()
-    }, popupCase: popupCase ?? .requireLogin)
+    }, popupCase: popupCase ?? .requiredLogin)
   }
 }

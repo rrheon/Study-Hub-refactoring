@@ -15,7 +15,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
   var selectedPostID: Int? = nil
-  
+
+  /// 내가 작성한 게시글 데이터
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
   let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)
   let updateMyPostData = BehaviorRelay<PostDetailData?>(value: nil)
@@ -30,11 +31,9 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   
   
   func getMyPostData(size: Int) {
-//    self.myPostDataManager.fetchMyPostInfo(page: 0, size: size) { [weak self] result in
-//      guard let data = result else { return }
-//      self?.myPostData.accept(data.myPostcontent)
-//      self?.isValidScroll = data.last
-//    }
+    StudyPostManager.shared.searchMyPost(page: 0, size: 5) { data in
+      self.myPostData.accept( data.posts.myPostcontent)
+    }
   }
   
   func getPostDetailData(

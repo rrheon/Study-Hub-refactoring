@@ -31,12 +31,16 @@ final class HomeViewModel: Stepper {
     /// 북마크 상태 체크를 위함
 //    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken().first != nil
 //    checkLoginStatus.accept(isLoginStatus)
-
-//
+    
 //    Task {
-//      await fetchNewPostDatas()
+//      do {
+//        async let newPostData: () = fetchNewPostDatas()
+//        async let deadLinePostData: () = fetchDeadLinePostDatas()
+//      
+//        await newPostData
+//        await deadLinePostData
+//      }
 //    }
-//    
   }
   
   

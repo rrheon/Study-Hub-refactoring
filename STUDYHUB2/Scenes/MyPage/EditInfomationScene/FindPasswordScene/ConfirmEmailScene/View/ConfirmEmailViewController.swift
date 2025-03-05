@@ -87,7 +87,7 @@ final class ConfirmEmailViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
@@ -118,7 +118,7 @@ final class ConfirmEmailViewController: UIViewController {
         if result {
           guard let email = self?.viewModel.email.value else { return }
 
-          self?.viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+          self?.viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
           self?.viewModel.steps.accept(AppStep.enterEmailCodeScreenIsRequired(email: email))
         } else {
           ToastPopupManager.shared.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",

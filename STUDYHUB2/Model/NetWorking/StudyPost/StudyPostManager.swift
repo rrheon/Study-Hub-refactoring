@@ -38,7 +38,7 @@ class StudyPostManager: StudyHubCommonNetworking {
                                                   page: page,
                                                   size: size)
     
-    
+
     let result = await provider.request(.searchAllPost(loginStatus: loginStatus, searchData: data))
     return try await self.commonDecodeNetworkResponse(with: result, decode: PostDataContent.self)
   }
@@ -48,8 +48,8 @@ class StudyPostManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - postId: 게시글의 PostId
   ///   - completion: API 처리 후 전달
-  func searchSinglePostData(postId: Int) async throws -> PostDetailData{
-    let result = await provider.request(.searchSinglePost(postId: postId))
+  func searchSinglePostData(postId: Int) async throws -> PostDetailData {
+    let result = await provider.request(.searchSinglePost(loginStatus: loginStatus, postId: postId))
     return try await self.commonDecodeNetworkResponse(with: result, decode: PostDetailData.self)
 //    provider.request(.searchSinglePost(postId: postId)) { result in
 //      self.commonDecodeNetworkResponse(with: result,
@@ -64,10 +64,11 @@ class StudyPostManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - page: 게시글 페이지
   ///   - size: 게시글 갯수
-  func searchMyPost(page: Int, size: Int){
+  func searchMyPost(page: Int, size: Int, completion: @escaping (MyPostData) -> Void){
     provider.request(.searchMyPost(page: page, size: size)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: MyPostData.self) { decodedData in
         print(decodedData)
+        completion(decodedData)
       }
     }
   }

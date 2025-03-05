@@ -9,8 +9,22 @@ import Foundation
 
 import Moya
 
+/// 로그인이 필요할 경우 팝업 띄우기
+protocol LoginPopupIsRequired {
+  func presentLoginPopup()
+}
+
+extension LoginPopupIsRequired {
+  func presentLoginPopup() {
+    NotificationCenter.default.post(name: .presentPopupScreen,
+                                    object: nil,
+                                    userInfo: ["popupCase": PopupCase.requiredLogin])
+  }
+}
+
 // MARK: - common base url
-#warning("전부 다 분류 후 다시 분류가 필요")
+
+
 /// 베이스 URL
 protocol CommonBaseURL {
   var baseURL: URL { get }
@@ -30,12 +44,12 @@ class StudyHubCommonNetworking {
   /// 로그인 상태
   var loginStatus: Bool = false
   
-  init(){
-    print(#fileID, #function, #line," - test")
-        
-    // 5분 간격으로 AccessToken 다시 받아오기
-    registerCheckValidAccessToken()
+  init() {
+      
+      // 5분 간격으로 AccessToken 다시 받아오기
+      registerCheckValidAccessToken()
   }
+
   
   
   /// 주기적으로 AccessToken 갱신 - 5분간격
@@ -54,6 +68,7 @@ class StudyHubCommonNetworking {
       loginStatus = false
       return
     }
+    
     UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
       if let accessToken = tokens?.accessToken,
          let refreshToken = tokens?.refreshToken {

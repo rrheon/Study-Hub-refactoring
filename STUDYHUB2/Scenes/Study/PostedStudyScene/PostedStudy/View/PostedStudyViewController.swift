@@ -88,7 +88,7 @@ final class PostedStudyViewController: UIViewController {
       isHiddenNav = vcCount < 3
     }
     
-    viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: isHiddenNav, animate: true))
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 터치 - 본인 게시글일 경우 수정 및 삭제
@@ -260,7 +260,7 @@ extension PostedStudyViewController: BottomSheetDelegate {
     case .managementPost:
       // 게시글 수정
       
-      viewModel.steps.accept(AppStep.popCurrentScreen(navigationbarHidden: true, animate: false))
+      viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
       
       NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
                                       object: nil,

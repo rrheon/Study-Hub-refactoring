@@ -14,10 +14,12 @@ import Then
 
 /// 스터디 검색결과 Cell
 final class SearchResultCell: UICollectionViewCell {
-    
+  var delegate: LoginPopupIsRequired?
+  
   var cellData: PostData? { didSet { bind() } }
   
-  var checkBookmarked: Bool?
+  var checkBookmarked: Bool = false
+  
   var loginStatus: Bool = false
   
   /// 학과 라벨
@@ -261,24 +263,28 @@ final class SearchResultCell: UICollectionViewCell {
   /// 북마크 터치 시
   private func bookmarkTapped(){
     let postID = cellData?.postId ?? 0
-    BookmarkManager.shared.bookmarkTapped(with: postID) {_ in 
-      
-    }
-    
-    if loginStatus {
-      checkBookmarked = !(checkBookmarked ?? false)
-      let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
-      bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+    BookmarkManager.shared.bookmarkTapped(with: postID) { result in
+      if result == 500 {
+        self.delegate?.presentLoginPopup()
+      } else {
+        DispatchQueue.main.async {
+          self.checkBookmarked.toggle()
+         
+          let bookmarkImage =  self.checkBookmarked  ? "BookMarkChecked": "BookMarkLightImg"
+          self.bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
+        }
+      }
     }
   }
   
+  /// UI 데이터 설정
   private func bind() {
     guard let data = cellData,
           let createdDate = data.createdDate,
           let studyStartDate = data.studyStartDate else { return }
     
     checkBookmarked = data.bookmarked
-    let bookmarkImage =  checkBookmarked ?? false ? "BookMarkChecked": "BookMarkLightImg"
+    let bookmarkImage = checkBookmarked ? "BookMarkChecked": "BookMarkLightImg"
     bookMarkButton.setImage(UIImage(named: bookmarkImage), for: .normal)
     
     var countMember = data.studyPerson - data.remainingSeat
@@ -330,6 +336,7 @@ final class SearchResultCell: UICollectionViewCell {
     closePostUI(data.close, countMember: countMember, remainingSeat: data.remainingSeat)
   }
   
+  /// 마감인 포스트 UI
   func closePostUI(_ postClose: Bool, countMember: Int, remainingSeat: Int){
     majorLabel.textColor = postClose ? .bg70 : .o50
     majorLabel.backgroundColor = postClose ? .bg30 : .o10
