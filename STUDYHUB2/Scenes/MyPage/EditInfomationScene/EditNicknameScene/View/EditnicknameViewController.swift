@@ -158,10 +158,10 @@ final class EditnicknameViewController: UIViewController {
       .disposed(by: disposeBag)
     
     viewModel.isCheckNicknameDuplication
-      .asDriver(onErrorJustReturn: "")
+      .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] result in
         switch result {
-        case "Error":
+        case true:
           self?.successToChangeNickname()
         default:
           self?.rightButtonSetting(imgName: "DeCompletedImg", activate: false)
@@ -178,7 +178,7 @@ final class EditnicknameViewController: UIViewController {
     viewModel.storeNicknameToServer(newNickname)
   
     ToastPopupManager.shared.showToast(message: "닉네임이 변경되었어요")
-    self.navigationController?.popViewController(animated: true)
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   
   /// 닉네임 변경에 실패했을 경우

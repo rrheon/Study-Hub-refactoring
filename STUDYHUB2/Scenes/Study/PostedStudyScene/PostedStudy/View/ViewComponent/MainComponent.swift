@@ -210,7 +210,7 @@ final class PostedStudyMainComponent: UIView {
   func setupUIData(_ data: PostDetailData){
     let createdData = data.createdDate
     postedDateLabel.text =  "\(createdData[0]). \(createdData[1]). \(createdData[2])"
-    postedMajorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
+    postedMajorLabel.text = Utils.convertMajor(data.major, toEnglish: false) ?? "없음"
     postedTitleLabel.text = data.title
 
     let availablePersonNum = data.studyPerson - data.remainingSeat

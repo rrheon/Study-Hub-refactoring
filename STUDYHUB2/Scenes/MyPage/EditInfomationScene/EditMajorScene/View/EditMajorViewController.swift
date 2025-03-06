@@ -153,19 +153,7 @@ final class EditMajorViewController: UIViewController {
         self?.viewModel.searchMajorFromPlist(text)
       })
       .disposed(by: disposeBag)
-    
-//    viewModel.isSuccessChangeMajor
-//      .asDriver(onErrorJustReturn: false)
-//      .drive(onNext: { [weak self] in
-//        switch $0 {
-//        case true:
-//          ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
-//          self?.navigationController?.popViewController(animated: true)
-//        case false:
-//          return
-//        }
-//      })
-//      .disposed(by: disposeBag)
+  
   }
   
   // MARK: - setupActions

@@ -146,7 +146,7 @@ final class MyParticipateCell: UICollectionViewCell {
     majorLabel.text = model.major
     titleLabel.text = model.title
     infoLabel.text = model.content
-    chatURL = model.chatURL
+    chatURL = model.chatURL ?? "없음"
   }
 }
 

@@ -261,14 +261,6 @@ extension BookmarkViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 북마크 셀에서 Actions
 
-//extension BookmarkViewController {
-//  
-//  /// 북마크 셀에서 북마크 터치 시
-//  /// - Parameter postId: 포스트 아이디
-//  func bookmarkTapped(postId: Int) {
-//    viewModel.deleteAllBtnTapped(postID: postId)
-//  }
-//}
 
 extension BookmarkViewController: BookmarkCellDelegate {
   func bookmarkBtnTapped(postId: Int) {
@@ -282,18 +274,6 @@ extension BookmarkViewController: BookmarkCellDelegate {
   ///   - postId: 포스트 아이디
   func participateBtnTapped(studyId: Int, postId: Int) {
     viewModel.applyStudyBtnTppaed(postID: postId)
-//    StudyPostManager.shared.searchSinglePostData(postId: postId) { result in
-//      if result.apply {
-//        self.showToast(message: "이미 신청한 스터디예요.", imageCheck: false)
-//        return
-//      }
-//      let postData = BehaviorRelay<PostDetailData?>(value: nil)
-//      postData.accept(result)
-//      
-//      let participateVC = ParticipateVC(postData)
-//   
-//      self.navigationController?.pushViewController(participateVC, animated: true)
-//    }
   }
 }
 
@@ -309,6 +289,24 @@ extension BookmarkViewController: PopupViewDelegate {
       $0.top.equalTo(view.snp.top).offset(150)
       $0.height.equalTo(250)
       $0.leading.trailing.equalToSuperview().inset(30)
+    }
+  }
+}
+
+
+extension BookmarkViewController {
+  
+  /// 스크롤할 때 네트워킹 요청
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    let scrollViewHeight = scrollView.frame.size.height
+    let contentHeight = scrollView.contentSize.height
+    let offsetY = scrollView.contentOffset.y
+    
+    // 바닥에서 50포인트 위에 도달했는지 체크
+    if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
+      print("바닥에서 50포인트 위에 도달! ")
+      
+      viewModel.getBookmarkList()
     }
   }
 }

@@ -134,12 +134,16 @@ class PostedStudyViewModel: Stepper  {
   
   /// 내 포스트 삭제하기
   func deleteMyPost(with postID: Int){
-    StudyPostManager.shared.deletePost(with: postID)
-    
-    /// 현재 화면 pop
-    steps.accept(AppStep.popCurrentScreen(animate: false))
+    StudyPostManager.shared.deletePost(with: postID) { result in
+      if result {
+        /// 현재 화면 pop
+        self.steps.accept(AppStep.popCurrentScreen(animate: false))
 
-    ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
+        ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
+      }else{
+        ToastPopupManager.shared.showToast(message: "삭제에 실패했어요. 잠시후 다시 시도해주세요.")
+      }
+    }
   }
   
   

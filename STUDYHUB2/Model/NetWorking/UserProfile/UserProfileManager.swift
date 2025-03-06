@@ -57,8 +57,9 @@ class UserProfileManager: StudyHubCommonNetworking {
   ///   - email: 사용자의 이메일
   ///   - completion: 콜백함수
   func changePassword(password: String, email: String, completion: @escaping (Bool) -> Void){
-    let data = EditUserPasswordDTO(checkPassword: true, email: email, password: password)
-    provider.request(.editUserPassword(data: data)) { result in
+    provider.request(.editUserPassword(checkPassword: true,
+                                       email: email,
+                                       password: password)) { result in
       switch result {
       case .success(let response):
         print(response.response)
@@ -138,11 +139,17 @@ class UserProfileManager: StudyHubCommonNetworking {
   /// - Parameters:
   ///   - nickname: 확인할 닉네임
   ///   - completion: 콜백함수
-  func checkNicknameDuplication(nickname: String, completion: @escaping (String) -> Void){
+  func checkNicknameDuplication(nickname: String, completion: @escaping (Bool) -> Void){
     provider.request(.checkNicknameDuplication(nickname: nickname)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: DuplicationResponse.self) { result in
-        completion(result.status)
-        print(result.message)
+      print(result)
+  
+      switch result {
+      case .success(let response):
+        if (200...299).contains(response.statusCode) {
+            return completion(true)
+        }else { return completion(false) }
+      case .failure(_):
+        return completion(false)
       }
     }
   }

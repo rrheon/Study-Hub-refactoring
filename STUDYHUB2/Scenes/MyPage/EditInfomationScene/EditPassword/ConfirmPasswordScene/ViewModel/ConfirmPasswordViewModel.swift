@@ -28,7 +28,7 @@ final class ConfirmPasswordViewModel: Stepper {
   /// - Parameter password: 비밀번호
   func nextButtonTapped(_ password: String){
     UserAuthManager.shared.verifyPassword(password: password) { result in
-      self.isValidPassword.accept(true)
+      self.isValidPassword.accept(result)
     }
 
   }

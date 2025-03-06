@@ -96,32 +96,12 @@ final class AgreementViewController: UIViewController {
     
     navigationSetting()
     
-    setupLayout()
     makeUI()
     
     setupBindings()
     setupActions()
   } // viewDidLoad
   
-  // MARK: - setupLayout
-  
-  /// Layout 설정
-  func setupLayout(){
-    [
-      mainTitleView,
-      agreeAllButton,
-      agreeAllCheckButton,
-      agreeFirstCheckButton,
-      firstServiceButton,
-      goToFirstServicePageButton,
-      agreeSecondCheckButton,
-      secondServiceButton,
-      goToSecondServicePageButton,
-      nextButton
-    ].forEach {
-      view.addSubview($0)
-    }
-  }
   
   // MARK: - makeUI
   
@@ -129,12 +109,14 @@ final class AgreementViewController: UIViewController {
   /// UI설정
   func makeUI(){
     // 인증 Flow customView
+    view.addSubview(mainTitleView)
     mainTitleView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
       $0.leading.equalToSuperview().offset(20)
     }
     
     // 전체동의 버튼
+    view.addSubview(agreeAllButton)
     agreeAllButton.snp.makeConstraints {
       $0.top.equalTo(mainTitleView.snp.bottom).offset(120)
       $0.leading.equalTo(mainTitleView)
@@ -143,6 +125,7 @@ final class AgreementViewController: UIViewController {
     }
     
     // 전체동의 버튼
+    view.addSubview(agreeAllCheckButton)
     agreeAllCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllButton.snp.leading).offset(15)
       $0.centerY.equalTo(agreeAllButton)
@@ -150,6 +133,7 @@ final class AgreementViewController: UIViewController {
     }
     
     // 서비스 이용약관동의 버튼
+    view.addSubview(agreeFirstCheckButton)
     agreeFirstCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeAllCheckButton.snp.leading)
       $0.top.equalTo(agreeAllCheckButton.snp.bottom).offset(40)
@@ -157,18 +141,21 @@ final class AgreementViewController: UIViewController {
     }
     
     // 서비스 이용약관동의 버튼
+    view.addSubview(firstServiceButton)
     firstServiceButton.snp.makeConstraints {
       $0.leading.equalTo(agreeFirstCheckButton.snp.trailing).offset(10)
       $0.centerY.equalTo(agreeFirstCheckButton)
     }
     
     // 서비스 이용약관동의 페이지 이동 버튼
+    view.addSubview(goToFirstServicePageButton)
     goToFirstServicePageButton.snp.makeConstraints {
       $0.trailing.equalToSuperview().offset(-20)
       $0.centerY.equalTo(firstServiceButton)
     }
     
     // 개인정보 수집 및 이용동의 버튼
+    view.addSubview(agreeSecondCheckButton)
     agreeSecondCheckButton.snp.makeConstraints {
       $0.leading.equalTo(agreeFirstCheckButton.snp.leading)
       $0.top.equalTo(agreeFirstCheckButton.snp.bottom).offset(20)
@@ -176,18 +163,21 @@ final class AgreementViewController: UIViewController {
     }
     
     // 개인정보 수집 및 이용동의 버튼
+    view.addSubview(secondServiceButton)
     secondServiceButton.snp.makeConstraints {
       $0.leading.equalTo(agreeSecondCheckButton.snp.trailing).offset(10)
       $0.centerY.equalTo(agreeSecondCheckButton)
     }
     
     // 개인정보 수집 및 이용동의 페이지 버튼
+    view.addSubview(goToSecondServicePageButton)
     goToSecondServicePageButton.snp.makeConstraints {
       $0.trailing.equalToSuperview().offset(-20)
       $0.centerY.equalTo(secondServiceButton)
     }
     
     // 다음화면 이동버튼
+    view.addSubview(nextButton)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-30)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -202,6 +192,7 @@ final class AgreementViewController: UIViewController {
   func navigationSetting() {
     settingNavigationTitle(title: "회원가입")
     leftButtonSetting()
+    settingNavigationbar()
   }
   
   /// 네비게이션 바 왼쪽 버튼 액션

@@ -155,16 +155,17 @@ final class UserInfoView: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (view, _) in
         
-        /// 비 로그인 시 - 로그인 화면으로 이동
-        if view.viewModel.userData.value?.nickname == nil {
-          TokenManager.shared.deleteTokens()
-          NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
-        }else {
+
+        if view.viewModel.isLoginStatus {
           /// 로그인 시 - 프로필 편집으로 이동
           NotificationCenter.default.post(name: .navToEditUserProfileScreen,
                                           object: nil,
                                           userInfo: ["userData" : view.viewModel.userData,
                                                      "userProfile": view.viewModel.userProfile])
+        }else {
+          /// 비 로그인 시 - 로그인 화면으로 이동
+          TokenManager.shared.deleteTokens()
+          NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
         }
       })
       .disposed(by: disposeBag)

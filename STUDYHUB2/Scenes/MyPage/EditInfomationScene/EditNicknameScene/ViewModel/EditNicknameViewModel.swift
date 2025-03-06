@@ -13,7 +13,7 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   var newNickname = BehaviorRelay<String?>(value: nil)
   
   /// 닉네임 중복 확인
-  var isCheckNicknameDuplication = PublishRelay<String>()
+  var isCheckNicknameDuplication = PublishRelay<Bool>()
   
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
@@ -21,9 +21,12 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   
   
   /// 닉네임 중복 체크
+  /// 200 중복 X, 400 중복
   /// - Parameter nickname: 체크할 닉네임
   func checkNicknameDuplication(_ nickname: String){
     UserProfileManager.shared.checkNicknameDuplication(nickname: nickname, completion: { result in
+      print(#fileID, #function, #line," - \(result)")
+
       self.isCheckNicknameDuplication.accept(result)
     })
 //    editUserInfoManager.checkNicknameDuplication(nickName: nickname) { result in

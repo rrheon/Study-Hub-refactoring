@@ -85,9 +85,6 @@ final class MyParticipateStudyVC: UIViewController {
     setupBinding()
     setupActions()
   } // viewDidLoad
-  
-  // MARK: - setupLayout
-  
 
   
   // MARK: - makeUI
@@ -151,7 +148,7 @@ final class MyParticipateStudyVC: UIViewController {
   func setupActions(){
     viewModel.isSuccessToDelete
       .asDriver(onErrorJustReturn: false)
-      .drive(onNext: {[weak self] result in
+      .drive(onNext: { [weak self] result in
         switch result {
         case true:
           ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.",
@@ -250,7 +247,8 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
     viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
   }
 }
-  // MARK: - PopupView Delegate
+
+// MARK: - PopupView Delegate
   
   
 extension MyParticipateStudyVC: PopupViewDelegate {

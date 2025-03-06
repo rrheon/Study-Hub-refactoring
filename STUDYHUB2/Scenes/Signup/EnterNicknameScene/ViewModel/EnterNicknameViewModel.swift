@@ -37,7 +37,7 @@ class EnterNicknameViewModel: Stepper {
   let checkValidNickname: PublishRelay<Bool> = PublishRelay<Bool>()
   
   /// 닉네임 중복여부 체크
-  let checkDuplicationNickname: PublishRelay<String> = PublishRelay<String>()
+  let checkDuplicationNickname: PublishRelay<Bool> = PublishRelay<Bool>()
   
   /// 성별 관리
   let genderStatus: BehaviorRelay<Gender> = BehaviorRelay(value: .none)
@@ -46,7 +46,7 @@ class EnterNicknameViewModel: Stepper {
   /// 다음버튼 활성화 여부
   var isActivateNextButton: Observable<Bool> {
     return Observable.combineLatest(checkDuplicationNickname, genderStatus)
-      .map { $0 == "Error" && $1 != .none  }
+      .map { $0 && $1 != .none  }
   }
   
   /// 닉네임 중복여부 확인하기

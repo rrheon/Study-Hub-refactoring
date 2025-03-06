@@ -14,9 +14,7 @@ final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
   
   /// 입력된 학과와 관련있는 학과들
   let matchedMajors = PublishRelay<[String]>()
-  
-  let isSuccessChangeMajor = PublishRelay<Bool>()
-  
+    
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
   }
@@ -48,12 +46,11 @@ final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
     
     UserProfileManager.shared.changeMajor(major: major) { result in
       if result {
-//        self.isSuccessChangeMajor.accept(true)
         ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
         self.steps.accept(AppStep.popCurrentScreen(animate: true))
+        
         self.updateUserData(major: major)
       }else {
-//        self.isSuccessChangeMajor.accept(false)
         ToastPopupManager.shared.showToast(message: "학과 변경에 실패했어요.\n다시 시도해주세요!")
       }
     }

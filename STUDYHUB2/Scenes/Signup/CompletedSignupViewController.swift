@@ -33,31 +33,18 @@ final class CompletedSignupViewController: UIViewController, Stepper {
     
     view.backgroundColor = .black
     
-    setUpLayout()
     makeUI()
     
     startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
   } // viewDidLoad
   
-  // MARK: - setUpLayout
-  
-  
-  /// layout 설정
-  func setUpLayout(){
-    [
-      mainImageView,
-      underMainImageView,
-      startButton
-    ].forEach {
-      view.addSubview($0)
-    }
-  }
   
   // MARK: - makeUI
   
   
   /// UI 설정
   func makeUI(){
+    view.addSubview(mainImageView)
     mainImageView.backgroundColor = .black
     mainImageView.snp.makeConstraints {
       $0.centerX.equalToSuperview()
@@ -65,11 +52,13 @@ final class CompletedSignupViewController: UIViewController, Stepper {
       $0.height.width.equalTo(280)
     }
     
+    view.addSubview(underMainImageView)
     underMainImageView.snp.makeConstraints {
       $0.top.equalTo(mainImageView.snp.bottom).offset(10)
       $0.centerX.equalTo(mainImageView)
     }
     
+    view.addSubview(startButton)
     startButton.snp.makeConstraints {
       $0.leading.equalToSuperview().offset(20)
       $0.trailing.equalToSuperview().offset(-20)

@@ -15,7 +15,7 @@ protocol RefuseBottomSheetDelegate: AnyObject {
 }
 
 /// 스터디 신청 거절사유 vc
-final class RefuseBottomSheet: UIViewController {
+final class SelectStudyRefuseViewController: UIViewController {
   weak var delegate: RefuseBottomSheetDelegate?
   
   /// 거절할 대상 유저의 ID
@@ -127,7 +127,7 @@ final class RefuseBottomSheet: UIViewController {
 // MARK: - tableview
 
 
-extension RefuseBottomSheet: UITableViewDelegate, UITableViewDataSource {
+extension SelectStudyRefuseViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return refuseList.count
   }

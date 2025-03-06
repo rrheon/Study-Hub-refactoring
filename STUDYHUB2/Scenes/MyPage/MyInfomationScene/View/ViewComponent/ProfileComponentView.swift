@@ -109,7 +109,7 @@ final class ProfileComponentView: UIView {
     deleteButton.rx
       .tap
       .subscribe(onNext: { _ in
-    
+        self.viewModel.deleteProfile()
     }).disposed(by: disposeBag)
   }
 }

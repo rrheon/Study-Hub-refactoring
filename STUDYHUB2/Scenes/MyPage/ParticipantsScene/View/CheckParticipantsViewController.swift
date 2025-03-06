@@ -8,7 +8,7 @@ import Then
 
 /// 스터디 참가자 확인 VC
 /// 종류 : 대기인원, 참여인원, 거절인원
-final class CheckParticipantsVC: UIViewController {
+final class CheckParticipantsViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -36,11 +36,9 @@ final class CheckParticipantsVC: UIViewController {
   /// 거절인원  CollectionView
   private lazy var refuseCollectionView = createUICollectionView()
   
-  private lazy var noParticipateImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(named: "EmptyWaitIamge")
-    return imageView
-  }()
+  private lazy var noParticipateImageView: UIImageView = UIImageView().then {
+    $0.image = UIImage(named: "EmptyWaitIamge")
+  }
   
   /// 참여자가 없을 때의 라벨
   private lazy var noParticipateLabel = UILabel().then {
@@ -54,8 +52,8 @@ final class CheckParticipantsVC: UIViewController {
   }
  
   
-  init(_ studyID: Int) {
-    self.viewModel = CheckParticipantsViewModel(studyID)
+  init(with viewModel: CheckParticipantsViewModel) {
+    self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -225,6 +223,7 @@ final class CheckParticipantsVC: UIViewController {
   
   /// Actions 설정
   func setupActions(){
+    /// 총 인원 수
     viewModel.totalCount
       .asDriver(onErrorJustReturn: 0)
       .drive(onNext: { [weak self] count in
@@ -287,7 +286,7 @@ final class CheckParticipantsVC: UIViewController {
     )
   }
   
-  // MARK: - setupNavigationbar
+  // MARK: - 네비게이션 바 설정
   
   /// 네비게이션 바 설정
   func setupNavigationbar(){
@@ -296,6 +295,10 @@ final class CheckParticipantsVC: UIViewController {
     settingNavigationbar()
   }
   
+  
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+  }
   
   // MARK: - 버튼 탭 공통 처리
   
@@ -368,7 +371,7 @@ final class CheckParticipantsVC: UIViewController {
 // MARK: - 셀 크기
 
 
-extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
+extension CheckParticipantsViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(
     _ collectionView: UICollectionView,
     layout collectionViewLayout: UICollectionViewLayout,
@@ -387,7 +390,7 @@ extension CheckParticipantsVC: UICollectionViewDelegateFlowLayout {
 // MARK: - bottomSheet
 
 // 내가 작성한 게시글 cell
-extension CheckParticipantsVC: ParticipantsCellDelegate {
+extension CheckParticipantsViewController: ParticipantsCellDelegate {
   /// 거절버튼 탭 -> 거절사유 선택
   func refuseButtonTapped(userId: Int) {
     viewModel.steps.accept(AppStep.refuseBottomSheetIsRequired(userId: userId))
@@ -402,7 +405,7 @@ extension CheckParticipantsVC: ParticipantsCellDelegate {
 
 // MARK: - 신청 거절
 
-extension CheckParticipantsVC: RefuseBottomSheetDelegate {
+extension CheckParticipantsViewController: RefuseBottomSheetDelegate {
   /// 기타사유로 거절이 아닌 경우
   func rejectPerson(_ reason: String, _ userId: Int){
     viewModel.userID = userId
@@ -423,14 +426,17 @@ extension CheckParticipantsVC: RefuseBottomSheetDelegate {
   }
 }
 
-extension CheckParticipantsVC: WriteRefuseReasonVCDelegate {
+// MARK: - 스터디 신청 거절하기
+
+extension CheckParticipantsViewController: WriteRefuseReasonVCDelegate {
   func completeButtonTapped(reason: String, userId: Int) {
     rejectPerson(reason, userId)
   }
 }
 
+// MARK: - PopupView
 
-extension CheckParticipantsVC: PopupViewDelegate {
+extension CheckParticipantsViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
 

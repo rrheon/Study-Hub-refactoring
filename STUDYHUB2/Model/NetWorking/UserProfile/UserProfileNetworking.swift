@@ -14,7 +14,9 @@ enum UserProfileNetworking{
   case loadUserInfo                                     // 회원정보 조회
   case editUserNickName(nickname: String)               // 유저 닉네임 수정
   case editUserMajor(major: String)                     // 유저 학과 수정
-  case editUserPassword(data: EditUserPasswordDTO)      // 유저 비밀번호 수정
+  case editUserPassword(checkPassword: Bool,
+                        email: String,
+                        password: String)              // 유저 비밀번호 수정
   case deleteUserAccount                                // 유저 계정 삭제하기
   case storeUserProfileImage(image: UIImage)            // 유저 프로필 저장
   case deleteUserProfileImage                           // 유저 프로필 삭제
@@ -59,16 +61,17 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
   /// API 별 요청
   var task: Moya.Task {
     switch self {
-    case .editUserNickName(let nickname):
-      let params: [String: Any] = ["nickname": nickname]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+   case .editUserNickName(let nickname):
+     let params = EditNickName(nickname: nickname)
+     return .requestJSONEncodable(params)
       
     case .editUserMajor(let major):
-      let params: [String: Any] = ["major": major]
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      let params = EditMajor(major: major)
+      return .requestJSONEncodable(params)
       
-    case .editUserPassword(let data):
-      return .requestJSONEncodable(data)
+    case .editUserPassword(let checkPassword, let email, let password):
+      let params = EditPassword(auth: checkPassword, email: email, password: password)
+      return .requestJSONEncodable(params)
       
     case .deleteUserAccount:
       return .requestPlain
@@ -97,13 +100,13 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
   var headers: [String : String]? {
     switch self {
     case .editUserMajor(_),
-        .editUserPassword(_),
-        .editUserNickName(_),
         .deleteUserAccount,
         .deleteUserProfileImage:
       return ["Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
       
-    case .loadUserInfo:
+    case  .editUserNickName(_),
+          .editUserPassword(_,_,_),
+          .loadUserInfo:
       return ["Content-type": "application/json",
               "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
       
@@ -111,7 +114,7 @@ extension UserProfileNetworking: TargetType, CommonBaseURL {
       return [ "Content-Type" : "multipart/form-data",
                "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
     default:
-      return .none
+      return ["Content-type": "application/json"]
     }
   }
 }

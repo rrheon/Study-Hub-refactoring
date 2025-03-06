@@ -81,13 +81,6 @@ final class PostedStudyViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 아이탬 터치 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    var isHiddenNav: Bool = false
-    
-    /// 스터디 디테일 -> 스터디 디테일 이동하는 경우 pop 할 경우 네비게이션 바 숨기기 처리 x
-    if let vcCount = self.navigationController?.viewControllers.count {
-      isHiddenNav = vcCount < 3
-    }
-    
     viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
   }
   

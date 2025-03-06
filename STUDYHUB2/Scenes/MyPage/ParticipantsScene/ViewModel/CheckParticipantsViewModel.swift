@@ -77,6 +77,7 @@ final class CheckParticipantsViewModel: Stepper {
     }
   }
   
+  /// 신청한 인원 거절하기
   func rejectPerson(reason: String, completion: @escaping () -> Void){
     guard let userID = userID else { return }
 

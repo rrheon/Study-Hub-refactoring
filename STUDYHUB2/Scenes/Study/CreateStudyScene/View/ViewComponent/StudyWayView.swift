@@ -121,10 +121,11 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     
     self.setupLayout()
     self.makeUI()
-    self.setupModifyUI()
     self.setupDelegate()
     self.setupActions()
     self.setupBinding()
+    self.setupModifyUI()
+
   }
   
   required init?(coder: NSCoder) {
@@ -271,7 +272,6 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] isFine in
         guard let self = self else { return }
-//        updateFineButtonUI()
         setupFineUI(!isFine)
       })
       .disposed(by: disposeBag)
@@ -285,10 +285,12 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       .forEach {
         if $0.titleLabel?.text == Utils.convertStudyWay(wayToStudy: postValue.studyWay ?? "") {
         updateButtonSelection(selectedButton: $0)
+  
+        viewModel.selectedStudyWayValue.accept($0)
       }
     }
     
-    if postValue.penaltyWay != "" {
+    if postValue.penaltyWay != nil {
       viewModel.isFineButton.accept(true)
       fineTypesTextField.text = postValue.penaltyWay
       fineAmountTextField.text = String(postValue.penalty)
@@ -315,7 +317,6 @@ final class StudyWayView: UIView, UITextFieldDelegate {
       .compactMap({ $0 })
       .subscribe(onNext: { [weak self] btn in
         self?.updateButtonColors(with: btn)
-        self?.updateButtonSelection(selectedButton: btn)
         self?.updateButtonSelection(selectedButton: btn)
       })
       .disposed(by: disposeBag)
@@ -368,7 +369,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
   /// 버튼이 선택되었을 때 데이터 업데이트
   func updateButtonSelection(selectedButton: UIButton) {
     let studyWay = studyWayButtonTapped(selectedButton)
-    
+
     var updatedData = viewModel.createStudyData.value
     updatedData?.studyWay = studyWay
     viewModel.createStudyData.accept(updatedData)

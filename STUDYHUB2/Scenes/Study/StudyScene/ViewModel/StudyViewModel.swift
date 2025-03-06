@@ -41,7 +41,12 @@ final class StudyViewModel: Stepper {
 
   init() {
     print(#fileID, #function, #line," - 111111111111111")
+        
+    Task {
+      try await Task.sleep(nanoseconds: 1_000_000_000)
 
+      await fetchPostData(hotType: "false")
+    }
   }
 
   /// 모든 스터디 게시글 조회하기

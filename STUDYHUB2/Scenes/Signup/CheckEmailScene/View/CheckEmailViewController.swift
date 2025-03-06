@@ -140,6 +140,10 @@ final class CheckEmailViewController: UIViewController {
     leftButtonSetting()
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.popIsRequired)
+  }
+  
   /// 이메일 TextField 이벤트 처리
   func handleTextFieldEvents(textField: AuthTextField) {
     guard let text = textField.getTextFieldValue() else { return }

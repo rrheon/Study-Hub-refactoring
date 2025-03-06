@@ -62,6 +62,7 @@ extension ApplyStudyNetworking: TargetType, CommonBaseURL {
   /// API 별 요청
   var task: Moya.Task {
     switch self {
+      
     case .participateStudy(let introduce, let studyId):
       let params: [String: Any] = ["introduce": introduce, "studyId": studyId]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
@@ -88,6 +89,10 @@ extension ApplyStudyNetworking: TargetType, CommonBaseURL {
     case .getMyReqeustList(let page, let size):
       let params: [String: Any] = ["page": page, "size": size]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+    
+    case .getMyParticipateList(let page, let size):
+      let params: [String: Any] =  ["page": page, "size": size]
+      return .requestParameters(parameters: params , encoding: URLEncoding.queryString)
       
     default:
       return .requestPlain
@@ -104,10 +109,10 @@ extension ApplyStudyNetworking: TargetType, CommonBaseURL {
         .getRejectReason(_),
         .getMyReqeustList(_, _):
       return ["Content-type": "application/json",
-              "Authorization": ""]
+              "Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
       
     case .deleteMyRequest(_):
-      return [ "Authorization": ""]
+      return ["Authorization": "\(TokenManager.shared.loadAccessToken() ?? "")"]
 
     default:
       return ["Content-type": "application/json"]

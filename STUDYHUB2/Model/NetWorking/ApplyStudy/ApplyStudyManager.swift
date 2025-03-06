@@ -44,13 +44,16 @@ class ApplyStudyManager: StudyHubCommonNetworking {
   ///   - size: 스터디 갯수
   ///   - completion: 결과값 반환
   func getMyParticipateList(
-    page: Int,
-    size: Int,
+    page: Int = 0,
+    size: Int = 5,
     completion: @escaping (TotalParticipateStudyData) -> Void
   ){
     provider.request(.getMyParticipateList(page: page, size: size)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: TotalParticipateStudyData.self) { decodedData in
-        print(decodedData)
+      print(#fileID, #function, #line," - \(result)")
+
+      self.commonDecodeNetworkResponse(with: result,
+                                       decode: TotalParticipateStudyData.self) { decodedData in
+        completion(decodedData)
       }
     }
   }
@@ -79,8 +82,10 @@ class ApplyStudyManager: StudyHubCommonNetworking {
     )
     
     provider.request(.searchParticipateInfo(data: data)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: TotalApplyUserData.self) { decodedData in
-        print(decodedData)
+      self.commonDecodeNetworkResponse(with: result,
+                                       decode: TotalApplyUserData.self
+      ) { decodedData in
+        completion(decodedData)
       }
     }
   }
@@ -128,8 +133,9 @@ class ApplyStudyManager: StudyHubCommonNetworking {
   func getMyRequestStudyList(completion: @escaping (MyRequestList) -> Void){
     // 무한스크롤로 늘려야함
     provider.request(.getMyReqeustList(page: 0, size: 5)) { result in
-      self.commonDecodeNetworkResponse(with: result, decode: MyRequestList.self) { decodedData in
-        print(decodedData)
+      self.commonDecodeNetworkResponse(with: result,
+                                       decode: MyRequestList.self) { decodedData in
+        completion(decodedData)
       }
     }
   }
@@ -143,7 +149,7 @@ class ApplyStudyManager: StudyHubCommonNetworking {
   func getMyRejectReason(studyId: Int, completion: @escaping (RejectReason) -> Void){
     provider.request(.getRejectReason(studyId)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: RejectReason.self) { decodedData in
-        print(decodedData)
+        completion(decodedData)
       }
     }
   }
@@ -156,6 +162,7 @@ class ApplyStudyManager: StudyHubCommonNetworking {
   ///   - comletion: 콜백함수
   func deleteRequestStudy(studyId: Int, comletion: @escaping (Bool) -> Void) {
     provider.request(.deleteMyRequest(studyId: studyId)) { result in
+      print(result)
       switch result {
       case .success(let response):
         print(response.response)

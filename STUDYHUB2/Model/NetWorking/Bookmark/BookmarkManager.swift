@@ -23,6 +23,8 @@ class BookmarkManager: StudyHubCommonNetworking {
   ///   - completion: 콜백함수
   func bookmarkTapped(with postId: Int, completion: @escaping (Int) -> Void){
     provider.request(.changeBookMarkStatus(postId: postId)) { result in
+      
+      print(result)
       switch result {
       case .success(let response):
         print(response.statusCode)

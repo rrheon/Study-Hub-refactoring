@@ -67,7 +67,6 @@ final class CreateStudyViewModel: Stepper {
     
     guard let data = createStudyData.value else { return }
 
-    print(data)
     /// close - false,   벌금은 nil
     StudyPostManager.shared.createNewPost(with: data) { postID in
       if let _postID = postID {
@@ -76,6 +75,8 @@ final class CreateStudyViewModel: Stepper {
         
         /// 생성한 게시글로 이동
         self.steps.accept(AppStep.studyDetailScreenIsRequired(postID: _postID))
+        
+        ToastPopupManager.shared.showToast(message: "게시글이 작성됐어요.")
       }
     }
   }

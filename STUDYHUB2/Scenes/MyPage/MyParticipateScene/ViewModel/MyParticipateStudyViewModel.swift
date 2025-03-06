@@ -34,13 +34,13 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
     }
     super.init(userData: userData)
     
-    getRequestList()
+    getParticipatedList()
   }
   
   
   /// 참여한  스터디 리스트 가져오기
-  func getRequestList() {
-    ApplyStudyManager.shared.getMyParticipateList(page: 0, size: 5) { result in
+  func getParticipatedList() {
+    ApplyStudyManager.shared.getMyParticipateList { result in
       self.participateInfo.accept(result.participateStudyData.content)
       self.countPostNumber.accept(result.participateStudyData.numberOfElements)
     }
@@ -67,7 +67,7 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
   func deleteAllParticipateList(){
     let content = participateInfo.value
     content.forEach {
-      deleteParticipateList(studyID: $0.studyID)
+      deleteParticipateList(studyID: $0.studyID ?? 0)
     }
     participateInfo.accept(content)
   }

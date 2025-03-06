@@ -22,7 +22,7 @@ extension ToStudyHubNetworking: TargetType, CommonBaseURL {
   var path: String {
     switch self {
     case .inquiryQuestion(_):                          return "/v1/email/question"
-    case .getNotice(page: let page, size: let size):   return "/v1/announce"
+    case .getNotice(_, _):   return "/v1/announce"
     }
   }
   
@@ -41,8 +41,9 @@ extension ToStudyHubNetworking: TargetType, CommonBaseURL {
     switch self {
     case .inquiryQuestion(let content):
       return .requestJSONEncodable(content)
-    case .getNotice(page: let page, size: let size):
-      return .requestPlain
+    case .getNotice(let page, let size):
+      let params: [String: Any] = ["page": page, "size": size]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
     }
   
   }

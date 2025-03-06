@@ -84,6 +84,10 @@ final class EditPasswordViewController: UIViewController {
     settingNavigationbar()
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+  }
+  
   /// 네비게이션 바 오른쪽 버튼 탭 -> 비밀번호 저장
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     viewModel.storePasswordToServer()
@@ -139,15 +143,15 @@ final class EditPasswordViewController: UIViewController {
           // 성공 : 비로그인시 -> 로그인화면
           if userData.nickname == nil && result {
             NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
-          // 성공 :로그인 시 -> 프로필 편집화면
+          // 성공 : 로그인 시 -> 프로필 편집화면
           }else if userData.nickname != nil && result {
-            self?.viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+            self?.viewModel.steps.accept(AppStep.popToVC(type: MyInformViewController.self))
           // 실패 -> 팝업
           }else {
             ToastPopupManager.shared.showToast(message: "비밀번호 변경에 실패했어요. 다시 시도해주세요.")
+            return
           }
         }
-        NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
         ToastPopupManager.shared.showToast(message: "비밀번호가 변경됐어요")
       })
       .disposed(by: disposeBag)

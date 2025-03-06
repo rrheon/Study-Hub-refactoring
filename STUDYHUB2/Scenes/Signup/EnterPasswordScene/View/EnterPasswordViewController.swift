@@ -133,6 +133,11 @@ final class EnterPasswordViewController: UIViewController {
     leftButtonSetting()
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.popIsRequired)
+  }
+  
+  
   /// Actions 설정
   func setupActions(){
     nextButton.rx.tap

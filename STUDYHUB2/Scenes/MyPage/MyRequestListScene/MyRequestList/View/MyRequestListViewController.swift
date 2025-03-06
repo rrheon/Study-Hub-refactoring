@@ -126,13 +126,6 @@ final class MyRequestListViewController: UIViewController {
         }
       })
       .disposed(by: disposeBag)
-    
-    viewModel.rejectReason
-      .asDriver(onErrorJustReturn: RejectReason(reason: "실패", studyTitle: "실패"))
-      .drive(onNext: { [weak self] reason in
-        self?.viewModel.steps.accept(AppStep.detailRejectReasonScreenIsRequired(reason: reason))
-      })
-      .disposed(by: disposeBag)
   }
   
   // MARK: - 네비게이션 설정
@@ -174,6 +167,8 @@ final class MyRequestListViewController: UIViewController {
   
   /// 데이터가 없을 때의 UI
   func noDataUI(){
+    myStudyRequestCollectionView.isHidden = true
+    
     view.addSubview(emptyImage)
     emptyImage.snp.makeConstraints {
       $0.centerX.centerY.equalToSuperview()

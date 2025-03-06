@@ -243,6 +243,12 @@ final class UserInfomationComponentView: UIView {
   
     guard let major = data.major, let gender = data.gender else { return }
     userMajorLabel.text = Utils.convertMajor(major, toEnglish: false)
+    print(#fileID, #function, #line," - \(data.major)")
+    print(#fileID, #function, #line," - \(userMajorLabel.text)")
+
+    if userMajorLabel.text == nil || userEmailLabel.text == ""{
+      userMajorLabel.text = major
+    }
     userGenderLabel.text = Utils.convertGender(gender: gender)
   }
 }

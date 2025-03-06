@@ -38,9 +38,7 @@ final class BookMarkCell: UICollectionViewCell {
   private lazy var bookMarkButton: UIButton = UIButton().then {
     $0.setImage(UIImage(named: "BookMarkChecked"), for: .normal)
     $0.addAction(UIAction { _ in
-      BookmarkManager.shared.bookmarkTapped(with: self.model?.postID ?? 0) { _ in 
-        self.delegate?.bookmarkBtnTapped(postId: self.model?.postID ?? 0)
-      }
+      self.delegate?.bookmarkBtnTapped(postId: self.model?.postID ?? 0)
     }, for: .touchUpInside)
   } 
   
@@ -78,9 +76,7 @@ final class BookMarkCell: UICollectionViewCell {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
-    addSubviews()
-    
+        
     configure()
     setViewShadow(backView: self)
 
@@ -91,50 +87,41 @@ final class BookMarkCell: UICollectionViewCell {
     fatalError()
   }
   
-  
-  /// Layout 설정
-  private func addSubviews() {
-    
-    [
-      majorLabel,
-      bookMarkButton,
-      titleLabel,
-      infoLabel,
-      remainLabel,
-      enterButton
-    ].forEach {
-      addSubview($0)
-    }
-  }
-  
-  
   /// UI설정
   private func configure() {
+    addSubview(majorLabel)
     majorLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
       make.leading.equalToSuperview().offset(20)
     }
     
+    addSubview(bookMarkButton)
     bookMarkButton.snp.makeConstraints { make in
       make.centerY.equalTo(majorLabel)
       make.trailing.equalToSuperview().offset(-20)
     }
     
+    addSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.top.equalTo(majorLabel.snp.bottom).offset(10)
       make.leading.equalTo(majorLabel.snp.leading)
+      make.trailing.equalTo(self.snp.trailing).offset(-10)
     }
     
+    addSubview(infoLabel)
     infoLabel.snp.makeConstraints { make in
       make.top.equalTo(titleLabel.snp.bottom).offset(10)
       make.leading.equalTo(majorLabel.snp.leading)
+      make.trailing.equalTo(self.snp.trailing).offset(-10)
     }
     
+    addSubview(remainLabel)
     remainLabel.snp.makeConstraints { make in
       make.top.equalTo(infoLabel.snp.bottom).offset(10)
       make.leading.equalTo(majorLabel.snp.leading)
     }
     
+    addSubview(enterButton)
     enterButton.snp.makeConstraints { make in
       make.top.equalTo(remainLabel.snp.bottom).offset(30)
       make.leading.equalTo(majorLabel.snp.leading)

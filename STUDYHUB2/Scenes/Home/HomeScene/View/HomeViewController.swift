@@ -100,7 +100,7 @@ final class HomeViewController: UIViewController {
   
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
-//    viewModel.isNeedFetchDatas.accept(true)
+    viewModel.isNeedFetchDatas.accept(true)
 
   }
   
@@ -110,7 +110,6 @@ final class HomeViewController: UIViewController {
     super.viewDidLoad()
     
     view.backgroundColor = .backgroundBlack
-
     
     setupBindings()
     setupCollectionView()
@@ -337,7 +336,6 @@ final class HomeViewController: UIViewController {
       .withUnretained(self)
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { vc, _ in
-#warning("알아보기 화면으로 이동")
         NotificationCenter.default.post(name: .navToHowToUseScreen, object: nil)
 
       })
@@ -349,8 +347,6 @@ final class HomeViewController: UIViewController {
         if let tabBarController = self?.tabBarController {
           tabBarController.selectedIndex = 1
         }
-#warning("스터디 화면으로 이동")
-
       })
       .disposed(by: disposeBag)
   }

@@ -85,6 +85,22 @@ final class NotificationViewController: UIViewController {
         cell.model = content
       }
       .disposed(by: disposeBag)
+    
+    viewModel.noticeDatas
+      .asDriver(onErrorJustReturn: [])
+      .drive(onNext: { noticeData in
+        if noticeData.count == 0{
+          let emptyView = EmptyResultView(imageName: "EmptyStudy", title: "공지사항이 없습니다.")
+          
+          self.view.addSubview(emptyView)
+          emptyView.snp.makeConstraints {
+            $0.top.centerY.equalTo(self.view.snp.centerY).offset(-100)
+            $0.centerX.equalToSuperview()
+          }
+        }
+        
+      })
+      .disposed(by: disposeBag)
   }
   
   /// Actions 설정

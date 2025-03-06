@@ -193,10 +193,17 @@ final class UserActivityView: UIView {
     writtenButton.rx
       .tap
       .subscribe(onNext: { _ in
+        if self.viewModel.isLoginStatus {
+          NotificationCenter.default.post(name: .navToMyStudyPostScreen,
+                                          object: nil,
+                                          userInfo: ["userData": userData])
+        }else {
+          /// 비 로그인 시 - 로그인 요청 팝업으로 이동
+          NotificationCenter.default.post(name: .presentPopupScreen,
+                                          object: nil,
+                                          userInfo: ["popupCase": PopupCase.requiredLogin])
+        }
         
-        NotificationCenter.default.post(name: .navToMyStudyPostScreen,
-                                        object: nil,
-                                        userInfo: ["userData": userData])
       })
       .disposed(by: disposeBag)
     
@@ -204,9 +211,18 @@ final class UserActivityView: UIView {
     joinstudyButton.rx
       .tap
       .subscribe(onNext: { _ in
-        NotificationCenter.default.post(name: .navToMyParticipatePostScreen,
-                                      object: nil,
-                                      userInfo: ["userData": userData])
+        
+        if self.viewModel.isLoginStatus {
+          NotificationCenter.default.post(name: .navToMyParticipatePostScreen,
+                                        object: nil,
+                                        userInfo: ["userData": userData])
+        }else {
+          /// 비 로그인 시 - 로그인 요청 팝업으로 이동
+          NotificationCenter.default.post(name: .presentPopupScreen,
+                                          object: nil,
+                                          userInfo: ["popupCase": PopupCase.requiredLogin])
+        }
+     
     })
     .disposed(by: disposeBag)
     
@@ -214,9 +230,17 @@ final class UserActivityView: UIView {
     requestListButton.rx
       .tap
       .subscribe(onNext: { _ in
-        NotificationCenter.default.post(name: .navToMyRequestPostScreen,
-                                        object: nil,
-                                        userInfo: ["userData": userData])
+        if self.viewModel.isLoginStatus {
+          NotificationCenter.default.post(name: .navToMyRequestPostScreen,
+                                          object: nil,
+                                          userInfo: ["userData": userData])
+        }else {
+          /// 비 로그인 시 - 로그인 요청 팝업으로 이동
+          NotificationCenter.default.post(name: .presentPopupScreen,
+                                          object: nil,
+                                          userInfo: ["popupCase": PopupCase.requiredLogin])
+        }
+   
       })
       .disposed(by: disposeBag)
   }

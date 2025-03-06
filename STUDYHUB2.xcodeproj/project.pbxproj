@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		903CF32160A1EDD2ADE8AA03 /* Pods_STUDYHUB2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD0AEF76B97F2D81A35C2224 /* Pods_STUDYHUB2.framework */; };
-		EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */; };
+		EE02B1112B15FEEE0092082F /* CheckParticipantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E942B1075A500C23AB4 /* CheckParticipantsViewController.swift */; };
 		EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E972B107B7100C23AB4 /* WaitCell.swift */; };
-		EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */; };
+		EE02B1132B15FEEE0092082F /* SelectStudyRefuseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E9B2B10966100C23AB4 /* SelectStudyRefuseViewController.swift */; };
 		EE02B1142B15FEEE0092082F /* WriteRefuseReasonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */; };
 		EE02B1152B15FEEE0092082F /* RefusePersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */; };
 		EE02B1162B15FEEE0092082F /* ParticipateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */; };
@@ -320,10 +320,10 @@
 		EEB07A5E2D5B95EC0009246D /* EmptyResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResultView.swift; sourceTree = "<group>"; };
 		EEB51E872B103C2300C23AB4 /* MyInformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInformationViewController.swift; sourceTree = "<group>"; };
 		EEB51E882B103C2300C23AB4 /* EditnicknameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditnicknameViewController.swift; sourceTree = "<group>"; };
-		EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsVC.swift; sourceTree = "<group>"; };
+		EEB51E942B1075A500C23AB4 /* CheckParticipantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckParticipantsViewController.swift; sourceTree = "<group>"; };
 		EEB51E972B107B7100C23AB4 /* WaitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitCell.swift; sourceTree = "<group>"; };
 		EEB51E992B10931500C23AB4 /* UIButton+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ext.swift"; sourceTree = "<group>"; };
-		EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseBottomSheet.swift; sourceTree = "<group>"; };
+		EEB51E9B2B10966100C23AB4 /* SelectStudyRefuseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStudyRefuseViewController.swift; sourceTree = "<group>"; };
 		EEB51E9D2B1099CB00C23AB4 /* RefusePersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusePersonCell.swift; sourceTree = "<group>"; };
 		EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteRefuseReasonVC.swift; sourceTree = "<group>"; };
 		EEC5FF682C994BEE00896FEB /* ApplyStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyStudyViewModel.swift; sourceTree = "<group>"; };
@@ -1351,7 +1351,7 @@
 		EEC5FFC42CA7EF2A00896FEB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EEB51E942B1075A500C23AB4 /* CheckParticipantsVC.swift */,
+				EEB51E942B1075A500C23AB4 /* CheckParticipantsViewController.swift */,
 				EEB51EA22B145B8000C23AB4 /* Wait */,
 				EE35ED6D2B14B7E2008040E2 /* Participate */,
 				EE35ED6E2B14BA95008040E2 /* Refuse */,
@@ -1395,7 +1395,7 @@
 		EEC5FFCD2CAD092E00896FEB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EEB51E9B2B10966100C23AB4 /* RefuseBottomSheet.swift */,
+				EEB51E9B2B10966100C23AB4 /* SelectStudyRefuseViewController.swift */,
 				EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */,
 				EEB51E9F2B10EF4200C23AB4 /* WriteRefuseReasonVC.swift */,
 			);
@@ -1895,11 +1895,11 @@
 				EEB07A492D5B04650009246D /* SearchResultCell.swift in Sources */,
 				EEC5FFA22C9DC23500896FEB /* EditNicknameProtocol.swift in Sources */,
 				EE8871652D7058E300C1C0AF /* UIViewController+Navigationbar.swift in Sources */,
-				EE02B1112B15FEEE0092082F /* CheckParticipantsVC.swift in Sources */,
+				EE02B1112B15FEEE0092082F /* CheckParticipantsViewController.swift in Sources */,
 				EE02B1122B15FEEE0092082F /* WaitCell.swift in Sources */,
 				EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */,
 				EE5B936B2D4A2584006DC65D /* CommentNetworking.swift in Sources */,
-				EE02B1132B15FEEE0092082F /* RefuseBottomSheet.swift in Sources */,
+				EE02B1132B15FEEE0092082F /* SelectStudyRefuseViewController.swift in Sources */,
 				EE5B934F2D48BC9E006DC65D /* ToStudyHubManager.swift in Sources */,
 				EE5B933F2D48AAF2006DC65D /* ApplyStudyNetworking.swift in Sources */,
 				EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */,

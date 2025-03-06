@@ -14,6 +14,11 @@ final class MyPageViewModel: Stepper {
   /// 사용자의 정보 데이터
   var userData = BehaviorRelay<UserDetailData?>(value: nil)
   
+  /// 로그인 상태 체크
+  var isLoginStatus: Bool {
+    return userData.value?.nickname != nil
+  }
+  
   /// 사용자 프로필
   var userProfile =  BehaviorRelay<UIImage?>(value: UIImage(named: "ProfileAvatar_change")!)
 

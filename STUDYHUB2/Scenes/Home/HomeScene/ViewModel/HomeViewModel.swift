@@ -15,32 +15,32 @@ final class HomeViewModel: Stepper {
   static let shared = HomeViewModel()
   
   var steps: PublishRelay<Step> = PublishRelay()
-
+  
   /// 새로 모집중인 스터디
   var newPostDatas = BehaviorRelay<[PostData]>(value: [])
- 
+  
   /// 마감이 임박한 스터디
   var deadlinePostDatas = BehaviorRelay<[PostData]>(value: [])
-
+  
   var checkLoginStatus = BehaviorRelay<Bool>(value: false)
   var singlePostData = PublishRelay<PostDetailData>()
   var isNeedFetchDatas = PublishRelay<Bool>()
-
+  
   
   init() {
-    /// 북마크 상태 체크를 위함
-//    let isLoginStatus: Bool = TokenManager.shared.loadAccessToken().first != nil
-//    checkLoginStatus.accept(isLoginStatus)
+    StudyPostManager.shared.fetchAccessToken()
     
-//    Task {
-//      do {
-//        async let newPostData: () = fetchNewPostDatas()
-//        async let deadLinePostData: () = fetchDeadLinePostDatas()
-//      
-//        await newPostData
-//        await deadLinePostData
-//      }
-//    }
+    Task {
+      do {
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+
+        async let newPostData: () = self.fetchNewPostDatas()
+        async let deadLinePostData: () = self.fetchDeadLinePostDatas()
+        
+        await newPostData
+        await deadLinePostData
+      }
+    }
   }
   
   
@@ -61,20 +61,8 @@ final class HomeViewModel: Stepper {
       self.deadlinePostDatas.accept(result.postDataByInquiries.content)
     } catch {
       print(#fileID, #function, #line," - \(error)")
-
+      
     }
-  }
-  
-  func fectchSinglePostDatas(_ postID: Int) async {
-//    do {
-//      let result = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
-//    }
-//    StudyPostManager.shared.searchSinglePostData(postId: <#T##Int#>) { <#PostDetailData#> in
-//      <#code#>
-//    }
-//    detailPostDataManager.searchSinglePostData(postId: postID, loginStatus: false) {
-//      self.singlePostData.accept($0)
-//    }
   }
 }
 

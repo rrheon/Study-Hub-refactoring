@@ -16,40 +16,60 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   
   var selectedPostID: Int? = nil
 
-  /// 내가 작성한 게시글 데이터
+  /// 내가 작성한 게시글 전체 데이터
   let myPostData = BehaviorRelay<[MyPostcontent]>(value: [])
+  
+  /// 내가 작성한 게시글 개별 데이터
   let postDetailData = BehaviorRelay<PostDetailData?>(value: nil)
+  
   let updateMyPostData = BehaviorRelay<PostDetailData?>(value: nil)
+  
   var isValidScroll: Bool = false
   
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
-    getMyPostData(size: 5)
+    getMyPostData()
   }
   
   // MARK: - 내가쓴 포스트 데이터 가져오기
   
   
-  func getMyPostData(size: Int) {
-    StudyPostManager.shared.searchMyPost(page: 0, size: 5) { data in
+  /// 내가 작성한 스터디 데이터 가져오기
+  /// - Parameters:
+  ///   - page: 페이지
+  ///   - size: 사이즈
+  func getMyPostData(page: Int = 0, size: Int = 5) {
+    StudyPostManager.shared.searchMyPost(page: page, size: size) { data in
       self.myPostData.accept( data.posts.myPostcontent)
     }
   }
   
-  func getPostDetailData(
-    _ postID: Int,
-    completion: @escaping (BehaviorRelay<PostDetailData?>) -> Void
-  ){
-//    self.detailPostDataManager.searchSinglePostData(
-//      postId: postID,
-//      loginStatus: true
-//    ) { result in
-//      self.postDetailData.accept(result)
-//      completion(self.postDetailData)
-//    }
+  
+  /// 내가 작성한 스터디 수정하기
+  /// - Parameter postID: 스터디 postID
+  func modifyMyPostBtnTapped(postID: Int){
+    Task {
+      let data = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
+      
+      steps.accept(AppStep.dismissCurrentScreen)
+      steps.accept(AppStep.studyFormScreenIsRequired(data: data))
+    }
+  }
+
+
+
+  /// 내가 작성한 스터디 마감처리
+  /// - Parameter postID: postID
+  func closeMyPost(_ postID: Int){
+    StudyPostManager.shared.closePost(with: postID) { reulst in
+      self.updateClosePost(postID: postID)
+    }
   }
   
-  func updateMyPost(postID: Int) {
+  
+  /// 마감처리 된 스터디 데이터 업데이트
+  /// - Parameter postID: 마감처리 된 스터디의 PostID
+  func updateClosePost(postID: Int) {
     var currentData = myPostData.value
     
     if let index = currentData.firstIndex(where: { $0.postID == postID }) {
@@ -59,22 +79,11 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
     myPostData.accept(currentData)
   }
   
-  func closeMyPost(_ postID: Int){
-//    self.commonNetworking.moyaNetworking(networkingChoice: .closePost(postID)) { result in
-//      switch result {
-//      case .success(let response):
-//        print(response.response)
-//        if response.statusCode == 200 {
-//          self.updateMyPost(postID: postID)
-//        }
-//      case .failure(let response):
-//        print(response.response)
-//      }
-//    }
-  }
-  
   // MARK: - Delete post
   
+  
+  /// 내가 작성한 게시글 갯수 업데이트
+  /// - Parameter mode:갯수 증가 / 감소
   func updateMyPostCount(mode: PostCountUpdate) -> Int {
     guard var postCount = userData.value?.postCount else { return 0 }
     switch mode {
@@ -86,19 +95,18 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
     return postCount
   }
   
-  func removePost(withId postID: Int) {
-    var currentPosts = myPostData.value
-    currentPosts.removeAll { $0.postID == postID }
-    myPostData.accept(currentPosts)
-  }
   
+  
+  /// 내가 작성한 스터디 삭제
+  /// - Parameter postID: postID
   func deleteMySinglePost(_ postID: Int){
-//    deleteMyPost(postID) { result in
-//      if result {
-//        super.updateUserData(postCount: self.updateMyPostCount(mode: .MINUS))
-//        self.removePost(withId: postID)
-//      }
-//    }
+    StudyPostManager.shared.deletePost(with: postID) { result in
+      super.updateUserData(postCount: self.updateMyPostCount(mode: .MINUS))
+     
+      var currentPosts = self.myPostData.value
+      currentPosts.removeAll { $0.postID == postID }
+      self.myPostData.accept(currentPosts)
+    }
   }
   
   
@@ -109,6 +117,7 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
       self.myPostData.accept([])
     }
   }
+  
   
   func updateMyPost(postData: PostDetailData, addPost: Bool = false) {
     var currentData = myPostData.value

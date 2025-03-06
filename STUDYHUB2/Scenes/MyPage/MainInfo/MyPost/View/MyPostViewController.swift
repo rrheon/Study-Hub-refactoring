@@ -162,6 +162,8 @@ final class MyPostViewController: UIViewController {
   
   /// 바인딩 설정
   func setupBinding(){
+    
+    // 내가 작성한 스터디 데이터
     viewModel.myPostData
       .asDriver(onErrorJustReturn: [])
       .drive(myPostCollectionView.rx.items(
@@ -172,39 +174,24 @@ final class MyPostViewController: UIViewController {
         }
         .disposed(by: disposeBag)
     
-    viewModel.userData
-      .asDriver(onErrorJustReturn: nil)
-      .drive(onNext: { [weak self] userData in
-        self?.totalPostCountLabel.text = "전체 \( userData?.postCount ?? 0)"
-      })
-      .disposed(by: disposeBag)
-  }
-  
-  /// Actions 설정
-  func setupActions(){
+    // 내가 작성한 스터디 데이터 -> UI 설정
     viewModel.myPostData
       .asDriver(onErrorJustReturn: [])
       .drive(onNext: { [ weak self] data in
         let postCount = data.count
         self?.makeUIWithPostCount(postCount)
-      })
-      .disposed(by: disposeBag)
-    
-    // 작성한 글이 없을 때 작성하기 버튼
-    writePostButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        guard let self = self else { return }
+        self?.totalPostCountLabel.text = "전체 \(postCount)"
 
-        viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
       })
       .disposed(by: disposeBag)
+
     
     viewModel.updateMyPostData
       .asDriver(onErrorJustReturn: nil)
-      .drive(onNext: {[weak self] postData in
+      .drive(onNext: { [weak self] postData in
 //        guard let data = postData else { return }
 //        self?.viewModel.updateMyPost(postData: data, addPost: true)
-//        
+//
 //        let postedData = PostedStudyData(isUserLogin: true, postDetailData: data)
 //        self?.moveToOtherVCWithSameNavi(vc: PostedStudyViewController(postedData), hideTabbar: true)
 //        self?.showToast(message: "글 작성이 완료됐어요", imageCheck: true, alertCheck: true)
@@ -219,6 +206,30 @@ final class MyPostViewController: UIViewController {
         self?.viewModel.updateMyPost(postData: data)
       })
       .disposed(by: disposeBag)
+  }
+  
+  /// Actions 설정
+  func setupActions(){
+    
+    /// 스터디 셀 터치 시 - 스터디 상세 화면으로 이동
+    myPostCollectionView.rx.modelSelected(MyPostcontent.self)
+      .throttle(.seconds(1), scheduler: MainScheduler.instance)
+      .subscribe(onNext: { item in
+        let postID = item.postID
+  
+        self.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postID))
+      })
+      .disposed(by: disposeBag)
+    
+  
+    // 작성한 글이 없을 때 작성하기 버튼
+    writePostButton.rx.tap
+      .subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
+      })
+      .disposed(by: disposeBag)
+
   }
   
   
@@ -267,7 +278,7 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
 extension MyPostViewController: MyPostCellDelegate {
   /// 참여자 버튼
   func acceptButtonTapped(studyID: Int) {
-//    moveToOtherVCWithSameNavi(vc: CheckParticipantsVC(studyID), hideTabbar: true)
+    viewModel.steps.accept(AppStep.managementAttendeeIsRequired(studyID: studyID))
   }
   
   /// 메뉴버튼 탭
@@ -304,13 +315,17 @@ extension MyPostViewController: BottomSheetDelegate {
   /// 삭제하기 버튼
   func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     viewModel.selectedPostID = postOrCommentID
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+    
+    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+      self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+    }
   }
   
   /// 수정하기 버튼
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
-    viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: viewModel.postDetailData.value))
+    viewModel.modifyMyPostBtnTapped(postID: postOrCommentID)
   }
 }
 
@@ -322,12 +337,16 @@ extension MyPostViewController: PopupViewDelegate {
     defaultBtnAction()
     
     switch popupCase{
+    // 게시글 전체 삭제
     case .deleteAllMyPosts:
       viewModel.deleteMyAllPost()
       ToastPopupManager.shared.showToast(message: "글이 삭제됐어요")
+    // 개별 게시글 삭제
     case .deleteStudyPost:
       guard let postID = viewModel.selectedPostID else { return }
       viewModel.deleteMySinglePost(postID)
+      ToastPopupManager.shared.showToast(message: "글이 삭제됐어요")
+    // 게시글 마감
     case .closeStudyRecruitment:
       guard let postID = viewModel.selectedPostID else { return }
       viewModel.closeMyPost(postID)

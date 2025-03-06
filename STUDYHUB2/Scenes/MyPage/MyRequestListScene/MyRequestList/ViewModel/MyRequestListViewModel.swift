@@ -21,9 +21,6 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   /// 삭제 성공여부
   var isSuccessToDelete = PublishRelay<Bool>()
   
-  /// 거절 사유
-  var rejectReason = PublishRelay<RejectReason>()
-  
   init(with userData: BehaviorRelay<UserDetailData?>) {
     if let applyCount = userData.value?.applyCount {
       self.countPostNumber.accept(applyCount)
@@ -66,7 +63,7 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   /// 거절 사유 가져오기
   func getRejectReason(_ studyID: Int) {
     ApplyStudyManager.shared.getMyRejectReason(studyId: studyID) { result in
-      self.rejectReason.accept(result)
+      self.steps.accept(AppStep.detailRejectReasonScreenIsRequired(reason: result))
     }
   }
   

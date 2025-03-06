@@ -122,6 +122,9 @@ enum AppStep: Step {
   /// 내가 신청한 스터디 리스트 화면
   case myRequestStudyIsRequired(userData: BehaviorRelay<UserDetailData?>)
   
+  /// 참여자 확인하기
+  case managementAttendeeIsRequired(studyID: Int)
+  
   /// 거절사유 bottomshett
   case refuseBottomSheetIsRequired(userId: Int)
   
@@ -163,6 +166,8 @@ enum AppStep: Step {
   /// BottomSheet
   case bottomSheetIsRequired(postOrCommnetID: Int, type: BottomSheetCase)
  
+  /// 특정 vc까지 pop
+  case popToVC(type: AnyClass)
 }
 
 // MARK: - Flow
@@ -253,6 +258,8 @@ class AppFlow: Flow {
       return navToWriteRefusereaonScreen(userID: userId)
     case .detailRejectReasonScreenIsRequired(let reason):
       return navToRejectReasonScreen(rejectReason: reason)
+    case .managementAttendeeIsRequired(let studyID):
+      return navToManagementAttendeeScreen(studyID: studyID)
       
   // MARK: - Service
       
@@ -279,6 +286,8 @@ class AppFlow: Flow {
       return .none
     case .dismissCurrentFlow:
       return presentLoginScreen()
+    case .popToVC(let type):
+      return popToViewController(ofType: type)
     }
   }
   
@@ -599,6 +608,7 @@ class AppFlow: Flow {
   private func presentPopupScreen(with popupCase: PopupCase) -> FlowContributors {
       let popupVC = PopupViewController(popupCase: popupCase)
 
+
       if let topVC = topMostViewController(), let delegateVC = topVC as? PopupViewDelegate {
           popupVC.popupView.delegate = delegateVC
       }
@@ -623,8 +633,9 @@ class AppFlow: Flow {
   /// 신청한 인원 거절 사유 선택 bottomSheet
   /// - Parameter userId: 거절할 user의 id
   private func presentRefuseBottomSheet(userId: Int) -> FlowContributors {
-    let vc = RefuseBottomSheet(userId: userId)
-    
+    let vc = SelectStudyRefuseViewController(userId: userId)
+    showBottomSheet(bottomSheetVC: vc, size: 387.0)
+
     if let topVC = self.rootViewController.viewControllers.last as? RefuseBottomSheetDelegate {
       vc.delegate = topVC
     }
@@ -652,6 +663,31 @@ class AppFlow: Flow {
     let vc = DetailRejectReasonViewController(rejectData: rejectReason)
     self.rootViewController.pushViewController(vc, animated: true)
     return .one(flowContributor: .contribute(withNext: vc))
+  }
+  
+  
+  /// 참여자 관리 화면으로 이동
+  /// - Parameter studyID: StudyID
+  private func navToManagementAttendeeScreen(studyID: Int) -> FlowContributors {
+    let viewModel = CheckParticipantsViewModel(studyID)
+    let vc = CheckParticipantsViewController(with: viewModel)
+    self.rootViewController.pushViewController(vc, animated: true)
+    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  }
+  
+  
+  /// 특정 VC까지 pop
+  /// - Parameter type: 특정 VC
+  func popToViewController(ofType type: AnyClass) -> FlowContributors{
+    if let navigationController = rootViewController as? UINavigationController {
+      for controller in navigationController.viewControllers {
+        if controller.isKind(of: type) {
+          navigationController.popToViewController(controller, animated: true)
+          return .none
+        }
+      }
+    }
+    return .none
   }
 }
 
@@ -813,8 +849,9 @@ extension AppFlow {
       where: { $0.isKeyWindow })?.rootViewController
   ) -> UIViewController?
   {
+    
       if let presented = rootViewController?.presentedViewController {
-          return topMostViewController(from: presented)
+        return topMostViewController(from: presented)
       }
       
       if let navigationController = rootViewController as? UINavigationController {

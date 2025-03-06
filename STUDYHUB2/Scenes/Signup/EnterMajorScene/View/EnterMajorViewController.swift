@@ -64,12 +64,12 @@ final class EnterMajorViewController: UIViewController {
     
     navigationItemSetting()
     
-    setUpLayout()
     makeUI()
     
     setupBindings()
     setupActions()
   } //viewDidLoad
+  
   
   // MARK: - 네비게이션 바 세팅
   
@@ -80,32 +80,24 @@ final class EnterMajorViewController: UIViewController {
     settingNavigationTitle(title: "회원가입")
   }
   
-  // MARK: - setuplayout
-  
-  /// layout 세팅
-  func setUpLayout() {
-    [
-      mainTitleView,
-      majorTextField,
-      searchButton,
-      resultTableView,
-      nextButton
-    ].forEach {
-      view.addSubview($0)
-    }
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.popIsRequired)
   }
+  
   
   // MARK: - makeUI
   
   
   /// UI 세팅
   func makeUI(){
+    view.addSubview(mainTitleView)
     mainTitleView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
       $0.leading.equalToSuperview().offset(20)
       $0.height.equalTo(75)
     }
-
+    
+    view.addSubview(majorTextField)
     majorTextField.snp.makeConstraints {
       $0.top.equalTo(mainTitleView.snp.bottom).offset(40)
       $0.leading.equalTo(mainTitleView.snp.leading)
@@ -113,11 +105,13 @@ final class EnterMajorViewController: UIViewController {
       $0.height.equalTo(40)
     }
     
+    view.addSubview(searchButton)
     searchButton.snp.makeConstraints {
       $0.centerY.equalTo(majorTextField).offset(15)
       $0.trailing.equalToSuperview().offset(-30)
     }
 
+    view.addSubview(resultTableView)
     resultTableView.isHidden = true
     resultTableView.snp.makeConstraints {
       $0.top.equalTo(majorTextField.snp.bottom).offset(30)
@@ -125,6 +119,7 @@ final class EnterMajorViewController: UIViewController {
       $0.bottom.equalTo(nextButton.snp.top).offset(10)
     }
     
+    view.addSubview(nextButton)
     nextButton.unableButton(false)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-40)

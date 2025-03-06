@@ -92,6 +92,11 @@ final class EnterNicknameViewController: UIViewController {
     leftButtonSetting()
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(SignupStep.popIsRequired)
+  }
+  
+  
   // MARK: - setUpLayout
   
   /// Layout 설정
@@ -245,9 +250,9 @@ final class EnterNicknameViewController: UIViewController {
     /// 닉네임 중복여부에 따른 UI설정
     viewModel.checkDuplicationNickname
       .withUnretained(self)
-      .asDriver(onErrorJustReturn: (self, ""))
+      .asDriver(onErrorJustReturn: (self, false))
       .drive(onNext: { vc, isDuplicatedNickname in
-        if isDuplicatedNickname == "Error"{
+        if isDuplicatedNickname {
           vc.characterCountLabel.isHidden = true
           vc.nicknameTextField.alertLabelSetting(
             hidden: false,

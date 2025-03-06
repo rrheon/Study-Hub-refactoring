@@ -45,9 +45,9 @@ class StudyHubCommonNetworking {
   var loginStatus: Bool = false
   
   init() {
-      
+    
       // 5분 간격으로 AccessToken 다시 받아오기
-      registerCheckValidAccessToken()
+    registerCheckValidAccessToken()
   }
 
   

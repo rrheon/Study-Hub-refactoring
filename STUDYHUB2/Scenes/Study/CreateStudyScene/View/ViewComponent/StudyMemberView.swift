@@ -209,6 +209,14 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
     guard let postValue = viewModel.postedData.value else { return }
     
     studymemberTextField.text = String(postValue.studyPerson)
+       
+    [ maleOnlyButton, femaleOnlyButton, allGenderButton]
+      .forEach {
+        if $0.titleLabel?.text == Utils.convertGenderType(postValue.filteredGender ?? ""){
+          viewModel.selectedGenderButton.accept($0)
+      }
+    }
+    
   }
   
   /// 바인딩
@@ -272,7 +280,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
       case femaleOnlyButton:  selectedGender = "FEMALE"
       default: return
     }
-    
+        
     var updatedData = viewModel.createStudyData.value
     updatedData?.gender = selectedGender
     viewModel.createStudyData.accept(updatedData)

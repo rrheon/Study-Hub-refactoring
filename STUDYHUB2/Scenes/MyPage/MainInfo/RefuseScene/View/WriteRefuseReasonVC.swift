@@ -82,6 +82,7 @@ final class WriteRefuseReasonVC: UIViewController, Stepper {
     setupUI()
     
     settingNavigationTitle(title: "거절사유")
+    leftButtonSetting()
   }
   
   // MARK: - UI Setup
@@ -109,19 +110,19 @@ final class WriteRefuseReasonVC: UIViewController, Stepper {
       $0.trailing.equalTo(reasonTextView)
       $0.top.equalTo(reasonTextView.snp.bottom).offset(5)
     }
+
+    view.addSubview(completeButton)
+    completeButton.snp.makeConstraints {
+      $0.bottom.equalTo(view.snp.bottom).offset(-20)
+      $0.leading.equalToSuperview().offset(20)
+      $0.trailing.equalToSuperview().offset(-20)
+      $0.height.equalTo(55)
+    }
     
     view.addSubview(bottomLabel)
     bottomLabel.snp.makeConstraints {
       $0.bottom.equalTo(completeButton.snp.top).offset(-30)
       $0.leading.equalTo(completeButton)
-    }
-    
-    view.addSubview(completeButton)
-    completeButton.snp.makeConstraints {
-      $0.bottom.equalToSuperview().offset(-30)
-      $0.leading.equalToSuperview().offset(20)
-      $0.trailing.equalToSuperview().offset(-20)
-      $0.height.equalTo(55)
     }
   }
 

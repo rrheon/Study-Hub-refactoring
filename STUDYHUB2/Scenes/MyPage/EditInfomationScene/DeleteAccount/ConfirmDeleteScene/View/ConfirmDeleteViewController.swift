@@ -91,6 +91,10 @@ final class ConfirmDeleteViewController: UIViewController, Stepper {
     settingNavigationTitle(title: "탈퇴하기")
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    self.steps.accept(AppStep.popCurrentScreen(animate: true))
+  }
+  
   /// layout 설정
   func setupLayout(){
     buttonStackView.addArrangedSubview(continueButton)

@@ -5,16 +5,23 @@ import Moya
 import RxRelay
 import RxFlow
 
+
+/// 공지사항 ViewModel
 final class NotificationViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
-  
+  /// 공지사항 데이터
   var noticeDatas = BehaviorRelay<[ExpandedNoticeContent]>(value: [])
   
   init() {
     self.getNoticeData(page: 0, size: 5)
   }
   
+  
+  /// 공지사항 가져오기
+  /// - Parameters:
+  ///   - page: 페이지 수
+  ///   - size: 사이즈 수
   func getNoticeData(page: Int, size: Int){
     ToStudyHubManager.shared.fetchNotice { noticeData in
       let filteredDatas = noticeData.content.map { ExpandedNoticeContent(noticeContent: $0) }

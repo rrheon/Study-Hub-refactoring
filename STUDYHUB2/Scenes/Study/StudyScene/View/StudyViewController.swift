@@ -51,7 +51,7 @@ final class StudyViewController: UIViewController {
   }()
   
   private let scrollView: UIScrollView =  UIScrollView().then {
-    $0.backgroundColor = .bg30
+    $0.backgroundColor = .white
   }
   
   /// 스터디 생성버튼
@@ -66,13 +66,11 @@ final class StudyViewController: UIViewController {
   
   /// view가 나타날 때 데이터 다시 가져오기
   override func viewWillAppear(_ animated: Bool) {
-//    Task {
-//      do {
-//        print(#fileID, #function, #line," - 호출")
-//
-//        await viewModel.fetchPostData(hotType: "false")
-//      }
-//    }
+    Task {
+      do {
+        await viewModel.fetchPostData(hotType: "false")
+      }
+    }
     
     print(#fileID, #function, #line," - \(TokenManager.shared.loadAccessToken() ?? "")")
 
@@ -126,10 +124,11 @@ final class StudyViewController: UIViewController {
       resultCollectionView.snp.makeConstraints { make in
         make.width.equalToSuperview()
         make.height.equalTo(scrollView.snp.height)
+        make.top.equalTo(scrollView.snp.top).offset(10)
       }
       
       scrollView.snp.makeConstraints { make in
-        make.top.equalTo(recentButton.snp.bottom).offset(20)
+        make.top.equalTo(recentButton.snp.bottom).offset(10)
         make.leading.trailing.bottom.equalTo(view)
       }
       

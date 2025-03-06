@@ -83,6 +83,10 @@ final class DeleteAccountViewController: UIViewController {
     leftButtonSetting()
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+  }
+  
   /// 바인딩 설정
   func setupBinding(){
     passwordTextField.textField.rx.text.orEmpty

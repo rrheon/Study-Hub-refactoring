@@ -17,7 +17,6 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   override init() {
     super.init()
-    super.fetchAccessToken()
   }
   
   /// 모든 스터디 게시글 조회하기
@@ -104,11 +103,11 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   /// 스터디 삭제
   /// - Parameter postId: 삭제할 스터디의 postId
-  func deletePost(with postId: Int){
+  func deletePost(with postId: Int, completion: @escaping (Bool) -> Void){
     provider.request(.deletePost(postId: postId)) { result in
       switch result {
-      case .success(_): print("삭제 완")
-      case .failure(_): print("삭제 실패")
+      case .success(_): completion(true)
+      case .failure(_): completion(false)
       }
     }
   }
@@ -128,11 +127,11 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   /// 작성한 스터디 마감하기
   /// - Parameter postId: 마감할 postId
-  func closePost(with postId: Int){
+  func closePost(with postId: Int, completion: @escaping (Bool) -> Void){
     provider.request(.closePost(postId: postId)) { result in
       switch result {
-      case .success(_): print("마감 완료")
-      case .failure(_): print("마감 실패")
+      case .success(_): completion(true)
+      case .failure(_): completion(false)
       }
     }
   }
