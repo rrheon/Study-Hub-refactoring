@@ -8,6 +8,7 @@
 import Foundation
 import Security
 
+
 /// 토큰 관련 매니저
 final class TokenManager {
   
@@ -55,34 +56,46 @@ final class TokenManager {
     let accessTokenQuery: [CFString: Any] = [
       kSecClass: kSecClassGenericPassword,
       kSecAttrService: service,
-      kSecAttrAccount: accessTokenAccount,
-      kSecValueData: accessTokenData
+      kSecAttrAccount: accessTokenAccount
     ]
     
     let refreshTokenQuery: [CFString: Any] = [
       kSecClass: kSecClassGenericPassword,
       kSecAttrService: service,
-      kSecAttrAccount: refreshTokenAccount,
-      kSecValueData: refreshTokenData
+      kSecAttrAccount: refreshTokenAccount
     ]
     
-    // Keychain에 access token과 refresh token을 저장
-    return SecItemAdd(accessTokenQuery as CFDictionary, nil) == errSecSuccess &&
-           SecItemAdd(refreshTokenQuery as CFDictionary, nil) == errSecSuccess
+    let updateAttributes: [CFString: Any] = [kSecValueData: accessTokenData]
+    let refreshUpdateAttributes: [CFString: Any] = [kSecValueData: refreshTokenData]
+    
+    // 기존 토큰이 존재하는지 확인
+    if SecItemUpdate(accessTokenQuery as CFDictionary, updateAttributes as CFDictionary) == errSecSuccess,
+       SecItemUpdate(refreshTokenQuery as CFDictionary, refreshUpdateAttributes as CFDictionary) == errSecSuccess {
+      return true
+    }
+    
+    // 기존 토큰이 없으면 새로 추가
+    let newAccessTokenQuery = accessTokenQuery.merging(updateAttributes) { (_, new) in new }
+    let newRefreshTokenQuery = refreshTokenQuery.merging(refreshUpdateAttributes) { (_, new) in new }
+    
+    let accessTokenResult = SecItemAdd(newAccessTokenQuery as CFDictionary, nil)
+    let refreshTokenResult = SecItemAdd(newRefreshTokenQuery as CFDictionary, nil)
+    
+    return accessTokenResult == errSecSuccess && refreshTokenResult == errSecSuccess
   }
-  
+
   
   /// access token 가져오기
   /// - Returns: access token
   func loadAccessToken() -> String? {
     guard let service = self.service,
-          let query = accessTokenQuery else { return nil }
+          let query = accessTokenQuery else { return "" }
     
     var item: CFTypeRef?
-    if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess { return nil }
+    if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess { return "" }
     
     guard let data = item as? Data,
-          let accessToken = String(data: data, encoding: .utf8) else { return nil }
+          let accessToken = String(data: data, encoding: .utf8) else { return "" }
     
     return accessToken
   }
