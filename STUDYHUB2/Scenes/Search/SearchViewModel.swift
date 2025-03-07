@@ -20,8 +20,13 @@ final class SearchViewModel: Stepper {
   var recommendList: PublishRelay<[String]> = PublishRelay<[String]>()
   
   /// 검색된 스터디 리스트
-  var postDatas: PublishRelay<[PostData?]> = PublishRelay<[PostData?]>()
+  var postDatas: BehaviorRelay<[PostData?]> = BehaviorRelay<[PostData?]>(value: [])
 
+  var page: Int = 0
+
+  var isInfiniteScroll: Bool = true
+  
+  var searchContent: String = ""
   
   // MARK: - 추천어 검색하기
 
@@ -40,8 +45,23 @@ final class SearchViewModel: Stepper {
   func fectchPostData(with selectedKeyword: String){
     Task {
       do {
-        let data = try await StudyPostManager.shared.searchAllPost(title: selectedKeyword)
-        postDatas.accept(data.postDataByInquiries.content)
+        let data = try await StudyPostManager.shared.searchAllPost(title: selectedKeyword, page: page)
+        
+        var curruentData = postDatas.value
+        
+        if page == 0 {
+          curruentData = data.postDataByInquiries.content
+        }else{
+          var newData = data.postDataByInquiries.content
+          
+          curruentData.append(contentsOf: newData)
+          
+          isInfiniteScroll = data.postDataByInquiries.last
+        }
+        
+        self.postDatas.accept(curruentData)
+        
+        page += 1
       }
     }
   }

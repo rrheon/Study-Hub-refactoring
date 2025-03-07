@@ -24,8 +24,15 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   
   let updateMyPostData = BehaviorRelay<PostDetailData?>(value: nil)
   
-  var isValidScroll: Bool = false
+  var totalCount: Int = 0
   
+  /// 스터디 무한스크롤 여부
+  /// true = 마지막 , false = 더 있음
+  var isInfiniteScroll: Bool = true
+  
+  /// 북마크 페이지
+  var myPostPage: Int = 0
+    
   override init(userData: BehaviorRelay<UserDetailData?>) {
     super.init(userData: userData)
     getMyPostData()
@@ -38,12 +45,23 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   /// - Parameters:
   ///   - page: 페이지
   ///   - size: 사이즈
-  func getMyPostData(page: Int = 0, size: Int = 5) {
-    StudyPostManager.shared.searchMyPost(page: page, size: size) { data in
-      self.myPostData.accept( data.posts.myPostcontent)
+  func getMyPostData(size: Int = 5) {
+    StudyPostManager.shared.searchMyPost(page: myPostPage, size: size) { data in
+      var currentDatas = self.myPostData.value
+      
+      if self.myPostPage == 0 {
+        currentDatas = data.posts.myPostcontent
+      }else{
+        var newData = data.posts.myPostcontent
+        currentDatas.append(contentsOf: newData)
+      }
+      self.myPostData.accept(currentDatas)
+      self.myPostPage += 1
+      self.isInfiniteScroll = data.posts.last
+      self.totalCount = data.totalCount
     }
   }
-  
+
   
   /// 내가 작성한 스터디 수정하기
   /// - Parameter postID: 스터디 postID

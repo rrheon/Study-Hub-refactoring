@@ -20,6 +20,10 @@ final class MyPageViewController: UIViewController {
   /// 서비스 View - 공지사항, 문의하기, 이용방법, 서비스 이용약관, 개인정보 처리방침
   private lazy var serviceView: ServiceView = ServiceView(viewModel)
   
+  override func viewWillAppear(_ animated: Bool) {
+    viewModel.fetchUserData()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white

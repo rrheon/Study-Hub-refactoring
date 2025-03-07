@@ -17,7 +17,7 @@ enum UserAuthNetworking{
   case refreshAccessToken(refreshToken: String)           // accessToken 발행
   case sendEmailCode(email: String)                       // 이메일 인증코드 전송
   case checkEmailDuplication(email: String)               // 이메일 중복검사
-//  case sendEmailForVerifyPassword(email: String)          // 비밀번호 검증용 이메일 인증코드 전송
+  case sendEmailForVerifyPassword(email: String)          // 비밀번호 검증용 이메일 인증코드 전송
   case verifyEmailAndCode(code: String, email: String)    // 이메일 인증코드 검증
 }
 
@@ -32,7 +32,7 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
     case .refreshAccessToken(_):            return "/jwt/v1/accessToken"
     case .sendEmailCode(_):                 return "/v1/email"
     case .checkEmailDuplication(_):         return "/v1/email/duplication"
-//    case .sendEmailForVerifyPassword(_):    return "/v1/users/password"
+    case .sendEmailForVerifyPassword(_):    return "/v1/email/password"
     case .verifyEmailAndCode(_, _):         return "/v1/email/verify"
     }
   }
@@ -59,10 +59,10 @@ extension UserAuthNetworking: TargetType, CommonBaseURL {
       let params: [String: Any] = ["email": email]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)
       
-//    case .sendEmailForVerifyPassword(let email):
-//      let params: [String: Any] = ["email": email]
-//      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
-//      
+    case .sendEmailForVerifyPassword(let email):
+      let params: [String: Any] = ["email": email]
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+      
     case .loginToStudyHub(let email, let password):
       let params: [String: Any] = ["email": email, "password": password]
       return .requestParameters(parameters: params, encoding: JSONEncoding.default)

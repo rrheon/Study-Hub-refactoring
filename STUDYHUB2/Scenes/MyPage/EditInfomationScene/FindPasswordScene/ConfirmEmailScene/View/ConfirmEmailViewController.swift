@@ -24,12 +24,16 @@ final class ConfirmEmailViewController: UIViewController {
   private lazy var emailTextField = StudyHubUI.createTextField(title: "@inu.ac.kr")
   
   init(with viewModel: ConfirmEmailViewModel) {
-    self.viewModel = ConfirmEmailViewModel()
+    self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    viewModel.email.accept("")
   }
   
   override func viewDidLoad() {
@@ -39,21 +43,13 @@ final class ConfirmEmailViewController: UIViewController {
     
     setupNavigationbar()
     
-    setUpLayout()
     makeUI()
     
     setupBinding()
     setupActions()
   } // viewDidLoad
-  
-  // MARK: - setUpLayout
-  
-  
-  /// layout 설정
-  func setUpLayout(){
-    [ titleLabel, emailTextField ]
-      .forEach { view.addSubview($0) }
-  }
+    
+
   
   // MARK: - makeUI
   
@@ -78,16 +74,17 @@ final class ConfirmEmailViewController: UIViewController {
   
   // MARK: - navigationbar
   
-  /// 네비게이션 설정
+  /// 네비게이션바 설정
   func setupNavigationbar() {
     settingNavigationTitle(title: "비밀번호 찾기")
     leftButtonSetting()
     rightButtonSetting(imgName: "UnableNextButton", activate: false)
-    navigationController?.navigationBar.backgroundColor = .black
+    settingNavigationbar()
   }
   
+  /// 네비게이션 바 왼쪽 버튼 탭 -
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(FindPasswordStep.dismissCurrentFlow)
   }
   
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
@@ -118,8 +115,7 @@ final class ConfirmEmailViewController: UIViewController {
         if result {
           guard let email = self?.viewModel.email.value else { return }
 
-          self?.viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
-          self?.viewModel.steps.accept(AppStep.enterEmailCodeScreenIsRequired(email: email))
+          self?.viewModel.steps.accept(FindPasswordStep.enterEmailCodeScreenIsRequired(email: email))
         } else {
           ToastPopupManager.shared.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
                                              alertCheck: false)

@@ -106,6 +106,10 @@ final class EditMajorViewController: UIViewController {
     rightButtonSetting(imgName: "DeCompletedImg", activate: false)
   }
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+  }
+  
   /// 네비게이션 바 오른쪽 버튼 탭
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     guard let major = majorTextField.text else { return }

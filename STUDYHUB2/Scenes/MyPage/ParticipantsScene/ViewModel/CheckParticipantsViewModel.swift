@@ -58,7 +58,7 @@ final class CheckParticipantsViewModel: Stepper {
     buttonStatus = type
     ApplyStudyManager.shared.getApplyUserData(inspection: buttonStatus.content,
                                               page: 0,
-                                              size: 5,
+                                              size: 50,
                                               studyId: studyID) { result in
       self.studyUserData.accept(result.applyUserData.content)
       self.totalCount.accept(result.applyUserData.numberOfElements)

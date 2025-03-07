@@ -130,9 +130,9 @@ class ApplyStudyManager: StudyHubCommonNetworking {
   
   /// 내가 신청한 스터디 요청내역 가져오기
   /// - Parameter completion: 콜백함수
-  func getMyRequestStudyList(completion: @escaping (MyRequestList) -> Void){
+  func getMyRequestStudyList(page: Int, size: Int, completion: @escaping (MyRequestList) -> Void){
     // 무한스크롤로 늘려야함
-    provider.request(.getMyReqeustList(page: 0, size: 5)) { result in
+    provider.request(.getMyReqeustList(page: page, size: size)) { result in
       self.commonDecodeNetworkResponse(with: result,
                                        decode: MyRequestList.self) { decodedData in
         completion(decodedData)

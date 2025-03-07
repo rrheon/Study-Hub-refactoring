@@ -111,7 +111,6 @@ class UserAuthManager: StudyHubCommonNetworking {
         print(response.response)
       }
     }
-    
   }
   
   // MARK: - 이메일 중복체크 후 인증코드 확인
@@ -170,4 +169,18 @@ class UserAuthManager: StudyHubCommonNetworking {
     }
   }
 
+  
+  func sendEmailCodeWithChangePassword(email: String, completion: @escaping (Bool) -> Void) {
+    provider.request(.sendEmailForVerifyPassword(email: email)) { result in
+      switch result {
+      case .success(let response):
+        print(response.response)
+        completion(true)
+      case .failure(let response):
+        print(response.response)
+        completion(false)
+      }
+    }
+  }
+  
 }

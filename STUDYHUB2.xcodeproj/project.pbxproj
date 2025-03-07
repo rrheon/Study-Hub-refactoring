@@ -97,6 +97,8 @@
 		EE8871652D7058E300C1C0AF /* UIViewController+Navigationbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871642D7058E300C1C0AF /* UIViewController+Navigationbar.swift */; };
 		EE8871672D72B05900C1C0AF /* ToastPopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871662D72B05900C1C0AF /* ToastPopupManager.swift */; };
 		EE8871692D72F8DB00C1C0AF /* UIViewController+Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871682D72F8DB00C1C0AF /* UIViewController+Indicator.swift */; };
+		EE88717C2D79F23600C1C0AF /* FindPasswordFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE88717B2D79F23600C1C0AF /* FindPasswordFlow.swift */; };
+		EE88717E2D7A8A8700C1C0AF /* UITabBarController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE88717D2D7A8A8700C1C0AF /* UITabBarController+UI.swift */; };
 		EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356272B6A509E00D662CC /* NotificationViewController.swift */; };
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
 		EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */; };
@@ -291,6 +293,8 @@
 		EE8871642D7058E300C1C0AF /* UIViewController+Navigationbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Navigationbar.swift"; sourceTree = "<group>"; };
 		EE8871662D72B05900C1C0AF /* ToastPopupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastPopupManager.swift; sourceTree = "<group>"; };
 		EE8871682D72F8DB00C1C0AF /* UIViewController+Indicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Indicator.swift"; sourceTree = "<group>"; };
+		EE88717B2D79F23600C1C0AF /* FindPasswordFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindPasswordFlow.swift; sourceTree = "<group>"; };
+		EE88717D2D7A8A8700C1C0AF /* UITabBarController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabBarController+UI.swift"; sourceTree = "<group>"; };
 		EE9356272B6A509E00D662CC /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMajorViewController.swift; sourceTree = "<group>"; };
@@ -518,6 +522,7 @@
 				EE8871682D72F8DB00C1C0AF /* UIViewController+Indicator.swift */,
 				EEB07A4C2D5B0A620009246D /* UICollectionViewCell+CellID.swift */,
 				EEB07A5C2D5B3E6F0009246D /* Notification+Name.swift */,
+				EE88717D2D7A8A8700C1C0AF /* UITabBarController+UI.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -930,9 +935,11 @@
 			isa = PBXGroup;
 			children = (
 				EEB079FD2D54FFBA0009246D /* AppFlow.swift */,
+				EEB07A2D2D5724F10009246D /* SignupFlow.swift */,
 				EEB07A022D5503020009246D /* HomeFlow.swift */,
 				EEB07A042D5503070009246D /* StudyFlow.swift */,
 				EEB07A062D55030C0009246D /* MypageFlow.swift */,
+				EE88717B2D79F23600C1C0AF /* FindPasswordFlow.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -1711,7 +1718,6 @@
 		F80421C42A7D7C25006C6B87 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
-				EEB07A2D2D5724F10009246D /* SignupFlow.swift */,
 				EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */,
 				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
 				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
@@ -1920,12 +1926,14 @@
 				EEB07A032D5503020009246D /* HomeFlow.swift in Sources */,
 				EE02B1172B15FEEE0092082F /* RefuseCell.swift in Sources */,
 				EEB07A5F2D5B95EC0009246D /* EmptyResultView.swift in Sources */,
+				EE88717C2D79F23600C1C0AF /* FindPasswordFlow.swift in Sources */,
 				EEB07A2E2D5724F10009246D /* SignupFlow.swift in Sources */,
 				EE5B93392D48AA57006DC65D /* StudyPostDTO.swift in Sources */,
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,
 				EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */,
 				EEC5FF9B2C9DBF7200896FEB /* ConfirmEmailViewModel.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,
+				EE88717E2D7A8A8700C1C0AF /* UITabBarController+UI.swift in Sources */,
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
 				EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */,
 				EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */,

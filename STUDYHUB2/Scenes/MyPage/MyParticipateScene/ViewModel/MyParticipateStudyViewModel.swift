@@ -26,6 +26,10 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
   /// 삭제 성공 여부
   var isSuccessToDelete = PublishRelay<Bool>()
   
+  var page: Int = 0
+  
+  var isInfiniteScroll: Bool = true
+  
   init(with userData: BehaviorRelay<UserDetailData?>) {
     if let participateCount = userData.value?.participateCount {
       self.countPostNumber.accept(participateCount)
@@ -40,8 +44,20 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
   
   /// 참여한  스터디 리스트 가져오기
   func getParticipatedList() {
-    ApplyStudyManager.shared.getMyParticipateList { result in
-      self.participateInfo.accept(result.participateStudyData.content)
+    ApplyStudyManager.shared.getMyParticipateList(page: page) { result in
+      
+      var currentDatas = self.participateInfo.value
+      
+      if self.page == 0 {
+        currentDatas = result.participateStudyData.content
+      }else{
+        var newDatas = result.participateStudyData.content
+        currentDatas.append(contentsOf: newDatas)
+      }
+      
+      self.participateInfo.accept(currentDatas)
+      self.page += 1
+      self.isInfiniteScroll = result.participateStudyData.last
       self.countPostNumber.accept(result.participateStudyData.numberOfElements)
     }
   }

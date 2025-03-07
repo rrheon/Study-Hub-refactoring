@@ -215,7 +215,7 @@ class AppFlow: Flow {
     case .confirmPasswordScreenIsRequired(let email):
       return navToConfirmpasswordScreen(with: email)
     case .confrimEmailScreenIsRequired:
-      return navToConfirmEmailScreen()
+      return presentToConfirmEmailScreen()
     case .enterEmailCodeScreenIsRequired(let email):
       return navToEmailCodeScreen(with: email)
     case .confirmDeleteAccountScreenIsRequired:
@@ -298,16 +298,14 @@ class AppFlow: Flow {
     let studyFlow: StudyFlow = StudyFlow()
     let mypageFlow: MypageFlow = MypageFlow()
     
+    tabBarController.setupTabBarControllerUI()
+    
     Flows.use(homeFlow, studyFlow, mypageFlow, when: .ready) { [unowned self] root1, root2, root3 in
       root1.tabBarItem = AppStep.SceneType.home.tabItem
       root2.tabBarItem = AppStep.SceneType.study.tabItem
       root3.tabBarItem = AppStep.SceneType.mypage.tabItem
       
       tabBarController.viewControllers = [root1, root2, root3]
-      tabBarController.tabBar.backgroundColor = .white
-      tabBarController.tabBar.tintColor = .o50
-      tabBarController.tabBar.layer.borderColor = UIColor.white.cgColor
-      tabBarController.tabBar.layer.borderWidth = 0.5
       tabBarController.selectedIndex = 0
       
       rootViewController.setViewControllers([tabBarController], animated: false)
@@ -534,14 +532,19 @@ class AppFlow: Flow {
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
-  
+
   /// 이메일 유효성 확인 화면으로 이동
-  func navToConfirmEmailScreen() -> FlowContributors {
-    let viewModel = ConfirmEmailViewModel()
-    let vc = ConfirmEmailViewController(with: viewModel)
-    self.rootViewController.navigationBar.isHidden = false
-    self.rootViewController.pushViewController(vc, animated: true)
-    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+  func presentToConfirmEmailScreen() -> FlowContributors {
+    let findPasswordFlow = FindPasswordFlow()
+    
+    Flows.use(findPasswordFlow, when: .ready) { [unowned self] root in
+      root.modalPresentationStyle = .fullScreen
+      self.rootViewController.present(root, animated: true)
+    }
+   
+    return .one(flowContributor: .contribute(
+      withNextPresentable: findPasswordFlow,
+      withNextStepper: OneStepper(withSingleStep: FindPasswordStep.confirmEmailIsRequired)))
   }
   
   /// 이메일 인증코드 입력 화면으로 이동

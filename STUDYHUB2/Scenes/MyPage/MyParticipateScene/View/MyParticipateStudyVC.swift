@@ -267,3 +267,22 @@ extension MyParticipateStudyVC: PopupViewDelegate {
   }
 }
   
+
+
+// MARK: - 스크롤
+
+
+extension MyParticipateStudyVC {
+  
+  /// 스크롤할 때 네트워킹 요청
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    let scrollViewHeight = scrollView.frame.size.height
+    let contentHeight = scrollView.contentSize.height
+    let offsetY = scrollView.contentOffset.y
+    
+    // 바닥에서 50포인트 위에 도달했는지 체크
+    if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
+      viewModel.getParticipatedList()
+    }
+  }
+}

@@ -57,10 +57,10 @@ final class EnterMajorViewModel: Stepper {
   /// 계정 생성하기
   /// - Parameter major: 학과
   func createAccount(_ major: String){
-    guard let email = email,
-          let gender = gender,
-          let nickname = nickname,
-          let password = password,
+    guard let email = EnterMajorViewModel.shared.email,
+          let gender = EnterMajorViewModel.shared.gender,
+          let nickname = EnterMajorViewModel.shared.nickname,
+          let password = EnterMajorViewModel.shared.password,
           let major = Utils.convertMajor(major, toEnglish: true) else { return }
     let userInfo = CreateAccount(
       email: email,

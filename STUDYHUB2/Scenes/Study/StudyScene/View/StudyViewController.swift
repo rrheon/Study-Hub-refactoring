@@ -71,9 +71,6 @@ final class StudyViewController: UIViewController {
         await viewModel.fetchPostData(hotType: "false")
       }
     }
-    
-    print(#fileID, #function, #line," - \(TokenManager.shared.loadAccessToken() ?? "")")
-
   }
 
   override func viewDidLoad() {

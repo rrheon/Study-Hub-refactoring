@@ -293,20 +293,6 @@ extension MyPostViewController: MyPostCellDelegate {
   }
 }
 
-// MARK: - collectionView
-
-extension MyPostViewController: UICollectionViewDelegate {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let tableView = myPostCollectionView
-    if (tableView.contentOffset.y > (tableView.contentSize.height - tableView.bounds.size.height)){
-      guard let count = viewModel.userData.value?.postCount else { return }
-      if viewModel.isValidScroll {
-        viewModel.isValidScroll = false
-        viewModel.getMyPostData(size: count)
-      }
-    }
-  }
-}
 
 // MARK: - BottomSheet
 
@@ -351,6 +337,24 @@ extension MyPostViewController: PopupViewDelegate {
       guard let postID = viewModel.selectedPostID else { return }
       viewModel.closeMyPost(postID)
     default: return
+    }
+  }
+}
+
+// MARK: - 스크롤
+
+
+extension MyPostViewController {
+  
+  /// 스크롤할 때 네트워킹 요청
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    let scrollViewHeight = scrollView.frame.size.height
+    let contentHeight = scrollView.contentSize.height
+    let offsetY = scrollView.contentOffset.y
+    
+    // 바닥에서 50포인트 위에 도달했는지 체크
+    if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
+      viewModel.getMyPostData()
     }
   }
 }

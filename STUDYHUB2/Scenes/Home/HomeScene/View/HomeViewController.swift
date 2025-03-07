@@ -101,7 +101,6 @@ final class HomeViewController: UIViewController {
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
     viewModel.isNeedFetchDatas.accept(true)
-
   }
   
   // MARK: -  viewDidLoad

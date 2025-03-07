@@ -17,7 +17,7 @@ class ResultSearchViewController: UIViewController {
   
   var viewModel: SearchViewModel
   let disposeBag: DisposeBag = DisposeBag()
-
+  
   /// 서치바
   private lazy var searchBar = StudyHubUI.createSearchBar(placeholder: "관심있는 스터디를 검색해 보세요")
   
@@ -33,7 +33,7 @@ class ResultSearchViewController: UIViewController {
   
   /// 검색결과 필터링 버튼 - 동일한 학과
   private lazy var majorButton = createSearchViewButton(title: "학과")
-
+  
   /// 검색결과가 없을 때 이미지
   private lazy var emptyImageView = UIImageView(image: UIImage(named: "EmptyStudy"))
   
@@ -88,7 +88,7 @@ class ResultSearchViewController: UIViewController {
     makeUI()
   } // viewDidLoad
   
-
+  
   // MARK: - UI설정
   
   
@@ -144,7 +144,7 @@ class ResultSearchViewController: UIViewController {
   /// 네비게이션 바 설정
   func setupNavigationbar(){
     leftButtonSetting()
-    settingNavigationTitle(title: "검색결과") // 타이틀 색상이 안보임
+    settingNavigationTitle(title: "검색결과")
     self.navigationController?.navigationBar.isTranslucent = false
   }
   
@@ -202,15 +202,15 @@ class ResultSearchViewController: UIViewController {
         cellIdentifier: SearchResultCell.cellID,
         cellType: SearchResultCell.self)) { index, content, cell in
           cell.cellData = content
-//          cell.loginStatus = self.viewModel.isUserLogin
+          //          cell.loginStatus = self.viewModel.isUserLogin
         }
         .disposed(by: disposeBag)
     
-//    viewModel.postDatas
-//      .subscribe(onNext: { [ weak self]  _ in
-//        self?.updateUI()
-//      })
-//      .disposed(by: disposeBag)
+    //    viewModel.postDatas
+    //      .subscribe(onNext: { [ weak self]  _ in
+    //        self?.updateUI()
+    //      })
+    //      .disposed(by: disposeBag)
   }
   
   
@@ -222,9 +222,9 @@ class ResultSearchViewController: UIViewController {
       .throttle(.seconds(1), scheduler: MainScheduler.instance)
       .subscribe(onNext: { [weak self] item in
         let postID = item.postId
-       NotificationCenter.default.post(name: .navToStudyDetailScrenn,
-                                      object: nil,
-                                      userInfo: ["postID" : postID])
+        NotificationCenter.default.post(name: .navToStudyDetailScrenn,
+                                        object: nil,
+                                        userInfo: ["postID" : postID])
       })
       .disposed(by: disposeBag)
     
@@ -252,19 +252,7 @@ class ResultSearchViewController: UIViewController {
   
   func buttonTapped(hot: String, titleAndMajor: String){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
-//
-//    let data = RequestPostData(
-//      hot: hot,
-//      text: self.viewModel.searchKeyword ?? "",
-//      page: 0,
-//      size: 5,
-//      titleAndMajor: titleAndMajor
-//    )
-//    viewModel.getPostData(data: data)
-//
-//    self.resultCollectionView.isHidden = false
-//
-//    noSearchDataUI(count: viewModel.numberOfCells)
+    viewModel.fectchPostData(with: titleAndMajor)
   }
   
   // MARK: - 전체버튼 눌렸을 때
@@ -277,7 +265,7 @@ class ResultSearchViewController: UIViewController {
   // MARK: - 인기버튼 눌렸을 때
   func popularButtonTapped() {
     updateButtonColors(selectedButton: popularButton, deselectedButtons: [titleButton, majorButton])
-  
+    
     buttonTapped(hot: "true", titleAndMajor: "true")
   }
   
@@ -332,47 +320,8 @@ class ResultSearchViewController: UIViewController {
       }
     }
   }
-  
-  // MARK: - 스크롤해서 네트워킹
-  func fetchMoreData(hotType: String, titleAndMajor: String){
-  }
-    
-    // MARK: - 스크롤 제약 업데이트
-    func updateCollectionViewHeight() {
-      // 기존의 제약 조건을 찾아 업데이트
-      let existingConstraint = resultCollectionView.constraints.first { constraint in
-        return constraint.firstAttribute == .height && constraint.relation == .equal
-      }
-      
- //     if let existingConstraint = existingConstraint {
- //       // 기존의 제약 조건이 존재하는 경우, 해당 제약 조건을 업데이트
- //       existingConstraint.constant = calculateNewCollectionViewHeight()
- //     } else {
- //       // 기존의 제약 조건이 존재하지 않는 경우, 새로운 제약 조건 추가
- //       resultCollectionView.snp.makeConstraints { make in
- //         make.height.equalTo(calculateNewCollectionViewHeight())
- //       }
- //     }
-      
-      
-      // 레이아웃 업데이트
-      self.view.layoutIfNeeded()
-    }
-    
-    // MARK: - 스크롤 시 셀 높이 계산
-   func calculateNewCollectionViewHeight()
- //  -> CGFloat {
-   {
-     // resultCollectionView의 셀 개수에 따라 새로운 높이 계산
-     let cellHeight: CGFloat = 247
-     let spacing: CGFloat = 10
- //    let numberOfCells = viewModel.numberOfCells
- //    let newHeight = CGFloat(numberOfCells) * cellHeight + CGFloat(numberOfCells - 1) * spacing
-     
- //    return newHeight
-   }
-  }
-  
+}
+
 
 
 // 셀의 각각의 크기
@@ -390,5 +339,32 @@ extension ResultSearchViewController: UISearchBarDelegate {
   /// 검색버튼 터치 시 pop
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     viewModel.steps.accept(HomeStep.popScreenIsRequired)
+  }
+  
+  func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+    viewModel.searchContent = searchBar.text ?? ""
+    return true
+  }
+}
+
+// MARK: - 스크롤
+
+
+extension ResultSearchViewController {
+  
+  /// 스크롤할 때 네트워킹 요청
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    let scrollViewHeight = scrollView.frame.size.height
+    let contentHeight = scrollView.contentSize.height
+    let offsetY = scrollView.contentOffset.y
+    
+    // 바닥에서 50포인트 위에 도달했는지 체크
+    if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
+      print("바닥에서 50포인트 위에 도달! ")
+       
+      viewModel.fectchPostData(with: viewModel.searchContent)
+    
+    
+    }
   }
 }

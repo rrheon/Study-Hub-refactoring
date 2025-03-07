@@ -122,7 +122,7 @@ final class MyRequestCell: UICollectionViewCell {
   
   /// 신청한 내역 삭제하기
   func deleteButtonTapped(){
-    self.delegate?.deleteButtonTapped(postID: 0)
+    self.delegate?.deleteButtonTapped(postID: self.model?.studyID ?? 0)
   }
   
   /// 거절사유 체크

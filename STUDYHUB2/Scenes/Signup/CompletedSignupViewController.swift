@@ -35,9 +35,14 @@ final class CompletedSignupViewController: UIViewController, Stepper {
     
     makeUI()
     
+    leftButtonSetting()
+    
     startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
   } // viewDidLoad
   
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    steps.accept(AppStep.dismissCurrentFlow)
+  }
   
   // MARK: - makeUI
   

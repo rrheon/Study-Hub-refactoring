@@ -48,7 +48,7 @@ final class EnterMajorViewController: UIViewController {
   
   init(with viewModel: EnterMajorViewModel) {
     self.viewModel = viewModel
-    super.init()
+    super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
@@ -111,20 +111,20 @@ final class EnterMajorViewController: UIViewController {
       $0.trailing.equalToSuperview().offset(-30)
     }
 
-    view.addSubview(resultTableView)
-    resultTableView.isHidden = true
-    resultTableView.snp.makeConstraints {
-      $0.top.equalTo(majorTextField.snp.bottom).offset(30)
-      $0.leading.trailing.equalTo(majorTextField)
-      $0.bottom.equalTo(nextButton.snp.top).offset(10)
-    }
-    
     view.addSubview(nextButton)
     nextButton.unableButton(false)
     nextButton.snp.makeConstraints {
       $0.bottom.equalToSuperview().offset(-40)
       $0.height.equalTo(55)
       $0.leading.trailing.equalTo(majorTextField)
+    }
+    
+    view.addSubview(resultTableView)
+    resultTableView.isHidden = true
+    resultTableView.snp.makeConstraints {
+      $0.top.equalTo(majorTextField.snp.bottom).offset(30)
+      $0.leading.trailing.equalTo(majorTextField)
+      $0.bottom.equalTo(nextButton.snp.top).offset(10)
     }
   }
   

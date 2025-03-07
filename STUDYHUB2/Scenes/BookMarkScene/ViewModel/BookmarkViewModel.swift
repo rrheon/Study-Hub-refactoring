@@ -49,13 +49,11 @@ final class BookmarkViewModel: Stepper {
     self.bookmarkList = []
   }
   
-#warning("무한 스크롤로 변경")
   /// 북마크 리스트 가져오기
   func getBookmarkList(size: Int = 5){
     Task {
       do {
         let datas = try await BookmarkManager.shared.getBookmarkList(page: bookmarkPage, size: size)
-        print(#fileID, #function, #line," - \(datas)")
         
         var currentDatas = bookmarkDatas.value
         
@@ -68,7 +66,7 @@ final class BookmarkViewModel: Stepper {
           currentDatas.append(contentsOf: newData)
         }
         
-        self.totalCount.accept(datas.totalCount)
+        self.totalCount.accept(datas.getBookmarkedPostsData.numberOfElements)
         self.bookmarkDatas.accept(currentDatas)
         self.bookmarkList = currentDatas
         

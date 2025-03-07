@@ -214,8 +214,9 @@ final class LoginViewController: UIViewController {
     
     // 비밀번호찾기 버튼 터치
     forgotPasswordButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-//        self?.moveToOtherVC(vc: ConfirmEmailViewController(false), naviCheck: true)
+      .withUnretained(self)
+      .subscribe(onNext: { vc, _ in
+        vc.viewModel.steps.accept(AppStep.confrimEmailScreenIsRequired)
       })
       .disposed(by: disposeBag)
     

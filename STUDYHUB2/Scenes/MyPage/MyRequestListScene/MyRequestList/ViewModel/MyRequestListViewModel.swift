@@ -21,6 +21,10 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   /// 삭제 성공여부
   var isSuccessToDelete = PublishRelay<Bool>()
   
+  var page: Int = 0
+  
+  var isInfiniteScroll: Bool = true
+  
   init(with userData: BehaviorRelay<UserDetailData?>) {
     if let applyCount = userData.value?.applyCount {
       self.countPostNumber.accept(applyCount)
@@ -34,8 +38,19 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   
   /// 신청한 스터디 리스트 가져오기
   func getRequestList() {
-    ApplyStudyManager.shared.getMyRequestStudyList { result in
-      self.requestStudyList.accept(result.requestStudyData.content)
+    ApplyStudyManager.shared.getMyRequestStudyList(page: page, size: 5) { result in
+      var currentDats = self.requestStudyList.value
+      
+      if self.page == 0{
+        currentDats = result.requestStudyData.content
+      }else{
+        var newDats = result.requestStudyData.content
+        currentDats.append(contentsOf: newDats)
+      }
+      
+      self.requestStudyList.accept(currentDats)
+      self.page += 1
+      self.isInfiniteScroll = result.requestStudyData.last
       self.countPostNumber.accept(result.requestStudyData.numberOfElements)
     }
   }

@@ -85,7 +85,11 @@ final class EditPasswordViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    if let _ = self.navigationController?.viewControllers.first as? MyPageViewController  {
+      viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    }else{
+      viewModel.steps.accept(FindPasswordStep.popCurrentScreen(animate: true))
+    }
   }
   
   /// 네비게이션 바 오른쪽 버튼 탭 -> 비밀번호 저장
@@ -142,7 +146,8 @@ final class EditPasswordViewController: UIViewController {
         UserProfileManager.shared.fetchUserInfoToServer { userData in
           // 성공 : 비로그인시 -> 로그인화면
           if userData.nickname == nil && result {
-            NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+//            NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+            self?.viewModel.steps.accept(FindPasswordStep.dismissCurrentFlow)
           // 성공 : 로그인 시 -> 프로필 편집화면
           }else if userData.nickname != nil && result {
             self?.viewModel.steps.accept(AppStep.popToVC(type: MyInformViewController.self))

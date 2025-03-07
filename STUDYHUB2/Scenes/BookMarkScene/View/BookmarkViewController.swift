@@ -277,6 +277,9 @@ extension BookmarkViewController: BookmarkCellDelegate {
   }
 }
 
+// MARK: - PopupView
+
+
 extension BookmarkViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
@@ -292,6 +295,10 @@ extension BookmarkViewController: PopupViewDelegate {
     }
   }
 }
+
+
+
+// MARK: - 스크롤
 
 
 extension BookmarkViewController {

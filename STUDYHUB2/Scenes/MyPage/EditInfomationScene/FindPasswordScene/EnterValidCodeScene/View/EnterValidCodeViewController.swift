@@ -69,7 +69,7 @@ final class EnterValidCodeViewController: UIViewController {
       $0.leading.equalToSuperview().offset(20)
     }
     
-    emailLabel.text = "전송된 이메일 \(viewModel.email)"
+    emailLabel.text = "전송된 이메일 \(viewModel.email ?? "")"
     emailLabel.changeColor(wantToChange: "\(viewModel.email)", color: .black)
     
     emailLabel.snp.makeConstraints {
@@ -99,6 +99,10 @@ final class EnterValidCodeViewController: UIViewController {
     settingNavigationTitle(title: "비밀번호 찾기")
     leftButtonSetting()
     rightButtonSetting(imgName: "UnableNextButton", activate: false)
+  }
+  
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    viewModel.steps.accept(FindPasswordStep.popCurrentScreen(animate: true))
   }
   
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
@@ -146,8 +150,7 @@ final class EnterValidCodeViewController: UIViewController {
         switch valid {
         case true:
           guard let email = viewModel.email else { return }
-          viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
-          viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
+          viewModel.steps.accept(FindPasswordStep.editPasswordScreenIsRequired(email: email))
         case false:
           ToastPopupManager.shared.showToast(
             message: "인증코드가 일치하지 않아요. 다시 입력하거나 새 인증코드를 받아주세요.",
