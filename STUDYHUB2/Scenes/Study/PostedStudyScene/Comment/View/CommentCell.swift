@@ -36,8 +36,8 @@ final class CommentCell: UITableViewCell {
   
   /// 댓글이 작성된 날짜 라벨
   private lazy var postCommentDate: UILabel = UILabel().then {
-   $0.textColor = .bg70
-   $0.font = UIFont(name: "Pretendard", size: 10)
+    $0.textColor = .bg70
+    $0.font = UIFont(name: "Pretendard", size: 10)
   }
   
   /// 메뉴 버튼 - 댓글 수정, 삭제
@@ -47,8 +47,8 @@ final class CommentCell: UITableViewCell {
   
   /// 댓글 내용 라벨
   private lazy var commentLabel: UILabel = UILabel().then {
-   $0.textColor = .bg80
-   $0.font = UIFont(name: "Pretendard", size: 14)
+    $0.textColor = .bg80
+    $0.font = UIFont(name: "Pretendard", size: 14)
   }
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -111,45 +111,45 @@ final class CommentCell: UITableViewCell {
   /// 데이터 바인딩
   private func bind() {
     guard let data = model else { return }
-      /// 작성자의 닉네임
-      self.nickNameLabel.text = data.commentedUserData.nickname
-      
-    print(#fileID, #function, #line," - \(loginUserName)")
-
-      
-  /// 사용자가 작성한 댓글이라면 수정이 가능한 메뉴 표시
+    /// 작성자의 닉네임
+    self.nickNameLabel.text = data.commentedUserData.nickname
+    
+    print(#fileID, #function, #line," - \(data.usersComment)")
+    
+    
+    /// 사용자가 작성한 댓글이라면 수정이 가능한 메뉴 표시
     
     self.menuButton.isHidden = !data.usersComment
-      
-      
-      /// 댓글 내용
-      self.commentLabel.text = data.content
-      
-      /// 작성된 날짜
-
-      self.postCommentDate.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
-      
-      
-      /// 이미지
+    
+    
+    /// 댓글 내용
+    self.commentLabel.text = data.content
+    
+    /// 작성된 날짜
+    
+    self.postCommentDate.text = "\(data.createdDate[0]). \(data.createdDate[1]). \(data.createdDate[2])"
+    
+    
+    /// 이미지
     if let imageURL = URL(string: data.commentedUserData.imageURL ?? "") {
-        let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
-        
-        KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
-        
-        self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
-          switch result {
-          case .success(let value):
-            DispatchQueue.main.async {
-              self.profileImageView.image = value.image
-              self.profileImageView.layer.cornerRadius = 12
-              self.profileImageView.clipsToBounds = true
-            }
-          case .failure(let error):
-            print("Image download failed: \(error)")
-            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
+      let processor = ResizingImageProcessor(referenceSize: CGSize(width: 28, height: 28))
+      
+      KingfisherManager.shared.cache.removeImage(forKey: imageURL.absoluteString)
+      
+      self.profileImageView.kf.setImage(with: imageURL, options: [.processor(processor)]) { result in
+        switch result {
+        case .success(let value):
+          DispatchQueue.main.async {
+            self.profileImageView.image = value.image
+            self.profileImageView.layer.cornerRadius = 12
+            self.profileImageView.clipsToBounds = true
           }
+        case .failure(let error):
+          print("Image download failed: \(error)")
+          self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
         }
       }
+    }
     
   }
   

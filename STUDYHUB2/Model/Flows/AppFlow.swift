@@ -609,16 +609,18 @@ class AppFlow: Flow {
   /// 팝업 뷰 띄우기
   /// - Parameter popupCase: 팝업의 종류
   private func presentPopupScreen(with popupCase: PopupCase) -> FlowContributors {
-      let popupVC = PopupViewController(popupCase: popupCase)
+    let popupVC = PopupViewController(popupCase: popupCase)
+    
+    print(topMostViewController())
+    if let topVC = topMostViewController(), let delegateVC = topVC as? PopupViewDelegate {
+      print(#fileID, #function, #line," - topvc: \(topVC.self)")
 
-
-      if let topVC = topMostViewController(), let delegateVC = topVC as? PopupViewDelegate {
-          popupVC.popupView.delegate = delegateVC
-      }
-
-      popupVC.modalPresentationStyle = .overFullScreen
-      self.rootViewController.present(popupVC, animated: false)
-      return .none
+      popupVC.popupView.delegate = delegateVC
+    }
+    
+    popupVC.modalPresentationStyle = .overFullScreen
+    self.rootViewController.present(popupVC, animated: false)
+    return .none
   }
   
   /// 현재화면 pop

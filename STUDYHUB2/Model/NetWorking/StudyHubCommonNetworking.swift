@@ -38,45 +38,9 @@ extension CommonBaseURL {
 
 /// 공용 네트워킹
 class StudyHubCommonNetworking {
-  /// 타이머
-  var timer: Timer?
   
-  /// 로그인 상태
-  var loginStatus: Bool = false
-  
-  init() {
-    
-      // 5분 간격으로 AccessToken 다시 받아오기
-    registerCheckValidAccessToken()
-  }
-
-  
-  
-  /// 주기적으로 AccessToken 갱신 - 5분간격
-  func registerCheckValidAccessToken(){
-    timer = Timer.scheduledTimer(timeInterval: 300.0,
-                                 target: self,
-                                 selector: #selector(fetchAccessToken),
-                                 userInfo: nil,
-                                 repeats: true)
-  }
-  
-  
-  /// AccessToken 다시 받아오기
-  @objc func fetchAccessToken(){
-    guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
-      loginStatus = false
-      return
-    }
-    
-    UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
-      if let accessToken = tokens?.accessToken,
-         let refreshToken = tokens?.refreshToken {
-        self.loginStatus = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-      } else {
-        self.loginStatus = false
-      }
-    }
+  init(){
+    LoginStatusManager.shared.registerCheckValidAccessToken()
   }
   
   /// API 통신 후 결과처리 - 디코딩

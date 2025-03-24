@@ -55,7 +55,7 @@ final class HowToUseViewController: UIViewController, Stepper {
     view.backgroundColor = .black
     
     UserProfileManager.shared.fetchUserInfoToServer { userData in
-      self.loginStatus =  userData.nickname != nil
+      self.loginStatus = userData.nickname != nil
     }
     
     setupNavigationbar()

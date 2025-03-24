@@ -195,22 +195,26 @@ final class PostedStudyCommentComponent: UIView {
   
   /// Actions 설정
   func setupActions(){
-    
+ 
     // 댓글 작성 / 수정 버튼 탭
     commentButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { (vc, _) in
-        
-        guard let commentContent = vc.commentTextField.text,
-              let title = vc.commentButton.currentTitle else { return }
-        
-        /// 버튼 제목에 따라 다른 댓글 작업 수행
-        switch title {
+        if TokenManager.shared.loadAccessToken()?.isEmpty == true {
+          vc.settingComment()
+          self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .requiredLogin))
+        }else {
+          guard let commentContent = vc.commentTextField.text,
+                let title = vc.commentButton.currentTitle else { return }
+          
+          /// 버튼 제목에 따라 다른 댓글 작업 수행
+          switch title {
           case "수정":        vc.viewModel.modifyComment(content: commentContent)
           case "등록":        vc.viewModel.createNewComment(with: commentContent)
           default: return
+          }
+          vc.settingComment()
         }
-        vc.settingComment()
       })
       .disposed(by: disposeBag)
 

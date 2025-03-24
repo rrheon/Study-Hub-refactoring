@@ -28,7 +28,7 @@ final class HomeViewModel: Stepper {
   
   
   init() {
-    StudyPostManager.shared.fetchAccessToken()
+    LoginStatusManager.shared.fetchAccessToken()
     
     Task {
       do {

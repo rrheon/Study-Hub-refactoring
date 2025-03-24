@@ -89,7 +89,7 @@ final class TokenManager {
   /// - Returns: access token
   func loadAccessToken() -> String? {
     guard let service = self.service,
-          let query = accessTokenQuery else { return "" }
+          let query = accessTokenQuery else { return nil }
     
     var item: CFTypeRef?
     if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess { return "" }

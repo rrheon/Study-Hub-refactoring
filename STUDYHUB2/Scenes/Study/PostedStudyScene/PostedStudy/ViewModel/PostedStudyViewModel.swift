@@ -51,6 +51,7 @@ class PostedStudyViewModel: Stepper  {
   
   var loginUserData: BehaviorRelay<UserDetailData?> = BehaviorRelay<UserDetailData?>(value: nil)
 
+  
   init(with postID: Int) {
     self.postID = postID
     
@@ -62,7 +63,7 @@ class PostedStudyViewModel: Stepper  {
     UserProfileManager.shared.fetchUserInfoToServer { userData in
       self.loginUserData.accept(userData)
       
-      self.fetchCommentDatas(with: postID)
+//      self.fetchCommentDatas(with: postID)
       self.fetchStudyDeatilData(with: postID)
     }
   }

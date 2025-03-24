@@ -130,6 +130,8 @@ extension MyInformViewController: PopupViewDelegate {
     
     if popupCase == .logoutIsRequired {
       TokenManager.shared.deleteTokens()
+      
+      LoginStatusManager.shared.loginStatus = false
       NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
     }else{
       guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }

@@ -16,7 +16,6 @@ class CommentManager: StudyHubCommonNetworking {
 
   let provider = MoyaProvider<CommentNetworking>()
   
-  
   /// 댓글 작성하기
   /// - Parameters:
   ///   - content: 댓글 내용
@@ -78,6 +77,7 @@ class CommentManager: StudyHubCommonNetworking {
   ///   - size: 댓글 갯수
   ///   - completion: 콜백함수
   func getCommentList(postId: Int, page: Int, size: Int, completion: @escaping (GetCommentList) -> Void) {
+    let loginStatus = LoginStatusManager.shared.loginStatus
     provider.request(.getCommentList(postId: postId, page: page, size: size, loginStatus: loginStatus)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: GetCommentList.self) { decodedData in
         completion(decodedData)
@@ -92,6 +92,7 @@ class CommentManager: StudyHubCommonNetworking {
   ///   - postId:스터디의 postId
   ///   - completion: 콜백함수
   func getCommentPreview(postId: Int) async throws -> [CommentConetent] {
+    let loginStatus = LoginStatusManager.shared.loginStatus
     let result = await provider.request(.getPreviewCommentList(postId: postId, loginStatus: loginStatus))
     return try await self.commonDecodeNetworkResponse(with: result, decode: [CommentConetent].self)
 //

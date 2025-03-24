@@ -234,8 +234,12 @@ extension PostedStudyViewController: BottomSheetDelegate {
     case .managementPost:
       
       viewModel.steps.accept(AppStep.dismissCurrentScreen)
-      // 게시글 삭제 팝업 띄우기
-      viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        // 게시글 삭제 팝업 띄우기
+        self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+      }
+      
     case .managementComment:
       // 댓글 삭제하기
       viewModel.deleteComment(with: postOrCommentID)
@@ -268,11 +272,24 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
 }
 
+// MARK: - popupView Actions
+
+
 extension PostedStudyViewController: PopupViewDelegate {
-  // 삭제 후 스터디 화면으로 이동
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
-    defaultBtnAction()
-    viewModel.deleteMyPost(with: viewModel.postID)
+    
+    // 내가 작성한 게시글 삭제
+    if popupCase == .deleteStudyPost {
+      defaultBtnAction()
+      viewModel.deleteMyPost(with: viewModel.postID)
+    }
+    
+    // 비로그인 시 로그인 화면으로 이도
+    if popupCase == .requiredLogin {
+      defaultBtnAction()
+      NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+    }
+    
  
   }
 }

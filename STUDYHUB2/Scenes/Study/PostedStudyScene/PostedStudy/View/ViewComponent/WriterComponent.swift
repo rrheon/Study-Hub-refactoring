@@ -12,13 +12,13 @@ final class PostedStudyWriterComponent: UIView {
   let disposeBag: DisposeBag = DisposeBag()
   
   var postedData: PostDetailData
-
+  
   /// 구분선
   private lazy var divideLineUnderIntroduceStudy = UIView().then {
     $0.backgroundColor = UIColor(hexCode: "#F3F5F6")
     $0.heightAnchor.constraint(equalToConstant: 8.0).isActive = true
   }
-
+  
   /// 작성자 이름 제목
   private lazy var writerLabel = UILabel().then {
     $0.text = "작성자"
@@ -45,17 +45,17 @@ final class PostedStudyWriterComponent: UIView {
     $0.textColor = .black
     $0.font = UIFont(name: "Pretendard-Medium", size: 16)
   }
- 
+  
   /// 구분선
   private lazy var divideLineUnderWriterLabel = UIView().then {
     $0.backgroundColor = UIColor(hexCode: "#F3F5F6")
     $0.heightAnchor.constraint(equalToConstant: 8.0).isActive = true
   }
-
+  
   /// 작성자 정보 스택뷰 - 학과, 이름
   private lazy var writerInfoStackView: UIStackView = UIStackView().then {
-   $0.axis = .vertical
-   $0.spacing = 5
+    $0.axis = .vertical
+    $0.spacing = 5
   }
   
   /// 작성자 정보 스택뷰 - 학과, 이름, 이미지
@@ -92,7 +92,7 @@ final class PostedStudyWriterComponent: UIView {
     /// 작성자 정보 스택뷰 - 학과, 이름, 이미지
     [profileImageView, writerInfoStackView]
       .forEach {  writerInfoWithImageStackView.addArrangedSubview($0) }
-
+    
     /// 전체 작성자 정보 스택뷰
     [
       divideLineUnderIntroduceStudy,
@@ -102,7 +102,7 @@ final class PostedStudyWriterComponent: UIView {
     ].forEach {
       totalWriterInfoStackView.addArrangedSubview($0)
     }
-
+    
     self.addSubview(totalWriterInfoStackView)
     
     writerLabel.snp.makeConstraints {
@@ -131,5 +131,23 @@ final class PostedStudyWriterComponent: UIView {
   func setupUIData(_ data: PostDetailData){
     writerMajorLabel.text = Utils.convertMajor(data.major, toEnglish: false)
     nickNameLabel.text = data.postedUser.nickname
+  
+    
+    /// 작성자 프로필 이미지
+    if let imageURL = URL(string: data.postedUser.imageUrl) {
+      getUserProfileImage(imageURL: imageURL) { result in
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let image):
+            self.profileImageView.layer.cornerRadius = 25
+            self.profileImageView.image = image
+          case .failure(_):
+            self.profileImageView.image = UIImage(named: "ProfileAvatar_change")
+          }
+        }
+      }
+    }
   }
 }
+
+extension PostedStudyWriterComponent: ManagementImage {}

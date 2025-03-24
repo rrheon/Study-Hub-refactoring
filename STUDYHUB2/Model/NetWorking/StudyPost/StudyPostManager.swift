@@ -15,10 +15,6 @@ class StudyPostManager: StudyHubCommonNetworking {
   
   let provider = MoyaProvider<StudyPostNetworking>()
   
-  override init() {
-    super.init()
-  }
-  
   /// 모든 스터디 게시글 조회하기
   /// - Parameters:
   ///   - hot: true - 인기순, false - 인기순 x
@@ -37,7 +33,7 @@ class StudyPostManager: StudyHubCommonNetworking {
                                                   page: page,
                                                   size: size)
     
-
+    let loginStatus = LoginStatusManager.shared.loginStatus
     let result = await provider.request(.searchAllPost(loginStatus: loginStatus, searchData: data))
     return try await self.commonDecodeNetworkResponse(with: result, decode: PostDataContent.self)
   }
@@ -48,14 +44,11 @@ class StudyPostManager: StudyHubCommonNetworking {
   ///   - postId: 게시글의 PostId
   ///   - completion: API 처리 후 전달
   func searchSinglePostData(postId: Int) async throws -> PostDetailData {
+    let loginStatus = LoginStatusManager.shared.loginStatus
+    print(#fileID, #function, #line," - \(loginStatus)")
+
     let result = await provider.request(.searchSinglePost(loginStatus: loginStatus, postId: postId))
     return try await self.commonDecodeNetworkResponse(with: result, decode: PostDetailData.self)
-//    provider.request(.searchSinglePost(postId: postId)) { result in
-//      self.commonDecodeNetworkResponse(with: result,
-//                                       decode: PostDetailData.self) { decodedData in
-//        completion(decodedData)
-//      }
-//    }
   }
   
   
@@ -66,7 +59,6 @@ class StudyPostManager: StudyHubCommonNetworking {
   func searchMyPost(page: Int, size: Int, completion: @escaping (MyPostData) -> Void){
     provider.request(.searchMyPost(page: page, size: size)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: MyPostData.self) { decodedData in
-        print(decodedData)
         completion(decodedData)
       }
     }
