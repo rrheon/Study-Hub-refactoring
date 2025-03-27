@@ -103,7 +103,7 @@ class PostedStudyViewModel: Stepper  {
   ///   - commentID: 댓글  ID
   func deleteComment(with commentID: Int){
     // 현재 화면 내리기
-    self.steps.accept(AppStep.dismissCurrentScreen)
+    self.steps.accept(AppStep.navigation(.dismissCurrentScreen))
     
     CommentManager.shared.deleteComment(commentID: commentID) { result in
       print("댓글 삭제 여부 - \(result)")
@@ -138,7 +138,7 @@ class PostedStudyViewModel: Stepper  {
     StudyPostManager.shared.deletePost(with: postID) { result in
       if result {
         /// 현재 화면 pop
-        self.steps.accept(AppStep.popCurrentScreen(animate: false))
+        self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
 
         ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
       }else{

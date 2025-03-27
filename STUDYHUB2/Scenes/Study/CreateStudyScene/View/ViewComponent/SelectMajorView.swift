@@ -104,7 +104,7 @@ final class SelectMajorView: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (view ,_) in
         let major = view.viewModel.selectedMajor
-        view.viewModel.steps.accept(AppStep.selectMajorScreenIsRequired(seletedMajor: major))
+        view.viewModel.steps.accept(AppStep.studyManagement(.selectMajorScreenIsRequired(seletedMajor: major)))
       })
       .disposed(by: disposeBag)
     

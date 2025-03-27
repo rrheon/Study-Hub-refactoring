@@ -185,8 +185,9 @@ final class StudyPeriodView: UIView {
     startDateButton.rx.tap
       .withUnretained(self)
       .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: true))
+        view.viewModel.steps.accept(AppStep.studyManagement(.calendarIsRequired(
+          viewModel: view.viewModel,selectType: true)
+        ))
       }
       .disposed(by: disposeBag)
     
@@ -194,8 +195,9 @@ final class StudyPeriodView: UIView {
     endDateButton.rx.tap
       .withUnretained(self)
       .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: false))
+        view.viewModel.steps.accept(AppStep.studyManagement(.calendarIsRequired(
+          viewModel: view.viewModel,selectType: false)
+        ))
 
       }
       .disposed(by: disposeBag)

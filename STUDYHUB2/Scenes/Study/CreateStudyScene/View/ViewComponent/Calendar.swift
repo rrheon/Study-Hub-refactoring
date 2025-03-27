@@ -258,7 +258,7 @@ final class CalendarViewController: UIViewController {
     
     print(selectedDay)
   
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
   }
 }
 

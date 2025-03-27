@@ -69,8 +69,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
     Task {
       let data = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
       
-      steps.accept(AppStep.dismissCurrentScreen)
-      steps.accept(AppStep.studyFormScreenIsRequired(data: data))
+      steps.accept(AppStep.navigation(.dismissCurrentScreen))
+      steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: data)))
     }
   }
 

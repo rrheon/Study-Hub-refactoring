@@ -78,7 +78,7 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   /// 거절 사유 가져오기
   func getRejectReason(_ studyID: Int) {
     ApplyStudyManager.shared.getMyRejectReason(studyId: studyID) { result in
-      self.steps.accept(AppStep.detailRejectReasonScreenIsRequired(reason: result))
+      self.steps.accept(AppStep.studyManagement(.detailRejectReasonScreenIsRequired(reason: result)))
     }
   }
   

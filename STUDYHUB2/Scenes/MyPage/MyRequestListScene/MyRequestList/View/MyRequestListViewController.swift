@@ -140,7 +140,7 @@ final class MyRequestListViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
                            
   /// 셀등록
@@ -217,7 +217,7 @@ extension MyRequestListViewController: MyRequestCellDelegate {
   /// 신청한 스터디 삭제 탭 -> 팝업 띄우기
   func deleteButtonTapped(postID: Int) {
     viewModel.selectedPostID = postID
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy)))
 
   }
 }

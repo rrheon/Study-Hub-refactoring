@@ -88,7 +88,7 @@ final class DetailRejectReasonViewController: UIViewController, Stepper{
     
     view.addSubview(confirmButton)
     confirmButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(animate: true))
+      self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
     }, for: .touchUpInside)
     confirmButton.snp.makeConstraints {
       $0.leading.equalTo(titleLabel)
@@ -108,6 +108,6 @@ final class DetailRejectReasonViewController: UIViewController, Stepper{
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen(animate: true))
+    steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
 }

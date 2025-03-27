@@ -56,6 +56,9 @@ final class PostedStudyViewController: UIViewController {
     
     setUpLayout()
     makeUI()
+    
+//    registerKeyboard()
+    registerTapGesture()
   } // viewDidLoad
 
   
@@ -81,14 +84,15 @@ final class PostedStudyViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 아이탬 터치 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 터치 - 본인 게시글일 경우 수정 및 삭제
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     guard let postID = viewModel.postDatas.value?.postId else { return }
 
-    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
+    viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: postID,
+                                                                     type: .managementPost)))
   }
   
   // MARK: - setUpLayout
@@ -233,11 +237,11 @@ extension PostedStudyViewController: BottomSheetDelegate {
     switch bottomSheetCase {
     case .managementPost:
       
-      viewModel.steps.accept(AppStep.dismissCurrentScreen)
+      viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
         // 게시글 삭제 팝업 띄우기
-        self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+        self.viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteStudyPost)))
       }
       
     case .managementComment:
@@ -251,13 +255,13 @@ extension PostedStudyViewController: BottomSheetDelegate {
   /// - Parameter postOrCommentID: commentID
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     // 현재 화면 내리기
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
     
     switch bottomSheetCase {
     case .managementPost:
       // 게시글 수정
       
-      viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
+      viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
       
       NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
                                       object: nil,
@@ -289,7 +293,7 @@ extension PostedStudyViewController: PopupViewDelegate {
       defaultBtnAction()
       NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
     }
-    
- 
   }
 }
+
+extension PostedStudyViewController: KeyboardProtocol {}

@@ -58,7 +58,6 @@ class StudyHubCommonNetworking {
 
       do {
         let decodedData = try JSONDecoder().decode(type, from: response.data)
-        print(decodedData)
         completion(decodedData)
       } catch(_) {
         // 디코딩에러
@@ -66,7 +65,6 @@ class StudyHubCommonNetworking {
       }
       
     case let .failure(err):
-      print(err.localizedDescription)
       switch err {
       case .statusCode(let response):
         ApiError.badStatus(code: response.statusCode)
@@ -82,15 +80,11 @@ class StudyHubCommonNetworking {
   ) async throws -> T {
     switch apiResult {
     case let .success(response):
-      print("Status Code: \(response.statusCode)")
-      
       do {
         let decodedData = try JSONDecoder().decode(type, from: response.data)
-        print("Decoded Data: \(decodedData)")
         return decodedData
       } catch {
-        print("Decoding Error: \(error.localizedDescription)")
-        ApiError.managementError(error: .decodingError) // 로깅
+        ApiError.managementError(error: .decodingError) 
         throw ApiError.decodingError
       }
       

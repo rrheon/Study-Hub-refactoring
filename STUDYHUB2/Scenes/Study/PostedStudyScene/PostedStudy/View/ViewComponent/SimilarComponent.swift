@@ -193,7 +193,7 @@ final class SimilarStudyComponent: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (component, cellData) in
         let postID = cellData.postId
-        component.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postID))
+        component.viewModel.steps.accept(AppStep.study(.studyDetailScreenIsRequired(postID: postID)))
       })
       .disposed(by: disposeBag)
     
@@ -212,7 +212,7 @@ final class SimilarStudyComponent: UIView {
           case .goToParticipateVC:
             let studyID = self.viewModel.postDatas.value?.studyId
             //              self.viewModel.moveToParticipateVC.accept(studyID)
-            self.viewModel.steps.accept(AppStep.applyStudyScreenIsRequired(data: self.viewModel.postDatas))
+            self.viewModel.steps.accept(AppStep.study(.applyStudyScreenIsRequired(data: self.viewModel.postDatas)))
           case .limitedGender:
             ToastPopupManager.shared.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요")
           }

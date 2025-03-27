@@ -67,6 +67,13 @@
 		EE2AEBA62C898EC500CE80A3 /* ManagementDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */; };
 		EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2AEBA82C918E3E00CE80A3 /* SimilarComponent.swift */; };
 		EE35ED7B2B15F829008040E2 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */; };
+		EE47149E2D9160FF007B22B9 /* KeyboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE47149D2D9160FF007B22B9 /* KeyboardProtocol.swift */; };
+		EE4714A82D95267B007B22B9 /* AppStep+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714A72D95267B007B22B9 /* AppStep+Auth.swift */; };
+		EE4714AB2D953131007B22B9 /* AppStep+StudyPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714AA2D953131007B22B9 /* AppStep+StudyPost.swift */; };
+		EE4714AD2D953143007B22B9 /* AppStep+StudyManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714AC2D953143007B22B9 /* AppStep+StudyManagement.swift */; };
+		EE4714AF2D95314F007B22B9 /* AppStep+Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714AE2D95314F007B22B9 /* AppStep+Service.swift */; };
+		EE4714B12D95315C007B22B9 /* AppStep+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714B02D95315C007B22B9 /* AppStep+Navigation.swift */; };
+		EE4714B32D9536D1007B22B9 /* AppFlow+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4714B22D9536D1007B22B9 /* AppFlow+Ext.swift */; };
 		EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */; };
 		EE5B2FD92B8C749F00D365A2 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */; };
 		EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */; };
@@ -264,6 +271,13 @@
 		EE35ED6B2B14B71A008040E2 /* ParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipateCell.swift; sourceTree = "<group>"; };
 		EE35ED6F2B14BAA9008040E2 /* RefuseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseCell.swift; sourceTree = "<group>"; };
 		EE35ED7A2B15F829008040E2 /* MyPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		EE47149D2D9160FF007B22B9 /* KeyboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardProtocol.swift; sourceTree = "<group>"; };
+		EE4714A72D95267B007B22B9 /* AppStep+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStep+Auth.swift"; sourceTree = "<group>"; };
+		EE4714AA2D953131007B22B9 /* AppStep+StudyPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStep+StudyPost.swift"; sourceTree = "<group>"; };
+		EE4714AC2D953143007B22B9 /* AppStep+StudyManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStep+StudyManagement.swift"; sourceTree = "<group>"; };
+		EE4714AE2D95314F007B22B9 /* AppStep+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStep+Service.swift"; sourceTree = "<group>"; };
+		EE4714B02D95315C007B22B9 /* AppStep+Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStep+Navigation.swift"; sourceTree = "<group>"; };
+		EE4714B22D9536D1007B22B9 /* AppFlow+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppFlow+Ext.swift"; sourceTree = "<group>"; };
 		EE5B2FD02B83822900D365A2 /* DetailRejectReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRejectReasonViewController.swift; sourceTree = "<group>"; };
 		EE5B2FD82B8C749F00D365A2 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		EE5B2FDA2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUseInfoViewController.swift; sourceTree = "<group>"; };
@@ -450,6 +464,7 @@
 				EE2AEBA52C898EC500CE80A3 /* ManagementDate.swift */,
 				EEC5FF742C9960B600896FEB /* ManagementImage.swift */,
 				EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */,
+				EE47149D2D9160FF007B22B9 /* KeyboardProtocol.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -791,6 +806,20 @@
 			path = Scenes;
 			sourceTree = "<group>";
 		};
+		EE4714A92D952FD4007B22B9 /* AppFlow */ = {
+			isa = PBXGroup;
+			children = (
+				EEB079FD2D54FFBA0009246D /* AppFlow.swift */,
+				EE4714B22D9536D1007B22B9 /* AppFlow+Ext.swift */,
+				EE4714A72D95267B007B22B9 /* AppStep+Auth.swift */,
+				EE4714AA2D953131007B22B9 /* AppStep+StudyPost.swift */,
+				EE4714AC2D953143007B22B9 /* AppStep+StudyManagement.swift */,
+				EE4714AE2D95314F007B22B9 /* AppStep+Service.swift */,
+				EE4714B02D95315C007B22B9 /* AppStep+Navigation.swift */,
+			);
+			path = AppFlow;
+			sourceTree = "<group>";
+		};
 		EE5B933A2D48AA84006DC65D /* StudyPost */ = {
 			isa = PBXGroup;
 			children = (
@@ -937,7 +966,7 @@
 		EEB079FC2D54FFB40009246D /* Flows */ = {
 			isa = PBXGroup;
 			children = (
-				EEB079FD2D54FFBA0009246D /* AppFlow.swift */,
+				EE4714A92D952FD4007B22B9 /* AppFlow */,
 				EEB07A2D2D5724F10009246D /* SignupFlow.swift */,
 				EEB07A022D5503020009246D /* HomeFlow.swift */,
 				EEB07A042D5503070009246D /* StudyFlow.swift */,
@@ -1937,6 +1966,7 @@
 				EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */,
 				EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
+				EE4714AB2D953131007B22B9 /* AppStep+StudyPost.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
 				EEDDDD152C6B4D8800FA347D /* WriterComponent.swift in Sources */,
 				EED00B782C534C68000D2E23 /* DataLoaderFromPlist.swift in Sources */,
@@ -1980,6 +2010,7 @@
 				EE5B93602D4A1825006DC65D /* UserProfileDTO.swift in Sources */,
 				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
+				EE4714AD2D953143007B22B9 /* AppStep+StudyManagement.swift in Sources */,
 				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
 				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
 				EEC5FF832C9C0AFA00896FEB /* ExitComponentView.swift in Sources */,
@@ -1994,6 +2025,7 @@
 				EE9356282B6A509E00D662CC /* NotificationViewController.swift in Sources */,
 				EEA53A402C5252D000C8FEFF /* AuthTitleView.swift in Sources */,
 				EE8871692D72F8DB00C1C0AF /* UIViewController+Indicator.swift in Sources */,
+				EE4714B32D9536D1007B22B9 /* AppFlow+Ext.swift in Sources */,
 				EEDD810F2B7DE1A70022302E /* MyRequestListViewController.swift in Sources */,
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* EnterMajorViewController.swift in Sources */,
@@ -2002,6 +2034,7 @@
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */,
 				EE07ADCD2AF26D360096890F /* MajorCell.swift in Sources */,
+				EE4714A82D95267B007B22B9 /* AppStep+Auth.swift in Sources */,
 				EE5B93372D47B87B006DC65D /* StudyHubCommonNetworking.swift in Sources */,
 				EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */,
 				EE5B93412D48AAFD006DC65D /* ApplyStudyManager.swift in Sources */,
@@ -2012,10 +2045,12 @@
 				EE0A8B5A2AF932FE001C3F41 /* RecruitCell.swift in Sources */,
 				EEA53A3D2C524C8E00C8FEFF /* StudyHubButton.swift in Sources */,
 				EE5B93642D4A1833006DC65D /* UserProfileManager.swift in Sources */,
+				EE47149E2D9160FF007B22B9 /* KeyboardProtocol.swift in Sources */,
 				EE5B2FDB2B8C7CBA00D365A2 /* ServiceUseInfoViewController.swift in Sources */,
 				EE271F262AD77CD100190E7A /* UIViewcontroller+Ext.swift in Sources */,
 				EE271F2C2AD9250F00190E7A /* UIView+Ext.swift in Sources */,
 				EE5B93352D47B315006DC65D /* ManagementAPIError.swift in Sources */,
+				EE4714AF2D95314F007B22B9 /* AppStep+Service.swift in Sources */,
 				EEC5FFB42CA4036500896FEB /* EnterValidCodeViewController.swift in Sources */,
 				EEC5FFBC2CA4531200896FEB /* ConfirmDeleteViewController.swift in Sources */,
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
@@ -2041,6 +2076,7 @@
 				EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */,
 				EE27B44E2C5B70B700057475 /* EnterMajorViewModel.swift in Sources */,
 				EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */,
+				EE4714B12D95315C007B22B9 /* AppStep+Navigation.swift in Sources */,
 				F8085D412A815DCD0067D4DE /* HomeViewController.swift in Sources */,
 				EEA53A3B2C51338300C8FEFF /* UITextView+Ext.swift in Sources */,
 				EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */,
@@ -2219,7 +2255,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.03;
+				MARKETING_VERSION = 1.06;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2257,7 +2293,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.03;
+				MARKETING_VERSION = 1.06;
 				PRODUCT_BUNDLE_IDENTIFIER = com.STUDYHUB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

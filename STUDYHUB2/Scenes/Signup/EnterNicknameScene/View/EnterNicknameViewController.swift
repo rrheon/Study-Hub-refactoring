@@ -82,6 +82,8 @@ final class EnterNicknameViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   // MARK: - 네비게이션 바
@@ -361,3 +363,6 @@ extension EnterNicknameViewController {
     return changedText.count <= 9
   }
 }
+
+extension EnterNicknameViewController: KeyboardProtocol {}
+

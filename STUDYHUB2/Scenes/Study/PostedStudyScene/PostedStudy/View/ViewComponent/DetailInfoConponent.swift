@@ -119,12 +119,12 @@ final class PostedStudyDetailInfoComponent: UIView {
                                         imageName: "CalenderImage")
     
     /// 벌금 스택뷰
-    let fineStackView =   createInfoRow(titleLabel: fineTitleLabel,
+    let fineStackView =  createInfoRow(titleLabel: fineTitleLabel,
                                         contentLabel: fineAmountLabel,
                                         imageName: "MoneyImage")
     
     /// 성별 스택뷰
-    let genderStackView =  createInfoRow(titleLabel: meetTitleLabel,
+    let genderStackView = createInfoRow(titleLabel: meetTitleLabel,
                                          contentLabel: meetLabel,
                                          imageName: "MixMeetImage")
     

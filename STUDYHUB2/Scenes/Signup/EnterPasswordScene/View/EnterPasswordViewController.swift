@@ -73,6 +73,8 @@ final class EnterPasswordViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   // MARK: - setupLayout
@@ -212,3 +214,5 @@ final class EnterPasswordViewController: UIViewController {
     }
   }
 }
+
+extension EnterPasswordViewController: KeyboardProtocol {}

@@ -122,7 +122,7 @@ final class BookmarkViewModel: Stepper {
         }else {
           let postedData = BehaviorRelay<PostDetailData?>(value: nil)
           postedData.accept(result)
-          steps.accept(AppStep.applyStudyScreenIsRequired(data: postedData))
+          steps.accept(AppStep.study(.applyStudyScreenIsRequired(data: postedData)))
         }
       }
     }

@@ -136,7 +136,7 @@ final class CommentViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 바인딩
@@ -214,8 +214,8 @@ extension CommentViewController: CommentCellDelegate {
   /// 메뉴 버튼 탭 -> bottomSheet
   func menuButtonTapped(commentID: Int) {
     /// BottomSheet 띄우기
-    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: commentID,
-                                                         type: .managementComment))
+    viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: commentID,
+                                                                     type: .managementComment)))
   }
 }
 
@@ -229,8 +229,8 @@ extension CommentViewController: BottomSheetDelegate {
     
     viewModel.commentID = postOrCommentID
     
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteComment))
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteComment)))
   }
   
   /// BottomSheet의 두 번째 버튼 탭 - 댓글 수정
@@ -238,7 +238,7 @@ extension CommentViewController: BottomSheetDelegate {
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     commentButton.setTitle("수정", for: .normal)
     viewModel.commentID = postOrCommentID
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
   }
 }
 

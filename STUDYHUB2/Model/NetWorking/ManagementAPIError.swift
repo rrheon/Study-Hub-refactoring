@@ -35,8 +35,7 @@ enum ApiError: Error {
   /// - Parameter error: 발생한 API 에러
   static func managementError(error: Self) -> String {
     switch error {
-    case .unAuthorize:
-      return "인증 실패: 다시 로그인해주세요."
+    case .unAuthorize: return "인증 실패: 다시 로그인해주세요."
       
     case .badStatus(let code):
       switch code {

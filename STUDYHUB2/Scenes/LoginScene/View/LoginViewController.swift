@@ -208,7 +208,7 @@ final class LoginViewController: UIViewController {
     signUpButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
-        vc.viewModel.steps.accept(AppStep.signupIsRequired)
+        vc.viewModel.steps.accept(AppStep.auth(.signupIsRequired))
       })
       .disposed(by: disposeBag)
     
@@ -216,7 +216,7 @@ final class LoginViewController: UIViewController {
     forgotPasswordButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
-        vc.viewModel.steps.accept(AppStep.confrimEmailScreenIsRequired)
+        vc.viewModel.steps.accept(AppStep.auth(.confirmEmailScreenIsRequired))
       })
       .disposed(by: disposeBag)
     

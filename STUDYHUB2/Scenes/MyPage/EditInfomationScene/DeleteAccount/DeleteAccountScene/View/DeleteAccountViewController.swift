@@ -84,7 +84,7 @@ final class DeleteAccountViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 바인딩 설정
@@ -145,7 +145,7 @@ final class DeleteAccountViewController: UIViewController {
   func resultOfDeleteAccount(_ result: Bool){
     switch result {
     case true:
-      viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .accountDeletionCompleted))
+      viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .accountDeletionCompleted)))
   
     case false:
       ToastPopupManager.shared.showToast(message:  "계정 탈퇴에 실패했어요.", alertCheck: false)

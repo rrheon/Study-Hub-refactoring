@@ -70,6 +70,8 @@ final class CheckEmailViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   
@@ -301,3 +303,5 @@ final class CheckEmailViewController: UIViewController {
   }
   
 }
+
+extension CheckEmailViewController: KeyboardProtocol {}

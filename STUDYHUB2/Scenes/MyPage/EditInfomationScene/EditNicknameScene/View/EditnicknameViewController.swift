@@ -114,7 +114,7 @@ final class EditnicknameViewController: UIViewController {
  
   /// 네비게이션 바 왼쪽 아이탬 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 탭
@@ -178,7 +178,7 @@ final class EditnicknameViewController: UIViewController {
     viewModel.storeNicknameToServer(newNickname)
   
     ToastPopupManager.shared.showToast(message: "닉네임이 변경되었어요")
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 닉네임 변경에 실패했을 경우

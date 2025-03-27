@@ -128,8 +128,7 @@ final class CreateStudyViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    self.viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
-#warning("수정하거나 작성하다가 나가면 경고창")
+    self.viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - setupBinding
@@ -166,7 +165,7 @@ final class CreateStudyViewController: UIViewController {
   func backButtonTapped(){
     self.view.endEditing(true)
     
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .cancelModifyPost))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .cancelModifyPost)))
   }
 }
 
@@ -176,6 +175,7 @@ final class CreateStudyViewController: UIViewController {
 extension CreateStudyViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
   }
 }
+

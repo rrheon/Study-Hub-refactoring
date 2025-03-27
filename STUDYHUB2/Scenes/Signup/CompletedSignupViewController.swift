@@ -41,7 +41,7 @@ final class CompletedSignupViewController: UIViewController, Stepper {
   } // viewDidLoad
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.dismissCurrentFlow)
+    steps.accept(AppStep.navigation(.dismissCurrentFlow))
   }
   
   // MARK: - makeUI

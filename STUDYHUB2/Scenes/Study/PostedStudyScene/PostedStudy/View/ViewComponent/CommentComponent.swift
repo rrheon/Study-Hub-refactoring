@@ -144,6 +144,11 @@ final class PostedStudyCommentComponent: UIView {
     }
   }
   
+  func settingComment(){
+    commentTextField.text = nil
+    commentTextField.resignFirstResponder()
+  }
+  
   // MARK: -  setupBinding
   
   /// 바인딩
@@ -201,8 +206,8 @@ final class PostedStudyCommentComponent: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (vc, _) in
         if TokenManager.shared.loadAccessToken()?.isEmpty == true {
-          vc.settingComment()
-          self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .requiredLogin))
+          self.settingComment()
+          self.viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .requiredLogin)))
         }else {
           guard let commentContent = vc.commentTextField.text,
                 let title = vc.commentButton.currentTitle else { return }
@@ -223,22 +228,9 @@ final class PostedStudyCommentComponent: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (vc, _) in
         vc.viewModel.steps.accept(
-          AppStep.commentDetailScreenIsRequired(postID: vc.viewModel.postID))
+          AppStep.study(.commentDetailScreenIsRequired(postID: vc.viewModel.postID)))
       })
       .disposed(by: disposeBag)
-  }
-  
-  func settingComment(){
-    /// PushlishRelay 로 댓글데이터 처리 -> 초기값이 없어서 UI가 께짐
-    /// BehaviorRelay로 처리 -> 초기값을 빈 배열로 설정해서 UI를 잡고 데이터를 넣어줌
-    /// 다시 불러오지 말고 마지막 데이터 교체해주기 x -> 댓글 ID를 알 수 없음
-//    viewModel.fetchCommentDatas()
-//    let message = mode == "생성" ? "댓글이 작성됐어요" : "댓글이 수정됐어요"
-//    viewModel.showToastMessage.accept(message)
-//    
-//    commentButton.setTitle("등록", for: .normal)
-    commentTextField.text = nil
-    commentTextField.resignFirstResponder()
   }
 }
 
@@ -252,8 +244,8 @@ extension PostedStudyCommentComponent: CommentCellDelegate {
   /// - Parameter commentID: 댓글의 ID
   func menuButtonTapped(commentID: Int) {
     /// BottomSheet 띄우기
-    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: commentID,
-                                                         type: .managementComment))
+    viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: commentID,
+                                                                     type: .managementComment)))
   }
 }
 
@@ -274,5 +266,4 @@ extension PostedStudyCommentComponent: UITextFieldDelegate {
     
     commentButton.unableButton(activateBtn, backgroundColor: backgroundColor, titleColor: .white)
   }
-  
 }

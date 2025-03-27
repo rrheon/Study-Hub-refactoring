@@ -83,7 +83,7 @@ final class ConfirmPasswordViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 버튼 탭
@@ -103,7 +103,7 @@ final class ConfirmPasswordViewController: UIViewController {
         switch valid {
         case true:
           guard let email = self?.viewModel.userEmail else { return }
-          self?.viewModel.steps.accept(AppStep.editPasswordScreenIsRequired(email: email))
+          self?.viewModel.steps.accept(AppStep.auth(.editPasswordScreenIsRequired(email: email)))
         case false:
           ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.",
                                              alertCheck: false)
@@ -128,8 +128,7 @@ final class ConfirmPasswordViewController: UIViewController {
     // 비밀번호 잊었을 경우
     forgotPasswordButton.rx.tap
       .subscribe(onNext: { [weak self] in
-      
-//        self?.moveToOtherVCWithSameNavi(vc: ConfirmEmailViewController(true), hideTabbar: true)
+        self?.viewModel.steps.accept(AppStep.auth(.confirmEmailScreenIsRequired))
       })
       .disposed(by: disposeBag)
   }

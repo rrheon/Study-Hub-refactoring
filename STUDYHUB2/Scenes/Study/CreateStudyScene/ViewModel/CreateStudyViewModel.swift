@@ -33,7 +33,7 @@ final class CreateStudyViewModel: Stepper {
   var selectedStudyWayValue = BehaviorRelay<UIButton?>(value: nil)
   
   /// 벌금 선택 여부
-  var isFineButton = PublishRelay<Bool>()
+  var isFineButton = BehaviorRelay<Bool>(value: false)
   
   /// 스터디 시작날짜
   var startDate = BehaviorRelay<String>(value: "선택하기")
@@ -71,10 +71,10 @@ final class CreateStudyViewModel: Stepper {
     StudyPostManager.shared.createNewPost(with: data) { postID in
       if let _postID = postID {
         /// 생성 후 회면 내리기
-        self.steps.accept(AppStep.popCurrentScreen(animate: false))
+        self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
         
         /// 생성한 게시글로 이동
-        self.steps.accept(AppStep.studyDetailScreenIsRequired(postID: _postID))
+        self.steps.accept(AppStep.study(.studyDetailScreenIsRequired(postID: _postID)))
         
         ToastPopupManager.shared.showToast(message: "게시글이 작성됐어요.")
       }
@@ -93,7 +93,7 @@ final class CreateStudyViewModel: Stepper {
       let modifyData = UpdateStudyRequest(from: data, postId: postedData.postId)
       StudyPostManager.shared.modifyPost(with: modifyData)
       
-      self.steps.accept(AppStep.popCurrentScreen(animate: false))
+      self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
 
       ToastPopupManager.shared.showToast(message: "글이 수정됐어요.")
     }

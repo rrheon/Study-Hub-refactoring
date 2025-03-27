@@ -68,6 +68,8 @@ final class EnterMajorViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } //viewDidLoad
   
   
@@ -214,3 +216,5 @@ extension EnterMajorViewController: UITableViewDelegate {
     return 48.0
   }
 }
+
+extension EnterMajorViewController: KeyboardProtocol {}

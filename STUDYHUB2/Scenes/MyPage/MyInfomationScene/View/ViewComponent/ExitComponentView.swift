@@ -79,7 +79,7 @@ final class ExitComponentView: UIView {
     logoutButton.rx
       .tap
       .subscribe(onNext: { _ in
-        self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .logoutIsRequired))
+        self.viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .logoutIsRequired)))
       })
       .disposed(by: disposeBag)
     
@@ -87,7 +87,7 @@ final class ExitComponentView: UIView {
     quitButton.rx
       .tap
       .subscribe(onNext: { _ in
-        self.viewModel.steps.accept(AppStep.confirmDeleteAccountScreenIsRequired)
+        self.viewModel.steps.accept(AppStep.auth(.confirmDeleteAccountScreenIsRequired))
       })
       .disposed(by: disposeBag)
 

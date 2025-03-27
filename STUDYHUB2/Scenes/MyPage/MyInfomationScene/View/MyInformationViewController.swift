@@ -89,7 +89,7 @@ final class MyInformViewController: UIViewController {
   
   /// 네비게이션 왼쪽 버튼 탭 - 현재 탭 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
     
   // MARK: - setupActions
@@ -199,7 +199,7 @@ extension MyInformViewController: BottomSheetDelegate {
   
   /// 프로필 사진 변경 허용 팝업
   func showAccessDeniedAlert() {
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .allowProfileImageChange))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .allowProfileImageChange)))
   }
 }
 
@@ -213,7 +213,7 @@ extension MyInformViewController: UIImagePickerControllerDelegate,
     if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
       viewModel.storeProfileToserver(image: image)
       
-      viewModel.steps.accept(AppStep.dismissCurrentScreen)
+      viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
     }
   }
 }

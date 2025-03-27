@@ -89,7 +89,7 @@ final class BookmarkViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽버튼 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 바인딩 설정
@@ -150,7 +150,7 @@ final class BookmarkViewController: UIViewController {
     loginButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
-        vc.viewModel.steps.accept(AppStep.loginScreenIsRequired)
+        vc.viewModel.steps.accept(AppStep.auth(.loginScreenIsRequired))
         _ = TokenManager.shared.deleteTokens()
       })
       .disposed(by: disposeBag)
@@ -159,7 +159,7 @@ final class BookmarkViewController: UIViewController {
     bookMarkCollectionView.rx
       .modelSelected(BookmarkContent.self)
       .subscribe(onNext: { [weak self] postCellData in
-        self?.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postCellData.postID))
+        self?.viewModel.steps.accept(AppStep.study(.studyDetailScreenIsRequired(postID: postCellData.postID)))
       })
       .disposed(by: disposeBag)
   }
@@ -242,7 +242,7 @@ final class BookmarkViewController: UIViewController {
   
   /// 전체삭제 버튼 탭
   @objc func deleteAllButtonTapped(){
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllBookmarks))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteAllBookmarks)))
   }
 }
 
