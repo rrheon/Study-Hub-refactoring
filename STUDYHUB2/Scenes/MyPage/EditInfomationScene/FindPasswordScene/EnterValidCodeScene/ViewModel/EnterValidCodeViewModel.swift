@@ -7,13 +7,15 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
 /// 이메일 유효성 체크 ViewModel
 final class EnterValidCodeViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
-  
+  let disposeBag: DisposeBag = DisposeBag()
+
   var email: String? = nil
   
   let validCode = BehaviorRelay<String>(value: "")
@@ -28,9 +30,14 @@ final class EnterValidCodeViewModel: Stepper {
   /// 이메일 인증 코드 보내기
   func sendEmailValidCode(){
     guard let _email = email else { return }
-    UserAuthManager.shared.sendEmailCode(email: _email) { result in
-      self.isValidCode.accept(result)
-    }
+    UserAuthManager.shared.sendEmailCodeWithRx(email: _email)
+      .subscribe(onNext: { isSent in
+        self.isValidCode.accept(isSent)
+      })
+      .disposed(by: disposeBag )
+//    UserAuthManager.shared.sendEmailCode(email: _email) { result in
+//      self.isValidCode.accept(result)
+//    }
   }
   
   /// 코드 다시 보내기

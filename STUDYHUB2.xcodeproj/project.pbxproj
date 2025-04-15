@@ -43,7 +43,6 @@
 		EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */; };
 		EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441C2B18666800223436 /* MyParticipateCell.swift */; };
 		EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1B2AD04ACE00190E7A /* TokenManager.swift */; };
-		EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1D2AD04BB300190E7A /* UserToken.swift */; };
 		EE271F202AD0584100190E7A /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1F2AD0584100190E7A /* UIColor+Ext.swift */; };
 		EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F232AD77C0E00190E7A /* LoginViewModel.swift */; };
 		EE271F262AD77CD100190E7A /* UIViewcontroller+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F252AD77CD100190E7A /* UIViewcontroller+Ext.swift */; };
@@ -115,7 +114,7 @@
 		EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9356292B6A518500D662CC /* NotificationCell.swift */; };
 		EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */; };
 		EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AC2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift */; };
-		EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */; };
+		EE98B1B02B3C387A0025C4F8 /* isExistEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1AF2B3C387A0025C4F8 /* isExistEmailViewController.swift */; };
 		EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BC2B4805A90025C4F8 /* DeleteAccountViewController.swift */; };
 		EE98B1BF2B4D52200025C4F8 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */; };
 		EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */; };
@@ -183,6 +182,7 @@
 		EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD162C6B4F2F00FA347D /* CommentComponent.swift */; };
 		EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1A2C6CA05900FA347D /* Utils.swift */; };
 		EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDDDD1E2C71EE8500FA347D /* ShowBottomSheet.swift */; };
+		EEEB55A82DA4F008002F27AA /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = EEEB55A72DA4F008002F27AA /* RxMoya */; };
 		EEFD5D1F2B5E40C900D1CE00 /* ApplyStudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D1E2B5E40C900D1CE00 /* ApplyStudyViewController.swift */; };
 		EEFD5D242B5F682A00D1CE00 /* TokenDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */; };
 		EEFD5D2E2B60D37A00D1CE00 /* AgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFD5D2D2B60D37A00D1CE00 /* AgreementViewController.swift */; };
@@ -245,7 +245,6 @@
 		EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyVC.swift; sourceTree = "<group>"; };
 		EE1E441C2B18666800223436 /* MyParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateCell.swift; sourceTree = "<group>"; };
 		EE271F1B2AD04ACE00190E7A /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
-		EE271F1D2AD04BB300190E7A /* UserToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserToken.swift; sourceTree = "<group>"; };
 		EE271F1F2AD0584100190E7A /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		EE271F232AD77C0E00190E7A /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		EE271F252AD77CD100190E7A /* UIViewcontroller+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewcontroller+Ext.swift"; sourceTree = "<group>"; };
@@ -314,7 +313,7 @@
 		EE9356292B6A518500D662CC /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		EE98B1AA2B3BB3F70025C4F8 /* EditMajorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMajorViewController.swift; sourceTree = "<group>"; };
 		EE98B1AC2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPasswordViewController.swift; sourceTree = "<group>"; };
-		EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewController.swift; sourceTree = "<group>"; };
+		EE98B1AF2B3C387A0025C4F8 /* isExistEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = isExistEmailViewController.swift; sourceTree = "<group>"; };
 		EE98B1BC2B4805A90025C4F8 /* DeleteAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewController.swift; sourceTree = "<group>"; };
 		EE98B1BE2B4D52200025C4F8 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		EE98B1C02B4F9AB70025C4F8 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
@@ -425,6 +424,7 @@
 				903CF32160A1EDD2ADE8AA03 /* Pods_STUDYHUB2.framework in Frameworks */,
 				EE8871842D7AC51D00C1C0AF /* Then in Frameworks */,
 				EE88718D2D7AC62300C1C0AF /* FSCalendar in Frameworks */,
+				EEEB55A82DA4F008002F27AA /* RxMoya in Frameworks */,
 				EE8871872D7AC56700C1C0AF /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -548,7 +548,6 @@
 			isa = PBXGroup;
 			children = (
 				EEFD5D232B5F682A00D1CE00 /* TokenDTO.swift */,
-				EE271F1D2AD04BB300190E7A /* UserToken.swift */,
 				EE271F1B2AD04ACE00190E7A /* TokenManager.swift */,
 			);
 			path = Token;
@@ -1239,7 +1238,7 @@
 		EEC5FF992C9DBF6200896FEB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				EE98B1AF2B3C387A0025C4F8 /* ConfirmEmailViewController.swift */,
+				EE98B1AF2B3C387A0025C4F8 /* isExistEmailViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1808,6 +1807,7 @@
 				EE8871862D7AC56700C1C0AF /* Kingfisher */,
 				EE8871892D7AC60200C1C0AF /* Moya */,
 				EE88718C2D7AC62300C1C0AF /* FSCalendar */,
+				EEEB55A72DA4F008002F27AA /* RxMoya */,
 			);
 			productName = STUDYHUB2;
 			productReference = F804218E2A7D6816006C6B87 /* STUDYHUB2.app */;
@@ -1984,7 +1984,6 @@
 				EEB079FE2D54FFBA0009246D /* AppFlow.swift in Sources */,
 				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
 				EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */,
-				EE271F1E2AD04BB300190E7A /* UserToken.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */,
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
 				EE5B93482D48B624006DC65D /* BookmarkManager.swift in Sources */,
@@ -2055,7 +2054,7 @@
 				EEC5FFBC2CA4531200896FEB /* ConfirmDeleteViewController.swift in Sources */,
 				F80421CC2A7D9BC3006C6B87 /* EnterNicknameViewController.swift in Sources */,
 				EE5B936D2D4A2589006DC65D /* CommentManager.swift in Sources */,
-				EE98B1B02B3C387A0025C4F8 /* ConfirmEmailViewController.swift in Sources */,
+				EE98B1B02B3C387A0025C4F8 /* isExistEmailViewController.swift in Sources */,
 				EEB07A552D5B0F010009246D /* ResultSearchViewController.swift in Sources */,
 				EE29083D2C86F407006B28A7 /* SelectMajorViewModel.swift in Sources */,
 				EE2908312C81A002006B28A7 /* SelectMajorView.swift in Sources */,
@@ -2250,7 +2249,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2288,7 +2287,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2410,6 +2409,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EEB079FF2D54FFEF0009246D /* XCRemoteSwiftPackageReference "RxFlow" */;
 			productName = RxFlow;
+		};
+		EEEB55A72DA4F008002F27AA /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EE8871882D7AC60200C1C0AF /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

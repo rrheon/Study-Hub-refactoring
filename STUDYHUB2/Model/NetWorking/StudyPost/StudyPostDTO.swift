@@ -136,36 +136,36 @@ struct CreateStudyRequest: Codable {
 // MARK: - 게시글 수정 시
 
 struct UpdateStudyRequest: Codable {
-//  var chatUrl: String = ""
-//  var close: Bool = false
-//  var content: String = ""
-//  var gender: String = ""
-//  var major: String = ""
-//  var penalty: Int = 0
-//  var penaltyWay: String? = nil
-  var studyData: CreateStudyRequest
+  var chatUrl: String = ""
+  var close: Bool = false
+  var content: String = ""
+  var gender: String = ""
+  var major: String = ""
+  var penalty: Int = 0
+  var penaltyWay: String? = nil
+//  var studyData: CreateStudyRequest
   var postId: Int = 0
-//  var studyEndDate: String = ""
-//  var studyPerson: Int = 0
-//  var studyStartDate: String = ""
-//  var studyWay: String = ""
-//  var title: String = ""
+  var studyEndDate: String = ""
+  var studyPerson: Int = 0
+  var studyStartDate: String = ""
+  var studyWay: String = ""
+  var title: String = ""
   
   // CreateStudyRequest에서 변환하는 이니셜라이저 추가
   init(from createStudy: CreateStudyRequest, postId: Int) {
-//    self.chatUrl = createStudy.chatUrl
-//    self.close = createStudy.close
-//    self.content = createStudy.content
-//    self.gender = createStudy.gender
-//    self.major = createStudy.major
-//    self.penalty = createStudy.penalty
-//    self.penaltyWay = createStudy.penaltyWay
-//    self.studyEndDate = createStudy.studyEndDate
-//    self.studyPerson = createStudy.studyPerson
-//    self.studyStartDate = createStudy.studyStartDate
-//    self.studyWay = createStudy.studyWay
-//    self.title = createStudy.title
-    self.studyData = createStudy
+    self.chatUrl = createStudy.chatUrl
+    self.close = createStudy.close
+    self.content = createStudy.content
+    self.gender = createStudy.gender
+    self.major = createStudy.major
+    self.penalty = createStudy.penalty
+    self.penaltyWay = createStudy.penaltyWay
+    self.studyEndDate = createStudy.studyEndDate
+    self.studyPerson = createStudy.studyPerson
+    self.studyStartDate = createStudy.studyStartDate
+    self.studyWay = createStudy.studyWay
+    self.title = createStudy.title
+//    self.studyData = createStudy
     self.postId = postId
   }
 }

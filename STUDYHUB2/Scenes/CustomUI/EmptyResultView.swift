@@ -57,7 +57,6 @@ final class EmptyResultView: UIView {
     emptyImageView.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
       make.top.equalToSuperview()
-      make.size.equalTo(CGSize(width: 150, height: 200))
     }
     
     addSubview(emptyLabel)

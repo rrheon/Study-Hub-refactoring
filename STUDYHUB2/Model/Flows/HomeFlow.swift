@@ -84,7 +84,6 @@ class HomeFlow: Flow {
   /// 현재화면 pop
   private func popCurrentScreen() -> FlowContributors {
     self.rootViewController.popViewController(animated: true)
-    self.rootViewController.popViewController(animated: true)
     return .none
   }
 }

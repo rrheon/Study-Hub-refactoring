@@ -163,7 +163,7 @@ final class EnterSearchViewController: UIViewController {
       .subscribe(onNext: { (vc, keyword) in
         print(#fileID, #function, #line," - \(keyword)")
         
-        vc.viewModel.fectchPostData(with: keyword)
+        vc.viewModel.fetchPostData(with: keyword)
         
         if let _ = self.navigationController?.viewControllers.first as? HomeViewController  {
           vc.viewModel.steps.accept(HomeStep.resultSearchIsRequired)
@@ -193,9 +193,7 @@ extension EnterSearchViewController: UISearchBarDelegate {
   // 검색 시 실시간으로 호출 - 비어있지 않는 경우만
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)  {
     if !searchText.isEmpty {
-      Task {
-        await viewModel.searchRecommend(keyword: searchText)
-      }
+      viewModel.searchRecommend(keyword: searchText)
     }
   }
 }

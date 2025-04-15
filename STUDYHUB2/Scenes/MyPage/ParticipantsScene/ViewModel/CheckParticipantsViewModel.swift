@@ -7,6 +7,7 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
@@ -29,6 +30,8 @@ enum ParticipateStatus {
 final class CheckParticipantsViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
+  let disposeBag: DisposeBag = DisposeBag()
+
   /// 수락 / 거절 할 사용자 ID
   var userID: Int? = nil
   
@@ -56,13 +59,23 @@ final class CheckParticipantsViewModel: Stepper {
   /// - Parameter type: 참여자의 타입
   func getParticipateInfo(type: ParticipateStatus){
     buttonStatus = type
-    ApplyStudyManager.shared.getApplyUserData(inspection: buttonStatus.content,
-                                              page: 0,
-                                              size: 50,
-                                              studyId: studyID) { result in
-      self.studyUserData.accept(result.applyUserData.content)
-      self.totalCount.accept(result.applyUserData.numberOfElements)
-    }
+    
+    ApplyStudyManager.shared
+      .getApplyUserDataWithRx(inspection: buttonStatus.content, page: 0, size: 50, studyId: studyID)
+      .subscribe(onNext: { [weak self] applyUsers in
+        self?.studyUserData.accept(applyUsers.applyUserData.content)
+        self?.totalCount.accept(applyUsers.applyUserData.numberOfElements)
+      })
+      .disposed(by: disposeBag)
+    
+//    
+//    ApplyStudyManager.shared.getApplyUserData(inspection: buttonStatus.content,
+//                                              page: 0,
+//                                              size: 50,
+//                                              studyId: studyID) { result in
+//      self.studyUserData.accept(result.applyUserData.content)
+//      self.totalCount.accept(result.applyUserData.numberOfElements)
+//    }
   }
   
   
@@ -72,9 +85,15 @@ final class CheckParticipantsViewModel: Stepper {
     guard let userID = userID else { return }
     let personData = AcceptStudy(rejectedUserId: userID , studyId: studyID)
 
-    ApplyStudyManager.shared.acceptApplyUser(personData: personData) {
-      completion()
-    }
+    ApplyStudyManager.shared.acceptApplyUserWithRx(personData: personData)
+      .subscribe(onError: { _ in
+        ToastPopupManager.shared.showToast(message: "수락에 실패했습니다. 다시 시도해주세요!")
+      })
+      .disposed(by: disposeBag)
+      
+//    ApplyStudyManager.shared.acceptApplyUser(personData: personData) {
+//      completion()
+//    }
   }
   
   /// 신청한 인원 거절하기
@@ -82,8 +101,15 @@ final class CheckParticipantsViewModel: Stepper {
     guard let userID = userID else { return }
 
     let personData = RejectStudy(rejectReason: reason, rejectedUserId: userID, studyId: studyID)
-    ApplyStudyManager.shared.rejectApplyUser(personData: personData) {
-      completion()
-    }
+    
+    ApplyStudyManager.shared.rejectApplyUser(personData: personData)
+      .subscribe(onError: { _ in
+        ToastPopupManager.shared.showToast(message: "거절에 실패했습니다. 다시 시도해주세요!")
+      })
+      .disposed(by: disposeBag)
+    
+//    ApplyStudyManager.shared.rejectApplyUser(personData: personData) {
+//      completion()
+//    }
   }
 }

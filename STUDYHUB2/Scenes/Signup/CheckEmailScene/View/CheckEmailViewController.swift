@@ -265,6 +265,13 @@ final class CheckEmailViewController: UIViewController {
         EnterMajorViewModel.shared.email = email
       })
       .disposed(by: disposeBag)
+    
+    viewModel.isCodeSent
+      .subscribe(onNext: { isSent in
+        self.validButton.setTitle("재전송", for: .normal)
+        self.codeTextField.isHidden = false
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - 인증코드 전송
@@ -282,11 +289,11 @@ final class CheckEmailViewController: UIViewController {
     }
     
     self.viewModel.resend = true
-    
-    viewModel.sendEmailCode(email) {
-      self.validButton.setTitle("재전송", for: .normal)
-      self.codeTextField.isHidden = false
-    }
+//    
+//    viewModel.sendEmailCode(email) {
+//      self.validButton.setTitle("재전송", for: .normal)
+//      self.codeTextField.isHidden = false
+//    }
   }
   
   // MARK: - 인증코드 전송 후 UI설정

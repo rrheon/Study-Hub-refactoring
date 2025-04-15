@@ -62,6 +62,8 @@ final class CreateStudyViewController: UIViewController {
     makeUI()
     
     setupBinding()
+    
+    registerTapGesture()
   } // viewDidLoad
   
  
@@ -150,9 +152,10 @@ final class CreateStudyViewController: UIViewController {
     /// 벌금 여부에 따른 UI 설정
     viewModel.isFineButton
       .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self]  in
-        guard let self = self else { return }
-        let height = $0 ? 450 : 230
+      .drive(onNext: { [weak self] isFine in
+        guard let self = self,
+              let _isFine = isFine else { return }
+        let height = _isFine ? 450 : 230
         self.studyWayView.snp.updateConstraints {
           $0.height.equalTo(height)
         }
@@ -179,3 +182,4 @@ extension CreateStudyViewController: PopupViewDelegate {
   }
 }
 
+extension CreateStudyViewController: KeyboardProtocol {}

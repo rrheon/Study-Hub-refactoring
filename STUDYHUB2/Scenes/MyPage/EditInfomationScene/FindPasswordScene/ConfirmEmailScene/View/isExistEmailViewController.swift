@@ -109,19 +109,19 @@ final class ConfirmEmailViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    viewModel.isExistEmail
-      .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self] result in
-        if result {
-          guard let email = self?.viewModel.email.value else { return }
-
-          self?.viewModel.steps.accept(FindPasswordStep.enterEmailCodeScreenIsRequired(email: email))
-        } else {
-          ToastPopupManager.shared.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
-                                             alertCheck: false)
-        }
-      })
-      .disposed(by: disposeBag)
+//    viewModel.isExistEmail
+//      .asDriver(onErrorJustReturn: false)
+//      .drive(onNext: { [weak self] result in
+//        if result {
+//          guard let email = self?.viewModel.email.value else { return }
+//
+//          self?.viewModel.steps.accept(FindPasswordStep.enterEmailCodeScreenIsRequired(email: email))
+//        } else {
+//          ToastPopupManager.shared.showToast(message: "가입되지 않은 이메일이에요. 다시 입력해주세요.",
+//                                             alertCheck: false)
+//        }
+//      })
+//      .disposed(by: disposeBag)
 
   }
 }

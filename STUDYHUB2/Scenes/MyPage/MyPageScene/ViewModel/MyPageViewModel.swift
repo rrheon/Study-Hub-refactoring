@@ -1,6 +1,7 @@
 
 import UIKit
 
+import RxSwift
 import RxRelay
 import RxFlow
 
@@ -8,6 +9,8 @@ import RxFlow
 /// 마이페이지 ViewModel
 final class MyPageViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   static let shared = MyPageViewModel()
   
@@ -35,11 +38,17 @@ final class MyPageViewModel: Stepper {
 
   /// 사용자의 정보 가져오기
   func fetchUserData() {
-    UserProfileManager.shared.fetchUserInfoToServer { userData in
-      self.userData.accept(userData)
-      print(#fileID, #function, #line," - \(userData)")
-
-    }
+    UserProfileManager.shared.fetchUserInfoToServerWithRx()
+      .subscribe(onNext: { userData in
+        self.userData.accept(userData)
+      })
+      .disposed(by: disposeBag)
+    
+//    UserProfileManager.shared.fetchUserInfoToServer { userData in
+//      self.userData.accept(userData)
+//      print(#fileID, #function, #line," - \(userData)")
+//
+//    }
   }
 }
 

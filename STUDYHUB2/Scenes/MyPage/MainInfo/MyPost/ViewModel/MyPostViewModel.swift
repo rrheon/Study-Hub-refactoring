@@ -1,6 +1,7 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
@@ -13,7 +14,8 @@ enum PostCountUpdate {
 /// 내가 작성한 스터디 포스트 ViewModel
 final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
-  
+  let disposeBag: DisposeBag = DisposeBag()
+
   var selectedPostID: Int? = nil
 
   /// 내가 작성한 게시글 전체 데이터
@@ -46,32 +48,55 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   ///   - page: 페이지
   ///   - size: 사이즈
   func getMyPostData(size: Int = 5) {
-    StudyPostManager.shared.searchMyPost(page: myPostPage, size: size) { data in
-      var currentDatas = self.myPostData.value
-      
-      if self.myPostPage == 0 {
-        currentDatas = data.posts.myPostcontent
-      }else{
-        var newData = data.posts.myPostcontent
-        currentDatas.append(contentsOf: newData)
-      }
-      self.myPostData.accept(currentDatas)
-      self.myPostPage += 1
-      self.isInfiniteScroll = data.posts.last
-      self.totalCount = data.totalCount
-    }
+    StudyPostManager.shared.searchMyPostWithRx(page: myPostPage, size: size)
+      .subscribe(onNext: { [weak self] postData in
+        var currentDatas = self?.myPostData.value ?? []
+        
+        if self?.myPostPage == 0 {
+          currentDatas = postData.posts.myPostcontent
+        }else{
+          var newData = postData.posts.myPostcontent
+          currentDatas.append(contentsOf: newData)
+        }
+        self?.myPostData.accept(currentDatas)
+        self?.myPostPage += 1
+        self?.isInfiniteScroll = postData.posts.last
+        self?.totalCount = postData.totalCount
+      })
+      .disposed(by: disposeBag)
+    
+//    StudyPostManager.shared.searchMyPost(page: myPostPage, size: size) { data in
+//      var currentDatas = self.myPostData.value
+//      
+//      if self.myPostPage == 0 {
+//        currentDatas = data.posts.myPostcontent
+//      }else{
+//        var newData = data.posts.myPostcontent
+//        currentDatas.append(contentsOf: newData)
+//      }
+//      self.myPostData.accept(currentDatas)
+//      self.myPostPage += 1
+//      self.isInfiniteScroll = data.posts.last
+//      self.totalCount = data.totalCount
+//    }
   }
 
   
   /// 내가 작성한 스터디 수정하기
   /// - Parameter postID: 스터디 postID
   func modifyMyPostBtnTapped(postID: Int){
-    Task {
-      let data = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
-      
-      steps.accept(AppStep.navigation(.dismissCurrentScreen))
-      steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: data)))
-    }
+    StudyPostManager.shared.searchSinglePostDataWithRx(postId: postID)
+      .subscribe(onNext: { [weak self] postData in
+        self?.steps.accept(AppStep.navigation(.dismissCurrentScreen))
+        self?.steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: postData)))
+      })
+      .disposed(by: disposeBag)
+//    Task {
+//      let data = try await StudyPostManager.shared.searchSinglePostData(postId: postID)
+//      
+//      steps.accept(AppStep.navigation(.dismissCurrentScreen))
+//      steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: data)))
+//    }
   }
 
 
@@ -79,9 +104,14 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   /// 내가 작성한 스터디 마감처리
   /// - Parameter postID: postID
   func closeMyPost(_ postID: Int){
-    StudyPostManager.shared.closePost(with: postID) { reulst in
-      self.updateClosePost(postID: postID)
-    }
+    StudyPostManager.shared.closePostWithRx(with: postID)
+      .subscribe(onNext: { [weak self] isClosed in
+        self?.updateClosePost(postID: postID)
+      })
+      .disposed(by: disposeBag)
+//    StudyPostManager.shared.closePost(with: postID) { reulst in
+//      self.updateClosePost(postID: postID)
+//    }
   }
   
   
@@ -118,22 +148,47 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
   /// 내가 작성한 스터디 삭제
   /// - Parameter postID: postID
   func deleteMySinglePost(_ postID: Int){
-    StudyPostManager.shared.deletePost(with: postID) { result in
-      super.updateUserData(postCount: self.updateMyPostCount(mode: .MINUS))
-     
-      var currentPosts = self.myPostData.value
-      currentPosts.removeAll { $0.postID == postID }
-      self.myPostData.accept(currentPosts)
-    }
+    StudyPostManager.shared.deletePostWithRx(with: postID)
+      .subscribe(onNext: { [weak self] isDeleted in
+        guard let self = self, isDeleted else { return }
+
+        // 사용자 데이터 업데이트
+        let newCount = self.updateMyPostCount(mode: .MINUS)
+          
+        updateUserData(postCount: newCount)
+        
+        // 게시글 목록 갱신
+        var currentPosts = self.myPostData.value
+        currentPosts.removeAll { $0.postID == postID }
+        self.myPostData.accept(currentPosts)
+
+      }, onError: { error in
+        ToastPopupManager.shared.showToast(message: "게시글 삭제에 실패했습니다.", alertCheck: false)
+      })
+      .disposed(by: disposeBag)
+
+//    StudyPostManager.shared.deletePost(with: postID) { result in
+//      super.updateUserData(postCount: self.updateMyPostCount(mode: .MINUS))
+//     
+//      var currentPosts = self.myPostData.value
+//      currentPosts.removeAll { $0.postID == postID }
+//      self.myPostData.accept(currentPosts)
+//    }
   }
   
   
   /// 내가 작성한 스터디 모두 삭제
   func deleteMyAllPost(){
-    StudyPostManager.shared.deleteMyAllPost { result in
-      super.updateUserData(postCount: 0)
-      self.myPostData.accept([])
-    }
+    StudyPostManager.shared.deleteMyAllPostWithRx()
+      .subscribe(onNext: { [weak self] isDeleted in
+        self?.updateUserData(postCount: 0)
+        self?.myPostData.accept([])
+      })
+      .disposed(by: disposeBag)
+//    StudyPostManager.shared.deleteMyAllPost { result in
+//      super.updateUserData(postCount: 0)
+//      self.myPostData.accept([])
+//    }
   }
   
   

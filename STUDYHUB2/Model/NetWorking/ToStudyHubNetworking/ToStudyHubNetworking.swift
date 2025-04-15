@@ -21,8 +21,8 @@ extension ToStudyHubNetworking: TargetType, CommonBaseURL {
   /// API 별 요청 path
   var path: String {
     switch self {
-    case .inquiryQuestion(_):                          return "/v1/email/question"
-    case .getNotice(_, _):   return "/v1/announce"
+    case .inquiryQuestion(_):    return "/v1/email/question"
+    case .getNotice(_, _):       return "/v1/announce"
     }
   }
   

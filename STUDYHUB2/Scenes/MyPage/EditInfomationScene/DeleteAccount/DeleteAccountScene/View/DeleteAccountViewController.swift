@@ -111,47 +111,47 @@ final class DeleteAccountViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    viewModel.isValidPassword
-      .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self] in
-        self?.deleteAccountButtonTapped($0)
-      })
-      .disposed(by: disposeBag)
-    
+//    viewModel.isValidPassword
+//      .asDriver(onErrorJustReturn: false)
+//      .drive(onNext: { [weak self] in
+//        self?.deleteAccountButtonTapped($0)
+//      })
+//      .disposed(by: disposeBag)
+//    
     quitButton.rx.tap
       .subscribe(onNext: {[weak self] in
         self?.viewModel.checkValidPassword()
       })
       .disposed(by: disposeBag)
     
-    viewModel.isSuccessToDeleteAccount
-      .subscribe(onNext: { [weak self] result in
-        self?.resultOfDeleteAccount(result)
-      })
-      .disposed(by: disposeBag)
+//    viewModel.isSuccessToDeleteAccount
+//      .subscribe(onNext: { [weak self] result in
+//        self?.resultOfDeleteAccount(result)
+//      })
+//      .disposed(by: disposeBag)
   }
   
   /// 계정 삭제 버튼 탭
-  func deleteAccountButtonTapped(_ result: Bool){
-    switch result {
-    case true:
-      viewModel.deleteAccount()
-    case false:
-      ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
-    }
-  }
+//  func deleteAccountButtonTapped(_ result: Bool){
+//    switch result {
+//    case true:
+//      viewModel.deleteAccount()
+//    case false:
+//      ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.", alertCheck: false)
+//    }
+//  }
   
   /// 삭제 완료 시
-  func resultOfDeleteAccount(_ result: Bool){
-    switch result {
-    case true:
-      viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .accountDeletionCompleted)))
+//  func resultOfDeleteAccount(_ result: Bool){
+//    switch result {
+//    case true:
+//      viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .accountDeletionCompleted)))
+//  
+//    case false:
+//      ToastPopupManager.shared.showToast(message:  "계정 탈퇴에 실패했어요.", alertCheck: false)
+//
+//    }
   
-    case false:
-      ToastPopupManager.shared.showToast(message:  "계정 탈퇴에 실패했어요.", alertCheck: false)
-
-    }
-  }
 }
 
 

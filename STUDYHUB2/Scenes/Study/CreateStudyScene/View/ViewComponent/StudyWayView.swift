@@ -271,8 +271,9 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     viewModel.isFineButton
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] isFine in
-        guard let self = self else { return }
-        setupFineUI(!isFine)
+        guard let self = self,
+              let _isFine = isFine else { return }
+        setupFineUI(!_isFine)
       })
       .disposed(by: disposeBag)
   }
@@ -334,9 +335,10 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     viewModel.isFineButton
       .withUnretained(self)
       .subscribe(onNext: { (view, selected) in
-        view.haveFineButton.setImage(UIImage(named: selected ? "ButtonChecked" : "ButtonEmpty"),
+        guard let _selected = selected else { return }
+        view.haveFineButton.setImage(UIImage(named: _selected ? "ButtonChecked" : "ButtonEmpty"),
                                      for: .normal)
-        view.noFineButton.setImage(UIImage(named: selected ? "ButtonEmpty" : "ButtonChecked"),
+        view.noFineButton.setImage(UIImage(named: _selected ? "ButtonEmpty" : "ButtonChecked"),
                                    for: .normal)
       })
       .disposed(by: disposeBag)

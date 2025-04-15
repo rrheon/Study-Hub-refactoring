@@ -15,6 +15,7 @@ import RxFlow
 final class CheckEmailViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 이메일
   let email: PublishRelay<String> = PublishRelay<String>()
@@ -22,6 +23,9 @@ final class CheckEmailViewModel: Stepper {
   /// 이메일 인증코드
   let code: PublishRelay<String> = PublishRelay<String>()
   
+  /// 코드전송 여부
+  var isCodeSent: PublishRelay<Bool> = PublishRelay<Bool>()
+
   /// 이메일 중복 여부
   let isEmailDuplication: PublishRelay<Bool> = PublishRelay<Bool>()
   
@@ -41,11 +45,19 @@ final class CheckEmailViewModel: Stepper {
   /// 이메일 중복여부 체크 후 전달
   /// - Parameter email: 확인할 이메일
   func checkEmailDuplication(_ email: String) {
-    UserAuthManager.shared.checkEmailDuplication(email: email) { result in
-      self.isEmailDuplication.accept(result)
-      
-      if result { EnterMajorViewModel.shared.email = email }
-    }
+    UserAuthManager.shared.checkEmailDuplicationWithRx(email: email)
+      .subscribe(onNext: { [weak self] isValid in
+        self?.isEmailDuplication.accept(isValid)
+        
+        EnterMajorViewModel.shared.email = email
+        
+      })
+      .disposed(by: disposeBag )
+//    UserAuthManager.shared.checkEmailDuplication(email: email) { result in
+//      self.isEmailDuplication.accept(result)
+//      
+//      if result { EnterMajorViewModel.shared.email = email }
+//    }
   }
   
   
@@ -53,10 +65,16 @@ final class CheckEmailViewModel: Stepper {
   /// - Parameters:
   ///   - email: 보낼 이메일 주소
   ///   - completion: 콜백함수
-  func sendEmailCode(_ email: String, completion: @escaping () -> Void){
-    UserAuthManager.shared.sendEmailCode(email: email) { _ in
-      completion()
-    }
+  func sendEmailCode(_ email: String){
+    UserAuthManager.shared.sendEmailCodeWithRx(email: email)
+      .subscribe(onNext: { [weak self] isSent in
+        self?.isCodeSent.accept(isSent)
+      })
+      .disposed(by: disposeBag)
+    
+//    UserAuthManager.shared.sendEmailCode(email: email) { _ in
+//      completion()
+//    }
   }
   
   

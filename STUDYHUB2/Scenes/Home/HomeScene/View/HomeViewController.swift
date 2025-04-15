@@ -295,10 +295,7 @@ final class HomeViewController: UIViewController {
       .asDriver(onErrorJustReturn: (self, false))
       .drive(onNext: { vc, isNeedFecthDatas in
         if isNeedFecthDatas {
-          Task {
-            await vc.viewModel.fetchNewPostDatas()
-            await vc.viewModel.fetchDeadLinePostDatas()
-          }
+          vc.viewModel.fetchHomePostDatas()
         }
       })
       .disposed(by: disposeBag)

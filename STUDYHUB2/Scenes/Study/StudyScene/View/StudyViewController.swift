@@ -126,7 +126,8 @@ final class StudyViewController: UIViewController {
       
       scrollView.snp.makeConstraints { make in
         make.top.equalTo(recentButton.snp.bottom).offset(10)
-        make.leading.trailing.bottom.equalTo(view)
+        make.leading.trailing.equalTo(view)
+        make.bottom.equalToSuperview()
       }
       
       addButton.snp.makeConstraints { make in
@@ -268,12 +269,12 @@ final class StudyViewController: UIViewController {
     addButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { (_, _) in
-        if TokenManager.shared.loadAccessToken()?.isEmpty == true {
-          self.presentLoginPopup()
-        }else {
+        if LoginStatusManager.shared.loginStatus{
           NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
                                           object: nil,
                                           userInfo: ["postID" : nil])
+        }else {
+          self.presentLoginPopup()
         }
         
       })

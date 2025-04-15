@@ -2,6 +2,7 @@
 import UIKit
 
 import Moya
+import RxSwift
 import RxRelay
 import RxFlow
 
@@ -9,6 +10,7 @@ import RxFlow
 /// 공지사항 ViewModel
 final class NotificationViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 공지사항 데이터
   var noticeDatas = BehaviorRelay<[ExpandedNoticeContent]>(value: [])
@@ -23,10 +25,16 @@ final class NotificationViewModel: Stepper {
   ///   - page: 페이지 수
   ///   - size: 사이즈 수
   func getNoticeData(page: Int, size: Int){
-    ToStudyHubManager.shared.fetchNotice { noticeData in
-      let filteredDatas = noticeData.content.map { ExpandedNoticeContent(noticeContent: $0) }
-      self.noticeDatas.accept(filteredDatas)
-    }
+    ToStudyHubManager.shared.fetchNoticeWithRx()
+      .subscribe(onNext: { [weak self] notice in
+        let filteredDatas = notice.content.map { ExpandedNoticeContent(noticeContent: $0) }
+        self?.noticeDatas.accept(filteredDatas)
+      })
+      .disposed(by: disposeBag)
+//    ToStudyHubManager.shared.fetchNotice { noticeData in
+//      let filteredDatas = noticeData.content.map { ExpandedNoticeContent(noticeContent: $0) }
+//      self.noticeDatas.accept(filteredDatas)
+//    }
   }
   
   func noticeCellTapped(_ title: String){

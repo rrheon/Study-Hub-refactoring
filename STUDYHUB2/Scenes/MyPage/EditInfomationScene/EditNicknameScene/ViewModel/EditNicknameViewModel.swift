@@ -9,6 +9,7 @@ import RxRelay
 final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
+  var disposeBag: DisposeBag = DisposeBag()
   /// 새로운 닉네임
   var newNickname = BehaviorRelay<String?>(value: nil)
   
@@ -24,11 +25,16 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   /// 200 중복 X, 400 중복
   /// - Parameter nickname: 체크할 닉네임
   func checkNicknameDuplication(_ nickname: String){
-    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname, completion: { result in
-      print(#fileID, #function, #line," - \(result)")
-
-      self.isCheckNicknameDuplication.accept(result)
-    })
+    UserProfileManager.shared.checkNicknameDuplicationWithRx(nickname: nickname)
+      .subscribe(onNext: { isValid in
+        self.isCheckNicknameDuplication.accept(isValid)
+      })
+      .disposed(by: disposeBag)
+//    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname, completion: { result in
+//      print(#fileID, #function, #line," - \(result)")
+//
+//      self.isCheckNicknameDuplication.accept(result)
+//    })
 //    editUserInfoManager.checkNicknameDuplication(nickName: nickname) { result in
 //      self.isCheckNicknameDuplication.accept(result)
 //    }
@@ -38,11 +44,16 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
   /// 새로운 닉네임 저장
   /// - Parameter nickname: 저장할 닉네임
   func storeNicknameToServer(_ nickname: String){
-    UserProfileManager.shared.editUserNickname(nickname: nickname) { statusCode in
-#warning("코드 체크해보기")
-      print(statusCode)
-      self.updateUserData(nickname: nickname)
-    }
+    UserProfileManager.shared.editUserNicknameWithRx(nickname: nickname)
+      .subscribe(onNext: { _ in
+        self.updateUserData(nickname: nickname)
+      })
+      .disposed(by: disposeBag)
+//    UserProfileManager.shared.editUserNickname(nickname: nickname) { statusCode in
+//#warning("코드 체크해보기")
+//      print(statusCode)
+//      self.updateUserData(nickname: nickname)
+//    }
 
   }
   

@@ -122,7 +122,6 @@ final class EditnicknameViewController: UIViewController {
     guard let newNickname = viewModel.newNickname.value else { return }
 
     let valid = self.viewModel.checkValidNickname(nickname: newNickname)
-
     switch valid {
     case true:
       viewModel.checkNicknameDuplication(newNickname)

@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+import RxMoya
 import Moya
 
 
@@ -31,6 +33,16 @@ class UserProfileManager: StudyHubCommonNetworking {
     }
   }
   
+  func fetchUserInfoToServerWithRx() -> Observable<UserDetailData>{
+    return provider.rx
+      .request(.loadUserInfo)
+      .asObservable()
+      .flatMap { response -> Observable<UserDetailData> in
+        self.commonDecodeNetworkResponse(with: response, decode: UserDetailData.self)
+      }
+    
+  }
+  
   // MARK: - 유저 닉네임 변경
   
   /// 사용자의 닉네임 변경
@@ -48,6 +60,16 @@ class UserProfileManager: StudyHubCommonNetworking {
         print(error.localizedDescription)
       }
     }
+  }
+  
+  func editUserNicknameWithRx(nickname: String) -> Observable<Bool> {
+    return provider.rx
+      .request(.editUserNickName(nickname: nickname))
+      .asObservable()
+      .map { response in
+        return (200...299).contains(response.statusCode)
+      }
+      .catchAndReturn(false)
   }
   
   
@@ -72,6 +94,16 @@ class UserProfileManager: StudyHubCommonNetworking {
  
   }
   
+  func changePasswordWithRx(password: String, email: String) -> Observable<Bool>{
+    return provider.rx
+      .request(.editUserPassword(checkPassword: true, email: email, password: password))
+      .asObservable()
+      .map { response in
+        return (200...299).contains(response.statusCode)
+      }
+      .catchAndReturn(false)
+  }
+  
   /// 사용자의 학과 변경
   /// - Parameter major: 변경할 학과
   func changeMajor(major: String, completion: @escaping(Bool) -> Void){
@@ -89,6 +121,17 @@ class UserProfileManager: StudyHubCommonNetworking {
     }
   }
   
+  func changeMajorWithRx(major: String) -> Observable<Bool> {
+    guard let major = Utils.convertMajor(major, toEnglish: true) else { return .just(false) }
+    
+    return provider.rx
+      .request(.editUserMajor(major: major))
+      .asObservable()
+      .map { response in
+        return (200...299).contains(response.statusCode)
+      }
+      .catchAndReturn(false)
+  }
   
   /// 사용자의 계정 삭제
   func deleteAccount(completion: @escaping (Bool) -> Void){
@@ -103,6 +146,15 @@ class UserProfileManager: StudyHubCommonNetworking {
       }
      }
   }
+  
+  func deleteAccountWithRx() -> Observable<Bool> {
+    return provider.rx
+          .request(.deleteUserAccount)
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)  }
   
   
   /// 사용자의 프로필 이미지 삭제
@@ -119,6 +171,16 @@ class UserProfileManager: StudyHubCommonNetworking {
     }
   }
   
+  func deleteProfileWithRx() -> Observable<Bool>{
+    return provider.rx
+          .request(.deleteUserProfileImage)
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
+  }
+  
   
   /// 사용자의 프로필 이미지 저장
   /// - Parameter image: 저장할 이미지
@@ -133,6 +195,16 @@ class UserProfileManager: StudyHubCommonNetworking {
         completion(false)
       }
     }
+  }
+  
+  func storeProfileToserverWithRx(image: UIImage) -> Observable<Bool> {
+    return provider.rx
+          .request(.storeUserProfileImage(image: image))
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
   }
   
   /// 닉네임 중복확인
@@ -152,5 +224,15 @@ class UserProfileManager: StudyHubCommonNetworking {
         return completion(false)
       }
     }
+  }
+  
+  func checkNicknameDuplicationWithRx(nickname: String) -> Observable<Bool>{
+    return provider.rx
+          .request(.checkNicknameDuplication(nickname: nickname))
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
   }
 }

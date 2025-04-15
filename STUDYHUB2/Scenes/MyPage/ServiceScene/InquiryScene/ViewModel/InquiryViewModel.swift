@@ -15,6 +15,8 @@ final class InquiryViewModel: Stepper {
   
   var steps: PublishRelay<Step> = PublishRelay<Step>()
 
+  var disposeBag: DisposeBag = DisposeBag()
+  
   let titleValue = BehaviorRelay<String?>(value: nil)
   let contentValue = BehaviorRelay<String?>(value: nil)
   let emailValue = BehaviorRelay<String?>(value: nil)
@@ -33,6 +35,15 @@ final class InquiryViewModel: Stepper {
           let title = titleValue.value,
           let email = emailValue.value else { return }
     
+    let data: InquiryQuestionDTO = InquiryQuestionDTO(content: content,
+                                                      title: title,
+                                                      toEmail: email)
+    
+    ToStudyHubManager.shared.inquiryToServerWithRx(with: data)
+      .subscribe(onNext: { [weak self] isSent in
+        self?.isSuccessToInquiry.accept(isSent)
+      })
+      .disposed(by: disposeBag)
 //    commonNetwork.moyaNetworking(networkingChoice: .inquiryQuestion(
 //      content: content,
 //      title: title,

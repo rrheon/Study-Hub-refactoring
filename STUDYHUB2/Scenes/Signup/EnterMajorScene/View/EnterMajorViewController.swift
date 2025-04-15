@@ -164,13 +164,13 @@ final class EnterMajorViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    /// 계정 생성 여부
-    viewModel.isSuccessCreateAccount
-      .withUnretained(self)
-      .subscribe(onNext: { vc,  _ in
-        vc.viewModel.steps.accept(SignupStep.completeSignupIsRequired)
-      })
-      .disposed(by: disposeBag)
+//    /// 계정 생성 여부
+//    viewModel.isSuccessCreateAccount
+//      .withUnretained(self)
+//      .subscribe(onNext: { vc,  _ in
+//        vc.viewModel.steps.accept(SignupStep.completeSignupIsRequired)
+//      })
+//      .disposed(by: disposeBag)
   }
   
   /// Actions 설정

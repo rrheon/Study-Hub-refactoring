@@ -2,6 +2,7 @@
 import UIKit
 
 import SnapKit
+import RxSwift
 import RxFlow
 import RxRelay
 import Then
@@ -13,6 +14,8 @@ protocol WriteRefuseReasonVCDelegate: AnyObject {
 
 /// 거절사유 작성 VC
 final class WriteRefuseReasonVC: UIViewController, Stepper {
+  var disposeBag: DisposeBag = DisposeBag()
+  
   var steps: PublishRelay<Step> = PublishRelay<Step>()
 
   weak var delegate: WriteRefuseReasonVCDelegate?
@@ -83,6 +86,8 @@ final class WriteRefuseReasonVC: UIViewController, Stepper {
     
     settingNavigationTitle(title: "거절사유")
     leftButtonSetting()
+    
+    registerTapGesture()
   }
   
   // MARK: - UI Setup
@@ -134,6 +139,10 @@ final class WriteRefuseReasonVC: UIViewController, Stepper {
     delegate?.completeButtonTapped(reason: reasonTextView.text, userId: userId)
     steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
+  
+  override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
+    steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
+  }
 }
 
 // MARK: - textview
@@ -174,3 +183,4 @@ extension WriteRefuseReasonVC {
   }
 }
 
+extension WriteRefuseReasonVC: KeyboardProtocol {}

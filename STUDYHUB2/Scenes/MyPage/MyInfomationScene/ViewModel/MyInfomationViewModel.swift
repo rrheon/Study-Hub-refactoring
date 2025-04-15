@@ -1,6 +1,7 @@
 
 import UIKit
 
+import RxSwift
 import RxRelay
 import RxFlow
 import Kingfisher
@@ -26,6 +27,8 @@ enum ProfileActions {
 final class MyInfomationViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
+  var disposeBag: DisposeBag = DisposeBag()
+  
   /// 사용자의 정보
   var userData = BehaviorRelay<UserDetailData?>(value: nil)
   
@@ -43,39 +46,71 @@ final class MyInfomationViewModel: Stepper {
   
   /// 현재 프로필 이미지 삭제(기본 이미지로 변경)
   func deleteProfile(){
-    UserProfileManager.shared.deleteProfile { result in
-      if result {
-        // 삭제에 성공한 경우 캐시 지우기
-        KingfisherManager.shared.cache.clearMemoryCache()
-        KingfisherManager.shared.cache.clearDiskCache {}
-        
-        // 기본 이미지로 변경
-        self.isUserProfileAction.accept(ProfileActions.successToDelete)
-        self.userProfile.accept(UIImage(named: "ProfileAvatar_change")!)
-      }else {
-        // 삭제에 실패한 경우
-        self.isUserProfileAction.accept(ProfileActions.failToDelete)
-      }
-    }
+    UserProfileManager.shared.deleteProfileWithRx()
+      .subscribe(onNext: { isSuccess in
+        if isSuccess {
+          // 삭제에 성공한 경우 캐시 지우기
+          KingfisherManager.shared.cache.clearMemoryCache()
+          KingfisherManager.shared.cache.clearDiskCache {}
+          
+          // 기본 이미지로 변경
+          self.isUserProfileAction.accept(ProfileActions.successToDelete)
+          self.userProfile.accept(UIImage(named: "ProfileAvatar_change")!)
+        }else {
+          // 삭제에 실패한 경우
+          self.isUserProfileAction.accept(ProfileActions.failToDelete)
+        }
+      })
+      .disposed(by: disposeBag)
+    
+//    UserProfileManager.shared.deleteProfile { result in
+//      if result {
+//        // 삭제에 성공한 경우 캐시 지우기
+//        KingfisherManager.shared.cache.clearMemoryCache()
+//        KingfisherManager.shared.cache.clearDiskCache {}
+//        
+//        // 기본 이미지로 변경
+//        self.isUserProfileAction.accept(ProfileActions.successToDelete)
+//        self.userProfile.accept(UIImage(named: "ProfileAvatar_change")!)
+//      }else {
+//        // 삭제에 실패한 경우
+//        self.isUserProfileAction.accept(ProfileActions.failToDelete)
+//      }
+//    }
   }
   
   
   /// 프로필 이미지 변경 후 저장
   /// - Parameter image: 저장할 이미지
   func storeProfileToserver(image: UIImage){
-    UserProfileManager.shared.storeProfileToserver(image: image) { result in
-      if result {
-        // 변경에 성공한 경우
-        KingfisherManager.shared.cache.clearMemoryCache()
-        KingfisherManager.shared.cache.clearDiskCache {}
-        self.userProfile.accept(image)
-        
-        self.isUserProfileAction.accept(ProfileActions.successToEdit)
-      }else {
-        // 변경에 실패한 경우
-        self.isUserProfileAction.accept(ProfileActions.failToEdit)
-      }
-    }
+    UserProfileManager.shared.storeProfileToserverWithRx(image: image)
+      .subscribe(onNext: { isSuccess in
+        if isSuccess {
+          // 변경에 성공한 경우
+          KingfisherManager.shared.cache.clearMemoryCache()
+          KingfisherManager.shared.cache.clearDiskCache {}
+          self.userProfile.accept(image)
+          
+          self.isUserProfileAction.accept(ProfileActions.successToEdit)
+        }else {
+          // 변경에 실패한 경우
+          self.isUserProfileAction.accept(ProfileActions.failToEdit)
+        }
+      })
+      .disposed(by: disposeBag)
+//    UserProfileManager.shared.storeProfileToserver(image: image) { result in
+//      if result {
+//        // 변경에 성공한 경우
+//        KingfisherManager.shared.cache.clearMemoryCache()
+//        KingfisherManager.shared.cache.clearDiskCache {}
+//        self.userProfile.accept(image)
+//        
+//        self.isUserProfileAction.accept(ProfileActions.successToEdit)
+//      }else {
+//        // 변경에 실패한 경우
+//        self.isUserProfileAction.accept(ProfileActions.failToEdit)
+//      }
+//    }
   }
   
 //  func fetchUserProfile(){

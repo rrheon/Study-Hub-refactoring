@@ -140,7 +140,9 @@ class AppStepper: Stepper {
   
   /// 로그인 상태 확인
   var isUserLoginStatus: Bool {
-    return TokenManager.shared.loadRefreshToken()?.first != nil
+    LoginStatusManager.shared.fetchAccessToken()
+
+    return LoginStatusManager.shared.loginStatus
   }
   
   /// 로그인 여부에 따라 초기 화면 설정
@@ -152,6 +154,9 @@ class AppStepper: Stepper {
     self.steps.accept(step)
   }
   
+//  func checkRefreshToken(){
+//    LoginStatusManager.shared.fetchAccessToken()
+//  }
   func readyToEmitSteps() {
     Observable.merge(
       /// 북마크 화면으로 이동

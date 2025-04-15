@@ -1,6 +1,7 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
@@ -8,6 +9,9 @@ import RxRelay
 /// 학과입력 ViewModel
 final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 입력된 학과
   let enteredMajor = PublishRelay<String>()
@@ -43,17 +47,29 @@ final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
   /// 변경된 학과 저장하기
   /// - Parameter major: 저장할 학과
   func storeMajorToServer(_ major: String){
-    
-    UserProfileManager.shared.changeMajor(major: major) { result in
-      if result {
-        ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
-        self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
-        
-        self.updateUserData(major: major)
-      }else {
-        ToastPopupManager.shared.showToast(message: "학과 변경에 실패했어요.\n다시 시도해주세요!")
-      }
-    }
+    UserProfileManager.shared.changeMajorWithRx(major: major)
+      .subscribe(onNext: { isChanged in
+        if isChanged {
+          ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
+          self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
+          
+          self.updateUserData(major: major)
+        } else {
+          ToastPopupManager.shared.showToast(message: "학과 변경에 실패했어요.\n다시 시도해주세요!")
+        }
+      })
+      .disposed(by: disposeBag)
+//    
+//    UserProfileManager.shared.changeMajor(major: major) { result in
+//      if result {
+//        ToastPopupManager.shared.showToast(message: "학과가 변경됐어요.")
+//        self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
+//        
+//        self.updateUserData(major: major)
+//      }else {
+//        ToastPopupManager.shared.showToast(message: "학과 변경에 실패했어요.\n다시 시도해주세요!")
+//      }
+//    }
   }
   
   

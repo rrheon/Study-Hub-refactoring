@@ -1,8 +1,12 @@
 import UIKit
 
 import SnapKit
- 
+
+/// 팝업종류
 enum PopupCase {
+
+  /// 에러가 발생한 경우
+  case checkError
   
   /// 로그인이 필요한 경우
   case requiredLogin
@@ -76,6 +80,8 @@ enum PopupCase {
         return ("댓글을 삭제할까요?", "", "취소", "삭제", false)
       case .logoutIsRequired:
         return ("로그아웃 하시겠어요?", "", "아니요", "네", false)
+      case .checkError:
+        return ("잠시 후 다시 시도해주세요.", "", nil, nil, true)
       }
   }
 }

@@ -12,7 +12,7 @@ import Security
 /// 토큰 관련 매니저
 final class TokenManager {
   
-  // MARK: Shared instance
+  
   static let shared = TokenManager()
   private init() { }
   

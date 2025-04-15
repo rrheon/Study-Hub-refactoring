@@ -8,6 +8,7 @@
 import Foundation
 
 import Moya
+import RxSwift
 
 /// 로그인이 필요할 경우 팝업 띄우기
 protocol LoginPopupIsRequired {
@@ -99,7 +100,17 @@ class StudyHubCommonNetworking {
       }
     }
   }
-
+  
+  func commonDecodeNetworkResponse<T: Decodable>(with response: Response,
+                                                 decode type: T.Type) -> Observable<T> {
+    do {
+      let decoded = try JSONDecoder().decode(T.self, from: response.data)
+      return .just(decoded)
+    } catch {
+      return .error(error)
+    }
+  }
+  
 }
 
 // MARK: - Moya Request 변환

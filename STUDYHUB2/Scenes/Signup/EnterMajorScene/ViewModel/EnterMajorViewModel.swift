@@ -15,6 +15,8 @@ import RxFlow
 final class EnterMajorViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
   
+  var disposeBag: DisposeBag = DisposeBag()
+
   static let shared = EnterMajorViewModel()
 
   
@@ -69,9 +71,17 @@ final class EnterMajorViewModel: Stepper {
       nickname: nickname,
       password: password
     )
-    UserAuthManager.shared.createNewAccount(accountData: userInfo) { result in
-      self.isSuccessCreateAccount.accept(result)
-    }
+    
+    UserAuthManager.shared.createNewAccountWithRx(accountData: userInfo)
+      .subscribe(onNext: { [weak self] isCreated in
+        self?.steps.accept(SignupStep.completeSignupIsRequired)
+
+      })
+      .disposed(by: disposeBag)
+    
+//    UserAuthManager.shared.createNewAccount(accountData: userInfo) { result in
+//      self.isSuccessCreateAccount.accept(result)
+//    }
 
   }
 }

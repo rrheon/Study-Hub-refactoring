@@ -67,7 +67,7 @@ final class BookmarkViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .bg30
     
-    viewModel.fetchBookmarkData()
+    viewModel.getBookmarkList()
 
     setupNavigationbar()
   

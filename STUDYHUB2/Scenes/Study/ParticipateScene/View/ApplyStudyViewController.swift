@@ -76,6 +76,8 @@ final class ApplyStudyViewController: UIViewController {
     
     setupAction()
     setupBinding()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   // MARK: - setupLayout
@@ -160,18 +162,18 @@ final class ApplyStudyViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    /// 사용자의 소개 내용
-    viewModel.userIntroduce
-      .asDriver(onErrorJustReturn: "")
-      .drive(onNext: { [weak self] in
-        let buttonHidden = $0.count > 0 ? true : false
-        let buttonBackgroundColor: UIColor = $0.count > 0 ? .o50 : .o30
-        self?.completeButton.unableButton(
-          buttonHidden,
-          backgroundColor: buttonBackgroundColor,
-          titleColor: .white)
-      })
-      .disposed(by: disposeBag)
+//    /// 사용자의 소개 내용
+//    viewModel.userIntroduce
+//      .asDriver(onErrorJustReturn: "")
+//      .drive(onNext: { [weak self] in
+//        let buttonHidden = $0.count > 0 ? true : false
+//        let buttonBackgroundColor: UIColor = $0.count > 0 ? .o50 : .o30
+//        self?.completeButton.unableButton(
+//          buttonHidden,
+//          backgroundColor: buttonBackgroundColor,
+//          titleColor: .white)
+//      })
+//      .disposed(by: disposeBag)
     
     reasonTextView.rx.text.orEmpty
       .filter { [weak self] _ in
@@ -245,3 +247,4 @@ extension ApplyStudyViewController {
   }
 }
 
+extension ApplyStudyViewController: KeyboardProtocol {}
