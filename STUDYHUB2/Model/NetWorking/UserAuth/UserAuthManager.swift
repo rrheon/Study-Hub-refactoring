@@ -132,7 +132,6 @@ class UserAuthManager: StudyHubCommonNetworking {
   /// AccessToken 갱신하기
   /// - Parameter refreshToken: refreshToken
   func refreshAccessTokenWithRx(refreshToken: String) -> Observable<AccessTokenResponse> {
-    
     return provider.rx
       .request(.refreshAccessToken(refreshToken: refreshToken))
       .asObservable()

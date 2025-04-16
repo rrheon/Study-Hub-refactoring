@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 // MARK: - bookmarkDTO
 
 
@@ -14,6 +15,7 @@ struct BookmarkDatas: Codable {
   let getBookmarkedPostsData: GetBookmarkedPostsData
   let totalCount: Int
 }
+
 // MARK: - GetBookmarkedPostsData
 
 

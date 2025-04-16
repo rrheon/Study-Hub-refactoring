@@ -16,7 +16,6 @@ struct SearchAllPostDTO: Codable {
 }
 
 
-
 // MARK: - 추천 검색어
 
 struct RecommendList: Codable {
@@ -49,11 +48,11 @@ struct PostData: Codable {
   let close, bookmarked: Bool
   let userData: UserData
   
-  enum CodingKeys: String, CodingKey {
-    case postId, major, title, studyStartDate, studyEndDate, createdDate,
-         studyPerson, filteredGender, penalty, penaltyWay, remainingSeat,
-         close, userData, bookmarked
-  }
+//  enum CodingKeys: String, CodingKey {
+//    case postId, major, title, studyStartDate, studyEndDate, createdDate,
+//         studyPerson, filteredGender, penalty, penaltyWay, remainingSeat,
+//         close, userData, bookmarked
+//  }
 }
 
 
@@ -76,11 +75,11 @@ struct PostDetailData: Codable {
   let relatedPost: [RelatedPost]
   var close, apply, usersPost, bookmarked: Bool
   
-  enum CodingKeys: String, CodingKey {
-    case postId, title, createdDate, content, major, studyPerson, filteredGender,
-         studyWay, penalty, penaltyWay, studyStartDate, studyEndDate, remainingSeat
-    case chatUrl, studyId, postedUser, relatedPost, close, apply, usersPost, bookmarked
-  }
+//  enum CodingKeys: String, CodingKey {
+//    case postId, title, createdDate, content, major, studyPerson, filteredGender,
+//         studyWay, penalty, penaltyWay, studyStartDate, studyEndDate, remainingSeat
+//    case chatUrl, studyId, postedUser, relatedPost, close, apply, usersPost, bookmarked
+//  }
 }
 
 // 작성자 정보 구조체

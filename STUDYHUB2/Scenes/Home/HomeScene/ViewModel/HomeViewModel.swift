@@ -25,7 +25,7 @@ final class HomeViewModel: Stepper {
   /// 마감이 임박한 스터디
   var deadlinePostDatas = BehaviorRelay<[PostData]>(value: [])
   
-  //  var checkLoginStatus = BehaviorRelay<Bool>(value: false)
+  var isLoginStatus = PublishRelay<Bool>()
   //  var singlePostData = PublishRelay<PostDetailData>()
   var isNeedFetchDatas = PublishRelay<Bool>()
   
@@ -55,6 +55,34 @@ final class HomeViewModel: Stepper {
         self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
         
       }).disposed(by: disposeBag)
+  }
+  
+  
+  /// 로그인 상태를 체크해 팝업 띄우기
+  func checkLoginStatus() {
+    guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
+      isLoginStatus.accept(false)
+      return
+    }
+    
+    UserAuthManager.shared.refreshAccessTokenWithRx(refreshToken: refreshToken)
+      .flatMap({ tokens -> Observable<AccessTokenResponse> in
+        if let accessToken = tokens.accessToken,
+           let refreshToken = tokens.refreshToken {
+          TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+          return .just(tokens)
+        }else{
+          return .error(ApiError.unAuthorize)
+        }
+      })
+      .subscribe(onNext: { [weak self] tokens in
+        print(tokens)
+        self?.isLoginStatus.accept(true)
+//        TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
+      },onError: { err in
+        self.isLoginStatus.accept(false)
+      })
+      .disposed(by: disposeBag)
   }
 }
 

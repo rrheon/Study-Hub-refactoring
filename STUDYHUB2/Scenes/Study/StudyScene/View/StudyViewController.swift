@@ -66,11 +66,7 @@ final class StudyViewController: UIViewController {
   
   /// view가 나타날 때 데이터 다시 가져오기
   override func viewWillAppear(_ animated: Bool) {
-    Task {
-      do {
-        await viewModel.fetchPostData(hotType: "false")
-      }
-    }
+    viewModel.fetchPostData(hotType: "false")
   }
 
   override func viewDidLoad() {

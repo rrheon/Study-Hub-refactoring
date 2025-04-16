@@ -140,15 +140,16 @@ class AppStepper: Stepper {
   
   /// 로그인 상태 확인
   var isUserLoginStatus: Bool {
-    LoginStatusManager.shared.fetchAccessToken()
-
-    return LoginStatusManager.shared.loginStatus
+    guard let result = TokenManager.shared.loadAccessToken(),
+              !result.isEmpty else { return false }
+    return true
   }
   
   /// 로그인 여부에 따라 초기 화면 설정
   var initialStep: Step {
     return isUserLoginStatus ? AppStep.mainTabIsRequired : AppStep.auth(.loginScreenIsRequired)
   }
+  
   
   func navigate(to step: AppStep) {
     self.steps.accept(step)

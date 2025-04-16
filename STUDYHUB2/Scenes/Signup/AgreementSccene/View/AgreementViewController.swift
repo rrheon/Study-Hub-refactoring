@@ -35,7 +35,7 @@ final class AgreementViewController: UIViewController {
     $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 16)
     $0.backgroundColor = .g100
     $0.layer.cornerRadius = 6
-    $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -180, bottom: 0, right: 0)
+    $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -210, bottom: 0, right: 0)
   }
   
   

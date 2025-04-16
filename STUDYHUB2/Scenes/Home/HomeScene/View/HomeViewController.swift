@@ -101,10 +101,9 @@ final class HomeViewController: UIViewController {
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
     viewModel.isNeedFetchDatas.accept(true)
-    
-    if LoginStatusManager.shared.loginStatus == false {
-      LoginStatusManager.shared.fetchAccessToken()
-    }
+
+    /// accessToken이 만료되었으면 재로그인이 필요하다는 팝업을 띄운다
+    viewModel.checkLoginStatus()
   }
   
   // MARK: -  viewDidLoad
@@ -124,6 +123,8 @@ final class HomeViewController: UIViewController {
     setupNavigationbar()
     redesignSearchBar()
 
+//    registerKeyboard()
+    registerTapGesture()
   } // viewDidLoad
   
   
@@ -299,6 +300,15 @@ final class HomeViewController: UIViewController {
         }
       })
       .disposed(by: disposeBag)
+    
+    /// 로그인 상태를 체크해 로그인 요청팝업 띄우기
+    viewModel.isLoginStatus
+      .subscribe(onNext: { [weak self] loginStatus in
+        if !loginStatus {
+          self?.presentLoginPopup()
+        }
+      })
+      .disposed(by: disposeBag)
   }
   
   /// Actions 설정
@@ -392,7 +402,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 비로그인 시 팝업 띄우기
 
-extension HomeViewController: LoginPopupIsRequired {}
+extension HomeViewController: LoginPopupIsRequired, KeyboardProtocol {}
 
 extension HomeViewController: PopupViewDelegate {
   // 로그인 화면으로 이동

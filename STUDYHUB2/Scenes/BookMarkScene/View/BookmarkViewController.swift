@@ -7,7 +7,6 @@ import RxCocoa
 import Then
 
 /// 북마크 VC
-#warning("북마크 작업, ")
 final class BookmarkViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -117,15 +116,13 @@ final class BookmarkViewController: UIViewController {
         }
         .disposed(by: disposeBag)
     
-//    // 로그인 여부에 따른 데이터 설정
-//    viewModel.loginStatus
-//      .observe(on: MainScheduler.instance)
-//      .subscribe(onNext: { loginStatus in
-//        if !loginStatus {
-//          self.noDataUI(loginStatus: !loginStatus)
-//        }
-//      })
-//      .disposed(by: disposeBag)
+    // 로그인 여부에 따른 데이터 설정
+    viewModel.loginStatus
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { loginStatus in
+        self.loginButton.isHidden = loginStatus
+      })
+      .disposed(by: disposeBag)
 
 //    viewModel.postData
 //      .subscribe(onNext: { [weak self] in

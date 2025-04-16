@@ -11,7 +11,7 @@ import Moya
 import RxSwift
 
 /// 로그인이 필요할 경우 팝업 띄우기
-protocol LoginPopupIsRequired {
+protocol LoginPopupIsRequired: PopupViewDelegate {
   func presentLoginPopup()
 }
 
@@ -20,6 +20,16 @@ extension LoginPopupIsRequired {
     NotificationCenter.default.post(name: .presentPopupScreen,
                                     object: nil,
                                     userInfo: ["popupCase": PopupCase.requiredLogin])
+  }
+  
+  func leftBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    _ = TokenManager.shared.deleteTokens()
+    defaultBtnAction()
+  }
+  
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    _ = TokenManager.shared.deleteTokens()
+    defaultBtnAction()
   }
 }
 

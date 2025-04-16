@@ -279,7 +279,7 @@ final class CheckEmailViewController: UIViewController {
   /// 인증코드 전송
   func sendEmailCode(){
     guard let email = emailTextField.getTextFieldValue() else { return }
-    
+    self.viewModel.sendEmailCode(email)
     self.emailTextField.alertLabelSetting(hidden: false,
                                           title: "이메일 코드를 메일로 보내드렸어요.",
                                           textColor: .g80,
@@ -289,7 +289,9 @@ final class CheckEmailViewController: UIViewController {
     }
     
     self.viewModel.resend = true
-//    
+    
+
+//
 //    viewModel.sendEmailCode(email) {
 //      self.validButton.setTitle("재전송", for: .normal)
 //      self.codeTextField.isHidden = false
