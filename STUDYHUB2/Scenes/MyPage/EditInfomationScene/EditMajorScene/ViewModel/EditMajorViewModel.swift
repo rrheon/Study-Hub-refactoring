@@ -57,6 +57,8 @@ final class EditMajorViewModel: EditUserInfoViewModel, Stepper {
         } else {
           ToastPopupManager.shared.showToast(message: "학과 변경에 실패했어요.\n다시 시도해주세요!")
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    

@@ -53,7 +53,7 @@
 		EE27B4492C57ECC900057475 /* EnterNicknameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */; };
 		EE27B44E2C5B70B700057475 /* EnterMajorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE27B44D2C5B70B600057475 /* EnterMajorViewModel.swift */; };
 		EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */; };
-		EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */; };
+		EE2908102C7635A7006B28A7 /* StudyFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29080F2C7635A7006B28A7 /* StudyFormViewModel.swift */; };
 		EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */; };
 		EE29082C2C7DA965006B28A7 /* StudyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */; };
 		EE29082F2C819B3F006B28A7 /* StudyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */; };
@@ -255,7 +255,7 @@
 		EE27B4482C57ECC900057475 /* EnterNicknameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNicknameViewModel.swift; sourceTree = "<group>"; };
 		EE27B44D2C5B70B600057475 /* EnterMajorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMajorViewModel.swift; sourceTree = "<group>"; };
 		EE29080B2C7630A9006B28A7 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
-		EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStudyViewModel.swift; sourceTree = "<group>"; };
+		EE29080F2C7635A7006B28A7 /* StudyFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyFormViewModel.swift; sourceTree = "<group>"; };
 		EE2908152C770FC3006B28A7 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
 		EE29082B2C7DA965006B28A7 /* StudyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViewModel.swift; sourceTree = "<group>"; };
 		EE29082E2C819B3F006B28A7 /* StudyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyInfoView.swift; sourceTree = "<group>"; };
@@ -675,7 +675,7 @@
 		EE29080E2C76359A006B28A7 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				EE29080F2C7635A7006B28A7 /* CreateStudyViewModel.swift */,
+				EE29080F2C7635A7006B28A7 /* StudyFormViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2072,7 +2072,7 @@
 				EEB07A072D55030C0009246D /* MypageFlow.swift in Sources */,
 				EEFD5D1F2B5E40C900D1CE00 /* ApplyStudyViewController.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
-				EE2908102C7635A7006B28A7 /* CreateStudyViewModel.swift in Sources */,
+				EE2908102C7635A7006B28A7 /* StudyFormViewModel.swift in Sources */,
 				EE27B44E2C5B70B700057475 /* EnterMajorViewModel.swift in Sources */,
 				EEA53A452C528ABE00C8FEFF /* AgreementViewModel.swift in Sources */,
 				EE4714B12D95315C007B22B9 /* AppStep+Navigation.swift in Sources */,

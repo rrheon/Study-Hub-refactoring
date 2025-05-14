@@ -4,7 +4,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 비밀번호 확인 VC
+/// StudyHub - front - ChangePasswordScreen-01
+/// - 비밀번호 확인 확인
+
 final class ConfirmPasswordViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: ConfirmPasswordViewModel

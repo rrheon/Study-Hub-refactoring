@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 참여한 스터디 VC
+/// StudyHub - front - MyParticipatedStudyScreen
+/// - 내가 참여한 스터디 화면
+
 final class MyParticipateStudyVC: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

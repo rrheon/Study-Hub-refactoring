@@ -12,7 +12,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 검색어 입력 VC
+/// StudyHub - front - SearchInputScreen
+/// - 검색어 입력 화면
+
 final class EnterSearchViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

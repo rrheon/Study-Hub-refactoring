@@ -5,7 +5,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 회원가입 - 3. 비밀번호 입력 VC
+/// StudyHub - front - SignupScreen - 03
+/// - 비밀번호 입력 화면
 final class EnterPasswordViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

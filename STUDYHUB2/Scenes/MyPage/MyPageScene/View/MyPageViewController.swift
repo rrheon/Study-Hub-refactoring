@@ -5,7 +5,9 @@ import SafariServices
 import SnapKit
 import RxSwift
 
-/// 마이페이지 VC
+/// StudyHub - front - MyPageScreen
+/// -  마이페이지 화면
+
 final class MyPageViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

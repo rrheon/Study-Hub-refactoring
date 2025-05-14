@@ -5,10 +5,10 @@ import SnapKit
 import RxFlow
 import RxRelay
 
-/// 회원가입 완료 VC
+/// StudyHub - front - SignupScreen - 06
+/// - 회원가입 완료 화면
 final class CompletedSignupViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
-  
   
   // MARK: - 화면구성
   

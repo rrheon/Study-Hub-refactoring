@@ -76,6 +76,9 @@ final class EnterMajorViewModel: Stepper {
       .subscribe(onNext: { [weak self] isCreated in
         self?.steps.accept(SignupStep.completeSignupIsRequired)
 
+      }, onError: { _ in
+        /// 다시 시도 요청 팝업 띄우기
+        ToastPopupManager.shared.showToast()
       })
       .disposed(by: disposeBag)
     

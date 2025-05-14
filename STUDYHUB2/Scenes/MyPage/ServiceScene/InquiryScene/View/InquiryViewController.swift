@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 문의하기 VC
+/// StudyHub - front - InquiryScreen
+/// - 문의하기 화면
+
 final class InquiryViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

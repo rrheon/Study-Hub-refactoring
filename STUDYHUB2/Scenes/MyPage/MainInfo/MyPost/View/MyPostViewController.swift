@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 작성한 스터디 VC
+/// StudyHub - front - MyStudyListScreen
+/// - 내가 작성한 스터디 화면
+
 final class MyPostViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

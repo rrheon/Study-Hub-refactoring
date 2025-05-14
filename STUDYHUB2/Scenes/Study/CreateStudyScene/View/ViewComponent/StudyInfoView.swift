@@ -11,7 +11,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
 
   // MARK: - 채팅방 링크 UI
   
@@ -68,7 +68,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     return tv
   }()
   
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     

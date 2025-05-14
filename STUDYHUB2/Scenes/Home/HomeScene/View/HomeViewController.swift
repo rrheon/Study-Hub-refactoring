@@ -6,12 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/*
- 셀 터치 시 상세 스터디 페이지로 이동
- 북마크 가능하게 수정
- 무한스크롤 구현 - 북마크, 검색
- */
-/// 홈 VC - 메인
+/// StudyHub - front - HomeScreen
+/// - 홈 화면
+        
 final class HomeViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

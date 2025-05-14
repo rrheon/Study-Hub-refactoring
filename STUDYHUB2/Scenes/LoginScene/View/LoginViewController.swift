@@ -6,7 +6,8 @@ import RxSwift
 import RxCocoa
 
 
-/// 로그인 VC
+/// StudyHub - front - LoginScreen
+
 final class LoginViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 
@@ -236,6 +237,7 @@ final class LoginViewController: UIViewController {
     textField.textField.rx.controlEvent([.editingDidBegin, .editingDidEnd])
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
+        
         let isEditingDidBegin = textField.textField.isEditing
         self.handleTextFieldEvents(textField: textField, isEditingDidBegin: isEditingDidBegin)
       })

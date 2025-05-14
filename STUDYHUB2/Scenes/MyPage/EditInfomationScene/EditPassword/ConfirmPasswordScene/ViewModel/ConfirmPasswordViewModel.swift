@@ -33,6 +33,8 @@ final class ConfirmPasswordViewModel: Stepper {
     UserAuthManager.shared.verifyPasswordWithRx(password: password)
       .subscribe(onNext: { isValid in
         self.isValidPassword.accept(isValid)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserAuthManager.shared.verifyPassword(password: password) { result in

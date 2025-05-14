@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 이메일 확인 VC
+/// StudyHub - front - FindPasswordScreen
+/// - 이메일 확인 확인
+
 final class ConfirmEmailViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

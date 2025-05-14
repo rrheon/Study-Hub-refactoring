@@ -5,7 +5,9 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-/// 스터디 상세 VC
+/// StudyHub - front - StudyDetailScreen
+/// - 스터디 상세 화면
+
 final class PostedStudyViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

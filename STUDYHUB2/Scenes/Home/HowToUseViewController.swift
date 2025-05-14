@@ -6,8 +6,9 @@ import RxRelay
 import SnapKit
 import Then
 
-/// 이용방법 VC
-/// 로그인 상태 확인필요
+/// StudyHub - front - UsageGuideScreen
+/// - 이용방법 화면
+
 final class HowToUseViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step>
   

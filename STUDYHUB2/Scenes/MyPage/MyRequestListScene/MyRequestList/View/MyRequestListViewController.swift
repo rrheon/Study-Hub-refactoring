@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 신청한 스터디 리스트 VC
+/// StudyHub - front - MyRequestScreen
+/// - 내가 신청한. 스터디 리스트 화면
+
 final class MyRequestListViewController: UIViewController {
 
   let disposeBag: DisposeBag = DisposeBag()

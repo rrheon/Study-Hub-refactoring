@@ -44,6 +44,8 @@ class LoginViewModel: Stepper {
         // 로그인 성공
         self?.isValidAccount.accept(saveResult)
 
+      }, onError: { _ in
+        self.isValidAccount.accept(false)
       })
       .disposed(by: disposeBag)
     

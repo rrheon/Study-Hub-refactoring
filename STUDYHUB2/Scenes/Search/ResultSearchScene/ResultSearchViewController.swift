@@ -12,7 +12,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 검색결과 VC
+/// StudyHub - front - SearchResultScreen
+/// - 검색결과 화면
+
 class ResultSearchViewController: UIViewController {
   
   var viewModel: SearchViewModel

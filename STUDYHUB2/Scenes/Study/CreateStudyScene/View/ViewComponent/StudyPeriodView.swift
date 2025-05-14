@@ -11,7 +11,7 @@ final class StudyPeriodView: UIView {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   /// 구분선
   private lazy var periodTopDivideLine = StudyHubUI.createDividerLine(height: 8)
@@ -49,7 +49,7 @@ final class StudyPeriodView: UIView {
   /// 스터디 생성 완료하기 버튼
   private lazy var completeButton = StudyHubButton(title: "완료하기")
   
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     

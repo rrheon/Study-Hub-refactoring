@@ -6,7 +6,9 @@ import RxCocoa
 import RxSwift
 import Then
 
-/// 회원가입 - 4. 닉네임 입력 VC
+/// StudyHub - front - SignupScreen - 04
+/// - 닉네임 입력 화면
+
 final class EnterNicknameViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: EnterNicknameViewModel

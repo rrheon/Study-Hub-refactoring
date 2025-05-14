@@ -3,7 +3,7 @@ import Foundation
 
 import RxRelay
 
-/// 댓글 전체 ViewModel - PostedStudyViewModel을 상속받는건 어떤지
+/// 댓글 전체 ViewModel
 final class CommentViewModel: PostedStudyViewModel {
   
   
@@ -24,6 +24,8 @@ final class CommentViewModel: PostedStudyViewModel {
       .getCommentListWithRx(postId: postID, page: page, size: size)
       .subscribe(onNext: { comments in
         self.commentDatas.accept(comments.content)
+      },onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     

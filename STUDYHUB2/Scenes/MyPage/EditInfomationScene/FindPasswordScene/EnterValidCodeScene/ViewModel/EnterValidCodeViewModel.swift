@@ -33,6 +33,8 @@ final class EnterValidCodeViewModel: Stepper {
     UserAuthManager.shared.sendEmailCodeWithRx(email: _email)
       .subscribe(onNext: { isSent in
         self.isValidCode.accept(isSent)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag )
 //    UserAuthManager.shared.sendEmailCode(email: _email) { result in

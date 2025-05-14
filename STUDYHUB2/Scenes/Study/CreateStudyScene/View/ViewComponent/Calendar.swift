@@ -7,7 +7,7 @@ import Then
 /// 캘린더 VC
 final class CalendarViewController: UIViewController {
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   private var calendar: FSCalendar?
   
@@ -58,7 +58,7 @@ final class CalendarViewController: UIViewController {
   /// init - 캘린더 init
   /// - Parameter viewModel: 스터디 생성 ViewModel
   /// - Parameter selectStartData: true - 시작날짜 선택 / false - 종료날짜 선택
-  init(viewModel: CreateStudyViewModel, selectStartData: Bool = true) {
+  init(viewModel: StudyFormViewModel, selectStartData: Bool = true) {
     self.viewModel = viewModel
     self.selecType = selectStartData
     super.init(nibName: nil, bundle: .none)

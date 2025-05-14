@@ -5,12 +5,14 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 스터디 생성 VC
-final class CreateStudyViewController: UIViewController {
+/// StudyHub - front - StudyFormScreen
+/// - 스터디 생성 및 수정 화면
+
+final class StudyFormViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
 
   /// 채팅방 링크, 스터디 제목, 스터디 소개 View
   private var studyInfoView: StudyInfoView
@@ -32,7 +34,7 @@ final class CreateStudyViewController: UIViewController {
   
   let scrollView = UIScrollView()
   
-  init(with viewModel: CreateStudyViewModel) {
+  init(with viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     
     self.studyInfoView = StudyInfoView(viewModel)
@@ -175,11 +177,11 @@ final class CreateStudyViewController: UIViewController {
 // MARK: - PopupView Delgate
 
 
-extension CreateStudyViewController: PopupViewDelegate {
+extension StudyFormViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
     viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
   }
 }
 
-extension CreateStudyViewController: KeyboardProtocol {}
+extension StudyFormViewController: KeyboardProtocol {}

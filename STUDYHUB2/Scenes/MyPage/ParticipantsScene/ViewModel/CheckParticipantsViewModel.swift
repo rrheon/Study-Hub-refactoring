@@ -65,6 +65,8 @@ final class CheckParticipantsViewModel: Stepper {
       .subscribe(onNext: { [weak self] applyUsers in
         self?.studyUserData.accept(applyUsers.applyUserData.content)
         self?.totalCount.accept(applyUsers.applyUserData.numberOfElements)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     
@@ -86,7 +88,10 @@ final class CheckParticipantsViewModel: Stepper {
     let personData = AcceptStudy(rejectedUserId: userID , studyId: studyID)
 
     ApplyStudyManager.shared.acceptApplyUserWithRx(personData: personData)
-      .subscribe(onError: { _ in
+      .subscribe( onNext: { _ in
+        ToastPopupManager.shared.showToast(message: "수락이 완료됐어요")
+        completion()
+      },onError: { _ in
         ToastPopupManager.shared.showToast(message: "수락에 실패했습니다. 다시 시도해주세요!")
       })
       .disposed(by: disposeBag)
@@ -103,7 +108,10 @@ final class CheckParticipantsViewModel: Stepper {
     let personData = RejectStudy(rejectReason: reason, rejectedUserId: userID, studyId: studyID)
     
     ApplyStudyManager.shared.rejectApplyUser(personData: personData)
-      .subscribe(onError: { _ in
+      .subscribe(onNext: { _ in
+        ToastPopupManager.shared.showToast(message: "거절이 완료됐어요")
+        completion()
+      },onError: { _ in
         ToastPopupManager.shared.showToast(message: "거절에 실패했습니다. 다시 시도해주세요!")
       })
       .disposed(by: disposeBag)

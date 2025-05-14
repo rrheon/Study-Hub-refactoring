@@ -67,7 +67,7 @@ final class SearchViewModel: Stepper {
         self.postDatas.accept(currentData)
         self.page += 1
       },onError: { err in
-        print("❌ 에러 발생:",err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       }).disposed(by: disposeBag)
   }
 }

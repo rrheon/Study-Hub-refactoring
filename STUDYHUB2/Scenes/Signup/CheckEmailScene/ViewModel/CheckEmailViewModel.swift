@@ -51,8 +51,11 @@ final class CheckEmailViewModel: Stepper {
         
         EnterMajorViewModel.shared.email = email
         
+      }, onError: { _ in
+        /// 다시 시도 요청 팝업 띄우기
+        ToastPopupManager.shared.showToast()
       })
-      .disposed(by: disposeBag )
+      .disposed(by: disposeBag)
 //    UserAuthManager.shared.checkEmailDuplication(email: email) { result in
 //      self.isEmailDuplication.accept(result)
 //      
@@ -69,6 +72,9 @@ final class CheckEmailViewModel: Stepper {
     UserAuthManager.shared.sendEmailCodeWithRx(email: email)
       .subscribe(onNext: { [weak self] isSent in
         self?.isCodeSent.accept(isSent)
+      }, onError: { _ in
+        /// 다시 시도 요청 팝업 띄우기
+        ToastPopupManager.shared.showToast()
       })
       .disposed(by: disposeBag)
     

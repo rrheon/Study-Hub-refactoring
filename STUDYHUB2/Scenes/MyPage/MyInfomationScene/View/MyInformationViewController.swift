@@ -7,7 +7,9 @@ import SnapKit
 import RxSwift
 import RxRelay
 
-/// 내 정보 관리 VC
+/// StudyHub - front - ProfileScreen
+/// - 내 정보 관리 화면
+
 final class MyInformViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: MyInfomationViewModel

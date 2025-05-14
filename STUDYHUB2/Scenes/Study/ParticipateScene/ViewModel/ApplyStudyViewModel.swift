@@ -32,6 +32,8 @@ final class ApplyStudyViewModel: Stepper {
     ApplyStudyManager.shared.participateStudyWithRx(introduce: introduce, studyId: studyID)
       .subscribe(onNext: { isSuccess in
         self.isSuccessParticipate.accept(isSuccess)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
       

@@ -33,6 +33,8 @@ final class DeleteAccountViewModel: Stepper{
           ToastPopupManager.shared.showToast(message: "비밀번호가 일치하지 않아요. 다시 입력해주세요.",
                                              alertCheck: false)
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserAuthManager.shared.verifyPassword(password: password) { result in
@@ -48,8 +50,9 @@ final class DeleteAccountViewModel: Stepper{
           self?.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .accountDeletionCompleted)))
         }else {
           ToastPopupManager.shared.showToast(message:  "계정 탈퇴에 실패했어요.", alertCheck: false)
-
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserProfileManager.shared.deleteAccount { result in

@@ -14,7 +14,9 @@ import RxCocoa
 import Then
 
 
-/// 회원가입 - 1. 이용약관 동의 VC
+/// StudyHub - front - SignupScreen - 01
+/// - 약관 동의 화면
+
 final class AgreementViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   var viewModel: AgreementViewModel

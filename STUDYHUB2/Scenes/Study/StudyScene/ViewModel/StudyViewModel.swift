@@ -42,13 +42,12 @@ final class StudyViewModel: Stepper {
   var postPage: Int = 0
 
   init() {
-    print(#fileID, #function, #line," - 111111111111111")
-        
     Task {
       try await Task.sleep(nanoseconds: 1_000_000_000)
 
-      await fetchPostData(hotType: "false")
+     fetchPostData(hotType: "false")
     }
+
   }
 
   /// 모든 스터디 게시글 조회하기
@@ -62,10 +61,7 @@ final class StudyViewModel: Stepper {
       .subscribe(onNext: { postData in
         self.filterPostDatas(wtih: postData)
       }, onError: { err in
-        print(err)
-        if let _err = err as? DecodingError {
-          print(ApiError.decodingError.info)
-        }
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
   }
@@ -76,6 +72,7 @@ final class StudyViewModel: Stepper {
   func filterPostDatas(wtih data: PostDataContent){
     // 현재 데이터 가져오기
     var currentData = totalPostDatas.value
+ 
     
     // 마감 날짜가 지났는데 close가 false로 들어오는 경우가 있음
     if postPage == 0 {
@@ -113,9 +110,7 @@ final class StudyViewModel: Stepper {
   func recentOrPopularBtnTapped(btnType: String = "false") {
     postPage = 0
     
-    Task {
-      await fetchPostData(hotType: btnType)
-    }
+    fetchPostData(hotType: btnType)
   }
 }
 

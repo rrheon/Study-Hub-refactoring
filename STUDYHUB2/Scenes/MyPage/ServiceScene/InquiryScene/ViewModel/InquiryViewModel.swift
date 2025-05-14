@@ -11,6 +11,8 @@ import RxSwift
 import RxFlow
 import RxRelay
 
+/// 문의하기 viewmodel
+
 final class InquiryViewModel: Stepper {
   
   var steps: PublishRelay<Step> = PublishRelay<Step>()
@@ -42,6 +44,8 @@ final class InquiryViewModel: Stepper {
     ToStudyHubManager.shared.inquiryToServerWithRx(with: data)
       .subscribe(onNext: { [weak self] isSent in
         self?.isSuccessToInquiry.accept(isSent)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    commonNetwork.moyaNetworking(networkingChoice: .inquiryQuestion(

@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 학과 선택VC
+/// StudyHub - front - SelectMajorScreen
+/// - 학과 선택화면
+
 final class SeletMajorViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

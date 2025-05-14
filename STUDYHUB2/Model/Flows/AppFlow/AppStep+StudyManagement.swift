@@ -18,7 +18,7 @@ enum StudyManagementStep {
   case selectMajorScreenIsRequired(seletedMajor: BehaviorRelay<String?>)
   
   // 스터디 생성 / 수정 시 날짜선택(캘린더) 화면
-  case calendarIsRequired(viewModel: CreateStudyViewModel, selectType: Bool)
+  case calendarIsRequired(viewModel: StudyFormViewModel, selectType: Bool)
   
   // 내가 작성한 스터디 리스트 화면
   case myStudyPostIsRequired(userData: BehaviorRelay<UserDetailData?>)
@@ -71,8 +71,8 @@ extension AppFlow {
   /// 스터디 생성 / 수정 화면으로 이동
   /// - Parameter data: 스터디 데이터 - nil -> 스터디 생성 , 데이터 존재 -> 스터디 수정
   func navTostudyFormScreen(data: PostDetailData? = nil) -> FlowContributors {
-    let viewModel: CreateStudyViewModel = CreateStudyViewModel(data: data)
-    let vc = CreateStudyViewController(with: viewModel)
+    let viewModel: StudyFormViewModel = StudyFormViewModel(data: data)
+    let vc = StudyFormViewController(with: viewModel)
     self.rootViewController.navigationBar.isHidden = false
     self.rootViewController.pushViewController(vc, animated: true)
     return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))

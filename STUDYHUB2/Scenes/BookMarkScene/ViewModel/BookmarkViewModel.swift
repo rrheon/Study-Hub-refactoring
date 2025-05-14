@@ -123,6 +123,8 @@ final class BookmarkViewModel: Stepper {
         self?.bookmarkList = []
         self?.bookmarkDatas.accept(self?.bookmarkList ?? [])
         self?.totalCount.accept(self?.bookmarkList.count ?? 0)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    BookmarkManager.shared.deleteAllBookmark {
@@ -141,6 +143,8 @@ final class BookmarkViewModel: Stepper {
         self?.bookmarkList.removeAll { $0?.postID == postID }
         self?.bookmarkDatas.accept(self?.bookmarkList ?? [])
         self?.totalCount.accept(self?.bookmarkList.count ?? 0)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    BookmarkManager.shared.bookmarkTapped(with: postID) { result in
@@ -170,6 +174,8 @@ final class BookmarkViewModel: Stepper {
           let dataRelay = BehaviorRelay<PostDetailData?>(value: postedData)
           self.steps.accept(AppStep.study(.applyStudyScreenIsRequired(data: dataRelay)))
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 

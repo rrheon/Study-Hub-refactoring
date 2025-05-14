@@ -67,7 +67,7 @@ class PostedStudyViewModel: Stepper  {
         
         self.fetchStudyDeatilData(with: postID)
       },onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       }).disposed(by: disposeBag)
     
 //    // 유저 정보를 못가져옴
@@ -89,7 +89,7 @@ class PostedStudyViewModel: Stepper  {
         self?.postDatas.accept(postedData)
         self?.isBookmarked.accept(postedData.bookmarked)
       }, onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    
@@ -106,7 +106,7 @@ class PostedStudyViewModel: Stepper  {
       .subscribe(onNext: { [weak self] comments in
         self?.commentDatas.accept(comments)
       },onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       }).disposed(by: disposeBag)
 //    Task {
 //      let comments: [CommentConetent] = try await CommentManager.shared.getCommentPreview(postId: postID)
@@ -127,7 +127,7 @@ class PostedStudyViewModel: Stepper  {
           ToastPopupManager.shared.showToast(message: "댓글이 작성됐어요.")
         }
       }, onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       }).disposed(by: disposeBag)
 //    CommentManager.shared.createComment(content: content, postID: postID) { result in
 //      if result {
@@ -158,7 +158,7 @@ class PostedStudyViewModel: Stepper  {
           ToastPopupManager.shared.showToast(message: "댓글이 삭제됐어요.")
         }
       }, onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    
@@ -192,7 +192,7 @@ class PostedStudyViewModel: Stepper  {
           ToastPopupManager.shared.showToast(message: "댓글 수정이 완료됐어요.")
         }
       }, onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     
@@ -217,7 +217,6 @@ class PostedStudyViewModel: Stepper  {
           ToastPopupManager.shared.showToast(message: "삭제가 완료됐어요.")
         
       }, onError: { err in
-        print(err)
         ToastPopupManager.shared.showToast(message: "삭제에 실패했어요. 잠시후 다시 시도해주세요.")
       })
       .disposed(by: disposeBag)
@@ -248,7 +247,6 @@ class PostedStudyViewModel: Stepper  {
         self.isBookmarked.accept(bookmark)
         
       }, onError: { err in
-        print(err)
         ToastPopupManager.shared.showToast(message: "북마크 저장에 실패했어요. 잠시후 다시 시도해주세요.")
       })
       .disposed(by: disposeBag)

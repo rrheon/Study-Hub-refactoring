@@ -6,7 +6,9 @@ import RxFlow
 import RxRelay
 import Then
 
-/// 계정 삭제 확인 VC
+/// StudyHub - front - DeleteAccountScreen - 01
+/// - 계정 삭제 확인 화면
+
 final class ConfirmDeleteViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
 

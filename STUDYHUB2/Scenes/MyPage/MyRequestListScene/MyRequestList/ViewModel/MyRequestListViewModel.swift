@@ -58,6 +58,8 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
         self?.isInfiniteScroll = requestList.requestStudyData.last
         self?.countPostNumber.accept(requestList.requestStudyData.numberOfElements)
 
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    ApplyStudyManager.shared.getMyRequestStudyList(page: page, size: 5) { result in
@@ -85,6 +87,8 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
       .subscribe(onNext: { [weak self] isDeleted in
         self?.isSuccessToDelete.accept(isDeleted)
         self?.updateMyRequestList(studyID)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    ApplyStudyManager.shared.deleteRequestStudy(studyId: studyID) { result in
@@ -109,6 +113,8 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
       .subscribe(onNext: { [weak self] reason in
         self?.steps.accept(AppStep.studyManagement(.detailRejectReasonScreenIsRequired(reason: reason)))
 
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    ApplyStudyManager.shared.getMyRejectReason(studyId: studyID) { result in

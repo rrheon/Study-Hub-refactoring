@@ -6,8 +6,8 @@ import RxRelay
 import RxFlow
 
 /// 스터디 생성 ViewModel
-final class CreateStudyViewModel: Stepper {
-  static let shared = CreateStudyViewModel()
+final class StudyFormViewModel: Stepper {
+  static let shared = StudyFormViewModel()
   
   var steps: PublishRelay<Step> = PublishRelay<Step>()
   
@@ -81,7 +81,7 @@ final class CreateStudyViewModel: Stepper {
         }
         
       }, onError: { err in
-        print(err)
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       }).disposed(by: disposeBag)
 //    
 //    /// close - false,   벌금은 nil
@@ -115,7 +115,7 @@ final class CreateStudyViewModel: Stepper {
 
           ToastPopupManager.shared.showToast(message: "글이 수정됐어요.")
         },onError: { err in
-          print(err)
+          self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
         })
         .disposed(by: disposeBag)
     }
@@ -146,4 +146,4 @@ final class CreateStudyViewModel: Stepper {
   }
 }
 
-extension CreateStudyViewModel: ManagementDate {}
+extension StudyFormViewModel: ManagementDate {}

@@ -57,6 +57,9 @@ class EnterNicknameViewModel: Stepper {
     UserProfileManager.shared.checkNicknameDuplicationWithRx(nickname: nickname)
       .subscribe(onNext: { [weak self] isValid in
         self?.checkDuplicationNickname.accept(isValid)
+      }, onError: { _ in
+        /// 다시 시도 요청 팝업 띄우기
+        ToastPopupManager.shared.showToast()
       })
       .disposed(by: disposeBag)
 //    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname) { result in

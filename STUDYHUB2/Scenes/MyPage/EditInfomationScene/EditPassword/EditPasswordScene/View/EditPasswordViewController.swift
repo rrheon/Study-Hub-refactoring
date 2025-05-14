@@ -5,7 +5,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 비밀번호 수정 VC
+/// StudyHub - front - ChangePasswordScreen - 02
+/// - 비밀번호 수정 화면
+
 final class EditPasswordViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

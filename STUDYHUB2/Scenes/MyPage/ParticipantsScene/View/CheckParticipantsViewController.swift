@@ -6,8 +6,10 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 스터디 참가자 확인 VC
-/// 종류 : 대기인원, 참여인원, 거절인원
+/// StudyHub - front - StudyAttendeesScreen
+/// - 스터디 참가자 확인 화면
+/// - 종류 : 대기인원, 참여인원, 거절인원
+
 final class CheckParticipantsViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -411,7 +413,6 @@ extension CheckParticipantsViewController: RefuseBottomSheetDelegate {
     viewModel.userID = userId
     
     viewModel.rejectPerson(reason: reason) {
-      ToastPopupManager.shared.showToast(message: "거절이 완료됐어요")
       self.waitButtonTapped()
     }
   }
@@ -441,7 +442,6 @@ extension CheckParticipantsViewController: PopupViewDelegate {
     defaultBtnAction()
 
     viewModel.acceptPerson(completion: {
-      ToastPopupManager.shared.showToast(message: "수락이 완료됐어요")
       self.waitButtonTapped()
     })
 }

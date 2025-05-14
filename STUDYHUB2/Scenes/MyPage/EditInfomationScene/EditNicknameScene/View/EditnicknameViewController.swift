@@ -7,7 +7,9 @@ import RxRelay
 import RxCocoa
 import Then
 
-/// 유저 닉네임 수정 VC
+/// StudyHub - front - EditNicknameScreen
+/// - 유저 닉네임 수정 화면
+
 final class EditnicknameViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 

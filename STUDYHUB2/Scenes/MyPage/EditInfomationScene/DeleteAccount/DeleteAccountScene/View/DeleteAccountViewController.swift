@@ -5,8 +5,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-// 탈퇴하기 누를 때 action, 팝업
-/// 계정 삭제 VC
+/// StudyHub - front - DeleteAccountScreen - 02
+/// - 계정 삭제 화면
+
 final class DeleteAccountViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

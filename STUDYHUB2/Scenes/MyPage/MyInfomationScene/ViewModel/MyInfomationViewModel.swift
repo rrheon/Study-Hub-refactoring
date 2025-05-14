@@ -60,6 +60,8 @@ final class MyInfomationViewModel: Stepper {
           // 삭제에 실패한 경우
           self.isUserProfileAction.accept(ProfileActions.failToDelete)
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     
@@ -96,6 +98,8 @@ final class MyInfomationViewModel: Stepper {
           // 변경에 실패한 경우
           self.isUserProfileAction.accept(ProfileActions.failToEdit)
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserProfileManager.shared.storeProfileToserver(image: image) { result in

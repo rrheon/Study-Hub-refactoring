@@ -63,6 +63,8 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
         self?.page += 1
         self?.isInfiniteScroll = result.participateStudyData.last
         self?.countPostNumber.accept(result.participateStudyData.numberOfElements)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    ApplyStudyManager.shared.getMyParticipateList(page: page) { result in
@@ -95,6 +97,8 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
           self?.updateParticipateCount()
           self?.updateParticipateContent(studyID: studyID)
         }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
   }

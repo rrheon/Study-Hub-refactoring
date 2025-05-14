@@ -31,7 +31,7 @@ final class HomeViewModel: Stepper {
   
   
   init() {
-    LoginStatusManager.shared.fetchAccessToken()
+//    LoginStatusManager.shared.fetchAccessToken()
     
     Task {
       try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -53,7 +53,6 @@ final class HomeViewModel: Stepper {
         self?.deadlinePostDatas.accept(deadLinePostData.postDataByInquiries.content)
       }, onError: { err in        
         self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
-        
       }).disposed(by: disposeBag)
   }
   

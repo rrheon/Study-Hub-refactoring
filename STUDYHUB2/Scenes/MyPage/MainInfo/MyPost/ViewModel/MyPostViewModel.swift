@@ -62,6 +62,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
         self?.myPostPage += 1
         self?.isInfiniteScroll = postData.posts.last
         self?.totalCount = postData.totalCount
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     
@@ -89,6 +91,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
       .subscribe(onNext: { [weak self] postData in
         self?.steps.accept(AppStep.navigation(.dismissCurrentScreen))
         self?.steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: postData)))
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    Task {
@@ -107,6 +111,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
     StudyPostManager.shared.closePostWithRx(with: postID)
       .subscribe(onNext: { [weak self] isClosed in
         self?.updateClosePost(postID: postID)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    StudyPostManager.shared.closePost(with: postID) { reulst in
@@ -183,6 +189,8 @@ final class MyPostViewModel: EditUserInfoViewModel, Stepper {
       .subscribe(onNext: { [weak self] isDeleted in
         self?.updateUserData(postCount: 0)
         self?.myPostData.accept([])
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    StudyPostManager.shared.deleteMyAllPost { result in

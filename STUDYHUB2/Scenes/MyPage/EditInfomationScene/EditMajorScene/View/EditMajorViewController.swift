@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 학과 수정 라벨
+/// StudyHub - front - EditMajorScreen
+/// - 학과 수정 라벨
+
 final class EditMajorViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

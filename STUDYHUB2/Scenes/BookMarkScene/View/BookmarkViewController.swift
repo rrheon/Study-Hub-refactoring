@@ -6,7 +6,10 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 북마크 VC
+
+/// StudyHub - front - BookmarkScreen
+/// - 북마크 화면
+
 final class BookmarkViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

@@ -5,7 +5,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 공지사항 VC
+/// StudyHub - front - NoticeScreen
+/// - 공지사항 화면
+
 final class NotificationViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()

@@ -6,7 +6,8 @@ import RxCocoa
 import RxSwift
 import Then
 
-/// 회원가입 - 5. 학과입력 VC
+/// StudyHub - front - SignupScreen - 05
+/// -  학과입력 화면
 final class EnterMajorViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

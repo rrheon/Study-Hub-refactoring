@@ -12,7 +12,9 @@ protocol WriteRefuseReasonVCDelegate: AnyObject {
   func completeButtonTapped(reason: String, userId: Int)
 }
 
-/// 거절사유 작성 VC
+/// StudyHub - front - WriteRejectionReasonScreen
+/// - 거절사유 작성 화면
+
 final class WriteRefuseReasonVC: UIViewController, Stepper {
   var disposeBag: DisposeBag = DisposeBag()
   

@@ -71,7 +71,7 @@ extension AppFlow{
   /// - Parameter viewModel: 스터디 생성 viewModel
   /// - Parameter selectType: 선택타입 - true - 시작날짜 선택 / false - 종료날짜 선택
   func presentCalendarScreen(
-    viewModel: CreateStudyViewModel,
+    viewModel: StudyFormViewModel,
     selectType: Bool = true
   ) -> FlowContributors {
     let calendarVC = CalendarViewController(viewModel: viewModel, selectStartData: selectType)

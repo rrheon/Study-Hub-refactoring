@@ -6,7 +6,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 전체 댓글 VC
+/// StudyHub - front - CommentDetailScreen
+/// - 전체 댓글 화면
+
 final class CommentViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: CommentViewModel

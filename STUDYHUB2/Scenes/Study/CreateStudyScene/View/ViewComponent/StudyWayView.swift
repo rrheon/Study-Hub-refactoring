@@ -12,7 +12,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   /// 스터디 방식 제목 라벨
   private lazy var studymethodLabel = UILabel().then {
@@ -115,7 +115,7 @@ final class StudyWayView: UIView, UITextFieldDelegate {
     $0.font = UIFont(name: "Pretendard-Medium", size: 12)
   }
   
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     

@@ -49,6 +49,8 @@ final class EditPasswordViewModel: Stepper {
     UserProfileManager.shared.changePasswordWithRx(password: enteredPassword, email: userEmail)
       .subscribe(onNext: { isSuccess in
         self.isSuccessChangePassword.accept(isSuccess)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     

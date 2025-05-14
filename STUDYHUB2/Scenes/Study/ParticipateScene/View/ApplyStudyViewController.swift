@@ -6,7 +6,9 @@ import RxRelay
 import RxCocoa
 import Then
 
-/// 스터디 참여하기 VC
+/// StudyHub - front - StudyJoinRequestScreen
+/// - 스터디 참여하기  화면
+
 final class ApplyStudyViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   

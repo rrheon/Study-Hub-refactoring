@@ -28,6 +28,8 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
     UserProfileManager.shared.checkNicknameDuplicationWithRx(nickname: nickname)
       .subscribe(onNext: { isValid in
         self.isCheckNicknameDuplication.accept(isValid)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname, completion: { result in
@@ -47,6 +49,8 @@ final class EditNicknameViewModel: EditUserInfoViewModel, Stepper {
     UserProfileManager.shared.editUserNicknameWithRx(nickname: nickname)
       .subscribe(onNext: { _ in
         self.updateUserData(nickname: nickname)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
 //    UserProfileManager.shared.editUserNickname(nickname: nickname) { statusCode in

@@ -41,6 +41,8 @@ final class MyPageViewModel: Stepper {
     UserProfileManager.shared.fetchUserInfoToServerWithRx()
       .subscribe(onNext: { userData in
         self.userData.accept(userData)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)
     
