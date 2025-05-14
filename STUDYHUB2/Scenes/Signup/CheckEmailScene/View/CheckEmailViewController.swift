@@ -5,7 +5,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 회원가입 - 2. 이메일 확인 VC
+/// StudyHub - front - SignupScreen - 02
+/// - 이메일 확인 화면
+
 final class CheckEmailViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -70,6 +72,8 @@ final class CheckEmailViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   
@@ -150,6 +154,8 @@ final class CheckEmailViewController: UIViewController {
     
     let isValid = textField.isValidEmail(text)
     let invalidMessage = "잘못된 주소예요. 다시 입력해주세요"
+    
+    /// 유효한 경우
     if isValid {
       textField.alertLabelSetting(hidden: true, title: "", textColor: .g60, underLineColor: .g60)
       unableValidButton(true)
@@ -185,6 +191,7 @@ final class CheckEmailViewController: UIViewController {
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
         let color: UIColor = vc.codeTextField.textField.isEditing ? .g60 : .g100
+        
         vc.codeTextField.alertLabelSetting(
           hidden: true,
           title: "",
@@ -198,6 +205,8 @@ final class CheckEmailViewController: UIViewController {
     viewModel.isEmailDuplication
       .withUnretained(self)
       .subscribe(onNext: { vc, result in
+        
+        /// 중복인 경우
         if result {
           vc.emailTextField.alertLabelSetting(hidden: false, title: "이미 가입된 이메일 주소예요")
         } else {
@@ -212,6 +221,8 @@ final class CheckEmailViewController: UIViewController {
       .withUnretained(self)
       .subscribe(onNext: { vc, result in
         guard let email = vc.emailTextField.getTextFieldValue() else { return }
+        
+        /// 인증코드가 유효한 경우
         if result == "true" {
           vc.viewModel.steps.accept(SignupStep.enterPasswordScreenIsRequired)
         } else {
@@ -243,6 +254,8 @@ final class CheckEmailViewController: UIViewController {
       .asDriver(onErrorJustReturn: (self, false))
       .drive(onNext: { vc, _ in
         guard let email = vc.emailTextField.getTextFieldValue() else { return }
+        
+        /// 사용가능한 이메일인 경우 중복 확인
         if vc.emailTextField.isValidEmail(email) {
           vc.viewModel.checkEmailDuplication(email)
         }
@@ -263,6 +276,13 @@ final class CheckEmailViewController: UIViewController {
         EnterMajorViewModel.shared.email = email
       })
       .disposed(by: disposeBag)
+    
+    viewModel.isCodeSent
+      .subscribe(onNext: { isSent in
+        self.validButton.setTitle("재전송", for: .normal)
+        self.codeTextField.isHidden = false
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - 인증코드 전송
@@ -270,7 +290,7 @@ final class CheckEmailViewController: UIViewController {
   /// 인증코드 전송
   func sendEmailCode(){
     guard let email = emailTextField.getTextFieldValue() else { return }
-    
+    self.viewModel.sendEmailCode(email)
     self.emailTextField.alertLabelSetting(hidden: false,
                                           title: "이메일 코드를 메일로 보내드렸어요.",
                                           textColor: .g80,
@@ -281,10 +301,12 @@ final class CheckEmailViewController: UIViewController {
     
     self.viewModel.resend = true
     
-    viewModel.sendEmailCode(email) {
-      self.validButton.setTitle("재전송", for: .normal)
-      self.codeTextField.isHidden = false
-    }
+
+//
+//    viewModel.sendEmailCode(email) {
+//      self.validButton.setTitle("재전송", for: .normal)
+//      self.codeTextField.isHidden = false
+//    }
   }
   
   // MARK: - 인증코드 전송 후 UI설정
@@ -301,3 +323,5 @@ final class CheckEmailViewController: UIViewController {
   }
   
 }
+
+extension CheckEmailViewController: KeyboardProtocol {}

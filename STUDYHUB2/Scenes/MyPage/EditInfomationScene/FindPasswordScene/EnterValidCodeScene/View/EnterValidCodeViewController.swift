@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 이메일 검증 코드 입력 VC
+/// StudyHub - front - FindPasswordScreen - 02
+/// - 이메일 검증 코드 입력 화면
+
 final class EnterValidCodeViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   let viewModel: EnterValidCodeViewModel

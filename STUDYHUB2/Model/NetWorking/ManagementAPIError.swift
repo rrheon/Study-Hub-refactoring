@@ -24,7 +24,7 @@ enum ApiError: Error {
     case .decodingError:                    return "디코딩 에러입니다"
     case .badStatus(let code):              return "에러상태코드\(code)"
     case .unAuthorize:                      return "인증되지 않은 사용자입니다"
-    case .notAllowedUrl:                    return "올바른 url형색이 아닙니다"
+    case .notAllowedUrl:                    return "올바른 url형식이 아닙니다"
     case .jsonEncoding:                     return "유효한 json이 아닙니다"
     case .unKnownError(let err):            return "알 수 없는 에러입니다. \(err)"
     }
@@ -35,8 +35,7 @@ enum ApiError: Error {
   /// - Parameter error: 발생한 API 에러
   static func managementError(error: Self) -> String {
     switch error {
-    case .unAuthorize:
-      return "인증 실패: 다시 로그인해주세요."
+    case .unAuthorize: return "인증 실패: 다시 로그인해주세요."
       
     case .badStatus(let code):
       switch code {

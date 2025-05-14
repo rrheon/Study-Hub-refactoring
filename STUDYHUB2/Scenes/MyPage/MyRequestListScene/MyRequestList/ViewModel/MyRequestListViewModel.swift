@@ -2,12 +2,15 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
 /// 신청한 스터디 관리 ViewModel
 final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 선택된 신청한 스터디ID
   var selectedPostID: Int?
@@ -38,31 +41,60 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   
   /// 신청한 스터디 리스트 가져오기
   func getRequestList() {
-    ApplyStudyManager.shared.getMyRequestStudyList(page: page, size: 5) { result in
-      var currentDats = self.requestStudyList.value
-      
-      if self.page == 0{
-        currentDats = result.requestStudyData.content
-      }else{
-        var newDats = result.requestStudyData.content
-        currentDats.append(contentsOf: newDats)
-      }
-      
-      self.requestStudyList.accept(currentDats)
-      self.page += 1
-      self.isInfiniteScroll = result.requestStudyData.last
-      self.countPostNumber.accept(result.requestStudyData.numberOfElements)
-    }
+    
+    ApplyStudyManager.shared.getMyRequestStudyListWithRx(page: page, size: 5)
+      .subscribe(onNext: { [weak self] requestList in
+        var currentDats = self?.requestStudyList.value ?? []
+        
+        if self?.page == 0{
+          currentDats = requestList.requestStudyData.content
+        }else{
+          var newDats = requestList.requestStudyData.content
+          currentDats.append(contentsOf: newDats)
+        }
+        
+        self?.requestStudyList.accept(currentDats)
+        self?.page += 1
+        self?.isInfiniteScroll = requestList.requestStudyData.last
+        self?.countPostNumber.accept(requestList.requestStudyData.numberOfElements)
+
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+//    ApplyStudyManager.shared.getMyRequestStudyList(page: page, size: 5) { result in
+//      var currentDats = self.requestStudyList.value
+//      
+//      if self.page == 0{
+//        currentDats = result.requestStudyData.content
+//      }else{
+//        var newDats = result.requestStudyData.content
+//        currentDats.append(contentsOf: newDats)
+//      }
+//      
+//      self.requestStudyList.accept(currentDats)
+//      self.page += 1
+//      self.isInfiniteScroll = result.requestStudyData.last
+//      self.countPostNumber.accept(result.requestStudyData.numberOfElements)
+//    }
   }
   
   
   /// 신청한 스터디 삭제하기
   /// - Parameter studyID: 스터디ID
   func deleteMyReuest(_ studyID: Int){
-    ApplyStudyManager.shared.deleteRequestStudy(studyId: studyID) { result in
-      self.isSuccessToDelete.accept(result)
-      self.updateMyRequestList(studyID)
-    }
+    ApplyStudyManager.shared.deleteRequestStudyWithRx(studyId: studyID)
+      .subscribe(onNext: { [weak self] isDeleted in
+        self?.isSuccessToDelete.accept(isDeleted)
+        self?.updateMyRequestList(studyID)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+//    ApplyStudyManager.shared.deleteRequestStudy(studyId: studyID) { result in
+//      self.isSuccessToDelete.accept(result)
+//      self.updateMyRequestList(studyID)
+//    }
   }
   
   func updateMyRequestList(_ studyID: Int){
@@ -77,9 +109,17 @@ final class MyRequestListViewModel: EditUserInfoViewModel, Stepper {
   
   /// 거절 사유 가져오기
   func getRejectReason(_ studyID: Int) {
-    ApplyStudyManager.shared.getMyRejectReason(studyId: studyID) { result in
-      self.steps.accept(AppStep.detailRejectReasonScreenIsRequired(reason: result))
-    }
+    ApplyStudyManager.shared.getMyRejectReasonWithRx(studyId: studyID)
+      .subscribe(onNext: { [weak self] reason in
+        self?.steps.accept(AppStep.studyManagement(.detailRejectReasonScreenIsRequired(reason: reason)))
+
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+//    ApplyStudyManager.shared.getMyRejectReason(studyId: studyID) { result in
+//      self.steps.accept(AppStep.studyManagement(.detailRejectReasonScreenIsRequired(reason: result)))
+//    }
   }
   
   func test(){

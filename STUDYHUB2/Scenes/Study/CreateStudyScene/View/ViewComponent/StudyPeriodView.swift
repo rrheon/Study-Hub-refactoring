@@ -11,7 +11,7 @@ final class StudyPeriodView: UIView {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   /// 구분선
   private lazy var periodTopDivideLine = StudyHubUI.createDividerLine(height: 8)
@@ -49,7 +49,7 @@ final class StudyPeriodView: UIView {
   /// 스터디 생성 완료하기 버튼
   private lazy var completeButton = StudyHubButton(title: "완료하기")
   
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     
@@ -185,8 +185,9 @@ final class StudyPeriodView: UIView {
     startDateButton.rx.tap
       .withUnretained(self)
       .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: true))
+        view.viewModel.steps.accept(AppStep.studyManagement(.calendarIsRequired(
+          viewModel: view.viewModel,selectType: true)
+        ))
       }
       .disposed(by: disposeBag)
     
@@ -194,8 +195,9 @@ final class StudyPeriodView: UIView {
     endDateButton.rx.tap
       .withUnretained(self)
       .subscribe { (view, _) in
-        view.viewModel.steps.accept(AppStep.calendarIsRequired(viewModel: view.viewModel,
-                                                               selectType: false))
+        view.viewModel.steps.accept(AppStep.studyManagement(.calendarIsRequired(
+          viewModel: view.viewModel,selectType: false)
+        ))
 
       }
       .disposed(by: disposeBag)

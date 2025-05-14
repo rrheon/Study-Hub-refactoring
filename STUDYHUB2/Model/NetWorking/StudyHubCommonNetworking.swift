@@ -8,9 +8,10 @@
 import Foundation
 
 import Moya
+import RxSwift
 
 /// 로그인이 필요할 경우 팝업 띄우기
-protocol LoginPopupIsRequired {
+protocol LoginPopupIsRequired: PopupViewDelegate {
   func presentLoginPopup()
 }
 
@@ -19,6 +20,16 @@ extension LoginPopupIsRequired {
     NotificationCenter.default.post(name: .presentPopupScreen,
                                     object: nil,
                                     userInfo: ["popupCase": PopupCase.requiredLogin])
+  }
+  
+  func leftBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    _ = TokenManager.shared.deleteTokens()
+    defaultBtnAction()
+  }
+  
+  func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
+    _ = TokenManager.shared.deleteTokens()
+    defaultBtnAction()
   }
 }
 
@@ -38,45 +49,9 @@ extension CommonBaseURL {
 
 /// 공용 네트워킹
 class StudyHubCommonNetworking {
-  /// 타이머
-  var timer: Timer?
   
-  /// 로그인 상태
-  var loginStatus: Bool = false
-  
-  init() {
-    
-      // 5분 간격으로 AccessToken 다시 받아오기
-    registerCheckValidAccessToken()
-  }
-
-  
-  
-  /// 주기적으로 AccessToken 갱신 - 5분간격
-  func registerCheckValidAccessToken(){
-    timer = Timer.scheduledTimer(timeInterval: 300.0,
-                                 target: self,
-                                 selector: #selector(fetchAccessToken),
-                                 userInfo: nil,
-                                 repeats: true)
-  }
-  
-  
-  /// AccessToken 다시 받아오기
-  @objc func fetchAccessToken(){
-    guard let refreshToken = TokenManager.shared.loadRefreshToken() else {
-      loginStatus = false
-      return
-    }
-    
-    UserAuthManager.shared.refreshAccessToken(refreshToken: refreshToken) { tokens in
-      if let accessToken = tokens?.accessToken,
-         let refreshToken = tokens?.refreshToken {
-        self.loginStatus = TokenManager.shared.saveTokens(accessToken: accessToken, refreshToken: refreshToken)
-      } else {
-        self.loginStatus = false
-      }
-    }
+  init(){
+    LoginStatusManager.shared.registerCheckValidAccessToken()
   }
   
   /// API 통신 후 결과처리 - 디코딩
@@ -94,7 +69,6 @@ class StudyHubCommonNetworking {
 
       do {
         let decodedData = try JSONDecoder().decode(type, from: response.data)
-        print(decodedData)
         completion(decodedData)
       } catch(_) {
         // 디코딩에러
@@ -102,7 +76,6 @@ class StudyHubCommonNetworking {
       }
       
     case let .failure(err):
-      print(err.localizedDescription)
       switch err {
       case .statusCode(let response):
         ApiError.badStatus(code: response.statusCode)
@@ -118,15 +91,11 @@ class StudyHubCommonNetworking {
   ) async throws -> T {
     switch apiResult {
     case let .success(response):
-      print("Status Code: \(response.statusCode)")
-      
       do {
         let decodedData = try JSONDecoder().decode(type, from: response.data)
-        print("Decoded Data: \(decodedData)")
         return decodedData
       } catch {
-        print("Decoding Error: \(error.localizedDescription)")
-        ApiError.managementError(error: .decodingError) // 로깅
+        ApiError.managementError(error: .decodingError) 
         throw ApiError.decodingError
       }
       
@@ -141,7 +110,17 @@ class StudyHubCommonNetworking {
       }
     }
   }
-
+  
+  func commonDecodeNetworkResponse<T: Decodable>(with response: Response,
+                                                 decode type: T.Type) -> Observable<T> {
+    do {
+      let decoded = try JSONDecoder().decode(T.self, from: response.data)
+      return .just(decoded)
+    } catch {
+      return .error(error)
+    }
+  }
+  
 }
 
 // MARK: - Moya Request 변환

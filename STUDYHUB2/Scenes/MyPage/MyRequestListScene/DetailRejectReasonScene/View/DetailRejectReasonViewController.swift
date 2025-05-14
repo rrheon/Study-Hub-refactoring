@@ -6,7 +6,9 @@ import RxFlow
 import RxRelay
 import Then
 
-/// 스터디 거절 사유 자세히 보기 VC
+/// StudyHub - front - CheckRejectReasonScreen
+/// - 스터디 거절 사유 자세히 보기 화면
+
 final class DetailRejectReasonViewController: UIViewController, Stepper{
   var steps: PublishRelay<Step> = PublishRelay<Step>()
 
@@ -88,7 +90,7 @@ final class DetailRejectReasonViewController: UIViewController, Stepper{
     
     view.addSubview(confirmButton)
     confirmButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(animate: true))
+      self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
     }, for: .touchUpInside)
     confirmButton.snp.makeConstraints {
       $0.leading.equalTo(titleLabel)
@@ -108,6 +110,6 @@ final class DetailRejectReasonViewController: UIViewController, Stepper{
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen(animate: true))
+    steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
 }

@@ -57,7 +57,7 @@ extension StudyPostNetworking: TargetType, CommonBaseURL {
     case .deletePost(let postId):             return "/v1/study-posts/\(postId)"
     case .searchMyPost:                       return "/v1/study-posts/mypost"
     case .searchAllPost:                      return "/v2/study-posts"
-    case .searchSinglePost(_, let postId):       return "/v2/study-posts/\(postId)"
+    case .searchSinglePost(_, let postId):    return "/v2/study-posts/\(postId)"
     }
   }
   

@@ -33,6 +33,8 @@ enum Gender {
 class EnterNicknameViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
 
+  var disposeBag: DisposeBag = DisposeBag()
+  
   /// 닉네임 유효성 체크
   let checkValidNickname: PublishRelay<Bool> = PublishRelay<Bool>()
   
@@ -51,10 +53,18 @@ class EnterNicknameViewModel: Stepper {
   
   /// 닉네임 중복여부 확인하기
   /// - Parameter nicknmae: 확인할 닉네임
-  func checkDuplicationNickname(_ nicknmae: String){
-    UserProfileManager.shared.checkNicknameDuplication(nickname: nicknmae) { result in
-      self.checkDuplicationNickname.accept(result)
-    }
+  func checkDuplicationNickname(_ nickname: String){
+    UserProfileManager.shared.checkNicknameDuplicationWithRx(nickname: nickname)
+      .subscribe(onNext: { [weak self] isValid in
+        self?.checkDuplicationNickname.accept(isValid)
+      }, onError: { _ in
+        /// 다시 시도 요청 팝업 띄우기
+        ToastPopupManager.shared.showToast()
+      })
+      .disposed(by: disposeBag)
+//    UserProfileManager.shared.checkNicknameDuplication(nickname: nickname) { result in
+//      self.checkDuplicationNickname.accept(result)
+//    }
   }
 
   

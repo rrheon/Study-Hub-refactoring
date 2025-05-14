@@ -6,7 +6,9 @@ import RxFlow
 import RxRelay
 import Then
 
-/// 계정 삭제 확인 VC
+/// StudyHub - front - DeleteAccountScreen - 01
+/// - 계정 삭제 확인 화면
+
 final class ConfirmDeleteViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
 
@@ -92,7 +94,8 @@ final class ConfirmDeleteViewController: UIViewController, Stepper {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    self.steps.accept(AppStep.popCurrentScreen(animate: true))
+    self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
+
   }
   
   /// layout 설정
@@ -167,12 +170,12 @@ final class ConfirmDeleteViewController: UIViewController, Stepper {
   /// 버튼 액션 설정
   func setupButtonActions(){
     continueButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(animate: false))
-      self.steps.accept(AppStep.deleteAccountScreenIsRequired)
+      self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
+      self.steps.accept(AppStep.auth(.deleteAccountScreenIsRequired))
     }, for: .touchUpInside)
     
     cancelButton.addAction(UIAction { _ in
-      self.steps.accept(AppStep.popCurrentScreen(animate: true))
+      self.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
     }, for: .touchUpInside)
   }
 }

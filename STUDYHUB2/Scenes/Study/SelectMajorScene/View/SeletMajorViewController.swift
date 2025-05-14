@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 학과 선택VC
+/// StudyHub - front - SelectMajorScreen
+/// - 학과 선택화면
+
 final class SeletMajorViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -120,7 +122,7 @@ final class SeletMajorViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 아이템 터치
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // 네비게이션 오른쪽 버튼을 누르면 이전 화면에 뜰 수 있도록 설정하기
@@ -130,7 +132,7 @@ final class SeletMajorViewController: UIViewController {
     viewModel.enteredMajor.accept(viewModel.selectedMajor)
     
     /// 현재 화면 pop
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// Actions 설정

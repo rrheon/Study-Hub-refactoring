@@ -14,7 +14,9 @@ protocol RefuseBottomSheetDelegate: AnyObject {
   func didTapRefuseButton(withReason reason: String, reasonNum: Int, userId: Int)
 }
 
-/// 스터디 신청 거절사유 vc
+/// StudyHub - front - WriteRejectionReasonScreen
+/// - 스터디 신청 거절사유 선택 화면 (BottomSheet로 표시) 
+
 final class SelectStudyRefuseViewController: UIViewController {
   weak var delegate: RefuseBottomSheetDelegate?
   

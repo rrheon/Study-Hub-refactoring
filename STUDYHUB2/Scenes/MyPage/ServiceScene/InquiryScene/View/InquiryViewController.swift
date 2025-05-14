@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 문의하기 VC
+/// StudyHub - front - InquiryScreen
+/// - 문의하기 화면
+
 final class InquiryViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -92,7 +94,7 @@ final class InquiryViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
 
   // MARK: - makeUI

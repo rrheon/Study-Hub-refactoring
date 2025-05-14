@@ -6,7 +6,8 @@ import RxCocoa
 import RxSwift
 import Then
 
-/// 회원가입 - 5. 학과입력 VC
+/// StudyHub - front - SignupScreen - 05
+/// -  학과입력 화면
 final class EnterMajorViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -68,6 +69,8 @@ final class EnterMajorViewController: UIViewController {
     
     setupBindings()
     setupActions()
+    
+    registerTapGesture()
   } //viewDidLoad
   
   
@@ -162,13 +165,13 @@ final class EnterMajorViewController: UIViewController {
       })
       .disposed(by: disposeBag)
     
-    /// 계정 생성 여부
-    viewModel.isSuccessCreateAccount
-      .withUnretained(self)
-      .subscribe(onNext: { vc,  _ in
-        vc.viewModel.steps.accept(SignupStep.completeSignupIsRequired)
-      })
-      .disposed(by: disposeBag)
+//    /// 계정 생성 여부
+//    viewModel.isSuccessCreateAccount
+//      .withUnretained(self)
+//      .subscribe(onNext: { vc,  _ in
+//        vc.viewModel.steps.accept(SignupStep.completeSignupIsRequired)
+//      })
+//      .disposed(by: disposeBag)
   }
   
   /// Actions 설정
@@ -214,3 +217,5 @@ extension EnterMajorViewController: UITableViewDelegate {
     return 48.0
   }
 }
+
+extension EnterMajorViewController: KeyboardProtocol {}

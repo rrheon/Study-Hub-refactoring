@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 학과 수정 라벨
+/// StudyHub - front - EditMajorScreen
+/// - 학과 수정 라벨
+
 final class EditMajorViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -107,7 +109,7 @@ final class EditMajorViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 버튼 탭

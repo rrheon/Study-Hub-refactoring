@@ -7,6 +7,8 @@
 
 import Foundation
 
+import RxSwift
+import RxMoya
 import Moya
 
 
@@ -36,6 +38,25 @@ class ApplyStudyManager: StudyHubCommonNetworking {
     }
   }
   
+  func participateStudyWithRx(introduce: String, studyId: Int) -> Observable<Bool> {
+    return provider.rx.request(.participateStudy(introduce: introduce, studyId: studyId))
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
+//    provider.request(.participateStudy(introduce: introduce, studyId: studyId)) { result in
+//      switch result {
+//      case .success(let response):
+//        print(response.response)
+//        completion(true)
+//      case .failure(let response):
+//        print(response.response)
+//        completion(false)
+//      }
+//    }
+  }
+  
   // MARK: - 내가 참여한 스터디 목록조회
   
   /// 내가 참여한 스터디 목록조회
@@ -56,6 +77,21 @@ class ApplyStudyManager: StudyHubCommonNetworking {
         completion(decodedData)
       }
     }
+  }
+  
+  /// 내가 참여한 스터디 목록조회 with Rx
+  /// - Parameters:
+  ///   - page: 목록페이지
+  ///   - size: 스터디 갯수
+  ///   - completion: 결과값 반환
+  func getMyParticipateListWithRx(page: Int = 0,
+                                  size: Int = 5) -> Observable<TotalParticipateStudyData> {
+    return provider.rx
+          .request(.getMyParticipateList(page: page, size: size))
+          .asObservable()
+          .flatMap { response -> Observable<TotalParticipateStudyData> in
+            self.commonDecodeNetworkResponse(with: response, decode: TotalParticipateStudyData.self)
+          }
   }
   
   // MARK: - 신청한 유저 정보 가져오기
@@ -90,6 +126,34 @@ class ApplyStudyManager: StudyHubCommonNetworking {
     }
   }
   
+  /// 스터디 신청한 유저정보 가져오기
+  /// - Parameters:
+  ///   - inspection: 상태정보 -  ACCEPT 승인 , REJECT : 거절 ,STANDBY : 대기
+  ///   - page: 목록 페이지
+  ///   - size: 유저 갯수
+  ///   - studyId: 해당 스터디의 Id
+  ///   - completion: 결과값 반환
+  func getApplyUserDataWithRx(inspection: String,
+                              page: Int,
+                              size: Int,
+                              studyId: Int) -> Observable<TotalApplyUserData>{
+    
+    let data: StudyApplyUserInfos = StudyApplyUserInfos(
+      inspection: inspection,
+      page: page,
+      size: size,
+      studyId: studyId
+    )
+    
+    return provider.rx
+          .request(.searchParticipateInfo(data: data))
+          .asObservable()
+          .flatMap { resposne -> Observable<TotalApplyUserData> in
+            self.commonDecodeNetworkResponse(with: resposne, decode: TotalApplyUserData.self)
+          }
+  }
+  
+  
   // MARK: - 스터디 참여 신청 수락
   
   /// 스터디 신청 수락
@@ -106,6 +170,19 @@ class ApplyStudyManager: StudyHubCommonNetworking {
         print(response.response)
       }
     }
+  }
+  
+  /// 스터디 신청 수락 with RX
+  /// - Parameters:
+  ///   - personData: 해당 사람의 정보
+  func acceptApplyUserWithRx(personData: AcceptStudy) -> Observable<Bool> {
+    return provider.rx
+          .request(.acceptParticipate(acceptPersonData: personData))
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
   }
   
   // MARK: - 스터디 참여 신청 거절
@@ -126,6 +203,17 @@ class ApplyStudyManager: StudyHubCommonNetworking {
     }
   }
   
+  /// 스터디 신청 거절 with Rx
+  /// - Parameters:
+  ///   - personData: 해당 사람의 정보
+  ///   - completion: 콜백함수
+  func rejectApplyUser(personData: RejectStudy) -> Observable<Int> {
+    return provider.rx
+          .request(.rejectParticipate(rejectPersonData: personData))
+          .asObservable()
+          .map { $0.statusCode }
+  }
+  
   // MARK: - 내가 신청한 스터디 요청 내역 가져오기
   
   /// 내가 신청한 스터디 요청내역 가져오기
@@ -138,6 +226,16 @@ class ApplyStudyManager: StudyHubCommonNetworking {
         completion(decodedData)
       }
     }
+  }
+  
+  /// 내가 신청한 스터디 요청내역 가져오기 with Rx
+  func getMyRequestStudyListWithRx(page: Int, size: Int) -> Observable<MyRequestList>{
+    return provider.rx
+          .request(.getMyReqeustList(page: page, size: size))
+          .asObservable()
+          .flatMap { response -> Observable<MyRequestList> in
+            self.commonDecodeNetworkResponse(with: response, decode: MyRequestList.self)
+          }
   }
   
   // MARK: - 거절이유 가져오기
@@ -153,6 +251,19 @@ class ApplyStudyManager: StudyHubCommonNetworking {
       }
     }
   }
+  
+  /// 거절 사유 가져오기 with Rx
+  /// - Parameters:
+  ///   - studyId: 가져올 스터디의 Id
+  func getMyRejectReasonWithRx(studyId: Int) -> Observable<RejectReason>{
+    return provider.rx
+          .request(.getRejectReason(studyId))
+          .asObservable()
+          .flatMap { response -> Observable<RejectReason> in
+            self.commonDecodeNetworkResponse(with: response, decode: RejectReason.self)
+          }
+  }
+  
   
   // MARK: - 신청한 스터디삭제
   
@@ -172,5 +283,18 @@ class ApplyStudyManager: StudyHubCommonNetworking {
         comletion(false)
       }
     }
+  }
+  
+  /// 신청한 스터디 요청 삭제하기 with Rx
+  /// - Parameters:
+  ///   - studyId: 삭제할 스터디의 Id
+  func deleteRequestStudyWithRx(studyId: Int) -> Observable<Bool> {
+    return provider.rx
+          .request(.deleteMyRequest(studyId: studyId))
+          .asObservable()
+          .map { response in
+            return (200...299).contains(response.statusCode)
+          }
+          .catchAndReturn(false)
   }
 }

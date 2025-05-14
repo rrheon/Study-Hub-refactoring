@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 작성한 스터디 VC
+/// StudyHub - front - MyStudyListScreen
+/// - 내가 작성한 스터디 화면
+
 final class MyPostViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -217,7 +219,7 @@ final class MyPostViewController: UIViewController {
       .subscribe(onNext: { item in
         let postID = item.postID
   
-        self.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postID))
+        self.viewModel.steps.accept(AppStep.study(.studyDetailScreenIsRequired(postID: postID)))
       })
       .disposed(by: disposeBag)
     
@@ -226,7 +228,7 @@ final class MyPostViewController: UIViewController {
     writePostButton.rx.tap
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
-        viewModel.steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
+        viewModel.steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: nil)))
       })
       .disposed(by: disposeBag)
 
@@ -251,14 +253,14 @@ final class MyPostViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - 전체삭제
   
   /// 전체 삭제 버튼 탭
   func confirmDeleteAll() {
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllMyPosts))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteAllMyPosts)))
   }
 }
 
@@ -278,18 +280,19 @@ extension MyPostViewController: UICollectionViewDelegateFlowLayout {
 extension MyPostViewController: MyPostCellDelegate {
   /// 참여자 버튼
   func acceptButtonTapped(studyID: Int) {
-    viewModel.steps.accept(AppStep.managementAttendeeIsRequired(studyID: studyID))
+    viewModel.steps.accept(AppStep.studyManagement(.managementAttendeeIsRequired(studyID: studyID)))
   }
   
   /// 메뉴버튼 탭
   func menuButtonTapped(postID: Int) {
-    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
+    viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: postID,
+                                                                     type: .managementPost)))
   }
   
   /// 마감하기 버튼 탭
   func closeButtonTapped(postID: Int){
     viewModel.selectedPostID = postID
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .closeStudyRecruitment))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .closeStudyRecruitment)))
   }
 }
 
@@ -302,10 +305,10 @@ extension MyPostViewController: BottomSheetDelegate {
   func firstButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     viewModel.selectedPostID = postOrCommentID
     
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
     
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-      self.viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+      self.viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteStudyPost)))
     }
   }
   

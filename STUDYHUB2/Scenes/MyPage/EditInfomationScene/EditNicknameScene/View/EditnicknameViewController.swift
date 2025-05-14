@@ -7,7 +7,9 @@ import RxRelay
 import RxCocoa
 import Then
 
-/// 유저 닉네임 수정 VC
+/// StudyHub - front - EditNicknameScreen
+/// - 유저 닉네임 수정 화면
+
 final class EditnicknameViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 
@@ -114,7 +116,7 @@ final class EditnicknameViewController: UIViewController {
  
   /// 네비게이션 바 왼쪽 아이탬 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 탭
@@ -122,7 +124,6 @@ final class EditnicknameViewController: UIViewController {
     guard let newNickname = viewModel.newNickname.value else { return }
 
     let valid = self.viewModel.checkValidNickname(nickname: newNickname)
-
     switch valid {
     case true:
       viewModel.checkNicknameDuplication(newNickname)
@@ -178,7 +179,7 @@ final class EditnicknameViewController: UIViewController {
     viewModel.storeNicknameToServer(newNickname)
   
     ToastPopupManager.shared.showToast(message: "닉네임이 변경되었어요")
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 닉네임 변경에 실패했을 경우

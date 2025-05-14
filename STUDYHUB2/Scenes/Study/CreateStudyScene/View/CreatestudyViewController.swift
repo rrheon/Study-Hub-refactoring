@@ -5,12 +5,14 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 스터디 생성 VC
-final class CreateStudyViewController: UIViewController {
+/// StudyHub - front - StudyFormScreen
+/// - 스터디 생성 및 수정 화면
+
+final class StudyFormViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
 
   /// 채팅방 링크, 스터디 제목, 스터디 소개 View
   private var studyInfoView: StudyInfoView
@@ -32,7 +34,7 @@ final class CreateStudyViewController: UIViewController {
   
   let scrollView = UIScrollView()
   
-  init(with viewModel: CreateStudyViewModel) {
+  init(with viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     
     self.studyInfoView = StudyInfoView(viewModel)
@@ -62,6 +64,8 @@ final class CreateStudyViewController: UIViewController {
     makeUI()
     
     setupBinding()
+    
+    registerTapGesture()
   } // viewDidLoad
   
  
@@ -128,8 +132,7 @@ final class CreateStudyViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    self.viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
-#warning("수정하거나 작성하다가 나가면 경고창")
+    self.viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - setupBinding
@@ -151,9 +154,10 @@ final class CreateStudyViewController: UIViewController {
     /// 벌금 여부에 따른 UI 설정
     viewModel.isFineButton
       .asDriver(onErrorJustReturn: false)
-      .drive(onNext: { [weak self]  in
-        guard let self = self else { return }
-        let height = $0 ? 450 : 230
+      .drive(onNext: { [weak self] isFine in
+        guard let self = self,
+              let _isFine = isFine else { return }
+        let height = _isFine ? 450 : 230
         self.studyWayView.snp.updateConstraints {
           $0.height.equalTo(height)
         }
@@ -166,16 +170,18 @@ final class CreateStudyViewController: UIViewController {
   func backButtonTapped(){
     self.view.endEditing(true)
     
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .cancelModifyPost))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .cancelModifyPost)))
   }
 }
 
 // MARK: - PopupView Delgate
 
 
-extension CreateStudyViewController: PopupViewDelegate {
+extension StudyFormViewController: PopupViewDelegate {
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
     defaultBtnAction()
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
   }
 }
+
+extension StudyFormViewController: KeyboardProtocol {}

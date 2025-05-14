@@ -102,7 +102,7 @@ final class ProfileComponentView: UIView {
     editButton.rx
       .tap
       .subscribe(onNext: { _ in
-      self.viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: 0, type: .editProfile))
+        self.viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: 0, type: .editProfile)))
     }).disposed(by: disposeBag)
     
     // 프로필 삭제 버튼 탭

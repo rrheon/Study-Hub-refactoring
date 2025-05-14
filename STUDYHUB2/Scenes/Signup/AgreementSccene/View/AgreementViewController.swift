@@ -14,7 +14,9 @@ import RxCocoa
 import Then
 
 
-/// 회원가입 - 1. 이용약관 동의 VC
+/// StudyHub - front - SignupScreen - 01
+/// - 약관 동의 화면
+
 final class AgreementViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   var viewModel: AgreementViewModel
@@ -35,7 +37,7 @@ final class AgreementViewController: UIViewController {
     $0.titleLabel?.font = UIFont(name: "Pretendara-Medium", size: 16)
     $0.backgroundColor = .g100
     $0.layer.cornerRadius = 6
-    $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -200, bottom: 0, right: 0)
+    $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: -210, bottom: 0, right: 0)
   }
   
   

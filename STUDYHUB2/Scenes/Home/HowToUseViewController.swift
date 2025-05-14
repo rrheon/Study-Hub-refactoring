@@ -6,8 +6,9 @@ import RxRelay
 import SnapKit
 import Then
 
-/// 이용방법 VC
-/// 로그인 상태 확인필요
+/// StudyHub - front - UsageGuideScreen
+/// - 이용방법 화면
+
 final class HowToUseViewController: UIViewController, Stepper {
   var steps: PublishRelay<Step>
   
@@ -55,7 +56,7 @@ final class HowToUseViewController: UIViewController, Stepper {
     view.backgroundColor = .black
     
     UserProfileManager.shared.fetchUserInfoToServer { userData in
-      self.loginStatus =  userData.nickname != nil
+      self.loginStatus = userData.nickname != nil
     }
     
     setupNavigationbar()
@@ -79,7 +80,7 @@ final class HowToUseViewController: UIViewController, Stepper {
   
   /// 네비게이션 바 왼쪽 탭 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    steps.accept(AppStep.popCurrentScreen(animate: true))
+    steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - setupLayout
@@ -149,11 +150,11 @@ final class HowToUseViewController: UIViewController, Stepper {
   @objc func writeButtonTapped() {
     // 로그인이 된 경우 스터디 생성 화면 띄우기
     if loginStatus {
-      steps.accept(AppStep.popCurrentScreen(animate: false))
-      steps.accept(AppStep.studyFormScreenIsRequired(data: nil))
+      steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
+      steps.accept(AppStep.studyManagement(.studyFormScreenIsRequired(data: nil)))
       // 비로그인의 경우 로그인 화면으로 이동
     }else {
-      steps.accept(AppStep.popupScreenIsRequired(popupCase: .requiredLogin))
+      steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .requiredLogin)))
     }
   }
 }

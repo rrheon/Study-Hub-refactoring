@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 참여한 스터디 VC
+/// StudyHub - front - MyParticipatedStudyScreen
+/// - 내가 참여한 스터디 화면
+
 final class MyParticipateStudyVC: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -173,13 +175,13 @@ final class MyParticipateStudyVC: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   
   /// 참여한 스터디 전체 삭제tr
   func confirmDeleteAll(){
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteAllParticipatedStudies))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteAllParticipatedStudies)))
   }
   
   /// 참여한 스터디가 있을 때의 UI
@@ -244,7 +246,7 @@ extension MyParticipateStudyVC: MyParticipateCellDelegate {
   
   func deleteButtonTapped(in cell: MyParticipateCell, postID: Int) {
     viewModel.selectedPostID = postID
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy)))
   }
 }
 

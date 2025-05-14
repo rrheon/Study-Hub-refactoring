@@ -193,7 +193,7 @@ final class SimilarStudyComponent: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (component, cellData) in
         let postID = cellData.postId
-        component.viewModel.steps.accept(AppStep.studyDetailScreenIsRequired(postID: postID))
+        component.viewModel.steps.accept(AppStep.study(.studyDetailScreenIsRequired(postID: postID)))
       })
       .disposed(by: disposeBag)
     
@@ -203,22 +203,10 @@ final class SimilarStudyComponent: UIView {
       .throttle(.seconds(1))
       .drive(onNext: { [weak self] in
         guard let self = self else { return }
-        self.viewModel.participateBtnTapped(completion: { action in
-          switch action {
-          case .closed:
-            ToastPopupManager.shared.showToast(message: "이미 마감된 스터디예요")
-          case .goToLoginVC:
-            NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
-          case .goToParticipateVC:
-            let studyID = self.viewModel.postDatas.value?.studyId
-            //              self.viewModel.moveToParticipateVC.accept(studyID)
-            self.viewModel.steps.accept(AppStep.applyStudyScreenIsRequired(data: self.viewModel.postDatas))
-          case .limitedGender:
-            ToastPopupManager.shared.showToast(message: "이 스터디는 성별 제한이 있는 스터디예요")
-          }
-        })
+        self.viewModel.participatedBtnTapped()
       })
       .disposed(by: disposeBag)
+    
   }
 }
 

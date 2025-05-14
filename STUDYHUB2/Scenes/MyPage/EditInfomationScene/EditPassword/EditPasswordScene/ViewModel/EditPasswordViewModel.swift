@@ -7,12 +7,15 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
 /// 비밀번호 수정 ViewModel
 final class EditPasswordViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 사용자의 이메일
   let userEmail: String
@@ -42,9 +45,18 @@ final class EditPasswordViewModel: Stepper {
   /// 변경할 비밀번호 서버에 저장
   func storePasswordToServer(){
     let enteredPassword = secondPassword.value
-    UserProfileManager.shared.changePassword(password: enteredPassword, email: userEmail) { result in
-      self.isSuccessChangePassword.accept(result)
-    }
+    
+    UserProfileManager.shared.changePasswordWithRx(password: enteredPassword, email: userEmail)
+      .subscribe(onNext: { isSuccess in
+        self.isSuccessChangePassword.accept(isSuccess)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+    
+//    UserProfileManager.shared.changePassword(password: enteredPassword, email: userEmail) { result in
+//      self.isSuccessChangePassword.accept(result)
+//    }
   }
 
 }

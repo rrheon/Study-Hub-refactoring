@@ -12,7 +12,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 검색결과 VC
+/// StudyHub - front - SearchResultScreen
+/// - 검색결과 화면
+
 class ResultSearchViewController: UIViewController {
   
   var viewModel: SearchViewModel
@@ -158,7 +160,12 @@ class ResultSearchViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽버튼 탭
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(HomeStep.popScreenIsRequired)
+//    viewModel.steps.accept(HomeStep.popScreenIsRequired)
+    if let _ = self.navigationController?.viewControllers.first as? HomeViewController  {
+      viewModel.steps.accept(HomeStep.popScreenIsRequired)
+    }else{
+      viewModel.steps.accept(StudyStep.popScreenIsRequired)
+    }
   }
   
   /// delegate 설정
@@ -202,15 +209,8 @@ class ResultSearchViewController: UIViewController {
         cellIdentifier: SearchResultCell.cellID,
         cellType: SearchResultCell.self)) { index, content, cell in
           cell.cellData = content
-          //          cell.loginStatus = self.viewModel.isUserLogin
         }
         .disposed(by: disposeBag)
-    
-    //    viewModel.postDatas
-    //      .subscribe(onNext: { [ weak self]  _ in
-    //        self?.updateUI()
-    //      })
-    //      .disposed(by: disposeBag)
   }
   
   
@@ -252,7 +252,7 @@ class ResultSearchViewController: UIViewController {
   
   func buttonTapped(hot: String, titleAndMajor: String){
     resultCollectionView.setContentOffset(CGPoint.zero, animated: false)
-    viewModel.fectchPostData(with: titleAndMajor)
+    viewModel.fetchPostData(with: titleAndMajor)
   }
   
   // MARK: - 전체버튼 눌렸을 때
@@ -336,15 +336,23 @@ extension ResultSearchViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - 서치바 함수
 
 extension ResultSearchViewController: UISearchBarDelegate {
-  /// 검색버튼 터치 시 pop
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+  func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
     viewModel.steps.accept(HomeStep.popScreenIsRequired)
+    return false
   }
   
-  func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-    viewModel.searchContent = searchBar.text ?? ""
-    return true
-  }
+//  /// 검색버튼 터치 시 pop
+//  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//    guard let content = searchBar.text else { return }
+//    
+//    viewModel.steps.accept(HomeStep.popScreenIsRequired)
+//  }
+//  
+//  func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+//    viewModel.searchContent = searchBar.text ?? ""
+//    return true
+//  }
 }
 
 // MARK: - 스크롤
@@ -362,7 +370,7 @@ extension ResultSearchViewController {
     if offsetY + scrollViewHeight >= contentHeight - 50 && viewModel.isInfiniteScroll == false {
       print("바닥에서 50포인트 위에 도달! ")
        
-      viewModel.fectchPostData(with: viewModel.searchContent)
+      viewModel.fetchPostData(with: viewModel.searchContent)
     
     
     }

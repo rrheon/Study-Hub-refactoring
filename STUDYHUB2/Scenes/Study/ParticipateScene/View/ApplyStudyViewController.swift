@@ -6,7 +6,9 @@ import RxRelay
 import RxCocoa
 import Then
 
-/// 스터디 참여하기 VC
+/// StudyHub - front - StudyJoinRequestScreen
+/// - 스터디 참여하기  화면
+
 final class ApplyStudyViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -76,6 +78,8 @@ final class ApplyStudyViewController: UIViewController {
     
     setupAction()
     setupBinding()
+    
+    registerTapGesture()
   } // viewDidLoad
   
   // MARK: - setupLayout
@@ -134,7 +138,7 @@ final class ApplyStudyViewController: UIViewController {
   }
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - 메인라벨 텍스트 색상 변경
@@ -153,24 +157,25 @@ final class ApplyStudyViewController: UIViewController {
       .asDriver(onErrorJustReturn: false)
       .drive(onNext: { [weak self] result in
         if result {
-          self?.viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
+          self?.viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
+
           ToastPopupManager.shared.showToast(message: "참여 신청이 완료됐어요.")
         }
       })
       .disposed(by: disposeBag)
     
-    /// 사용자의 소개 내용
-    viewModel.userIntroduce
-      .asDriver(onErrorJustReturn: "")
-      .drive(onNext: { [weak self] in
-        let buttonHidden = $0.count > 0 ? true : false
-        let buttonBackgroundColor: UIColor = $0.count > 0 ? .o50 : .o30
-        self?.completeButton.unableButton(
-          buttonHidden,
-          backgroundColor: buttonBackgroundColor,
-          titleColor: .white)
-      })
-      .disposed(by: disposeBag)
+//    /// 사용자의 소개 내용
+//    viewModel.userIntroduce
+//      .asDriver(onErrorJustReturn: "")
+//      .drive(onNext: { [weak self] in
+//        let buttonHidden = $0.count > 0 ? true : false
+//        let buttonBackgroundColor: UIColor = $0.count > 0 ? .o50 : .o30
+//        self?.completeButton.unableButton(
+//          buttonHidden,
+//          backgroundColor: buttonBackgroundColor,
+//          titleColor: .white)
+//      })
+//      .disposed(by: disposeBag)
     
     reasonTextView.rx.text.orEmpty
       .filter { [weak self] _ in
@@ -244,3 +249,4 @@ extension ApplyStudyViewController {
   }
 }
 
+extension ApplyStudyViewController: KeyboardProtocol {}

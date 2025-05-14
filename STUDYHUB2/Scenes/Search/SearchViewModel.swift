@@ -7,12 +7,15 @@
 
 import Foundation
 
+import RxSwift
 import RxRelay
 import RxFlow
 
 /// 검색 ViewModel
 final class SearchViewModel: Stepper {
   static let shared = SearchViewModel()
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   var steps: PublishRelay<Step> = PublishRelay()
 
@@ -29,42 +32,43 @@ final class SearchViewModel: Stepper {
   var searchContent: String = ""
   
   // MARK: - 추천어 검색하기
-
-
-  func searchRecommend(keyword: String) async {
-    do {
-      let result = try await StudyPostManager.shared.searchRecommend(with: keyword)
-      self.recommendList.accept(result.recommendList)
-    }catch {
-      print(#fileID, #function, #line," - \(error)")
-    }
+  
+  /// 추천어 검색하기
+  /// - Parameter keyword: 입력된 검색어
+  func searchRecommend(keyword: String) {
+    StudyPostManager.shared.searchRecommendWtihRx(with: keyword)
+      .subscribe(onNext: { [weak self] keywords in
+        self?.recommendList.accept(keywords.recommendList)
+      }, onError: { err in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+    
   }
   
   /// 검색어와 관련된 스터디 불러오기
   /// - Parameter selectedKeyword: 키워드
-  func fectchPostData(with selectedKeyword: String){
-    Task {
-      do {
-        let data = try await StudyPostManager.shared.searchAllPost(title: selectedKeyword, page: page)
+  func fetchPostData(with selectedKeyword: String) {
+    StudyPostManager.shared
+      .searchAllPostWithRx(title: selectedKeyword, page: page)
+      .subscribe(onNext: { [weak self] data in
+        guard let self = self else { return }
         
-        var curruentData = postDatas.value
+        var currentData = self.postDatas.value
         
-        if page == 0 {
-          curruentData = data.postDataByInquiries.content
-        }else{
-          var newData = data.postDataByInquiries.content
-          
-          curruentData.append(contentsOf: newData)
-          
-          isInfiniteScroll = data.postDataByInquiries.last
+        if self.page == 0 {
+          currentData = data.postDataByInquiries.content
+        } else {
+          let newData = data.postDataByInquiries.content
+          currentData.append(contentsOf: newData)
+          self.isInfiniteScroll = data.postDataByInquiries.last
         }
         
-        self.postDatas.accept(curruentData)
-        
-        page += 1
-      }
-    }
+        self.postDatas.accept(currentData)
+        self.page += 1
+      },onError: { err in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      }).disposed(by: disposeBag)
   }
-  
 }
 

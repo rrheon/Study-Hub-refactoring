@@ -211,8 +211,8 @@ final class UserInfomationComponentView: UIView {
       .rx
       .tap
       .subscribe(onNext: { _ in
-        self.viewModel.steps.accept(AppStep.editNicknameScreenIsRequired(
-          userData: self.viewModel.userData))
+        self.viewModel.steps.accept(AppStep.auth(.editNicknameScreenIsRequired(
+          userData: self.viewModel.userData)))
       })
       .disposed(by: disposeBag)
     
@@ -221,7 +221,7 @@ final class UserInfomationComponentView: UIView {
       .rx
       .tap
       .subscribe(onNext: { _ in
-        self.viewModel.steps.accept(AppStep.editMajorScreenIsRequired(userData: self.viewModel.userData))
+        self.viewModel.steps.accept(AppStep.auth(.editMajorScreenIsRequired(userData: self.viewModel.userData)))
       })
       .disposed(by: disposeBag)
     
@@ -230,7 +230,7 @@ final class UserInfomationComponentView: UIView {
       .tap
       .subscribe(onNext: { _ in
         guard let email = self.viewModel.userData.value?.email else { return }
-        self.viewModel.steps.accept(AppStep.confirmPasswordScreenIsRequired(email: email))
+        self.viewModel.steps.accept(AppStep.auth(.confirmPasswordScreenIsRequired(email: email)))
       })
       .disposed(by: disposeBag)
 

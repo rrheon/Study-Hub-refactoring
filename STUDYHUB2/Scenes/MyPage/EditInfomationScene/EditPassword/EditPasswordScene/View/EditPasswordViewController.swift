@@ -1,11 +1,13 @@
 
-import Foundation
+import UIKit
 
 import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 비밀번호 수정 VC
+/// StudyHub - front - ChangePasswordScreen - 02
+/// - 비밀번호 수정 화면
+
 final class EditPasswordViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -86,7 +88,7 @@ final class EditPasswordViewController: UIViewController {
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
     if let _ = self.navigationController?.viewControllers.first as? MyPageViewController  {
-      viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+      viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
     }else{
       viewModel.steps.accept(FindPasswordStep.popCurrentScreen(animate: true))
     }
@@ -150,7 +152,7 @@ final class EditPasswordViewController: UIViewController {
             self?.viewModel.steps.accept(FindPasswordStep.dismissCurrentFlow)
           // 성공 : 로그인 시 -> 프로필 편집화면
           }else if userData.nickname != nil && result {
-            self?.viewModel.steps.accept(AppStep.popToVC(type: MyInformViewController.self))
+            self?.viewModel.steps.accept(AppStep.navigation(.popToVC(type: MyInformViewController.self)))
           // 실패 -> 팝업
           }else {
             ToastPopupManager.shared.showToast(message: "비밀번호 변경에 실패했어요. 다시 시도해주세요.")

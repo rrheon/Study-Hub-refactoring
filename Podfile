@@ -9,6 +9,7 @@ target 'STUDYHUB2' do
 pod 'SnapKit', '~> 5.6.0'
 pod 'FSCalendar'
 pod 'Moya', '~> 15.0'
+pod 'RxMoya'
 pod 'RxSwift'
 pod 'RxCocoa'
 pod 'Then'

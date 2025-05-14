@@ -25,7 +25,6 @@ final class SearchResultCell: UICollectionViewCell {
   /// 학과 라벨
   private lazy var majorLabel: BasePaddingLabel = {
     let label = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
-    label.text = "세무회계학과"
     label.textColor = .o50
     label.backgroundColor = .o10
     label.layer.cornerRadius = 5
@@ -281,7 +280,8 @@ final class SearchResultCell: UICollectionViewCell {
   private func bind() {
     guard let data = cellData,
           let createdDate = data.createdDate,
-          let studyStartDate = data.studyStartDate else { return }
+          let studyStartDate = data.studyStartDate,
+          let studyEndDate = data.studyEndDate else { return }
     
     checkBookmarked = data.bookmarked
     let bookmarkImage = checkBookmarked ? "BookMarkChecked": "BookMarkLightImg"
@@ -291,7 +291,7 @@ final class SearchResultCell: UICollectionViewCell {
 
     majorLabel.text = " \(Utils.convertMajor(data.major, toEnglish: false) ?? "없음") "
     titleLabel.text = data.title
-    periodLabel.text = "\(studyStartDate[1])월 \(studyStartDate[2])일 ~\(studyStartDate[1])월 \(studyStartDate[2])일 "
+    periodLabel.text = "\(studyStartDate[1])월 \(studyStartDate[2])일 ~\(studyEndDate[1])월 \(studyEndDate[2])일 "
     
     remainLabel.text = "\(data.remainingSeat)자리 남았어요"
     countMemeberLabel.text = "\(countMember) /\(data.studyPerson)명"

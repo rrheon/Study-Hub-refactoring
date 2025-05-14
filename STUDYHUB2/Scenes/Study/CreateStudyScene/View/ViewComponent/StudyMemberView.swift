@@ -11,7 +11,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   /// 스터디 팀원 구분선
   private lazy var studyMemeberTopLine = StudyHubUI.createDividerLine(height: 8)
@@ -82,7 +82,7 @@ final class StudyMemberView: UIView, UITextFieldDelegate {
   private lazy var femaleOnlyButton = StudyHubUI.createButton(title: "여자만")
   private lazy var genderButtonDividerLine = StudyHubUI.createDividerLine(height: 8)
  
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     

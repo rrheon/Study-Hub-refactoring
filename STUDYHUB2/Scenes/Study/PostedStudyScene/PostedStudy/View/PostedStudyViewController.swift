@@ -5,7 +5,9 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-/// 스터디 상세 VC
+/// StudyHub - front - StudyDetailScreen
+/// - 스터디 상세 화면
+
 final class PostedStudyViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -56,6 +58,9 @@ final class PostedStudyViewController: UIViewController {
     
     setUpLayout()
     makeUI()
+    
+//    registerKeyboard()
+    registerTapGesture()
   } // viewDidLoad
 
   
@@ -81,14 +86,15 @@ final class PostedStudyViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 아이탬 터치 - 현재 화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   /// 네비게이션 바 오른쪽 아이탬 터치 - 본인 게시글일 경우 수정 및 삭제
   override func rightBarBtnTapped(_ sender: UIBarButtonItem) {
     guard let postID = viewModel.postDatas.value?.postId else { return }
 
-    viewModel.steps.accept(AppStep.bottomSheetIsRequired(postOrCommnetID: postID, type: .managementPost))
+    viewModel.steps.accept(AppStep.navigation(.bottomSheetIsRequired(postOrCommentID: postID,
+                                                                     type: .managementPost)))
   }
   
   // MARK: - setUpLayout
@@ -233,9 +239,13 @@ extension PostedStudyViewController: BottomSheetDelegate {
     switch bottomSheetCase {
     case .managementPost:
       
-      viewModel.steps.accept(AppStep.dismissCurrentScreen)
-      // 게시글 삭제 팝업 띄우기
-      viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteStudyPost))
+      viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        // 게시글 삭제 팝업 띄우기
+        self.viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteStudyPost)))
+      }
+      
     case .managementComment:
       // 댓글 삭제하기
       viewModel.deleteComment(with: postOrCommentID)
@@ -247,13 +257,13 @@ extension PostedStudyViewController: BottomSheetDelegate {
   /// - Parameter postOrCommentID: commentID
   func secondButtonTapped(postOrCommentID: Int, bottomSheetCase: BottomSheetCase) {
     // 현재 화면 내리기
-    viewModel.steps.accept(AppStep.dismissCurrentScreen)
+    viewModel.steps.accept(AppStep.navigation(.dismissCurrentScreen))
     
     switch bottomSheetCase {
     case .managementPost:
       // 게시글 수정
       
-      viewModel.steps.accept(AppStep.popCurrentScreen(animate: false))
+      viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: false)))
       
       NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
                                       object: nil,
@@ -268,11 +278,24 @@ extension PostedStudyViewController: BottomSheetDelegate {
   }
 }
 
+// MARK: - popupView Actions
+
+
 extension PostedStudyViewController: PopupViewDelegate {
-  // 삭제 후 스터디 화면으로 이동
   func rightBtnTapped(defaultBtnAction: () -> (), popupCase: PopupCase) {
-    defaultBtnAction()
-    viewModel.deleteMyPost(with: viewModel.postID)
- 
+    
+    // 내가 작성한 게시글 삭제
+    if popupCase == .deleteStudyPost {
+      defaultBtnAction()
+      viewModel.deleteMyPost(with: viewModel.postID)
+    }
+    
+    // 비로그인 시 로그인 화면으로 이도
+    if popupCase == .requiredLogin {
+      defaultBtnAction()
+      NotificationCenter.default.post(name: .dismissCurrentFlow, object: nil)
+    }
   }
 }
+
+extension PostedStudyViewController: KeyboardProtocol {}

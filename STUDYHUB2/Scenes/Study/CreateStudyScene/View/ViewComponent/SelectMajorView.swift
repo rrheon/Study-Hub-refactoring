@@ -12,7 +12,7 @@ final class SelectMajorView: UIView {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
   
   /// 구분선
   private lazy var selectMajorDividerLine = StudyHubUI.createDividerLine(height: 8)
@@ -48,7 +48,7 @@ final class SelectMajorView: UIView {
    $0.tintColor = .black
   }
     
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     
@@ -104,7 +104,7 @@ final class SelectMajorView: UIView {
       .withUnretained(self)
       .subscribe(onNext: { (view ,_) in
         let major = view.viewModel.selectedMajor
-        view.viewModel.steps.accept(AppStep.selectMajorScreenIsRequired(seletedMajor: major))
+        view.viewModel.steps.accept(AppStep.studyManagement(.selectMajorScreenIsRequired(seletedMajor: major)))
       })
       .disposed(by: disposeBag)
     

@@ -16,6 +16,8 @@ import RxRelay
 class LoginViewModel: Stepper {
   var steps: PublishRelay<Step> = PublishRelay()
 
+  var disposeBag: DisposeBag = DisposeBag()
+  
   /// 유효한 계정 여부
   let isValidAccount: PublishRelay<Bool> = PublishRelay<Bool>()
   
@@ -24,23 +26,47 @@ class LoginViewModel: Stepper {
   ///   - email: 사용자의 email
   ///   - password: 사용자 password
   func loginToStudyHub(email: String, password: String){
-    UserAuthManager.shared.loginToStudyHub(email: email, password: password) { tokens in
-      // 기존의 토큰 삭제
-      _ = TokenManager.shared.deleteTokens()
-      
-      // 새로운 토큰 저장
-      guard let accessToken = tokens.accessToken,
-            let refreshToken = tokens.refreshToken else {
+    UserAuthManager.shared.loginToStudyHubWithRx(email: email, password: password)
+      .subscribe(onNext: { [weak self] tokens in
+        // 기존의 토큰 삭제
+        _ = TokenManager.shared.deleteTokens()
+        
+        // 새로운 토큰 저장
+        guard let accessToken = tokens.accessToken,
+              let refreshToken = tokens.refreshToken else {
+          self?.isValidAccount.accept(false)
+          return
+        }
+        
+        let saveResult = TokenManager.shared.saveTokens(accessToken: accessToken,
+                                                        refreshToken: refreshToken)
+        
+        // 로그인 성공
+        self?.isValidAccount.accept(saveResult)
+
+      }, onError: { _ in
         self.isValidAccount.accept(false)
-        return
-      }
-      
-      let saveResult = TokenManager.shared.saveTokens(accessToken: accessToken,
-                                                      refreshToken: refreshToken)
-      
-      // 로그인 성공
-      self.isValidAccount.accept(saveResult)
-    }
+      })
+      .disposed(by: disposeBag)
+    
+    
+//    UserAuthManager.shared.loginToStudyHub(email: email, password: password) { tokens in
+//      // 기존의 토큰 삭제
+//      _ = TokenManager.shared.deleteTokens()
+//      
+//      // 새로운 토큰 저장
+//      guard let accessToken = tokens.accessToken,
+//            let refreshToken = tokens.refreshToken else {
+//        self.isValidAccount.accept(false)
+//        return
+//      }
+//      
+//      let saveResult = TokenManager.shared.saveTokens(accessToken: accessToken,
+//                                                      refreshToken: refreshToken)
+//      
+//      // 로그인 성공
+//      self.isValidAccount.accept(saveResult)
+//    }
   }
 }
 

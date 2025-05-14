@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 내가 신청한 스터디 리스트 VC
+/// StudyHub - front - MyRequestScreen
+/// - 내가 신청한. 스터디 리스트 화면
+
 final class MyRequestListViewController: UIViewController {
 
   let disposeBag: DisposeBag = DisposeBag()
@@ -140,7 +142,7 @@ final class MyRequestListViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
                            
   /// 셀등록
@@ -217,7 +219,7 @@ extension MyRequestListViewController: MyRequestCellDelegate {
   /// 신청한 스터디 삭제 탭 -> 팝업 띄우기
   func deleteButtonTapped(postID: Int) {
     viewModel.selectedPostID = postID
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy))
+    viewModel.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .deleteSingleParticipatedStudy)))
 
   }
 }

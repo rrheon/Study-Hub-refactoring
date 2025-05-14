@@ -11,7 +11,7 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
   
   let disposeBag: DisposeBag = DisposeBag()
   
-  let viewModel: CreateStudyViewModel
+  let viewModel: StudyFormViewModel
 
   // MARK: - 채팅방 링크 UI
   
@@ -64,11 +64,11 @@ final class StudyInfoView: UIView, UITextFieldDelegate, UITextViewDelegate {
     tv.layer.borderWidth = 0.5
     tv.layer.borderColor = UIColor.lightGray.cgColor
     tv.layer.cornerRadius = 5.0
-    tv.adjustUITextViewHeight()
+//    tv.adjustUITextViewHeight()
     return tv
   }()
   
-  init(_ viewModel: CreateStudyViewModel) {
+  init(_ viewModel: StudyFormViewModel) {
     self.viewModel = viewModel
     super.init(frame: .zero)
     

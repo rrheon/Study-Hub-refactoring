@@ -6,8 +6,10 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 스터디 참가자 확인 VC
-/// 종류 : 대기인원, 참여인원, 거절인원
+/// StudyHub - front - StudyAttendeesScreen
+/// - 스터디 참가자 확인 화면
+/// - 종류 : 대기인원, 참여인원, 거절인원
+
 final class CheckParticipantsViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -297,7 +299,7 @@ final class CheckParticipantsViewController: UIViewController {
   
   
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   // MARK: - 버튼 탭 공통 처리
@@ -393,13 +395,13 @@ extension CheckParticipantsViewController: UICollectionViewDelegateFlowLayout {
 extension CheckParticipantsViewController: ParticipantsCellDelegate {
   /// 거절버튼 탭 -> 거절사유 선택
   func refuseButtonTapped(userId: Int) {
-    viewModel.steps.accept(AppStep.refuseBottomSheetIsRequired(userId: userId))
+    viewModel.steps.accept(AppStep.studyManagement(.refuseBottomSheetIsRequired(userId: userId)))
   }
   
   /// 수락버튼 탭
   func acceptButtonTapped(userId: Int) {
     viewModel.userID = userId
-    viewModel.steps.accept(AppStep.popupScreenIsRequired(popupCase: .acceptParticipant))
+    viewModel.steps.accept(AppStep.navigation(. popupScreenIsRequired(popupCase: .acceptParticipant)))
   }
 }
 
@@ -411,7 +413,6 @@ extension CheckParticipantsViewController: RefuseBottomSheetDelegate {
     viewModel.userID = userId
     
     viewModel.rejectPerson(reason: reason) {
-      ToastPopupManager.shared.showToast(message: "거절이 완료됐어요")
       self.waitButtonTapped()
     }
   }
@@ -419,7 +420,7 @@ extension CheckParticipantsViewController: RefuseBottomSheetDelegate {
   /// 기타 사유로 거절할 경우 -> 사유 작성 화면으로 이동
   func didTapRefuseButton(withReason reason: String, reasonNum: Int, userId: Int) {
     if reasonNum == 3 {
-      viewModel.steps.accept(AppStep.writeRefuseReasoneScreenIsReuqired(userId: userId))
+      viewModel.steps.accept(AppStep.studyManagement(.writeRefuseReasonScreenIsRequired(userId: userId)))
     } else {
       rejectPerson(reason, userId)
     }
@@ -441,7 +442,6 @@ extension CheckParticipantsViewController: PopupViewDelegate {
     defaultBtnAction()
 
     viewModel.acceptPerson(completion: {
-      ToastPopupManager.shared.showToast(message: "수락이 완료됐어요")
       self.waitButtonTapped()
     })
 }

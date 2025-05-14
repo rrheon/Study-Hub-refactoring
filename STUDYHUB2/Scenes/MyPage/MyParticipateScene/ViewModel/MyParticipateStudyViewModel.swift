@@ -7,12 +7,15 @@
 
 import Foundation
 
+import RxSwift
 import RxFlow
 import RxRelay
 
 /// 내가 참여한 스터디 ViewModel
 final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
   var steps: PublishRelay<Step> = PublishRelay<Step>()
+  
+  var disposeBag: DisposeBag = DisposeBag()
   
   /// 선택된 게시글 ID
   var selectedPostID: Int?
@@ -44,46 +47,67 @@ final class MyParticipateStudyViewModel: EditUserInfoViewModel, Stepper {
   
   /// 참여한  스터디 리스트 가져오기
   func getParticipatedList() {
-    ApplyStudyManager.shared.getMyParticipateList(page: page) { result in
-      
-      var currentDatas = self.participateInfo.value
-      
-      if self.page == 0 {
-        currentDatas = result.participateStudyData.content
-      }else{
-        var newDatas = result.participateStudyData.content
-        currentDatas.append(contentsOf: newDatas)
-      }
-      
-      self.participateInfo.accept(currentDatas)
-      self.page += 1
-      self.isInfiniteScroll = result.participateStudyData.last
-      self.countPostNumber.accept(result.participateStudyData.numberOfElements)
-    }
+    ApplyStudyManager.shared.getMyParticipateListWithRx(page: page)
+      .subscribe(onNext: { [weak self] result in
+        
+        var currentDatas = self?.participateInfo.value ?? []
+        
+        if self?.page == 0 {
+          currentDatas = result.participateStudyData.content
+        }else{
+          var newDatas = result.participateStudyData.content
+          currentDatas.append(contentsOf: newDatas)
+        }
+        
+        self?.participateInfo.accept(currentDatas)
+        self?.page += 1
+        self?.isInfiniteScroll = result.participateStudyData.last
+        self?.countPostNumber.accept(result.participateStudyData.numberOfElements)
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
+//    ApplyStudyManager.shared.getMyParticipateList(page: page) { result in
+//      
+//      var currentDatas = self.participateInfo.value
+//      
+//      if self.page == 0 {
+//        currentDatas = result.participateStudyData.content
+//      }else{
+//        var newDatas = result.participateStudyData.content
+//        currentDatas.append(contentsOf: newDatas)
+//      }
+//      
+//      self.participateInfo.accept(currentDatas)
+//      self.page += 1
+//      self.isInfiniteScroll = result.participateStudyData.last
+//      self.countPostNumber.accept(result.participateStudyData.numberOfElements)
+//    }
   }
   
   
   /// 참여한 스터디 개별삭제
   /// - Parameter studyID: 삭제할 스터디 ID
   func deleteParticipateList(studyID: Int){
-    ApplyStudyManager.shared.deleteRequestStudy(studyId: studyID) { result in
-      self.isSuccessToDelete.accept(result)
-      
-      switch result {
-      case true:
-        self.updateParticipateCount()
-        self.updateParticipateContent(studyID: studyID)
-      case false:
-        return
-      }
-    }
+    ApplyStudyManager.shared.deleteRequestStudyWithRx(studyId: studyID)
+      .subscribe(onNext: { [weak self] isDeleted in
+        self?.isSuccessToDelete.accept(isDeleted)
+        
+        if isDeleted {
+          self?.updateParticipateCount()
+          self?.updateParticipateContent(studyID: studyID)
+        }
+      }, onError: { _ in
+        self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
+      })
+      .disposed(by: disposeBag)
   }
   
   /// 모든 내역 삭제
   func deleteAllParticipateList(){
     let content = participateInfo.value
     content.forEach {
-      deleteParticipateList(studyID: $0.studyID ?? 0)
+      deleteParticipateList(studyID: $0.studyID)
     }
     participateInfo.accept(content)
   }

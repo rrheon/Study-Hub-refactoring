@@ -6,7 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/// 전체 스터디 VC
+/// StudyHub - front - AllStudyListScreen
+/// - 전체 스터디 화면
+
 final class StudyViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -66,11 +68,7 @@ final class StudyViewController: UIViewController {
   
   /// view가 나타날 때 데이터 다시 가져오기
   override func viewWillAppear(_ animated: Bool) {
-    Task {
-      do {
-        await viewModel.fetchPostData(hotType: "false")
-      }
-    }
+    viewModel.fetchPostData(hotType: "false")
   }
 
   override func viewDidLoad() {
@@ -126,7 +124,8 @@ final class StudyViewController: UIViewController {
       
       scrollView.snp.makeConstraints { make in
         make.top.equalTo(recentButton.snp.bottom).offset(10)
-        make.leading.trailing.bottom.equalTo(view)
+        make.leading.trailing.equalTo(view)
+        make.bottom.equalToSuperview()
       }
       
       addButton.snp.makeConstraints { make in
@@ -268,12 +267,12 @@ final class StudyViewController: UIViewController {
     addButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { (_, _) in
-        if TokenManager.shared.loadAccessToken()?.isEmpty == true {
-          self.presentLoginPopup()
-        }else {
+        if LoginStatusManager.shared.loginStatus{
           NotificationCenter.default.post(name: .navToCreateOrModifyScreen,
                                           object: nil,
                                           userInfo: ["postID" : nil])
+        }else {
+          self.presentLoginPopup()
         }
         
       })

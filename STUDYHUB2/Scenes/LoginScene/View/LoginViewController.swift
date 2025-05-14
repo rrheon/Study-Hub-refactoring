@@ -6,7 +6,8 @@ import RxSwift
 import RxCocoa
 
 
-/// 로그인 VC
+/// StudyHub - front - LoginScreen
+
 final class LoginViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
 
@@ -208,7 +209,7 @@ final class LoginViewController: UIViewController {
     signUpButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
-        vc.viewModel.steps.accept(AppStep.signupIsRequired)
+        vc.viewModel.steps.accept(AppStep.auth(.signupIsRequired))
       })
       .disposed(by: disposeBag)
     
@@ -216,7 +217,7 @@ final class LoginViewController: UIViewController {
     forgotPasswordButton.rx.tap
       .withUnretained(self)
       .subscribe(onNext: { vc, _ in
-        vc.viewModel.steps.accept(AppStep.confrimEmailScreenIsRequired)
+        vc.viewModel.steps.accept(AppStep.auth(.confirmEmailScreenIsRequired))
       })
       .disposed(by: disposeBag)
     
@@ -236,6 +237,7 @@ final class LoginViewController: UIViewController {
     textField.textField.rx.controlEvent([.editingDidBegin, .editingDidEnd])
       .subscribe(onNext: { [weak self] in
         guard let self = self else { return }
+        
         let isEditingDidBegin = textField.textField.isEditing
         self.handleTextFieldEvents(textField: textField, isEditingDidBegin: isEditingDidBegin)
       })

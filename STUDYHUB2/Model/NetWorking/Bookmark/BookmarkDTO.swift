@@ -7,12 +7,18 @@
 
 import Foundation
 
+
 // MARK: - bookmarkDTO
+
+
 struct BookmarkDatas: Codable {
   let getBookmarkedPostsData: GetBookmarkedPostsData
   let totalCount: Int
 }
+
 // MARK: - GetBookmarkedPostsData
+
+
 struct GetBookmarkedPostsData: Codable {
   let content: [BookmarkContent]
   let empty, first, last: Bool
@@ -23,6 +29,8 @@ struct GetBookmarkedPostsData: Codable {
 }
 
 // MARK: - Content
+
+
 struct BookmarkContent: Codable {
   let close: Bool
   let content, major: String

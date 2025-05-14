@@ -5,7 +5,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-/// 공지사항 VC
+/// StudyHub - front - NoticeScreen
+/// - 공지사항 화면
+
 final class NotificationViewController: UIViewController {
   
   let disposeBag: DisposeBag = DisposeBag()
@@ -59,7 +61,7 @@ final class NotificationViewController: UIViewController {
   
   /// 네비게이션 바 왼쪽 버튼 탭 - 현재화면 pop
   override func leftBarBtnTapped(_ sender: UIBarButtonItem) {
-    viewModel.steps.accept(AppStep.popCurrentScreen(animate: true))
+    viewModel.steps.accept(AppStep.navigation(.popCurrentScreen(animate: true)))
   }
   
   

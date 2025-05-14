@@ -6,12 +6,9 @@ import RxSwift
 import RxCocoa
 import Then
 
-/*
- 셀 터치 시 상세 스터디 페이지로 이동
- 북마크 가능하게 수정
- 무한스크롤 구현 - 북마크, 검색
- */
-/// 홈 VC - 메인
+/// StudyHub - front - HomeScreen
+/// - 홈 화면
+        
 final class HomeViewController: UIViewController {
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -101,6 +98,9 @@ final class HomeViewController: UIViewController {
   /// 뷰가 나타날 때 데이터 불러오기
   override func viewWillAppear(_ animated: Bool) {
     viewModel.isNeedFetchDatas.accept(true)
+
+    /// accessToken이 만료되었으면 재로그인이 필요하다는 팝업을 띄운다
+    viewModel.checkLoginStatus()
   }
   
   // MARK: -  viewDidLoad
@@ -120,6 +120,8 @@ final class HomeViewController: UIViewController {
     setupNavigationbar()
     redesignSearchBar()
 
+//    registerKeyboard()
+    registerTapGesture()
   } // viewDidLoad
   
   
@@ -291,10 +293,16 @@ final class HomeViewController: UIViewController {
       .asDriver(onErrorJustReturn: (self, false))
       .drive(onNext: { vc, isNeedFecthDatas in
         if isNeedFecthDatas {
-          Task {
-            await vc.viewModel.fetchNewPostDatas()
-            await vc.viewModel.fetchDeadLinePostDatas()
-          }
+          vc.viewModel.fetchHomePostDatas()
+        }
+      })
+      .disposed(by: disposeBag)
+    
+    /// 로그인 상태를 체크해 로그인 요청팝업 띄우기
+    viewModel.isLoginStatus
+      .subscribe(onNext: { [weak self] loginStatus in
+        if !loginStatus {
+          self?.presentLoginPopup()
         }
       })
       .disposed(by: disposeBag)
@@ -391,7 +399,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - 비로그인 시 팝업 띄우기
 
-extension HomeViewController: LoginPopupIsRequired {}
+extension HomeViewController: LoginPopupIsRequired, KeyboardProtocol {}
 
 extension HomeViewController: PopupViewDelegate {
   // 로그인 화면으로 이동
