@@ -152,7 +152,7 @@ final class CheckEmailViewController: UIViewController {
   func handleTextFieldEvents(textField: AuthTextField) {
     guard let text = textField.getTextFieldValue() else { return }
     
-    let isValid = textField.isValidEmail(text)
+    let isValid = Validators.isValidEmail(text)
     let invalidMessage = "잘못된 주소예요. 다시 입력해주세요"
     
     /// 유효한 경우
@@ -256,7 +256,7 @@ final class CheckEmailViewController: UIViewController {
         guard let email = vc.emailTextField.getTextFieldValue() else { return }
         
         /// 사용가능한 이메일인 경우 중복 확인
-        if vc.emailTextField.isValidEmail(email) {
+        if Validators.isValidEmail(email) {
           vc.viewModel.checkEmailDuplication(email)
         }
       })

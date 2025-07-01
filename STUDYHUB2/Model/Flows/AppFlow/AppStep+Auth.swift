@@ -77,11 +77,12 @@ extension AppFlow {
   
   /// 로그인 화면 표시
   func presentLoginScreen() -> FlowContributors {
-    let viewModel: LoginViewModel = LoginViewModel()
+    let viewModel: LoginViewModel = AuthDIContainer.makeLoginViewModel()
     let vc = LoginViewController(with: viewModel)
     self.rootViewController.navigationBar.isHidden = true
     self.rootViewController.setViewControllers([vc], animated: false)
-    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
+    return .one(flowContributor: .contribute(withNext: vc))
+//    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: viewModel))
   }
   
   

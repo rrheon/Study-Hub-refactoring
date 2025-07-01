@@ -23,6 +23,15 @@ class UserAuthManager: StudyHubCommonNetworking {
   ///   - email: 유저 email
   ///   - password: 유저 password
   func loginToStudyHub(email: String, password: String, completion: @escaping (AccessTokenResponse) -> Void){
+//    let tes = provider
+//      .rx
+//      .request(.loginToStudyHub(email: email, password: password))
+//      .filterSuccessfulStatusCodes()
+//      .map(AccessTokenResponse.self)
+//     
+    
+      
+    
     provider.request(.loginToStudyHub(email: email, password: password)) { result in
       self.commonDecodeNetworkResponse(with: result, decode: AccessTokenResponse.self) { decodedData in
         completion(decodedData)
@@ -30,17 +39,17 @@ class UserAuthManager: StudyHubCommonNetworking {
     }
   }
   
+
+  
   /// 로그인하기
   /// - Parameters:
   ///   - email: 유저 email
   ///   - password: 유저 password
-  func loginToStudyHubWithRx(email: String, password: String) -> Observable<AccessTokenResponse> {
-    return provider.rx
+  func loginToStudyHubWithRx(email: String, password: String) -> Single<AccessTokenResponse> {
+    provider.rx
       .request(.loginToStudyHub(email: email, password: password))
-      .asObservable()
-      .flatMap { response -> Observable<AccessTokenResponse> in
-        self.commonDecodeNetworkResponse(with: response, decode: AccessTokenResponse.self)
-      }
+      .filterSuccessfulStatusCodes()
+      .map(AccessTokenResponse.self)
   }
   
   /// 계정 생성하기

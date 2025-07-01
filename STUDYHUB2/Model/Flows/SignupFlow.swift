@@ -78,7 +78,7 @@ class SignupFlow: Flow {
     let viewModel: AgreementViewModel = AgreementViewModel()
     let vc = AgreementViewController(with: viewModel)
     self.rootViewController.pushViewController(vc, animated: false)
-    return .one(flowContributor: .contribute(withNextPresentable: vc, withNextStepper: vc.viewModel))
+    return .one(flowContributor: .contribute(withNext: vc))
   }
   
   

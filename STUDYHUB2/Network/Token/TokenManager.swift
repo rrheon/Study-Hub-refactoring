@@ -14,7 +14,6 @@ final class TokenManager {
   
   
   static let shared = TokenManager()
-  private init() { }
   
   // MARK: Keychain
   
@@ -106,6 +105,24 @@ final class TokenManager {
   func loadRefreshToken() -> String? {
     guard let service = self.service,
           let query = refreshTokenQuery else { return nil }
+    
+    var item: CFTypeRef?
+    if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess { return nil }
+    
+    guard let data = item as? Data,
+          let refreshToken = String(data: data, encoding: .utf8) else { return nil }
+    
+    return refreshToken
+  }
+  
+  
+  /// JWT Token 가져오기
+  /// - Parameter type: 가져올 Token의 종류
+  /// - Returns: Token반환
+  func loadToken(type: TokenType) -> String? {
+    let _type = type == .access ? accessTokenQuery : refreshTokenQuery
+    guard let service = self.service,
+          let query = _type else { return nil }
     
     var item: CFTypeRef?
     if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess { return nil }

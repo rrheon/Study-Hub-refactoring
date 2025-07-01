@@ -61,6 +61,8 @@ final class StudyViewModel: Stepper {
       .subscribe(onNext: { postData in
         self.filterPostDatas(wtih: postData)
       }, onError: { err in
+        print(#fileID, #function, #line, "- \(err)")
+
         self.steps.accept(AppStep.navigation(.popupScreenIsRequired(popupCase: .checkError)))
       })
       .disposed(by: disposeBag)

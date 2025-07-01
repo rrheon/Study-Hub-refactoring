@@ -42,6 +42,20 @@
 		EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E44152B172ACB00223436 /* MyPostViewController.swift */; };
 		EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */; };
 		EE1E441D2B18666800223436 /* MyParticipateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1E441C2B18666800223436 /* MyParticipateCell.swift */; };
+		EE2451D52E04F92B00CA1C5C /* DesignSystemFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451D42E04F92B00CA1C5C /* DesignSystemFont.swift */; };
+		EE2451D82E04FDE600CA1C5C /* DesignSystemImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451D72E04FDE600CA1C5C /* DesignSystemImage.swift */; };
+		EE2451DD2E05004300CA1C5C /* DesignSystemStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451DC2E05004300CA1C5C /* DesignSystemStrings.swift */; };
+		EE2451DF2E0514E900CA1C5C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451DE2E0514E900CA1C5C /* LoginView.swift */; };
+		EE2451E12E051A6200CA1C5C /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451E02E051A6200CA1C5C /* Validators.swift */; };
+		EE2451E82E051F7600CA1C5C /* LoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451E72E051F7600CA1C5C /* LoginUseCase.swift */; };
+		EE2451EA2E0522FD00CA1C5C /* AuthRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451E92E0522FD00CA1C5C /* AuthRepositories.swift */; };
+		EE2451EC2E0525B500CA1C5C /* LoginEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451EB2E0525B500CA1C5C /* LoginEntity.swift */; };
+		EE2451F12E05267600CA1C5C /* LoginRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451F02E05267600CA1C5C /* LoginRepositoryImpl.swift */; };
+		EE2451F32E08F03500CA1C5C /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451F22E08F03500CA1C5C /* ViewModelType.swift */; };
+		EE2451F52E090A5100CA1C5C /* TokenRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451F42E090A5100CA1C5C /* TokenRepositoryImpl.swift */; };
+		EE2451F72E090B7400CA1C5C /* SaveTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451F62E090B7400CA1C5C /* SaveTokenUseCase.swift */; };
+		EE2451F92E090F3C00CA1C5C /* FetchTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451F82E090F3C00CA1C5C /* FetchTokenUseCase.swift */; };
+		EE2451FB2E090FE600CA1C5C /* DeleteTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2451FA2E090FE600CA1C5C /* DeleteTokenUseCase.swift */; };
 		EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1B2AD04ACE00190E7A /* TokenManager.swift */; };
 		EE271F202AD0584100190E7A /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F1F2AD0584100190E7A /* UIColor+Ext.swift */; };
 		EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE271F232AD77C0E00190E7A /* LoginViewModel.swift */; };
@@ -99,7 +113,7 @@
 		EE5B93692D4A257C006DC65D /* CommentDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B93682D4A257C006DC65D /* CommentDTO.swift */; };
 		EE5B936B2D4A2584006DC65D /* CommentNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B936A2D4A2584006DC65D /* CommentNetworking.swift */; };
 		EE5B936D2D4A2589006DC65D /* CommentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B936C2D4A2589006DC65D /* CommentManager.swift */; };
-		EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE76149A2C50D82D0008E463 /* AuthTextField.swift */; };
+		EE76149B2C50D82D0008E463 /* AuthTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE76149A2C50D82D0008E463 /* AuthTextView.swift */; };
 		EE8871652D7058E300C1C0AF /* UIViewController+Navigationbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871642D7058E300C1C0AF /* UIViewController+Navigationbar.swift */; };
 		EE8871672D72B05900C1C0AF /* ToastPopupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871662D72B05900C1C0AF /* ToastPopupManager.swift */; };
 		EE8871692D72F8DB00C1C0AF /* UIViewController+Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8871682D72F8DB00C1C0AF /* UIViewController+Indicator.swift */; };
@@ -167,6 +181,8 @@
 		EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */; };
 		EEC5FFD92CAE87E100896FEB /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFD82CAE87E100896FEB /* NotificationViewModel.swift */; };
 		EEC5FFDE2CAFCBEF00896FEB /* InquiryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC5FFDD2CAFCBEF00896FEB /* InquiryViewModel.swift */; };
+		EECBE1302E0A92F8004A57C1 /* AuthDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECBE12F2E0A92F8004A57C1 /* AuthDIContainer.swift */; };
+		EECBE13C2E0BEC5E004A57C1 /* AgreementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECBE13B2E0BEC5E004A57C1 /* AgreementView.swift */; };
 		EED00B762C534C21000D2E23 /* MajorDataSet.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B752C534C21000D2E23 /* MajorDataSet.plist */; };
 		EED00B782C534C68000D2E23 /* DataLoaderFromPlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED00B772C534C68000D2E23 /* DataLoaderFromPlist.swift */; };
 		EED00B7A2C534F05000D2E23 /* StudyHubURL.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED00B792C534F05000D2E23 /* StudyHubURL.plist */; };
@@ -244,6 +260,20 @@
 		EE1E44152B172ACB00223436 /* MyPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyPostViewController.swift; path = STUDYHUB2/Scenes/MyPage/MainInfo/MyPost/View/MyPostViewController.swift; sourceTree = SOURCE_ROOT; };
 		EE1E441A2B18641600223436 /* MyParticipateStudyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateStudyVC.swift; sourceTree = "<group>"; };
 		EE1E441C2B18666800223436 /* MyParticipateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyParticipateCell.swift; sourceTree = "<group>"; };
+		EE2451D42E04F92B00CA1C5C /* DesignSystemFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemFont.swift; sourceTree = "<group>"; };
+		EE2451D72E04FDE600CA1C5C /* DesignSystemImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemImage.swift; sourceTree = "<group>"; };
+		EE2451DC2E05004300CA1C5C /* DesignSystemStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemStrings.swift; sourceTree = "<group>"; };
+		EE2451DE2E0514E900CA1C5C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		EE2451E02E051A6200CA1C5C /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		EE2451E72E051F7600CA1C5C /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
+		EE2451E92E0522FD00CA1C5C /* AuthRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepositories.swift; sourceTree = "<group>"; };
+		EE2451EB2E0525B500CA1C5C /* LoginEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEntity.swift; sourceTree = "<group>"; };
+		EE2451F02E05267600CA1C5C /* LoginRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRepositoryImpl.swift; sourceTree = "<group>"; };
+		EE2451F22E08F03500CA1C5C /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
+		EE2451F42E090A5100CA1C5C /* TokenRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRepositoryImpl.swift; sourceTree = "<group>"; };
+		EE2451F62E090B7400CA1C5C /* SaveTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveTokenUseCase.swift; sourceTree = "<group>"; };
+		EE2451F82E090F3C00CA1C5C /* FetchTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTokenUseCase.swift; sourceTree = "<group>"; };
+		EE2451FA2E090FE600CA1C5C /* DeleteTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTokenUseCase.swift; sourceTree = "<group>"; };
 		EE271F1B2AD04ACE00190E7A /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		EE271F1F2AD0584100190E7A /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		EE271F232AD77C0E00190E7A /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -303,7 +333,7 @@
 		EE5B93682D4A257C006DC65D /* CommentDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentDTO.swift; sourceTree = "<group>"; };
 		EE5B936A2D4A2584006DC65D /* CommentNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNetworking.swift; sourceTree = "<group>"; };
 		EE5B936C2D4A2589006DC65D /* CommentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentManager.swift; sourceTree = "<group>"; };
-		EE76149A2C50D82D0008E463 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
+		EE76149A2C50D82D0008E463 /* AuthTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextView.swift; sourceTree = "<group>"; };
 		EE8871642D7058E300C1C0AF /* UIViewController+Navigationbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Navigationbar.swift"; sourceTree = "<group>"; };
 		EE8871662D72B05900C1C0AF /* ToastPopupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastPopupManager.swift; sourceTree = "<group>"; };
 		EE8871682D72F8DB00C1C0AF /* UIViewController+Indicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Indicator.swift"; sourceTree = "<group>"; };
@@ -373,6 +403,8 @@
 		EEC5FFD12CAD3AEE00896FEB /* MyRequestListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRequestListViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFD82CAE87E100896FEB /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		EEC5FFDD2CAFCBEF00896FEB /* InquiryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewModel.swift; sourceTree = "<group>"; };
+		EECBE12F2E0A92F8004A57C1 /* AuthDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDIContainer.swift; sourceTree = "<group>"; };
+		EECBE13B2E0BEC5E004A57C1 /* AgreementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementView.swift; sourceTree = "<group>"; };
 		EED00B752C534C21000D2E23 /* MajorDataSet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MajorDataSet.plist; sourceTree = "<group>"; };
 		EED00B772C534C68000D2E23 /* DataLoaderFromPlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoaderFromPlist.swift; sourceTree = "<group>"; };
 		EED00B792C534F05000D2E23 /* StudyHubURL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StudyHubURL.plist; sourceTree = "<group>"; };
@@ -465,6 +497,7 @@
 				EEC5FF742C9960B600896FEB /* ManagementImage.swift */,
 				EEC5FFA12C9DC23500896FEB /* EditNicknameProtocol.swift */,
 				EE47149D2D9160FF007B22B9 /* KeyboardProtocol.swift */,
+				EE2451D62E04FDD300CA1C5C /* DesignSystem */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -522,6 +555,106 @@
 				EEC5FFC92CAC3BDF00896FEB /* ViewModel */,
 			);
 			path = MyParticipateScene;
+			sourceTree = "<group>";
+		};
+		EE2451D62E04FDD300CA1C5C /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451D42E04F92B00CA1C5C /* DesignSystemFont.swift */,
+				EE2451D72E04FDE600CA1C5C /* DesignSystemImage.swift */,
+				EE2451DC2E05004300CA1C5C /* DesignSystemStrings.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		EE2451D92E04FE5000CA1C5C /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451F22E08F03500CA1C5C /* ViewModelType.swift */,
+				EE7614972C50D4E60008E463 /* LoginScene */,
+				EECBE13A2E0BEB8B004A57C1 /* Signup */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		EE2451DA2E04FE6800CA1C5C /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451E62E051F6100CA1C5C /* Entities */,
+				EE2451E52E051F5B00CA1C5C /* UseCase */,
+				EE2451E32E051F4800CA1C5C /* Interface */,
+				EE2451E22E051F3B00CA1C5C /* Validator */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		EE2451DB2E04FE7000CA1C5C /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451EE2E05265800CA1C5C /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		EE2451E22E051F3B00CA1C5C /* Validator */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451E02E051A6200CA1C5C /* Validators.swift */,
+			);
+			path = Validator;
+			sourceTree = "<group>";
+		};
+		EE2451E32E051F4800CA1C5C /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451E42E051F5000CA1C5C /* Repositories */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		EE2451E42E051F5000CA1C5C /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451E92E0522FD00CA1C5C /* AuthRepositories.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		EE2451E52E051F5B00CA1C5C /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451E72E051F7600CA1C5C /* LoginUseCase.swift */,
+				EE2451F62E090B7400CA1C5C /* SaveTokenUseCase.swift */,
+				EE2451F82E090F3C00CA1C5C /* FetchTokenUseCase.swift */,
+				EE2451FA2E090FE600CA1C5C /* DeleteTokenUseCase.swift */,
+			);
+			path = UseCase;
+			sourceTree = "<group>";
+		};
+		EE2451E62E051F6100CA1C5C /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451EB2E0525B500CA1C5C /* LoginEntity.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		EE2451EE2E05265800CA1C5C /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				EE2451F02E05267600CA1C5C /* LoginRepositoryImpl.swift */,
+				EE2451F42E090A5100CA1C5C /* TokenRepositoryImpl.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		EE2451EF2E05266300CA1C5C /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				EE271F222AD0FB3F00190E7A /* Token */,
+				EE5B93572D4A1406006DC65D /* UserAuth */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		EE271F212AD0584900190E7A /* Extension */ = {
@@ -783,7 +916,6 @@
 			children = (
 				EEB079FC2D54FFB40009246D /* Flows */,
 				EEC5FFDF2CB160D200896FEB /* NetWorking */,
-				EE271F222AD0FB3F00190E7A /* Token */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -794,7 +926,6 @@
 				EEDDDD202C71EE8900FA347D /* BottomSheet */,
 				EEDDDD252C72EC8D00FA347D /* PopupView */,
 				EEA53A3E2C5250F900C8FEFF /* CustomUI */,
-				EE7614972C50D4E60008E463 /* LoginScene */,
 				F80421C42A7D7C25006C6B87 /* Signup */,
 				EE0A8B582AF93255001C3F41 /* Home */,
 				EEB07A412D5B03AE0009246D /* Search */,
@@ -892,26 +1023,11 @@
 		EE7614972C50D4E60008E463 /* LoginScene */ = {
 			isa = PBXGroup;
 			children = (
-				EE7614982C50D53F0008E463 /* View */,
-				EE7614992C50D5480008E463 /* ViewModel */,
-			);
-			path = LoginScene;
-			sourceTree = "<group>";
-		};
-		EE7614982C50D53F0008E463 /* View */ = {
-			isa = PBXGroup;
-			children = (
+				EE271F232AD77C0E00190E7A /* LoginViewModel.swift */,
+				EE2451DE2E0514E900CA1C5C /* LoginView.swift */,
 				F80421952A7D6816006C6B87 /* LoginViewController.swift */,
 			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		EE7614992C50D5480008E463 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				EE271F232AD77C0E00190E7A /* LoginViewModel.swift */,
-			);
-			path = ViewModel;
+			path = LoginScene;
 			sourceTree = "<group>";
 		};
 		EE98B1AE2B3BDEB80025C4F8 /* EditInfomationScene */ = {
@@ -940,26 +1056,11 @@
 		EEA53A412C528A6B00C8FEFF /* AgreementSccene */ = {
 			isa = PBXGroup;
 			children = (
-				EEA53A422C528A8600C8FEFF /* View */,
-				EEA53A432C528A9100C8FEFF /* ViewModel */,
-			);
-			path = AgreementSccene;
-			sourceTree = "<group>";
-		};
-		EEA53A422C528A8600C8FEFF /* View */ = {
-			isa = PBXGroup;
-			children = (
+				EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */,
+				EECBE13B2E0BEC5E004A57C1 /* AgreementView.swift */,
 				EEFD5D2D2B60D37A00D1CE00 /* AgreementViewController.swift */,
 			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		EEA53A432C528A9100C8FEFF /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				EEA53A442C528ABE00C8FEFF /* AgreementViewModel.swift */,
-			);
-			path = ViewModel;
+			path = AgreementSccene;
 			sourceTree = "<group>";
 		};
 		EEB079FC2D54FFB40009246D /* Flows */ = {
@@ -1071,7 +1172,7 @@
 		EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */ = {
 			isa = PBXGroup;
 			children = (
-				EE76149A2C50D82D0008E463 /* AuthTextField.swift */,
+				EE76149A2C50D82D0008E463 /* AuthTextView.swift */,
 				EE27B4432C57ACA700057475 /* EnterPasswordTextField.swift */,
 				EEA53A3F2C5252D000C8FEFF /* AuthTitleView.swift */,
 			);
@@ -1543,36 +1644,36 @@
 				EE5B933B2D48AAAA006DC65D /* ApplyStudy */,
 				EE5B93422D48B601006DC65D /* Bookmark */,
 				EE5B93492D48BC6F006DC65D /* ToStudyHubNetworking */,
-				EE5B93572D4A1406006DC65D /* UserAuth */,
 				EE5B935E2D4A1803006DC65D /* UserProfile */,
 				EE5B93672D4A2566006DC65D /* Commnet */,
 			);
 			path = NetWorking;
 			sourceTree = "<group>";
 		};
+		EECBE12E2E0A92E4004A57C1 /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				EECBE12F2E0A92F8004A57C1 /* AuthDIContainer.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
+		EECBE13A2E0BEB8B004A57C1 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
+				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
+			);
+			path = Signup;
+			sourceTree = "<group>";
+		};
 		EED00B7F2C53B317000D2E23 /* CheckEmailScene */ = {
 			isa = PBXGroup;
 			children = (
-				EED00B802C53B36C000D2E23 /* View */,
-				EED00B812C54D613000D2E23 /* ViewModel */,
-			);
-			path = CheckEmailScene;
-			sourceTree = "<group>";
-		};
-		EED00B802C53B36C000D2E23 /* View */ = {
-			isa = PBXGroup;
-			children = (
+				EED00B822C54D622000D2E23 /* CheckEmailViewModel.swift */,
 				F80421C72A7D800E006C6B87 /* CheckEmailViewController.swift */,
 			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		EED00B812C54D613000D2E23 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				EED00B822C54D622000D2E23 /* CheckEmailViewModel.swift */,
-			);
-			path = ViewModel;
+			path = CheckEmailScene;
 			sourceTree = "<group>";
 		};
 		EEDD81102B7DE2780022302E /* MyRequestListScene */ = {
@@ -1724,6 +1825,11 @@
 				EE07ADC92AF25F1E0096890F /* Helper */,
 				EE3AD8B42C467E62000A8CCA /* Model */,
 				EE3AD8B52C467E6C000A8CCA /* Scenes */,
+				EECBE12E2E0A92E4004A57C1 /* DI */,
+				EE2451D92E04FE5000CA1C5C /* Presentation */,
+				EE2451DA2E04FE6800CA1C5C /* Domain */,
+				EE2451DB2E04FE7000CA1C5C /* Data */,
+				EE2451EF2E05266300CA1C5C /* Network */,
 				F804219A2A7D6818006C6B87 /* Assets.xcassets */,
 				F804219C2A7D6818006C6B87 /* LaunchScreen.storyboard */,
 				EED00B752C534C21000D2E23 /* MajorDataSet.plist */,
@@ -1737,8 +1843,6 @@
 			isa = PBXGroup;
 			children = (
 				EEC5FF6A2C995B9E00896FEB /* SignupCustomUI */,
-				EEA53A412C528A6B00C8FEFF /* AgreementSccene */,
-				EED00B7F2C53B317000D2E23 /* CheckEmailScene */,
 				EE27B43E2C57876C00057475 /* EnterPasswordScene */,
 				EE27B4452C57EC9F00057475 /* EnterNicknameScene */,
 				EE27B44C2C5B709500057475 /* EnterMajorScene */,
@@ -1940,6 +2044,7 @@
 				EEDDDD052C64D41F00FA347D /* HomeViewModel.swift in Sources */,
 				EE2AEBA92C918E3E00CE80A3 /* SimilarComponent.swift in Sources */,
 				EEC5FFA42CA27F5500896FEB /* EditUserInfoViewModel.swift in Sources */,
+				EE2451F72E090B7400CA1C5C /* SaveTokenUseCase.swift in Sources */,
 				EEB07A472D5B040C0009246D /* EnterSearchViewController.swift in Sources */,
 				EEB07A4D2D5B0A620009246D /* UICollectionViewCell+CellID.swift in Sources */,
 				EEB07A5D2D5B3E6F0009246D /* Notification+Name.swift in Sources */,
@@ -1960,11 +2065,13 @@
 				EE98B1BD2B4805A90025C4F8 /* DeleteAccountViewController.swift in Sources */,
 				EEC5FFC72CA7EF8A00896FEB /* CheckParticipantsViewModel.swift in Sources */,
 				EEC5FF9B2C9DBF7200896FEB /* ConfirmEmailViewModel.swift in Sources */,
+				EE2451D82E04FDE600CA1C5C /* DesignSystemImage.swift in Sources */,
 				EE07ADD12AF632B80096890F /* Calendar.swift in Sources */,
 				EE88717E2D7A8A8700C1C0AF /* UITabBarController+UI.swift in Sources */,
 				F8085D442A81846C0067D4DE /* StudyViewController.swift in Sources */,
 				EEC5FFA02C9DBFAF00896FEB /* DeleteAccountViewModel.swift in Sources */,
 				EEDDDD1B2C6CA05900FA347D /* Utils.swift in Sources */,
+				EE2451D52E04F92B00CA1C5C /* DesignSystemFont.swift in Sources */,
 				EE93562A2B6A518500D662CC /* NotificationCell.swift in Sources */,
 				EE4714AB2D953131007B22B9 /* AppStep+StudyPost.swift in Sources */,
 				EE98B1AB2B3BB3F70025C4F8 /* EditMajorViewController.swift in Sources */,
@@ -1974,6 +2081,7 @@
 				EE2908352C81A3EE006B28A7 /* StudyWayView.swift in Sources */,
 				EE5B93592D4A1416006DC65D /* UserAuthManager.swift in Sources */,
 				F80421962A7D6816006C6B87 /* LoginViewController.swift in Sources */,
+				EE2451F52E090A5100CA1C5C /* TokenRepositoryImpl.swift in Sources */,
 				EE8871672D72B05900C1C0AF /* ToastPopupManager.swift in Sources */,
 				EEDD81122B7DE3D70022302E /* MyReqeustCell.swift in Sources */,
 				EEB51E8F2B103C2300C23AB4 /* MyInformationViewController.swift in Sources */,
@@ -1982,7 +2090,7 @@
 				EEC5FFDE2CAFCBEF00896FEB /* InquiryViewModel.swift in Sources */,
 				EEC5FF752C9960B600896FEB /* ManagementImage.swift in Sources */,
 				EEB079FE2D54FFBA0009246D /* AppFlow.swift in Sources */,
-				EE76149B2C50D82D0008E463 /* AuthTextField.swift in Sources */,
+				EE76149B2C50D82D0008E463 /* AuthTextView.swift in Sources */,
 				EEC5FF782C9963D800896FEB /* MyPageViewModel.swift in Sources */,
 				F80421CA2A7D9534006C6B87 /* EnterPasswordViewController.swift in Sources */,
 				EEDDDD0C2C6B3A8500FA347D /* PostedStudyViewModel.swift in Sources */,
@@ -1995,6 +2103,7 @@
 				EE5B93622D4A182C006DC65D /* UserProfileNetworking.swift in Sources */,
 				EEB51E9A2B10931500C23AB4 /* UIButton+Ext.swift in Sources */,
 				EEB51E902B103C2300C23AB4 /* EditnicknameViewController.swift in Sources */,
+				EE2451DF2E0514E900CA1C5C /* LoginView.swift in Sources */,
 				EEC5FF7D2C9C086300896FEB /* MyInfomationViewModel.swift in Sources */,
 				EE5B93462D48B61E006DC65D /* BookmarkNetworking.swift in Sources */,
 				EE271F242AD77C0E00190E7A /* LoginViewModel.swift in Sources */,
@@ -2006,10 +2115,12 @@
 				EE5B2FD12B83822900D365A2 /* DetailRejectReasonViewController.swift in Sources */,
 				EEB07A4B2D5B04790009246D /* SearchViewModel.swift in Sources */,
 				F80421C82A7D800E006C6B87 /* CheckEmailViewController.swift in Sources */,
+				EE2451E82E051F7600CA1C5C /* LoginUseCase.swift in Sources */,
 				EE5B93602D4A1825006DC65D /* UserProfileDTO.swift in Sources */,
 				EEDDDD172C6B4F2F00FA347D /* CommentComponent.swift in Sources */,
 				EE07ADC12AF0D5A40096890F /* SimilarPostCell.swift in Sources */,
 				EE4714AD2D953143007B22B9 /* AppStep+StudyManagement.swift in Sources */,
+				EE2451F92E090F3C00CA1C5C /* FetchTokenUseCase.swift in Sources */,
 				EE2908372C81A4BD006B28A7 /* StudyPeriodView.swift in Sources */,
 				EE2908332C81A125006B28A7 /* StudyMemberView.swift in Sources */,
 				EEC5FF832C9C0AFA00896FEB /* ExitComponentView.swift in Sources */,
@@ -2029,6 +2140,7 @@
 				EE07ADC32AF236260096890F /* BottomSheet.swift in Sources */,
 				F80421CE2A7DA2F3006C6B87 /* EnterMajorViewController.swift in Sources */,
 				EE2908162C770FC3006B28A7 /* BookmarkViewModel.swift in Sources */,
+				EE2451DD2E05004300CA1C5C /* DesignSystemStrings.swift in Sources */,
 				EE5B932C2D424D74006DC65D /* StudyPostNetworking.swift in Sources */,
 				EEDDDD1F2C71EE8500FA347D /* ShowBottomSheet.swift in Sources */,
 				EE98B1AD2B3BDE0F0025C4F8 /* ConfirmPasswordViewController.swift in Sources */,
@@ -2036,6 +2148,7 @@
 				EE4714A82D95267B007B22B9 /* AppStep+Auth.swift in Sources */,
 				EE5B93372D47B87B006DC65D /* StudyHubCommonNetworking.swift in Sources */,
 				EEC5FF732C995EB200896FEB /* ServiceView.swift in Sources */,
+				EE2451EA2E0522FD00CA1C5C /* AuthRepositories.swift in Sources */,
 				EE5B93412D48AAFD006DC65D /* ApplyStudyManager.swift in Sources */,
 				EE29080C2C7630A9006B28A7 /* CommentViewModel.swift in Sources */,
 				EE1E441B2B18641600223436 /* MyParticipateStudyVC.swift in Sources */,
@@ -2067,9 +2180,12 @@
 				F87377592AA850940055B041 /* SeletMajorViewController.swift in Sources */,
 				EED00B832C54D622000D2E23 /* CheckEmailViewModel.swift in Sources */,
 				EE07ADB52AEFC2B90096890F /* UITextField+Ext.swift in Sources */,
+				EECBE1302E0A92F8004A57C1 /* AuthDIContainer.swift in Sources */,
 				EEC5FFB72CA4039300896FEB /* EnterValidCodeViewModel.swift in Sources */,
+				EE2451E12E051A6200CA1C5C /* Validators.swift in Sources */,
 				EE5B935B2D4A141B006DC65D /* UserAuthDTO.swift in Sources */,
 				EEB07A072D55030C0009246D /* MypageFlow.swift in Sources */,
+				EE2451F12E05267600CA1C5C /* LoginRepositoryImpl.swift in Sources */,
 				EEFD5D1F2B5E40C900D1CE00 /* ApplyStudyViewController.swift in Sources */,
 				EE07ADC72AF241A30096890F /* PopUpView.swift in Sources */,
 				EE2908102C7635A7006B28A7 /* StudyFormViewModel.swift in Sources */,
@@ -2081,6 +2197,7 @@
 				EE2908392C86DFBC006B28A7 /* EditTextProtocol.swift in Sources */,
 				F80421942A7D6816006C6B87 /* SceneDelegate.swift in Sources */,
 				EE271F1C2AD04ACE00190E7A /* TokenManager.swift in Sources */,
+				EE2451FB2E090FE600CA1C5C /* DeleteTokenUseCase.swift in Sources */,
 				EE1E44162B172ACB00223436 /* MyPostViewController.swift in Sources */,
 				EEB07A052D5503070009246D /* StudyFlow.swift in Sources */,
 				EEC5FFD22CAD3AEE00896FEB /* MyRequestListViewModel.swift in Sources */,
@@ -2088,6 +2205,7 @@
 				EE5B934B2D48BC92006DC65D /* ToStudyHublDTO.swift in Sources */,
 				EEC5FF812C9C09C300896FEB /* UserInfomationComponentView.swift in Sources */,
 				EE5B93692D4A257C006DC65D /* CommentDTO.swift in Sources */,
+				EE2451F32E08F03500CA1C5C /* ViewModelType.swift in Sources */,
 				EE07ADCF2AF325F80096890F /* UILabelPadding.swift in Sources */,
 				EEDDDD0E2C6B452E00FA347D /* MainComponent.swift in Sources */,
 				EE5B932E2D428F6E006DC65D /* StudyPostManager.swift in Sources */,
@@ -2097,7 +2215,9 @@
 				EE0A8B5C2AF9330F001C3F41 /* DeadLineCell.swift in Sources */,
 				F8085D3E2A7E9E270067D4DE /* CompletedSignupViewController.swift in Sources */,
 				EE98B1C12B4F9AB70025C4F8 /* CommentViewController.swift in Sources */,
+				EE2451EC2E0525B500CA1C5C /* LoginEntity.swift in Sources */,
 				EE5B935D2D4A1426006DC65D /* UserAuthNetworking.swift in Sources */,
+				EECBE13C2E0BEC5E004A57C1 /* AgreementView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

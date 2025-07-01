@@ -13,7 +13,7 @@ extension UIViewController {
   /// - Parameters:
   ///   - imgName: 이미지 - 기본값 = 왼쪽 화살표
   ///   - activate: 버튼 액션 활성화 여부
-  func leftButtonSetting(imgName: String = "LeftArrow", activate: Bool = true) {
+  func leftButtonSetting(imgName: String = ButtonImages.leftArrow, activate: Bool = true) {
     let homeImg = UIImage(named: imgName)?.withRenderingMode(.alwaysOriginal)
     let leftButton = UIBarButtonItem(
       image: homeImg,
@@ -53,7 +53,7 @@ extension UIViewController {
     
     appearance.titleTextAttributes = [
       NSAttributedString.Key.foregroundColor: UIColor.white,
-      NSAttributedString.Key.font: UIFont(name: "Pretendard-Bold", size: 18)!
+      NSAttributedString.Key.font: UIFont(name: FontSystem.bold.value, size: 18)!
     ]
     
     self.navigationController?.navigationBar.standardAppearance = appearance
@@ -66,7 +66,9 @@ extension UIViewController {
   ///   - title: 제목
   ///   - font: 폰트
   ///   - size: 사이즈
-  func settingNavigationTitle(title: String, font: String = "Pretendard-Bold", size: CGFloat = 18) {
+  func settingNavigationTitle(title: String,
+                              font: String = FontSystem.bold.value,
+                              size: CGFloat = 18) {
     self.navigationItem.title = title
     
     if let appearance = self.navigationController?.navigationBar.standardAppearance {

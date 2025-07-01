@@ -9,6 +9,7 @@ import Foundation
 
 import Moya
 import RxSwift
+import Alamofire
 
 /// 로그인이 필요할 경우 팝업 띄우기
 protocol LoginPopupIsRequired: PopupViewDelegate {
@@ -49,6 +50,19 @@ extension CommonBaseURL {
 
 /// 공용 네트워킹
 class StudyHubCommonNetworking {
+  lazy var session: Session = {
+      let evaluators: [String: ServerTrustEvaluating] = [
+        "studyhub.shop": DisabledTrustEvaluator()
+      ]
+      let trustManager = ServerTrustManager(evaluators: evaluators)
+
+      let configuration = URLSessionConfiguration.default
+      configuration.timeoutIntervalForRequest = 30
+
+      return Session(configuration: configuration,
+                     startRequestsImmediately: true,
+                     serverTrustManager: trustManager) // ✅ 이 부분이 중요!
+  }()
   
   init(){
     LoginStatusManager.shared.registerCheckValidAccessToken()
@@ -136,3 +150,5 @@ extension MoyaProvider {
     }
   }
 }
+
+

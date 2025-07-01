@@ -7,49 +7,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9CB20CEA-E98F-4227-A333-643BD8CC4635"
-            shouldBeEnabled = "Yes"
+            uuid = "FD24A951-92B9-4599-A54E-8027EBE4CCC7"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "STUDYHUB2/SceneDelegate.swift"
+            filePath = "STUDYHUB2/Scenes/Signup/SignupCustomUI/AuthTextField.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "scene(_:willConnectTo:options:)"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "setPasswordSecure(isSecure:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A3A5B98D-7A5C-4533-A358-7D601654049A"
-            shouldBeEnabled = "Yes"
+            uuid = "FC15FBB9-5207-4BA3-B6CD-56E716CA4497"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../LoginStatusManager.swift"
+            filePath = "STUDYHUB2/Presentation/LoginScene/ViewModel/LoginViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "fetchAccessToken()"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "transform(input:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0A149993-94F6-489F-BEE5-3B244B9D4DE7"
-            shouldBeEnabled = "Yes"
+            uuid = "F095D28F-8F1A-48B5-A3DB-A7D6A0B8C066"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../LoginStatusManager.swift"
+            filePath = "STUDYHUB2/Helper/DataLoaderFromPlist.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "fetchAccessToken()"
-            landmarkType = "7">
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "DataLoaderFromPlist"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -119,7 +119,7 @@ final class EditPasswordViewController: UIViewController {
       .filter({ !$0.isEmpty })
       .drive(onNext: { [weak self] password in
         guard let self = self else { return }
-        let checkValid = Utils.isValidPassword(password)
+        let checkValid = Validators.isValidPassword(password)
         
         checkValidPassword(textfield: firstPasswordTextField, checkValid: checkValid)
       })

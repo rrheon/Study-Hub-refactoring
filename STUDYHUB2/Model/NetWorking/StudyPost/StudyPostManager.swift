@@ -15,7 +15,7 @@ import Moya
 class StudyPostManager: StudyHubCommonNetworking {
   static let shared = StudyPostManager()
   
-  let provider = MoyaProvider<StudyPostNetworking>()
+  lazy var provider = MoyaProvider<StudyPostNetworking>(session: session)
   
   let disposeBag: DisposeBag = DisposeBag()
   
@@ -284,3 +284,4 @@ class StudyPostManager: StudyHubCommonNetworking {
           .catchAndReturn(false)
   }
 }
+

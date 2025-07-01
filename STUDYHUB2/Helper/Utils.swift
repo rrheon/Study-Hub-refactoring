@@ -93,10 +93,5 @@ class Utils {
     
     return filteredMajors
   }
-  
-  /// 비밀번호 유효성 검증
-  class func isValidPassword(_ password: String) -> Bool {
-    let passwordRegex = "(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{10,}"
-    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
-  }
+
 }
